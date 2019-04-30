@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configurationSnapshot xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:schemas-microsoft-com:xml-wcfconfigurationsnapshot">
+  <behaviors />
+  <bindings>
+    <binding digest="System.ServiceModel.Configuration.CustomBindingElement, System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089:&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;Data name=&quot;MyJavaServicePortBinding&quot;&gt;&lt;httpTransport /&gt;&lt;security authenticationMode=&quot;UserNameForCertificate&quot; defaultAlgorithmSuite=&quot;Basic128&quot; includeTimestamp=&quot;true&quot; messageProtectionOrder=&quot;SignBeforeEncrypt&quot; messageSecurityVersion=&quot;WSSecurity11WSTrust13WSSecureConversation13WSSecurityPolicy12BasicSecurityProfile10&quot; requireDerivedKeys=&quot;false&quot; requireSignatureConfirmation=&quot;false&quot; securityHeaderLayout=&quot;Lax&quot;&gt;&lt;localClientSettings detectReplays=&quot;true&quot; /&gt;&lt;localServiceSettings detectReplays=&quot;true&quot; /&gt;&lt;/security&gt;&lt;textMessageEncoding messageVersion=&quot;Soap11WSAddressing10&quot; /&gt;&lt;/Data&gt;" bindingType="customBinding" name="MyJavaServicePortBinding" />
+  </bindings>
+  <endpoints>
+    <endpoint normalizedDigest="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;Data address=&quot;http://vsrs11.rs.local:80/Windchill/servlet/MyJavaService&quot; binding=&quot;customBinding&quot; bindingConfiguration=&quot;MyJavaServicePortBinding&quot; contract=&quot;ExampleService.MyJavaService&quot; name=&quot;MyJavaServicePort&quot; /&gt;" digest="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;Data address=&quot;http://vsrs11.rs.local:80/Windchill/servlet/MyJavaService&quot; binding=&quot;customBinding&quot; bindingConfiguration=&quot;MyJavaServicePortBinding&quot; contract=&quot;ExampleService.MyJavaService&quot; name=&quot;MyJavaServicePort&quot; /&gt;" contractName="ExampleService.MyJavaService" name="MyJavaServicePort" />
+  </endpoints>
+</configurationSnapshot>
