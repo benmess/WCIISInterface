@@ -363,7 +363,7 @@ namespace WcfWCService
 
         public string CreateProjectWorkItem(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sPartNo, string sPartName,
                                             string sProductName, string sPartType, string sPartUsageType, string sPartUsageUnit, string sFolderNameAndPath,
-                                            string sCheckInComments, string sLineNumber, string iProdOrLibrary, string sWebAppId)
+                                            string sCheckInComments, string sLineNumber, string sPartDescription, string iProdOrLibrary, string sWebAppId)
         {
 
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -375,9 +375,9 @@ namespace WcfWCService
                 Update_User_Time(sUserId, sSessionId);
                 int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
                 ExampleService.MyJavaServiceClient client2 = GetWCService();
-                string[] sAttributeNames = new string[1];
-                string[] sAttributeValues = new string[1];
-                string[] sAttributeTypes = new string[1];
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
                 string[] sAttributeNamesLink = new string[0];
                 string[] sAttributeValuesLink = new string[0];
                 string[] sAttributeTypesLink = new string[0];
@@ -385,15 +385,15 @@ namespace WcfWCService
                 string sReturn2 = "";
 
                 sAttributeNames[0] = "Originator";
-                //sAttributeNames[1] = "ClientDesc";
+                sAttributeNames[1] = "PartDesc";
                 //sAttributeNames[2] = "ProjectType";
 
                 sAttributeValues[0] = sFullName;
-                //sAttributeValues[1] = sClientDesc;
+                sAttributeValues[1] = sPartDescription;
                 //sAttributeValues[2] = sProjType;
 
                 sAttributeTypes[0] = "string";
-                //sAttributeTypes[1] = "string";
+                sAttributeTypes[1] = "string";
                 //sAttributeTypes[2] = "string";
 
                 //if (sOriginator != "")
@@ -415,6 +415,43 @@ namespace WcfWCService
                     if (sReturn2 != "Success")
                         sReturn = sReturn2;
                 }
+
+                return sReturn;
+            }
+        }
+
+        public string CreateProject(string sSessionId, string sUserId, string sFullName, string sPartNo, string sPartName,
+                                            string sProductName, string sPartType, string sFolderNameAndPath,
+                                            string sCheckInComments, string sPartDescription, string iProdOrLibrary, string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
+                ExampleService.MyJavaServiceClient client2 = GetWCService();
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
+                string sReturn = "";
+
+                sAttributeNames[0] = "Originator";
+                sAttributeNames[1] = "PartDesc";
+                //sAttributeNames[2] = "ProjectType";
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = sPartDescription;
+                //sAttributeValues[2] = sProjType;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+                //sAttributeTypes[2] = "string";
+
+                sReturn = client2.createpart(sPartNo, sPartName, sProductName, sPartType, sFolderNameAndPath, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
 
                 return sReturn;
             }

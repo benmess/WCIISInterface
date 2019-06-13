@@ -41,16 +41,22 @@ namespace WcfWCService
         string SetDocPartDescribedByLink(string sSessionId, string sUserId, string sDocNo, string sPartNo, string sWebAppId);
 
         [OperationContract]
-        [WebGet(UriTemplate = "createprojectworkitem/{sSessionId}/{sUserId}/{sFullName}/{sParentPartNo}/{sPartNo}/{sPartName}/{sProductName}/{sPartType}/{sPartUsageType}/{sPartUsageUnit}/{sFolderNameAndPath}/{sCheckInComments}/{sLineNumber}/{iProdOrLibrary}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        [WebGet(UriTemplate = "createprojectworkitem/{sSessionId}/{sUserId}/{sFullName}/{sParentPartNo}/{sPartNo}/{sPartName}/{sProductName}/{sPartType}/{sPartUsageType}/{sPartUsageUnit}/{sFolderNameAndPath}/{sCheckInComments}/{sLineNumber}/{sPartDescription}/{iProdOrLibrary}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string CreateProjectWorkItem(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sPartNo, string sPartName,
                                             string sProductName, string sPartType, string sPartUsageType, string sPartUsageUnit, string sFolderNameAndPath,
-                                            string sCheckInComments,string sLineNumber, string iProdOrLibrary, string sWebAppId);
+                                            string sCheckInComments, string sLineNumber, string sPartDescription, string iProdOrLibrary, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "insertexistingprojectworkitem/{sSessionId}/{sUserId}/{sFullName}/{sParentPartNo}/{sExistingPWIPartNo}/{sPartUsageType}/{sPartUsageUnit}/{sCheckInComments}/{sLineNumber}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string InsertExistingProjectWorkItem(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sExistingPWIPartNo,
                                                     string sPartUsageType, string sPartUsageUnit, string sCheckInComments, string sLineNumber, string sWebAppId);
-        
+
+        [OperationContract]
+        [WebGet(UriTemplate = "createproject/{sSessionId}/{sUserId}/{sFullName}/{sPartNo}/{sPartName}/{sProductName}/{sPartType}/{sFolderNameAndPath}/{sCheckInComments}/{sPartDescription}/{iProdOrLibrary}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string CreateProject(string sSessionId, string sUserId, string sFullName, string sPartNo, string sPartName,
+                                            string sProductName, string sPartType, string sFolderNameAndPath,
+                                            string sCheckInComments, string sPartDescription, string iProdOrLibrary, string sWebAppId);
+
         [OperationContract]
         [WebGet(UriTemplate = "createfronesisproject/{sSessionId}/{sUserId}/{sProjNo}/{sProjDesc}/{sProductName}/{sDocType}/{sPartType}/{sFolderNameAndPath}/{sClientDesc}/{sOriginator}/{sClientProjNo}/{sRevision}/{sCheckInComments}/{iProdOrLibrary}/{sWebAppId}/{sProjType}", ResponseFormat = WebMessageFormat.Xml)]
         string CreateFronesisProject(string sSessionId, string sUserId, string sProjNo, string sProjDesc, string sProductName, string sDocType, string sPartType, string sFolderNameAndPath,
