@@ -31,6 +31,12 @@ namespace WcfWCService
                            string sLongDesc, string sOriginator, string sOriginatorDocId, string sJobCode, string sRevision, string sCheckInComments, string iProdOrLibrary, string sWebAppId);
 
         [OperationContract]
+        [WebGet(UriTemplate = "createwcdoc2/{sSessionId}/{sUserId}/{sDocNo}/{sDocName}/{sProductName}/{sDocType}/{sFolderNameAndPath}/{sDesc}/{sOriginator}/{sOriginatorDocId}/{sJobCode}/{sRevision}/{sCheckInComments}/{iProdOrLibrary}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string CreateWCDoc2(string sSessionId, string sUserId, string sDocNo, string sDocName, string sProductName, string sDocType, string sFolderNameAndPath,
+                           string sDesc, string sOriginator, string sOriginatorDocId, string sJobCode, string sRevision, string sCheckInComments, string iProdOrLibrary, string sWebAppId);
+
+
+        [OperationContract]
         [WebGet(UriTemplate = "createworkexecutionpackage/{sSessionId}/{sUserId}/{sWorkItemId}/{sAssignedActivityId}/{sRoute}/{sPlannedWorkPackageNo}/{sWEDName}/{sProductName}/{sDocType}/{sFolderNameAndPath}/{sOriginator}/{sJobCode}/{sNew}/{sExistingWEDNo}/{sWebAppId}/{sSkipCompleteTask}", ResponseFormat = WebMessageFormat.Xml)]
         string CreateWorkExecutionPackage(string sSessionId, string sUserId, string sWorkItemId, string sAssignedActivityId, string sRoute, 
                                           string sPlannedWorkPackageNo, string sWEDName, string sProductName, string sDocType, string sFolderNameAndPath,
@@ -76,8 +82,13 @@ namespace WcfWCService
         string DeleteWCDoc(string sSessionId, string sUserId, string sFullName, string sDocNo, string sAttachFile, string bSecondary, string sWebAppId);
 
         [OperationContract]
-        [WebGet(UriTemplate = "setdocattributestring/{sSessionId}/{sUserId}/{sDocNo}/{sDocName}/{sLongDesc}/{sOriginator}/{sOriginatorDocId}/{sJobCode}/{sCheckInComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        [WebGet(UriTemplate = "setdocattributestrings/{sSessionId}/{sUserId}/{sDocNo}/{sDocName}/{sLongDesc}/{sOriginator}/{sOriginatorDocId}/{sJobCode}/{sCheckInComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string SetDocAttributeStrings(string sSessionId, string sUserId, string sDocNo, string sDocName, string sLongDesc, string sOriginator, string sOriginatorDocId, string sJobCode,
+                                      string sCheckInComments, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "setdocattributestrings2/{sSessionId}/{sUserId}/{sDocNo}/{sDocName}/{sDesc}/{sOriginator}/{sOriginatorDocId}/{sJobCode}/{sCheckInComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string SetDocAttributeStrings2(string sSessionId, string sUserId, string sDocNo, string sDocName, string sDesc, string sOriginator, string sOriginatorDocId, string sJobCode,
                                       string sCheckInComments, string sWebAppId);
 
         [OperationContract]
@@ -97,12 +108,12 @@ namespace WcfWCService
         string DeleteDocToDocRefs(string sSessionId, string sUserId, string sFullName, string sDocNo, string sReferencedDocNos, string sCheckinComments, string sWebAppId);
 
         [OperationContract]
-        [WebGet(UriTemplate = "setdoctopartref/{sSessionId}/{sUserId}/{sFullname}/{sDocNo}/{sPartNo}/{sCheckinComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
-        string SetDocToPartRef(string sSessionId, string sUserId, string sFullName, string sDocNo, string sPartNo, string sCheckinComments, string sWebAppId);
+        [WebGet(UriTemplate = "setdoctopartref/{sSessionId}/{sUserId}/{sFullname}/{sDocNo}/{sPartNo}/{sCheckinComments}/{sPartRefLinkType}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string SetDocToPartRef(string sSessionId, string sUserId, string sFullName, string sDocNo, string sPartNo, string sCheckinComments, string sPartRefLinkType, string sWebAppId);
 
         [OperationContract]
-        [WebGet(UriTemplate = "setdoctopartrefs/{sSessionId}/{sUserId}/{sFullname}/{sDocNo}/{sPartNos}/{sCheckinComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
-        string SetDocToPartRefs(string sSessionId, string sUserId, string sFullName, string sDocNo, string sPartNos, string sCheckinComments, string sWebAppId);
+        [WebGet(UriTemplate = "setdoctopartrefs/{sSessionId}/{sUserId}/{sFullname}/{sDocNo}/{sPartNos}/{sCheckinComments}/{sPartRefLinkType}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string SetDocToPartRefs(string sSessionId, string sUserId, string sFullName, string sDocNo, string sPartNos, string sCheckinComments, string sPartRefLinkType, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "deletedoctopartref/{sSessionId}/{sUserId}/{sFullname}/{sDocNo}/{sPartNo}/{sCheckinComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
@@ -363,11 +374,21 @@ namespace WcfWCService
                                     string sDriveRating, string sEquipRegFlag, string sIPRegFlag, string sIPAddress,
                                     string sCheckInComments, string sWebAppId);
 
+        [OperationContract]
+        [WebGet(UriTemplate = "setmaintenancetemplates/{sSessionId}/{sUserId}/{sWONo}/{sWOName}/{sTemplateIndex}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string SetMaintenanceTemplates(string sSessionId, string sUserId, string sWONo, string sWOName, string sTemplateIndex, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "emailmessage/{sSessionId}/{sUserId}/{sSubject}/{sBody}/{sAttachments}/{sRecipients}/{sCCRecipients}/{sBCCRecipients}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string emailmessage(string sSessionId, string sUserId, string sSubject, string sBody, string sAttachments, string sRecipients, string sCCRecipients, string sBCCRecipients, string sWebAppId);
 
+        [OperationContract]
+        [WebGet(UriTemplate = "setfuncdoctopartref/{sSessionId}/{sUserId}/{sFullname}/{sFuncDocNo}/{sPartNo}/{sSequenceNo}/{sPrimaryPart}/{sCheckinComments}/{sPartDocRefLinkType}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string SetFuncDocToPartRef(string sSessionId, string sUserId, string sFullName, string sFuncDocNo, string sPartNo, string sSequenceNo, string sPrimaryPart, string sPartDocRefLinkType, string sCheckinComments, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "updatefuncdoctopartref/{sSessionId}/{sUserId}/{sFullname}/{sFuncDocNo}/{sPartNo}/{sSequenceNo}/{sPrimaryPart}/{sCheckinComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string UpdateFuncDocToPartRef(string sSessionId, string sUserId, string sFullName, string sFuncDocNo, string sPartNo, string sSequenceNo, string sPrimaryPart, string sCheckinComments, string sWebAppId);
 
     }
 

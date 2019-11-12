@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="p+g9B7fh86vYmcz2EKJTtKv9mE8=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="kOLd+9pnY0FEdxZhMTH6GzJ1vRI=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="customBinding" name="MyJavaServicePortBinding">
       <properties>
@@ -716,10 +716,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="MyJavaServicePort" contract="ExampleService.MyJavaService" bindingType="customBinding" address="http://vsrs11.rs.local/Windchill/servlet/MyJavaService" bindingConfiguration="MyJavaServicePortBinding">
+    <endpoint name="MyJavaServicePort" contract="ExampleService.MyJavaService" bindingType="customBinding" address="http://vsrs11.vr.local/Windchill/servlet/MyJavaService" bindingConfiguration="MyJavaServicePortBinding">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://vsrs11.rs.local:80/Windchill/servlet/MyJavaService</serializedValue>
+          <serializedValue>http://vsrs11.vr.local:80/Windchill/servlet/MyJavaService</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
