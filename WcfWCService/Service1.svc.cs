@@ -911,6 +911,7 @@ namespace WcfWCService
             }
         }
 
+        //THis uses the special part reference type that takes attributes. Attributes for relationships cannot be updated in native Windchill with the exception of the Part to Part link.
         public string UpdateFuncDocToPartRef(string sSessionId, string sUserId, string sFullName, string sFuncDocNo, string sPartNo, string sSequenceNo, string sPrimaryPart, string sCheckinComments, string sWebAppId)
         {
             string[] sAttributeNames = new string[2];
@@ -2808,7 +2809,7 @@ namespace WcfWCService
 
         public string CreatePlantEquipItem(string sSessionId, string sUserId, string sFullName, string sPlantEquipNo,
                                            string sPlantEquipType, string sName, string sDesc, string sLongDesc, string sContSysType, string sDriveRating,
-                                           string sEquipRegFlag, string sIPRegFlag, string sIPAddress,
+                                           string sEquipRegFlag, string sIPRegFlag, string sIPAddress, string sComments, string sOpZone,
                                            string sProduct, string sFolder, string sCheckInComments, string sWebAppId)
         {
             string sReturn = "";
@@ -2819,9 +2820,9 @@ namespace WcfWCService
             }
             else
             {
-                string[] sAttributeNames = new string[8];
-                string[] sAttributeValues = new string[8];
-                string[] sAttributeTypes = new string[8];
+                string[] sAttributeNames = new string[10];
+                string[] sAttributeValues = new string[10];
+                string[] sAttributeTypes = new string[10];
 
                 sAttributeNames[0] = "Originator";
                 sAttributeNames[1] = "PartDesc";
@@ -2831,6 +2832,8 @@ namespace WcfWCService
                 sAttributeNames[5] = "EquipRegFlag";
                 sAttributeNames[6] = "IPRegFlag";
                 sAttributeNames[7] = "IPAddress";
+                sAttributeNames[8] = "Comments";
+                sAttributeNames[9] = "OpZone";
 
                 sAttributeValues[0] = sFullName;
                 sAttributeValues[1] = sDesc;
@@ -2840,6 +2843,8 @@ namespace WcfWCService
                 sAttributeValues[5] = sEquipRegFlag;
                 sAttributeValues[6] = sIPRegFlag;
                 sAttributeValues[7] = sIPAddress;
+                sAttributeValues[8] = sComments;
+                sAttributeValues[9] = sOpZone;
 
                 sAttributeTypes[0] = "string";
                 sAttributeTypes[1] = "string";
@@ -2849,6 +2854,8 @@ namespace WcfWCService
                 sAttributeTypes[5] = "boolean";
                 sAttributeTypes[6] = "boolean";
                 sAttributeTypes[7] = "string";
+                sAttributeTypes[8] = "string";
+                sAttributeTypes[9] = "string";
 
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaServiceClient client2 = GetWCService();
@@ -2865,8 +2872,9 @@ namespace WcfWCService
 
         public string UpdatePlantEquipItem(string sSessionId, string sUserId, string sFullName, string sPlantEquipNo, 
                                            string sName, string sDesc, string sLongDesc,
-                                           string sContSysType, string sDriveRating, string sEquipRegFlag, 
-                                           string sIPRegFlag, string sIPAddress, string sCheckInComments, string sWebAppId)
+                                           string sContSysType, string sDriveRating, string sEquipRegFlag,
+                                           string sIPRegFlag, string sIPAddress, string sComments, string sOpZone, 
+                                           string sCheckInComments, string sWebAppId)
         {
             string sReturn = "";
 
@@ -2876,9 +2884,9 @@ namespace WcfWCService
             }
             else
             {
-                string[] sAttributeNames = new string[8];
-                string[] sAttributeValues = new string[8];
-                string[] sAttributeTypes = new string[8];
+                string[] sAttributeNames = new string[10];
+                string[] sAttributeValues = new string[10];
+                string[] sAttributeTypes = new string[10];
 
                 sAttributeNames[0] = "Originator";
                 sAttributeNames[1] = "PartDesc";
@@ -2888,6 +2896,8 @@ namespace WcfWCService
                 sAttributeNames[5] = "EquipRegFlag";
                 sAttributeNames[6] = "IPRegFlag";
                 sAttributeNames[7] = "IPAddress";
+                sAttributeNames[8] = "Comments";
+                sAttributeNames[9] = "OpZone";
 
                 sAttributeValues[0] = sFullName;
                 sAttributeValues[1] = sDesc;
@@ -2897,6 +2907,8 @@ namespace WcfWCService
                 sAttributeValues[5] = sEquipRegFlag;
                 sAttributeValues[6] = sIPRegFlag;
                 sAttributeValues[7] = sIPAddress;
+                sAttributeValues[8] = sComments;
+                sAttributeValues[9] = sOpZone;
 
                 sAttributeTypes[0] = "string";
                 sAttributeTypes[1] = "string";
@@ -2906,6 +2918,8 @@ namespace WcfWCService
                 sAttributeTypes[5] = "boolean";
                 sAttributeTypes[6] = "boolean";
                 sAttributeTypes[7] = "string";
+                sAttributeTypes[8] = "string";
+                sAttributeTypes[9] = "string";
 
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaServiceClient client2 = GetWCService();
