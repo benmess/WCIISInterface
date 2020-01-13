@@ -18,11 +18,11 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://vsrs11.rs.local/Windchill/servlet/MyJavaService?wsdl" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://vsrs11/Windchill/servlet/MyJavaService?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="MyJavaServiceService.wsdl" MetadataType="Wsdl" ID="d0a50cd9-5511-47c8-9a8b-48bc83c81123" SourceId="1" SourceUrl="http://vsrs11.rs.local/Windchill/servlet/MyJavaService?wsdl" />
-    <MetadataFile FileName="MyJavaService.xsd" MetadataType="Schema" ID="a5ac533a-4679-4c42-ab34-2ddae4996ac7" SourceId="1" SourceUrl="http://vsrs11.rs.local/Windchill/servlet/MyJavaService?xsd=1" />
+    <MetadataFile FileName="MyJavaServiceService11.wsdl" MetadataType="Wsdl" ID="78357597-dc87-4ab8-83a4-2d377057d722" SourceId="1" SourceUrl="http://vsrs11/Windchill/servlet/MyJavaService?wsdl" />
+    <MetadataFile FileName="MyJavaService11.xsd" MetadataType="Schema" ID="aa85ab5f-ab25-4c13-8174-83950f8d87d5" SourceId="1" SourceUrl="http://vsrs11/Windchill/servlet/MyJavaService?xsd=1" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

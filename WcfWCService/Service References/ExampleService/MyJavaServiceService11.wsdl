@@ -1,0 +1,1495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:tns="http://myorg.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" name="MyJavaServiceService" targetNamespace="http://myorg.org/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702" xmlns:ssp="http://schemas.sun.com/2006/03/wss/server" xmlns:sunwsp="http://java.sun.com/xml/ns/wsit/policy" wsu:Id="TheSecurityPolicy">
+    <sp:SignedEncryptedSupportingTokens>
+      <wsp:Policy>
+        <sp:UsernameToken sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient">
+          <wsp:Policy>
+            <sp:WssUsernameToken10 />
+          </wsp:Policy>
+        </sp:UsernameToken>
+      </wsp:Policy>
+    </sp:SignedEncryptedSupportingTokens>
+    <sp:SymmetricBinding>
+      <wsp:Policy>
+        <sp:AlgorithmSuite>
+          <wsp:Policy>
+            <sp:Basic128 />
+          </wsp:Policy>
+        </sp:AlgorithmSuite>
+        <sp:IncludeTimestamp />
+        <sp:Layout>
+          <wsp:Policy>
+            <sp:Lax />
+          </wsp:Policy>
+        </sp:Layout>
+        <sp:OnlySignEntireHeadersAndBody />
+        <sp:ProtectionToken>
+          <wsp:Policy>
+            <sp:X509Token sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/Never">
+              <wsp:Policy>
+                <sp:RequireIssuerSerialReference />
+                <sp:WssX509V3Token10 />
+              </wsp:Policy>
+            </sp:X509Token>
+          </wsp:Policy>
+        </sp:ProtectionToken>
+      </wsp:Policy>
+    </sp:SymmetricBinding>
+    <sp:Wss11>
+      <wsp:Policy>
+        <sp:MustSupportRefEncryptedKey />
+        <sp:MustSupportRefIssuerSerial />
+        <sp:MustSupportRefThumbprint />
+      </wsp:Policy>
+    </sp:Wss11>
+    <wsam:Addressing />
+  </wsp:Policy>
+  <wsp:Policy xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702" wsu:Id="InputSecurityPolicy">
+    <sp:EncryptedParts>
+      <sp:Body />
+    </sp:EncryptedParts>
+    <sp:SignedParts>
+      <sp:Body />
+      <sp:Header Namespace="http://www.w3.org/2005/08/addressing" Name="ReplyTo" />
+      <sp:Header Name="SequenceAcknowledgement" Namespace="http://docs.oasis-open.org/ws-rx/wsrmp/200702" />
+      <sp:Header Namespace="http://www.w3.org/2005/08/addressing" Name="To" />
+      <sp:Header Namespace="http://www.w3.org/2005/08/addressing" Name="From" />
+      <sp:Header Namespace="http://www.w3.org/2005/08/addressing" Name="MessageID" />
+      <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+      <sp:Header Namespace="http://www.w3.org/2005/08/addressing" Name="Action" />
+      <sp:Header Namespace="http://www.w3.org/2005/08/addressing" Name="RelatesTo" />
+      <sp:Header Name="AckRequested" Namespace="http://docs.oasis-open.org/ws-rx/wsrmp/200702" />
+      <sp:Header Name="CreateSequence" Namespace="http://docs.oasis-open.org/ws-rx/wsrmp/200702" />
+      <sp:Header Name="Sequence" Namespace="http://docs.oasis-open.org/ws-rx/wsrmp/200702" />
+    </sp:SignedParts>
+  </wsp:Policy>
+  <wsp:Policy xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702" wsu:Id="OutputSecurityPolicy">
+    <sp:EncryptedParts>
+      <sp:Body />
+    </sp:EncryptedParts>
+    <sp:SignedParts>
+      <sp:Body />
+      <sp:Header Namespace="http://www.w3.org/2005/08/addressing" Name="ReplyTo" />
+      <sp:Header Name="SequenceAcknowledgement" Namespace="http://docs.oasis-open.org/ws-rx/wsrmp/200702" />
+      <sp:Header Namespace="http://www.w3.org/2005/08/addressing" Name="To" />
+      <sp:Header Namespace="http://www.w3.org/2005/08/addressing" Name="From" />
+      <sp:Header Namespace="http://www.w3.org/2005/08/addressing" Name="MessageID" />
+      <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+      <sp:Header Namespace="http://www.w3.org/2005/08/addressing" Name="Action" />
+      <sp:Header Namespace="http://www.w3.org/2005/08/addressing" Name="RelatesTo" />
+      <sp:Header Name="AckRequested" Namespace="http://docs.oasis-open.org/ws-rx/wsrmp/200702" />
+      <sp:Header Name="CreateSequence" Namespace="http://docs.oasis-open.org/ws-rx/wsrmp/200702" />
+      <sp:Header Name="Sequence" Namespace="http://docs.oasis-open.org/ws-rx/wsrmp/200702" />
+    </sp:SignedParts>
+  </wsp:Policy>
+  <types>
+    <xsd:schema>
+      <xsd:import schemaLocation="http://vsrs11:80/Windchill/servlet/MyJavaService?xsd=1" namespace="http://myorg.org/" />
+    </xsd:schema>
+  </types>
+  <message name="add">
+    <part name="parameters" element="tns:add" />
+  </message>
+  <message name="addResponse">
+    <part name="parameters" element="tns:addResponse" />
+  </message>
+  <message name="updateprodorderpartpartlinkwithattributes">
+    <part name="parameters" element="tns:updateprodorderpartpartlinkwithattributes" />
+  </message>
+  <message name="updateprodorderpartpartlinkwithattributesResponse">
+    <part name="parameters" element="tns:updateprodorderpartpartlinkwithattributesResponse" />
+  </message>
+  <message name="WTException">
+    <part name="fault" element="tns:WTException" />
+  </message>
+  <message name="InvocationTargetException">
+    <part name="fault" element="tns:InvocationTargetException" />
+  </message>
+  <message name="deletepartpartlinkbydispatchdocket">
+    <part name="parameters" element="tns:deletepartpartlinkbydispatchdocket" />
+  </message>
+  <message name="deletepartpartlinkbydispatchdocketResponse">
+    <part name="parameters" element="tns:deletepartpartlinkbydispatchdocketResponse" />
+  </message>
+  <message name="FileNotFoundException">
+    <part name="fault" element="tns:FileNotFoundException" />
+  </message>
+  <message name="PropertyVetoException">
+    <part name="fault" element="tns:PropertyVetoException" />
+  </message>
+  <message name="IOException">
+    <part name="fault" element="tns:IOException" />
+  </message>
+  <message name="deletepartpartlinkbyproductionorder">
+    <part name="parameters" element="tns:deletepartpartlinkbyproductionorder" />
+  </message>
+  <message name="deletepartpartlinkbyproductionorderResponse">
+    <part name="parameters" element="tns:deletepartpartlinkbyproductionorderResponse" />
+  </message>
+  <message name="deletepartpartlinkbylinenumber">
+    <part name="parameters" element="tns:deletepartpartlinkbylinenumber" />
+  </message>
+  <message name="deletepartpartlinkbylinenumberResponse">
+    <part name="parameters" element="tns:deletepartpartlinkbylinenumberResponse" />
+  </message>
+  <message name="setpartusageattributesfromlinenumber">
+    <part name="parameters" element="tns:setpartusageattributesfromlinenumber" />
+  </message>
+  <message name="setpartusageattributesfromlinenumberResponse">
+    <part name="parameters" element="tns:setpartusageattributesfromlinenumberResponse" />
+  </message>
+  <message name="Exception">
+    <part name="fault" element="tns:Exception" />
+  </message>
+  <message name="setpartmultipleusageattributes">
+    <part name="parameters" element="tns:setpartmultipleusageattributes" />
+  </message>
+  <message name="setpartmultipleusageattributesResponse">
+    <part name="parameters" element="tns:setpartmultipleusageattributesResponse" />
+  </message>
+  <message name="setpartreferencedbydoclinkwithattributes">
+    <part name="parameters" element="tns:setpartreferencedbydoclinkwithattributes" />
+  </message>
+  <message name="setpartreferencedbydoclinkwithattributesResponse">
+    <part name="parameters" element="tns:setpartreferencedbydoclinkwithattributesResponse" />
+  </message>
+  <message name="updatepartreferencedbydoclinkwithattributes">
+    <part name="parameters" element="tns:updatepartreferencedbydoclinkwithattributes" />
+  </message>
+  <message name="updatepartreferencedbydoclinkwithattributesResponse">
+    <part name="parameters" element="tns:updatepartreferencedbydoclinkwithattributesResponse" />
+  </message>
+  <message name="setdocattributestrings">
+    <part name="parameters" element="tns:setdocattributestrings" />
+  </message>
+  <message name="setdocattributestringsResponse">
+    <part name="parameters" element="tns:setdocattributestringsResponse" />
+  </message>
+  <message name="setdocattributes">
+    <part name="parameters" element="tns:setdocattributes" />
+  </message>
+  <message name="setdocattributesResponse">
+    <part name="parameters" element="tns:setdocattributesResponse" />
+  </message>
+  <message name="deleteattachment">
+    <part name="parameters" element="tns:deleteattachment" />
+  </message>
+  <message name="deleteattachmentResponse">
+    <part name="parameters" element="tns:deleteattachmentResponse" />
+  </message>
+  <message name="setdoctodocref">
+    <part name="parameters" element="tns:setdoctodocref" />
+  </message>
+  <message name="setdoctodocrefResponse">
+    <part name="parameters" element="tns:setdoctodocrefResponse" />
+  </message>
+  <message name="setdoctodocrefs">
+    <part name="parameters" element="tns:setdoctodocrefs" />
+  </message>
+  <message name="setdoctodocrefsResponse">
+    <part name="parameters" element="tns:setdoctodocrefsResponse" />
+  </message>
+  <message name="setdoctopartref">
+    <part name="parameters" element="tns:setdoctopartref" />
+  </message>
+  <message name="setdoctopartrefResponse">
+    <part name="parameters" element="tns:setdoctopartrefResponse" />
+  </message>
+  <message name="setdoctopartrefs">
+    <part name="parameters" element="tns:setdoctopartrefs" />
+  </message>
+  <message name="setdoctopartrefsResponse">
+    <part name="parameters" element="tns:setdoctopartrefsResponse" />
+  </message>
+  <message name="setdoctopartdescribedby">
+    <part name="parameters" element="tns:setdoctopartdescribedby" />
+  </message>
+  <message name="setdoctopartdescribedbyResponse">
+    <part name="parameters" element="tns:setdoctopartdescribedbyResponse" />
+  </message>
+  <message name="setdoctopartdescribedbymulti">
+    <part name="parameters" element="tns:setdoctopartdescribedbymulti" />
+  </message>
+  <message name="setdoctopartdescribedbymultiResponse">
+    <part name="parameters" element="tns:setdoctopartdescribedbymultiResponse" />
+  </message>
+  <message name="deletedoctodocref">
+    <part name="parameters" element="tns:deletedoctodocref" />
+  </message>
+  <message name="deletedoctodocrefResponse">
+    <part name="parameters" element="tns:deletedoctodocrefResponse" />
+  </message>
+  <message name="deletedoctodocrefs">
+    <part name="parameters" element="tns:deletedoctodocrefs" />
+  </message>
+  <message name="deletedoctodocrefsResponse">
+    <part name="parameters" element="tns:deletedoctodocrefsResponse" />
+  </message>
+  <message name="deletedoctopartref">
+    <part name="parameters" element="tns:deletedoctopartref" />
+  </message>
+  <message name="deletedoctopartrefResponse">
+    <part name="parameters" element="tns:deletedoctopartrefResponse" />
+  </message>
+  <message name="deletedoctopartrefs">
+    <part name="parameters" element="tns:deletedoctopartrefs" />
+  </message>
+  <message name="deletedoctopartrefsResponse">
+    <part name="parameters" element="tns:deletedoctopartrefsResponse" />
+  </message>
+  <message name="deletedoctopartdescribeby">
+    <part name="parameters" element="tns:deletedoctopartdescribeby" />
+  </message>
+  <message name="deletedoctopartdescribebyResponse">
+    <part name="parameters" element="tns:deletedoctopartdescribebyResponse" />
+  </message>
+  <message name="deletedoctopartdescribebys">
+    <part name="parameters" element="tns:deletedoctopartdescribebys" />
+  </message>
+  <message name="deletedoctopartdescribebysResponse">
+    <part name="parameters" element="tns:deletedoctopartdescribebysResponse" />
+  </message>
+  <message name="setpartattributes">
+    <part name="parameters" element="tns:setpartattributes" />
+  </message>
+  <message name="setpartattributesResponse">
+    <part name="parameters" element="tns:setpartattributesResponse" />
+  </message>
+  <message name="setpartpartlink">
+    <part name="parameters" element="tns:setpartpartlink" />
+  </message>
+  <message name="setpartpartlinkResponse">
+    <part name="parameters" element="tns:setpartpartlinkResponse" />
+  </message>
+  <message name="setpartpartlinkwithattributes">
+    <part name="parameters" element="tns:setpartpartlinkwithattributes" />
+  </message>
+  <message name="setpartpartlinkwithattributesResponse">
+    <part name="parameters" element="tns:setpartpartlinkwithattributesResponse" />
+  </message>
+  <message name="deletepartpartlink">
+    <part name="parameters" element="tns:deletepartpartlink" />
+  </message>
+  <message name="deletepartpartlinkResponse">
+    <part name="parameters" element="tns:deletepartpartlinkResponse" />
+  </message>
+  <message name="createchangenotice">
+    <part name="parameters" element="tns:createchangenotice" />
+  </message>
+  <message name="createchangenoticeResponse">
+    <part name="parameters" element="tns:createchangenoticeResponse" />
+  </message>
+  <message name="deletecnattachment">
+    <part name="parameters" element="tns:deletecnattachment" />
+  </message>
+  <message name="deletecnattachmentResponse">
+    <part name="parameters" element="tns:deletecnattachmentResponse" />
+  </message>
+  <message name="createproblemreport">
+    <part name="parameters" element="tns:createproblemreport" />
+  </message>
+  <message name="createproblemreportResponse">
+    <part name="parameters" element="tns:createproblemreportResponse" />
+  </message>
+  <message name="deleteprobreport">
+    <part name="parameters" element="tns:deleteprobreport" />
+  </message>
+  <message name="deleteprobreportResponse">
+    <part name="parameters" element="tns:deleteprobreportResponse" />
+  </message>
+  <message name="deleteprattachment">
+    <part name="parameters" element="tns:deleteprattachment" />
+  </message>
+  <message name="deleteprattachmentResponse">
+    <part name="parameters" element="tns:deleteprattachmentResponse" />
+  </message>
+  <message name="setpraffectedparts">
+    <part name="parameters" element="tns:setpraffectedparts" />
+  </message>
+  <message name="setpraffectedpartsResponse">
+    <part name="parameters" element="tns:setpraffectedpartsResponse" />
+  </message>
+  <message name="deletepraffectedparts">
+    <part name="parameters" element="tns:deletepraffectedparts" />
+  </message>
+  <message name="deletepraffectedpartsResponse">
+    <part name="parameters" element="tns:deletepraffectedpartsResponse" />
+  </message>
+  <message name="setproblemreportattributes">
+    <part name="parameters" element="tns:setproblemreportattributes" />
+  </message>
+  <message name="setproblemreportattributesResponse">
+    <part name="parameters" element="tns:setproblemreportattributesResponse" />
+  </message>
+  <message name="setproblemreportstate">
+    <part name="parameters" element="tns:setproblemreportstate" />
+  </message>
+  <message name="setproblemreportstateResponse">
+    <part name="parameters" element="tns:setproblemreportstateResponse" />
+  </message>
+  <message name="setdocrevision">
+    <part name="parameters" element="tns:setdocrevision" />
+  </message>
+  <message name="setdocrevisionResponse">
+    <part name="parameters" element="tns:setdocrevisionResponse" />
+  </message>
+  <message name="setpartusagelinkqty">
+    <part name="parameters" element="tns:setpartusagelinkqty" />
+  </message>
+  <message name="setpartusagelinkqtyResponse">
+    <part name="parameters" element="tns:setpartusagelinkqtyResponse" />
+  </message>
+  <message name="doccreate2">
+    <part name="parameters" element="tns:doccreate2" />
+  </message>
+  <message name="doccreate2Response">
+    <part name="parameters" element="tns:doccreate2Response" />
+  </message>
+  <message name="doccreate">
+    <part name="parameters" element="tns:doccreate" />
+  </message>
+  <message name="doccreateResponse">
+    <part name="parameters" element="tns:doccreateResponse" />
+  </message>
+  <message name="attachdoc">
+    <part name="parameters" element="tns:attachdoc" />
+  </message>
+  <message name="attachdocResponse">
+    <part name="parameters" element="tns:attachdocResponse" />
+  </message>
+  <message name="setdocdoclink">
+    <part name="parameters" element="tns:setdocdoclink" />
+  </message>
+  <message name="setdocdoclinkResponse">
+    <part name="parameters" element="tns:setdocdoclinkResponse" />
+  </message>
+  <message name="createpart">
+    <part name="parameters" element="tns:createpart" />
+  </message>
+  <message name="createpartResponse">
+    <part name="parameters" element="tns:createpartResponse" />
+  </message>
+  <message name="copypart">
+    <part name="parameters" element="tns:copypart" />
+  </message>
+  <message name="copypartResponse">
+    <part name="parameters" element="tns:copypartResponse" />
+  </message>
+  <message name="attachcndoc">
+    <part name="parameters" element="tns:attachcndoc" />
+  </message>
+  <message name="attachcndocResponse">
+    <part name="parameters" element="tns:attachcndocResponse" />
+  </message>
+  <message name="attachprdoc">
+    <part name="parameters" element="tns:attachprdoc" />
+  </message>
+  <message name="attachprdocResponse">
+    <part name="parameters" element="tns:attachprdocResponse" />
+  </message>
+  <message name="setpartstate">
+    <part name="parameters" element="tns:setpartstate" />
+  </message>
+  <message name="setpartstateResponse">
+    <part name="parameters" element="tns:setpartstateResponse" />
+  </message>
+  <message name="completetask">
+    <part name="parameters" element="tns:completetask" />
+  </message>
+  <message name="completetaskResponse">
+    <part name="parameters" element="tns:completetaskResponse" />
+  </message>
+  <message name="emailmessage">
+    <part name="parameters" element="tns:emailmessage" />
+  </message>
+  <message name="emailmessageResponse">
+    <part name="parameters" element="tns:emailmessageResponse" />
+  </message>
+  <message name="updatedispatchdocketpartpartlinkwithattributes">
+    <part name="parameters" element="tns:updatedispatchdocketpartpartlinkwithattributes" />
+  </message>
+  <message name="updatedispatchdocketpartpartlinkwithattributesResponse">
+    <part name="parameters" element="tns:updatedispatchdocketpartpartlinkwithattributesResponse" />
+  </message>
+  <portType name="MyJavaService">
+    <operation name="add">
+      <input wsam:Action="http://myorg.org/MyJavaService/addRequest" message="tns:add" />
+      <output wsam:Action="http://myorg.org/MyJavaService/addResponse" message="tns:addResponse" />
+    </operation>
+    <operation name="updateprodorderpartpartlinkwithattributes">
+      <input wsam:Action="http://myorg.org/MyJavaService/updateprodorderpartpartlinkwithattributesRequest" message="tns:updateprodorderpartpartlinkwithattributes" />
+      <output wsam:Action="http://myorg.org/MyJavaService/updateprodorderpartpartlinkwithattributesResponse" message="tns:updateprodorderpartpartlinkwithattributesResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/updateprodorderpartpartlinkwithattributes/Fault/WTException" name="WTException" message="tns:WTException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/updateprodorderpartpartlinkwithattributes/Fault/InvocationTargetException" name="InvocationTargetException" message="tns:InvocationTargetException" />
+    </operation>
+    <operation name="deletepartpartlinkbydispatchdocket">
+      <input wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbydispatchdocketRequest" message="tns:deletepartpartlinkbydispatchdocket" />
+      <output wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbydispatchdocketResponse" message="tns:deletepartpartlinkbydispatchdocketResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbydispatchdocket/Fault/FileNotFoundException" name="FileNotFoundException" message="tns:FileNotFoundException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbydispatchdocket/Fault/InvocationTargetException" name="InvocationTargetException" message="tns:InvocationTargetException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbydispatchdocket/Fault/WTException" name="WTException" message="tns:WTException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbydispatchdocket/Fault/PropertyVetoException" name="PropertyVetoException" message="tns:PropertyVetoException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbydispatchdocket/Fault/IOException" name="IOException" message="tns:IOException" />
+    </operation>
+    <operation name="deletepartpartlinkbyproductionorder">
+      <input wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbyproductionorderRequest" message="tns:deletepartpartlinkbyproductionorder" />
+      <output wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbyproductionorderResponse" message="tns:deletepartpartlinkbyproductionorderResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbyproductionorder/Fault/FileNotFoundException" name="FileNotFoundException" message="tns:FileNotFoundException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbyproductionorder/Fault/InvocationTargetException" name="InvocationTargetException" message="tns:InvocationTargetException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbyproductionorder/Fault/WTException" name="WTException" message="tns:WTException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbyproductionorder/Fault/PropertyVetoException" name="PropertyVetoException" message="tns:PropertyVetoException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbyproductionorder/Fault/IOException" name="IOException" message="tns:IOException" />
+    </operation>
+    <operation name="deletepartpartlinkbylinenumber">
+      <input wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbylinenumberRequest" message="tns:deletepartpartlinkbylinenumber" />
+      <output wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbylinenumberResponse" message="tns:deletepartpartlinkbylinenumberResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbylinenumber/Fault/FileNotFoundException" name="FileNotFoundException" message="tns:FileNotFoundException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbylinenumber/Fault/InvocationTargetException" name="InvocationTargetException" message="tns:InvocationTargetException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbylinenumber/Fault/WTException" name="WTException" message="tns:WTException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbylinenumber/Fault/PropertyVetoException" name="PropertyVetoException" message="tns:PropertyVetoException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkbylinenumber/Fault/IOException" name="IOException" message="tns:IOException" />
+    </operation>
+    <operation name="setpartusageattributesfromlinenumber">
+      <input wsam:Action="http://myorg.org/MyJavaService/setpartusageattributesfromlinenumberRequest" message="tns:setpartusageattributesfromlinenumber" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setpartusageattributesfromlinenumberResponse" message="tns:setpartusageattributesfromlinenumberResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setpartusageattributesfromlinenumber/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="setpartmultipleusageattributes">
+      <input wsam:Action="http://myorg.org/MyJavaService/setpartmultipleusageattributesRequest" message="tns:setpartmultipleusageattributes" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setpartmultipleusageattributesResponse" message="tns:setpartmultipleusageattributesResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setpartmultipleusageattributes/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="setpartreferencedbydoclinkwithattributes">
+      <input wsam:Action="http://myorg.org/MyJavaService/setpartreferencedbydoclinkwithattributesRequest" message="tns:setpartreferencedbydoclinkwithattributes" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setpartreferencedbydoclinkwithattributesResponse" message="tns:setpartreferencedbydoclinkwithattributesResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setpartreferencedbydoclinkwithattributes/Fault/WTException" name="WTException" message="tns:WTException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setpartreferencedbydoclinkwithattributes/Fault/InvocationTargetException" name="InvocationTargetException" message="tns:InvocationTargetException" />
+    </operation>
+    <operation name="updatepartreferencedbydoclinkwithattributes">
+      <input wsam:Action="http://myorg.org/MyJavaService/updatepartreferencedbydoclinkwithattributesRequest" message="tns:updatepartreferencedbydoclinkwithattributes" />
+      <output wsam:Action="http://myorg.org/MyJavaService/updatepartreferencedbydoclinkwithattributesResponse" message="tns:updatepartreferencedbydoclinkwithattributesResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/updatepartreferencedbydoclinkwithattributes/Fault/WTException" name="WTException" message="tns:WTException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/updatepartreferencedbydoclinkwithattributes/Fault/InvocationTargetException" name="InvocationTargetException" message="tns:InvocationTargetException" />
+    </operation>
+    <operation name="setdocattributestrings">
+      <input wsam:Action="http://myorg.org/MyJavaService/setdocattributestringsRequest" message="tns:setdocattributestrings" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setdocattributestringsResponse" message="tns:setdocattributestringsResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setdocattributestrings/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="setdocattributes">
+      <input wsam:Action="http://myorg.org/MyJavaService/setdocattributesRequest" message="tns:setdocattributes" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setdocattributesResponse" message="tns:setdocattributesResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setdocattributes/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="deleteattachment">
+      <input wsam:Action="http://myorg.org/MyJavaService/deleteattachmentRequest" message="tns:deleteattachment" />
+      <output wsam:Action="http://myorg.org/MyJavaService/deleteattachmentResponse" message="tns:deleteattachmentResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deleteattachment/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="setdoctodocref">
+      <input wsam:Action="http://myorg.org/MyJavaService/setdoctodocrefRequest" message="tns:setdoctodocref" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setdoctodocrefResponse" message="tns:setdoctodocrefResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setdoctodocref/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="setdoctodocrefs">
+      <input wsam:Action="http://myorg.org/MyJavaService/setdoctodocrefsRequest" message="tns:setdoctodocrefs" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setdoctodocrefsResponse" message="tns:setdoctodocrefsResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setdoctodocrefs/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="setdoctopartref">
+      <input wsam:Action="http://myorg.org/MyJavaService/setdoctopartrefRequest" message="tns:setdoctopartref" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setdoctopartrefResponse" message="tns:setdoctopartrefResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setdoctopartref/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="setdoctopartrefs">
+      <input wsam:Action="http://myorg.org/MyJavaService/setdoctopartrefsRequest" message="tns:setdoctopartrefs" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setdoctopartrefsResponse" message="tns:setdoctopartrefsResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setdoctopartrefs/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="setdoctopartdescribedby">
+      <input wsam:Action="http://myorg.org/MyJavaService/setdoctopartdescribedbyRequest" message="tns:setdoctopartdescribedby" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setdoctopartdescribedbyResponse" message="tns:setdoctopartdescribedbyResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setdoctopartdescribedby/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="setdoctopartdescribedbymulti">
+      <input wsam:Action="http://myorg.org/MyJavaService/setdoctopartdescribedbymultiRequest" message="tns:setdoctopartdescribedbymulti" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setdoctopartdescribedbymultiResponse" message="tns:setdoctopartdescribedbymultiResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setdoctopartdescribedbymulti/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="deletedoctodocref">
+      <input wsam:Action="http://myorg.org/MyJavaService/deletedoctodocrefRequest" message="tns:deletedoctodocref" />
+      <output wsam:Action="http://myorg.org/MyJavaService/deletedoctodocrefResponse" message="tns:deletedoctodocrefResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletedoctodocref/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="deletedoctodocrefs">
+      <input wsam:Action="http://myorg.org/MyJavaService/deletedoctodocrefsRequest" message="tns:deletedoctodocrefs" />
+      <output wsam:Action="http://myorg.org/MyJavaService/deletedoctodocrefsResponse" message="tns:deletedoctodocrefsResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletedoctodocrefs/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="deletedoctopartref">
+      <input wsam:Action="http://myorg.org/MyJavaService/deletedoctopartrefRequest" message="tns:deletedoctopartref" />
+      <output wsam:Action="http://myorg.org/MyJavaService/deletedoctopartrefResponse" message="tns:deletedoctopartrefResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletedoctopartref/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="deletedoctopartrefs">
+      <input wsam:Action="http://myorg.org/MyJavaService/deletedoctopartrefsRequest" message="tns:deletedoctopartrefs" />
+      <output wsam:Action="http://myorg.org/MyJavaService/deletedoctopartrefsResponse" message="tns:deletedoctopartrefsResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletedoctopartrefs/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="deletedoctopartdescribeby">
+      <input wsam:Action="http://myorg.org/MyJavaService/deletedoctopartdescribebyRequest" message="tns:deletedoctopartdescribeby" />
+      <output wsam:Action="http://myorg.org/MyJavaService/deletedoctopartdescribebyResponse" message="tns:deletedoctopartdescribebyResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletedoctopartdescribeby/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="deletedoctopartdescribebys">
+      <input wsam:Action="http://myorg.org/MyJavaService/deletedoctopartdescribebysRequest" message="tns:deletedoctopartdescribebys" />
+      <output wsam:Action="http://myorg.org/MyJavaService/deletedoctopartdescribebysResponse" message="tns:deletedoctopartdescribebysResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletedoctopartdescribebys/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="setpartattributes">
+      <input wsam:Action="http://myorg.org/MyJavaService/setpartattributesRequest" message="tns:setpartattributes" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setpartattributesResponse" message="tns:setpartattributesResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setpartattributes/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="setpartpartlink">
+      <input wsam:Action="http://myorg.org/MyJavaService/setpartpartlinkRequest" message="tns:setpartpartlink" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setpartpartlinkResponse" message="tns:setpartpartlinkResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setpartpartlink/Fault/WTException" name="WTException" message="tns:WTException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setpartpartlink/Fault/InvocationTargetException" name="InvocationTargetException" message="tns:InvocationTargetException" />
+    </operation>
+    <operation name="setpartpartlinkwithattributes">
+      <input wsam:Action="http://myorg.org/MyJavaService/setpartpartlinkwithattributesRequest" message="tns:setpartpartlinkwithattributes" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setpartpartlinkwithattributesResponse" message="tns:setpartpartlinkwithattributesResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setpartpartlinkwithattributes/Fault/WTException" name="WTException" message="tns:WTException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setpartpartlinkwithattributes/Fault/InvocationTargetException" name="InvocationTargetException" message="tns:InvocationTargetException" />
+    </operation>
+    <operation name="deletepartpartlink">
+      <input wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkRequest" message="tns:deletepartpartlink" />
+      <output wsam:Action="http://myorg.org/MyJavaService/deletepartpartlinkResponse" message="tns:deletepartpartlinkResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlink/Fault/FileNotFoundException" name="FileNotFoundException" message="tns:FileNotFoundException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlink/Fault/InvocationTargetException" name="InvocationTargetException" message="tns:InvocationTargetException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlink/Fault/WTException" name="WTException" message="tns:WTException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlink/Fault/PropertyVetoException" name="PropertyVetoException" message="tns:PropertyVetoException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepartpartlink/Fault/IOException" name="IOException" message="tns:IOException" />
+    </operation>
+    <operation name="createchangenotice">
+      <input wsam:Action="http://myorg.org/MyJavaService/createchangenoticeRequest" message="tns:createchangenotice" />
+      <output wsam:Action="http://myorg.org/MyJavaService/createchangenoticeResponse" message="tns:createchangenoticeResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/createchangenotice/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="deletecnattachment">
+      <input wsam:Action="http://myorg.org/MyJavaService/deletecnattachmentRequest" message="tns:deletecnattachment" />
+      <output wsam:Action="http://myorg.org/MyJavaService/deletecnattachmentResponse" message="tns:deletecnattachmentResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletecnattachment/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="createproblemreport">
+      <input wsam:Action="http://myorg.org/MyJavaService/createproblemreportRequest" message="tns:createproblemreport" />
+      <output wsam:Action="http://myorg.org/MyJavaService/createproblemreportResponse" message="tns:createproblemreportResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/createproblemreport/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="deleteprobreport">
+      <input wsam:Action="http://myorg.org/MyJavaService/deleteprobreportRequest" message="tns:deleteprobreport" />
+      <output wsam:Action="http://myorg.org/MyJavaService/deleteprobreportResponse" message="tns:deleteprobreportResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deleteprobreport/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="deleteprattachment">
+      <input wsam:Action="http://myorg.org/MyJavaService/deleteprattachmentRequest" message="tns:deleteprattachment" />
+      <output wsam:Action="http://myorg.org/MyJavaService/deleteprattachmentResponse" message="tns:deleteprattachmentResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deleteprattachment/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="setpraffectedparts">
+      <input wsam:Action="http://myorg.org/MyJavaService/setpraffectedpartsRequest" message="tns:setpraffectedparts" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setpraffectedpartsResponse" message="tns:setpraffectedpartsResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setpraffectedparts/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="deletepraffectedparts">
+      <input wsam:Action="http://myorg.org/MyJavaService/deletepraffectedpartsRequest" message="tns:deletepraffectedparts" />
+      <output wsam:Action="http://myorg.org/MyJavaService/deletepraffectedpartsResponse" message="tns:deletepraffectedpartsResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepraffectedparts/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="setproblemreportattributes">
+      <input wsam:Action="http://myorg.org/MyJavaService/setproblemreportattributesRequest" message="tns:setproblemreportattributes" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setproblemreportattributesResponse" message="tns:setproblemreportattributesResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setproblemreportattributes/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="setproblemreportstate">
+      <input wsam:Action="http://myorg.org/MyJavaService/setproblemreportstateRequest" message="tns:setproblemreportstate" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setproblemreportstateResponse" message="tns:setproblemreportstateResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setproblemreportstate/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="setdocrevision">
+      <input wsam:Action="http://myorg.org/MyJavaService/setdocrevisionRequest" message="tns:setdocrevision" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setdocrevisionResponse" message="tns:setdocrevisionResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setdocrevision/Fault/FileNotFoundException" name="FileNotFoundException" message="tns:FileNotFoundException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setdocrevision/Fault/InvocationTargetException" name="InvocationTargetException" message="tns:InvocationTargetException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setdocrevision/Fault/WTException" name="WTException" message="tns:WTException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setdocrevision/Fault/PropertyVetoException" name="PropertyVetoException" message="tns:PropertyVetoException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setdocrevision/Fault/IOException" name="IOException" message="tns:IOException" />
+    </operation>
+    <operation name="setpartusagelinkqty">
+      <input wsam:Action="http://myorg.org/MyJavaService/setpartusagelinkqtyRequest" message="tns:setpartusagelinkqty" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setpartusagelinkqtyResponse" message="tns:setpartusagelinkqtyResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setpartusagelinkqty/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="doccreate2">
+      <input wsam:Action="http://myorg.org/MyJavaService/doccreate2Request" message="tns:doccreate2" />
+      <output wsam:Action="http://myorg.org/MyJavaService/doccreate2Response" message="tns:doccreate2Response" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/doccreate2/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="doccreate">
+      <input wsam:Action="http://myorg.org/MyJavaService/doccreateRequest" message="tns:doccreate" />
+      <output wsam:Action="http://myorg.org/MyJavaService/doccreateResponse" message="tns:doccreateResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/doccreate/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="attachdoc">
+      <input wsam:Action="http://myorg.org/MyJavaService/attachdocRequest" message="tns:attachdoc" />
+      <output wsam:Action="http://myorg.org/MyJavaService/attachdocResponse" message="tns:attachdocResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/attachdoc/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="setdocdoclink">
+      <input wsam:Action="http://myorg.org/MyJavaService/setdocdoclinkRequest" message="tns:setdocdoclink" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setdocdoclinkResponse" message="tns:setdocdoclinkResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setdocdoclink/Fault/WTException" name="WTException" message="tns:WTException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setdocdoclink/Fault/InvocationTargetException" name="InvocationTargetException" message="tns:InvocationTargetException" />
+    </operation>
+    <operation name="createpart">
+      <input wsam:Action="http://myorg.org/MyJavaService/createpartRequest" message="tns:createpart" />
+      <output wsam:Action="http://myorg.org/MyJavaService/createpartResponse" message="tns:createpartResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/createpart/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="copypart">
+      <input wsam:Action="http://myorg.org/MyJavaService/copypartRequest" message="tns:copypart" />
+      <output wsam:Action="http://myorg.org/MyJavaService/copypartResponse" message="tns:copypartResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/copypart/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="attachcndoc">
+      <input wsam:Action="http://myorg.org/MyJavaService/attachcndocRequest" message="tns:attachcndoc" />
+      <output wsam:Action="http://myorg.org/MyJavaService/attachcndocResponse" message="tns:attachcndocResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/attachcndoc/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="attachprdoc">
+      <input wsam:Action="http://myorg.org/MyJavaService/attachprdocRequest" message="tns:attachprdoc" />
+      <output wsam:Action="http://myorg.org/MyJavaService/attachprdocResponse" message="tns:attachprdocResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/attachprdoc/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="setpartstate">
+      <input wsam:Action="http://myorg.org/MyJavaService/setpartstateRequest" message="tns:setpartstate" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setpartstateResponse" message="tns:setpartstateResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setpartstate/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="completetask">
+      <input wsam:Action="http://myorg.org/MyJavaService/completetaskRequest" message="tns:completetask" />
+      <output wsam:Action="http://myorg.org/MyJavaService/completetaskResponse" message="tns:completetaskResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/completetask/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="emailmessage">
+      <input wsam:Action="http://myorg.org/MyJavaService/emailmessageRequest" message="tns:emailmessage" />
+      <output wsam:Action="http://myorg.org/MyJavaService/emailmessageResponse" message="tns:emailmessageResponse" />
+    </operation>
+    <operation name="updatedispatchdocketpartpartlinkwithattributes">
+      <input wsam:Action="http://myorg.org/MyJavaService/updatedispatchdocketpartpartlinkwithattributesRequest" message="tns:updatedispatchdocketpartpartlinkwithattributes" />
+      <output wsam:Action="http://myorg.org/MyJavaService/updatedispatchdocketpartpartlinkwithattributesResponse" message="tns:updatedispatchdocketpartpartlinkwithattributesResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/updatedispatchdocketpartpartlinkwithattributes/Fault/WTException" name="WTException" message="tns:WTException" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/updatedispatchdocketpartpartlinkwithattributes/Fault/InvocationTargetException" name="InvocationTargetException" message="tns:InvocationTargetException" />
+    </operation>
+  </portType>
+  <binding name="MyJavaServicePortBinding" type="tns:MyJavaService">
+    <wsp:PolicyReference URI="#TheSecurityPolicy" />
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="add">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="updateprodorderpartpartlinkwithattributes">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="WTException">
+        <soap:fault use="literal" name="WTException" namespace="" />
+      </fault>
+      <fault name="InvocationTargetException">
+        <soap:fault use="literal" name="InvocationTargetException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="deletepartpartlinkbydispatchdocket">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="FileNotFoundException">
+        <soap:fault use="literal" name="FileNotFoundException" namespace="" />
+      </fault>
+      <fault name="InvocationTargetException">
+        <soap:fault use="literal" name="InvocationTargetException" namespace="" />
+      </fault>
+      <fault name="WTException">
+        <soap:fault use="literal" name="WTException" namespace="" />
+      </fault>
+      <fault name="PropertyVetoException">
+        <soap:fault use="literal" name="PropertyVetoException" namespace="" />
+      </fault>
+      <fault name="IOException">
+        <soap:fault use="literal" name="IOException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="deletepartpartlinkbyproductionorder">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="FileNotFoundException">
+        <soap:fault use="literal" name="FileNotFoundException" namespace="" />
+      </fault>
+      <fault name="InvocationTargetException">
+        <soap:fault use="literal" name="InvocationTargetException" namespace="" />
+      </fault>
+      <fault name="WTException">
+        <soap:fault use="literal" name="WTException" namespace="" />
+      </fault>
+      <fault name="PropertyVetoException">
+        <soap:fault use="literal" name="PropertyVetoException" namespace="" />
+      </fault>
+      <fault name="IOException">
+        <soap:fault use="literal" name="IOException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="deletepartpartlinkbylinenumber">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="FileNotFoundException">
+        <soap:fault use="literal" name="FileNotFoundException" namespace="" />
+      </fault>
+      <fault name="InvocationTargetException">
+        <soap:fault use="literal" name="InvocationTargetException" namespace="" />
+      </fault>
+      <fault name="WTException">
+        <soap:fault use="literal" name="WTException" namespace="" />
+      </fault>
+      <fault name="PropertyVetoException">
+        <soap:fault use="literal" name="PropertyVetoException" namespace="" />
+      </fault>
+      <fault name="IOException">
+        <soap:fault use="literal" name="IOException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setpartusageattributesfromlinenumber">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setpartmultipleusageattributes">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setpartreferencedbydoclinkwithattributes">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="WTException">
+        <soap:fault use="literal" name="WTException" namespace="" />
+      </fault>
+      <fault name="InvocationTargetException">
+        <soap:fault use="literal" name="InvocationTargetException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="updatepartreferencedbydoclinkwithattributes">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="WTException">
+        <soap:fault use="literal" name="WTException" namespace="" />
+      </fault>
+      <fault name="InvocationTargetException">
+        <soap:fault use="literal" name="InvocationTargetException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setdocattributestrings">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setdocattributes">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="deleteattachment">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setdoctodocref">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setdoctodocrefs">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setdoctopartref">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setdoctopartrefs">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setdoctopartdescribedby">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setdoctopartdescribedbymulti">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="deletedoctodocref">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="deletedoctodocrefs">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="deletedoctopartref">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="deletedoctopartrefs">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="deletedoctopartdescribeby">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="deletedoctopartdescribebys">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setpartattributes">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setpartpartlink">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="WTException">
+        <soap:fault use="literal" name="WTException" namespace="" />
+      </fault>
+      <fault name="InvocationTargetException">
+        <soap:fault use="literal" name="InvocationTargetException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setpartpartlinkwithattributes">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="WTException">
+        <soap:fault use="literal" name="WTException" namespace="" />
+      </fault>
+      <fault name="InvocationTargetException">
+        <soap:fault use="literal" name="InvocationTargetException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="deletepartpartlink">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="FileNotFoundException">
+        <soap:fault use="literal" name="FileNotFoundException" namespace="" />
+      </fault>
+      <fault name="InvocationTargetException">
+        <soap:fault use="literal" name="InvocationTargetException" namespace="" />
+      </fault>
+      <fault name="WTException">
+        <soap:fault use="literal" name="WTException" namespace="" />
+      </fault>
+      <fault name="PropertyVetoException">
+        <soap:fault use="literal" name="PropertyVetoException" namespace="" />
+      </fault>
+      <fault name="IOException">
+        <soap:fault use="literal" name="IOException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="createchangenotice">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="deletecnattachment">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="createproblemreport">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="deleteprobreport">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="deleteprattachment">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setpraffectedparts">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="deletepraffectedparts">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setproblemreportattributes">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setproblemreportstate">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setdocrevision">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="FileNotFoundException">
+        <soap:fault use="literal" name="FileNotFoundException" namespace="" />
+      </fault>
+      <fault name="InvocationTargetException">
+        <soap:fault use="literal" name="InvocationTargetException" namespace="" />
+      </fault>
+      <fault name="WTException">
+        <soap:fault use="literal" name="WTException" namespace="" />
+      </fault>
+      <fault name="PropertyVetoException">
+        <soap:fault use="literal" name="PropertyVetoException" namespace="" />
+      </fault>
+      <fault name="IOException">
+        <soap:fault use="literal" name="IOException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setpartusagelinkqty">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="doccreate2">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="doccreate">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="attachdoc">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setdocdoclink">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="WTException">
+        <soap:fault use="literal" name="WTException" namespace="" />
+      </fault>
+      <fault name="InvocationTargetException">
+        <soap:fault use="literal" name="InvocationTargetException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="createpart">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="copypart">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="attachcndoc">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="attachprdoc">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="setpartstate">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="completetask">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="emailmessage">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="updatedispatchdocketpartpartlinkwithattributes">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="WTException">
+        <soap:fault use="literal" name="WTException" namespace="" />
+      </fault>
+      <fault name="InvocationTargetException">
+        <soap:fault use="literal" name="InvocationTargetException" namespace="" />
+      </fault>
+    </operation>
+  </binding>
+  <service name="MyJavaServiceService">
+    <port name="MyJavaServicePort" binding="tns:MyJavaServicePortBinding">
+      <soap:address location="http://vsrs11:80/Windchill/servlet/MyJavaService" />
+    </port>
+  </service>
+</definitions>

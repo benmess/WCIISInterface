@@ -1,0 +1,954 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://myorg.org/" targetNamespace="http://myorg.org/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Exception" type="tns:Exception" />
+  <xs:element name="FileNotFoundException" type="tns:FileNotFoundException" />
+  <xs:element name="IOException" type="tns:IOException" />
+  <xs:element name="InvocationTargetException" type="tns:InvocationTargetException" />
+  <xs:element name="PropertyVetoException" type="tns:PropertyVetoException" />
+  <xs:element name="WTException" type="tns:WTException" />
+  <xs:element name="add" type="tns:add" />
+  <xs:element name="addResponse" type="tns:addResponse" />
+  <xs:element name="attachcndoc" type="tns:attachcndoc" />
+  <xs:element name="attachcndocResponse" type="tns:attachcndocResponse" />
+  <xs:element name="attachdoc" type="tns:attachdoc" />
+  <xs:element name="attachdocResponse" type="tns:attachdocResponse" />
+  <xs:element name="attachprdoc" type="tns:attachprdoc" />
+  <xs:element name="attachprdocResponse" type="tns:attachprdocResponse" />
+  <xs:element name="completetask" type="tns:completetask" />
+  <xs:element name="completetaskResponse" type="tns:completetaskResponse" />
+  <xs:element name="copypart" type="tns:copypart" />
+  <xs:element name="copypartResponse" type="tns:copypartResponse" />
+  <xs:element name="createchangenotice" type="tns:createchangenotice" />
+  <xs:element name="createchangenoticeResponse" type="tns:createchangenoticeResponse" />
+  <xs:element name="createpart" type="tns:createpart" />
+  <xs:element name="createpartResponse" type="tns:createpartResponse" />
+  <xs:element name="createproblemreport" type="tns:createproblemreport" />
+  <xs:element name="createproblemreportResponse" type="tns:createproblemreportResponse" />
+  <xs:element name="deleteattachment" type="tns:deleteattachment" />
+  <xs:element name="deleteattachmentResponse" type="tns:deleteattachmentResponse" />
+  <xs:element name="deletecnattachment" type="tns:deletecnattachment" />
+  <xs:element name="deletecnattachmentResponse" type="tns:deletecnattachmentResponse" />
+  <xs:element name="deletedoctodocref" type="tns:deletedoctodocref" />
+  <xs:element name="deletedoctodocrefResponse" type="tns:deletedoctodocrefResponse" />
+  <xs:element name="deletedoctodocrefs" type="tns:deletedoctodocrefs" />
+  <xs:element name="deletedoctodocrefsResponse" type="tns:deletedoctodocrefsResponse" />
+  <xs:element name="deletedoctopartdescribeby" type="tns:deletedoctopartdescribeby" />
+  <xs:element name="deletedoctopartdescribebyResponse" type="tns:deletedoctopartdescribebyResponse" />
+  <xs:element name="deletedoctopartdescribebys" type="tns:deletedoctopartdescribebys" />
+  <xs:element name="deletedoctopartdescribebysResponse" type="tns:deletedoctopartdescribebysResponse" />
+  <xs:element name="deletedoctopartref" type="tns:deletedoctopartref" />
+  <xs:element name="deletedoctopartrefResponse" type="tns:deletedoctopartrefResponse" />
+  <xs:element name="deletedoctopartrefs" type="tns:deletedoctopartrefs" />
+  <xs:element name="deletedoctopartrefsResponse" type="tns:deletedoctopartrefsResponse" />
+  <xs:element name="deletepartpartlink" type="tns:deletepartpartlink" />
+  <xs:element name="deletepartpartlinkResponse" type="tns:deletepartpartlinkResponse" />
+  <xs:element name="deletepartpartlinkbydispatchdocket" type="tns:deletepartpartlinkbydispatchdocket" />
+  <xs:element name="deletepartpartlinkbydispatchdocketResponse" type="tns:deletepartpartlinkbydispatchdocketResponse" />
+  <xs:element name="deletepartpartlinkbylinenumber" type="tns:deletepartpartlinkbylinenumber" />
+  <xs:element name="deletepartpartlinkbylinenumberResponse" type="tns:deletepartpartlinkbylinenumberResponse" />
+  <xs:element name="deletepartpartlinkbyproductionorder" type="tns:deletepartpartlinkbyproductionorder" />
+  <xs:element name="deletepartpartlinkbyproductionorderResponse" type="tns:deletepartpartlinkbyproductionorderResponse" />
+  <xs:element name="deletepraffectedparts" type="tns:deletepraffectedparts" />
+  <xs:element name="deletepraffectedpartsResponse" type="tns:deletepraffectedpartsResponse" />
+  <xs:element name="deleteprattachment" type="tns:deleteprattachment" />
+  <xs:element name="deleteprattachmentResponse" type="tns:deleteprattachmentResponse" />
+  <xs:element name="deleteprobreport" type="tns:deleteprobreport" />
+  <xs:element name="deleteprobreportResponse" type="tns:deleteprobreportResponse" />
+  <xs:element name="doccreate" type="tns:doccreate" />
+  <xs:element name="doccreate2" type="tns:doccreate2" />
+  <xs:element name="doccreate2Response" type="tns:doccreate2Response" />
+  <xs:element name="doccreateResponse" type="tns:doccreateResponse" />
+  <xs:element name="emailmessage" type="tns:emailmessage" />
+  <xs:element name="emailmessageResponse" type="tns:emailmessageResponse" />
+  <xs:element name="setdocattributes" type="tns:setdocattributes" />
+  <xs:element name="setdocattributesResponse" type="tns:setdocattributesResponse" />
+  <xs:element name="setdocattributestrings" type="tns:setdocattributestrings" />
+  <xs:element name="setdocattributestringsResponse" type="tns:setdocattributestringsResponse" />
+  <xs:element name="setdocdoclink" type="tns:setdocdoclink" />
+  <xs:element name="setdocdoclinkResponse" type="tns:setdocdoclinkResponse" />
+  <xs:element name="setdocrevision" type="tns:setdocrevision" />
+  <xs:element name="setdocrevisionResponse" type="tns:setdocrevisionResponse" />
+  <xs:element name="setdoctodocref" type="tns:setdoctodocref" />
+  <xs:element name="setdoctodocrefResponse" type="tns:setdoctodocrefResponse" />
+  <xs:element name="setdoctodocrefs" type="tns:setdoctodocrefs" />
+  <xs:element name="setdoctodocrefsResponse" type="tns:setdoctodocrefsResponse" />
+  <xs:element name="setdoctopartdescribedby" type="tns:setdoctopartdescribedby" />
+  <xs:element name="setdoctopartdescribedbyResponse" type="tns:setdoctopartdescribedbyResponse" />
+  <xs:element name="setdoctopartdescribedbymulti" type="tns:setdoctopartdescribedbymulti" />
+  <xs:element name="setdoctopartdescribedbymultiResponse" type="tns:setdoctopartdescribedbymultiResponse" />
+  <xs:element name="setdoctopartref" type="tns:setdoctopartref" />
+  <xs:element name="setdoctopartrefResponse" type="tns:setdoctopartrefResponse" />
+  <xs:element name="setdoctopartrefs" type="tns:setdoctopartrefs" />
+  <xs:element name="setdoctopartrefsResponse" type="tns:setdoctopartrefsResponse" />
+  <xs:element name="setpartattributes" type="tns:setpartattributes" />
+  <xs:element name="setpartattributesResponse" type="tns:setpartattributesResponse" />
+  <xs:element name="setpartmultipleusageattributes" type="tns:setpartmultipleusageattributes" />
+  <xs:element name="setpartmultipleusageattributesResponse" type="tns:setpartmultipleusageattributesResponse" />
+  <xs:element name="setpartpartlink" type="tns:setpartpartlink" />
+  <xs:element name="setpartpartlinkResponse" type="tns:setpartpartlinkResponse" />
+  <xs:element name="setpartpartlinkwithattributes" type="tns:setpartpartlinkwithattributes" />
+  <xs:element name="setpartpartlinkwithattributesResponse" type="tns:setpartpartlinkwithattributesResponse" />
+  <xs:element name="setpartreferencedbydoclinkwithattributes" type="tns:setpartreferencedbydoclinkwithattributes" />
+  <xs:element name="setpartreferencedbydoclinkwithattributesResponse" type="tns:setpartreferencedbydoclinkwithattributesResponse" />
+  <xs:element name="setpartstate" type="tns:setpartstate" />
+  <xs:element name="setpartstateResponse" type="tns:setpartstateResponse" />
+  <xs:element name="setpartusageattributesfromlinenumber" type="tns:setpartusageattributesfromlinenumber" />
+  <xs:element name="setpartusageattributesfromlinenumberResponse" type="tns:setpartusageattributesfromlinenumberResponse" />
+  <xs:element name="setpartusagelinkqty" type="tns:setpartusagelinkqty" />
+  <xs:element name="setpartusagelinkqtyResponse" type="tns:setpartusagelinkqtyResponse" />
+  <xs:element name="setpraffectedparts" type="tns:setpraffectedparts" />
+  <xs:element name="setpraffectedpartsResponse" type="tns:setpraffectedpartsResponse" />
+  <xs:element name="setproblemreportattributes" type="tns:setproblemreportattributes" />
+  <xs:element name="setproblemreportattributesResponse" type="tns:setproblemreportattributesResponse" />
+  <xs:element name="setproblemreportstate" type="tns:setproblemreportstate" />
+  <xs:element name="setproblemreportstateResponse" type="tns:setproblemreportstateResponse" />
+  <xs:element name="updatedispatchdocketpartpartlinkwithattributes" type="tns:updatedispatchdocketpartpartlinkwithattributes" />
+  <xs:element name="updatedispatchdocketpartpartlinkwithattributesResponse" type="tns:updatedispatchdocketpartpartlinkwithattributesResponse" />
+  <xs:element name="updatepartreferencedbydoclinkwithattributes" type="tns:updatepartreferencedbydoclinkwithattributes" />
+  <xs:element name="updatepartreferencedbydoclinkwithattributesResponse" type="tns:updatepartreferencedbydoclinkwithattributesResponse" />
+  <xs:element name="updateprodorderpartpartlinkwithattributes" type="tns:updateprodorderpartpartlinkwithattributes" />
+  <xs:element name="updateprodorderpartpartlinkwithattributesResponse" type="tns:updateprodorderpartpartlinkwithattributesResponse" />
+  <xs:complexType name="updatedispatchdocketpartpartlinkwithattributes">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element name="arg3" type="xs:double" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+      <xs:element minOccurs="0" name="arg6" type="xs:string" />
+      <xs:element minOccurs="0" name="arg7" type="xs:string" />
+      <xs:element name="arg8" type="xs:long" />
+      <xs:element name="arg9" type="xs:long" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg10" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg11" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg12" nillable="true" type="xs:string" />
+      <xs:element name="arg13" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updatedispatchdocketpartpartlinkwithattributesResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WTException">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="WTMessage" type="tns:wtMessage" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="additionalMessageArray" nillable="true" type="xs:anyType" />
+      <xs:element minOccurs="0" name="additionalMessages" type="xs:string" />
+      <xs:element minOccurs="0" name="exceptionIdentifier" type="xs:string" />
+      <xs:element minOccurs="0" name="message" type="xs:string" />
+      <xs:element minOccurs="0" name="nestedThrowable" type="tns:throwable" />
+      <xs:element minOccurs="0" name="standardMessage" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="wtMessage">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:complexType name="throwable">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="stackTrace" nillable="true" type="tns:stackTraceElement" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="stackTraceElement" final="extension restriction">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:complexType name="InvocationTargetException">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string" />
+      <xs:element minOccurs="0" name="targetException" type="tns:throwable" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="createproblemreport">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg5" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg6" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg7" nillable="true" type="xs:string" />
+      <xs:element name="arg8" type="xs:int" />
+      <xs:element minOccurs="0" name="arg9" type="xs:string" />
+      <xs:element name="arg10" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="createproblemreportResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Exception">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletedoctopartdescribebys">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg2" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element name="arg4" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletedoctopartdescribebysResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdoctopartdescribedby">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element name="arg4" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdoctopartdescribedbyResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdocdoclink">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element name="arg5" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdocdoclinkResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="doccreate2">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg6" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg7" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="arg8" type="xs:string" />
+      <xs:element name="arg9" type="xs:int" />
+      <xs:element name="arg10" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="doccreate2Response">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartpartlink">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element name="arg3" type="xs:double" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+      <xs:element minOccurs="0" name="arg6" type="xs:string" />
+      <xs:element name="arg7" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartpartlinkResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="completetask">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:long" />
+      <xs:element name="arg1" type="xs:long" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg3" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg4" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg5" nillable="true" type="xs:string" />
+      <xs:element name="arg6" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="completetaskResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartmultipleusageattributes">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg1" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg3" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg4" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg5" nillable="true" type="xs:string" />
+      <xs:element name="arg6" type="xs:int" />
+      <xs:element name="arg7" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartmultipleusageattributesResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteattachment">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:boolean" />
+      <xs:element name="arg4" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteattachmentResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="add">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int" />
+      <xs:element name="arg1" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="addResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdocattributestrings">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg2" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg3" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element name="arg5" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdocattributestringsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="emailmessage">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg2" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+      <xs:element name="arg6" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="emailmessageResponse">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:complexType name="deletecnattachment">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element name="arg2" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletecnattachmentResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteprobreport">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element name="arg1" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteprobreportResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletepartpartlinkbylinenumber">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element name="arg1" type="xs:long" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element name="arg5" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletepartpartlinkbylinenumberResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FileNotFoundException">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PropertyVetoException">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string" />
+      <xs:element minOccurs="0" name="propertyChangeEvent" type="tns:propertyChangeEvent" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="propertyChangeEvent">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:eventObject">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="propagationId" type="xs:anyType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="eventObject">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:complexType name="IOException">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletepartpartlinkbydispatchdocket">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element name="arg2" type="xs:long" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+      <xs:element name="arg6" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletepartpartlinkbydispatchdocketResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="doccreate">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg6" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg7" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="arg8" type="xs:string" />
+      <xs:element name="arg9" type="xs:int" />
+      <xs:element name="arg10" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="doccreateResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updateprodorderpartpartlinkwithattributes">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element name="arg3" type="xs:double" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+      <xs:element minOccurs="0" name="arg6" type="xs:string" />
+      <xs:element minOccurs="0" name="arg7" type="xs:string" />
+      <xs:element name="arg8" type="xs:long" />
+      <xs:element name="arg9" type="xs:long" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg10" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg11" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg12" nillable="true" type="xs:string" />
+      <xs:element name="arg13" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updateprodorderpartpartlinkwithattributesResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updatepartreferencedbydoclinkwithattributes">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg3" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg4" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg5" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="arg6" type="xs:string" />
+      <xs:element name="arg7" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updatepartreferencedbydoclinkwithattributesResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setproblemreportstate">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element name="arg2" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setproblemreportstateResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletedoctodocrefs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg2" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element name="arg4" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletedoctodocrefsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdoctodocrefs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg2" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element name="arg4" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdoctodocrefsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletepartpartlink">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element name="arg4" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletepartpartlinkResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="createchangenotice">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg5" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg6" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg7" nillable="true" type="xs:string" />
+      <xs:element name="arg8" type="xs:int" />
+      <xs:element name="arg9" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="createchangenoticeResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartstate">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element name="arg2" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartstateResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletepartpartlinkbyproductionorder">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element name="arg2" type="xs:long" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+      <xs:element name="arg6" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletepartpartlinkbyproductionorderResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartpartlinkwithattributes">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element name="arg3" type="xs:double" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+      <xs:element minOccurs="0" name="arg6" type="xs:string" />
+      <xs:element name="arg7" type="xs:long" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg8" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg9" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg10" nillable="true" type="xs:string" />
+      <xs:element name="arg11" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartpartlinkwithattributesResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="attachdoc">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:boolean" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+      <xs:element name="arg6" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="attachdocResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpraffectedparts">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg1" nillable="true" type="xs:string" />
+      <xs:element name="arg2" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpraffectedpartsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdoctopartrefs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg2" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element name="arg5" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdoctopartrefsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletedoctopartrefs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg2" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element name="arg4" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletedoctopartrefsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdocrevision">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element name="arg2" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdocrevisionResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletedoctopartdescribeby">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element name="arg4" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletedoctopartdescribebyResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdoctopartdescribedbymulti">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg2" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element name="arg4" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdoctopartdescribedbymultiResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletepraffectedparts">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg1" nillable="true" type="xs:string" />
+      <xs:element name="arg2" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletepraffectedpartsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="createpart">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg5" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg6" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg7" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="arg8" type="xs:string" />
+      <xs:element name="arg9" type="xs:int" />
+      <xs:element name="arg10" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="createpartResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdoctopartref">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element name="arg5" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdoctopartrefResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdoctodocref">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element name="arg4" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdoctodocrefResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdocattributes">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg2" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg3" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg4" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+      <xs:element name="arg6" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setdocattributesResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletedoctopartref">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element name="arg4" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletedoctopartrefResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="copypart">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+      <xs:element name="arg6" type="xs:int" />
+      <xs:element name="arg7" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="copypartResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartattributes">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg2" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg3" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg4" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+      <xs:element name="arg6" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartattributesResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletedoctodocref">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element name="arg4" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletedoctodocrefResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setproblemreportattributes">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg2" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg3" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg4" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+      <xs:element name="arg6" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setproblemreportattributesResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartreferencedbydoclinkwithattributes">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg3" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg4" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg5" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="arg6" type="xs:string" />
+      <xs:element minOccurs="0" name="arg7" type="xs:string" />
+      <xs:element name="arg8" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartreferencedbydoclinkwithattributesResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteprattachment">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element name="arg2" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteprattachmentResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartusagelinkqty">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element name="arg2" type="xs:double" />
+      <xs:element name="arg3" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartusagelinkqtyResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="attachprdoc">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element name="arg3" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="attachprdocResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="attachcndoc">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element name="arg3" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="attachcndocResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartusageattributesfromlinenumber">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element name="arg2" type="xs:long" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg3" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg4" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg5" nillable="true" type="xs:string" />
+      <xs:element name="arg6" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartusageattributesfromlinenumberResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

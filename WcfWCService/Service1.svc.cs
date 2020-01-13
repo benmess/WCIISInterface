@@ -15,7 +15,8 @@ using System.IO;
 using System.Data.SqlClient;
 using System.Data;
 using System.Net;
-
+using word = Microsoft.Office.Interop.Word;
+using DocumentFormat.OpenXml.Packaging;
 
 namespace WcfWCService
 {
@@ -152,6 +153,46 @@ namespace WcfWCService
             SP.RunStoredProc();
         }
 
+        public string GetConstantValue(string sConstantName, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            rst.SetWebApp(iWebAppId);
+            string sRtn = "";
+            string sSQL = "SELECT isnull(Value,'') as Value FROM tblConstants WHERE Name = '" + sConstantName + "'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+
+            if (rst.m_RecordCount > 0)
+            {
+                sRtn = rst.Get_NVarchar(ds, "Value", 0);
+            }
+
+            ds.Dispose();
+
+            return sRtn;
+
+
+        }
+
+        public string GetTemplateName(int iTemplateCode, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            rst.SetWebApp(iWebAppId);
+            string sRtn = "";
+            string sSQL = "select TemplateFilename from tblDocTemplates where Code = " + iTemplateCode;
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+
+            if (rst.m_RecordCount > 0)
+            {
+                sRtn = rst.Get_NVarchar(ds, "TemplateFilename", 0);
+            }
+
+            ds.Dispose();
+
+            return sRtn;
+
+
+        }
+
         public string add(string sSessionId, string sUserId, string a, string b, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -208,6 +249,62 @@ namespace WcfWCService
 
 
                 sAttributeValues[0] = sLongDesc;
+                sAttributeValues[1] = sOriginator;
+
+                if (sOriginatorDocId != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, 3);
+                    Array.Resize<string>(ref sAttributeValues, 3);
+                    sAttributeNames[2] = "OrigDocId";
+                    sAttributeValues[2] = sOriginatorDocId;
+
+                    if (sJobCode != "")
+                    {
+                        Array.Resize<string>(ref sAttributeNames, 4);
+                        Array.Resize<string>(ref sAttributeValues, 4);
+                        sAttributeNames[3] = "JobCode";
+                        sAttributeValues[3] = sJobCode;
+                    }
+
+                }
+                else
+                {
+                    if (sJobCode != "")
+                    {
+                        Array.Resize<string>(ref sAttributeNames, 3);
+                        Array.Resize<string>(ref sAttributeValues, 3);
+                        sAttributeNames[2] = "JobCode";
+                        sAttributeValues[2] = sJobCode;
+                    }
+
+                }
+
+
+                return client2.doccreate(sDocNo, sDocName, sProductName, sDocType, sFolderNameAndPath, sRevision, sAttributeNames, sAttributeValues, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string CreateWCDoc2(string sSessionId, string sUserId, string sDocNo, string sDocName, string sProductName, string sDocType, string sFolderNameAndPath,
+                                  string sDesc, string sOriginator, string sOriginatorDocId, string sJobCode, string sRevision, string sCheckInComments, string iProdOrLibrary, string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
+                ExampleService.MyJavaServiceClient client2 = GetWCService();
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+
+                sAttributeNames[0] = "description";
+                sAttributeNames[1] = "Originator";
+
+
+                sAttributeValues[0] = sDesc;
                 sAttributeValues[1] = sOriginator;
 
                 if (sOriginatorDocId != "")
@@ -363,7 +460,7 @@ namespace WcfWCService
 
         public string CreateProjectWorkItem(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sPartNo, string sPartName,
                                             string sProductName, string sPartType, string sPartUsageType, string sPartUsageUnit, string sFolderNameAndPath,
-                                            string sCheckInComments, string sLineNumber, string iProdOrLibrary, string sWebAppId)
+                                            string sCheckInComments, string sLineNumber, string sPartDescription, string iProdOrLibrary, string sWebAppId)
         {
 
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -375,9 +472,9 @@ namespace WcfWCService
                 Update_User_Time(sUserId, sSessionId);
                 int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
                 ExampleService.MyJavaServiceClient client2 = GetWCService();
-                string[] sAttributeNames = new string[1];
-                string[] sAttributeValues = new string[1];
-                string[] sAttributeTypes = new string[1];
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
                 string[] sAttributeNamesLink = new string[0];
                 string[] sAttributeValuesLink = new string[0];
                 string[] sAttributeTypesLink = new string[0];
@@ -385,15 +482,15 @@ namespace WcfWCService
                 string sReturn2 = "";
 
                 sAttributeNames[0] = "Originator";
-                //sAttributeNames[1] = "ClientDesc";
+                sAttributeNames[1] = "PartDesc";
                 //sAttributeNames[2] = "ProjectType";
 
                 sAttributeValues[0] = sFullName;
-                //sAttributeValues[1] = sClientDesc;
+                sAttributeValues[1] = sPartDescription;
                 //sAttributeValues[2] = sProjType;
 
                 sAttributeTypes[0] = "string";
-                //sAttributeTypes[1] = "string";
+                sAttributeTypes[1] = "string";
                 //sAttributeTypes[2] = "string";
 
                 //if (sOriginator != "")
@@ -415,6 +512,43 @@ namespace WcfWCService
                     if (sReturn2 != "Success")
                         sReturn = sReturn2;
                 }
+
+                return sReturn;
+            }
+        }
+
+        public string CreateProject(string sSessionId, string sUserId, string sFullName, string sPartNo, string sPartName,
+                                            string sProductName, string sPartType, string sFolderNameAndPath,
+                                            string sCheckInComments, string sPartDescription, string iProdOrLibrary, string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
+                ExampleService.MyJavaServiceClient client2 = GetWCService();
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
+                string sReturn = "";
+
+                sAttributeNames[0] = "Originator";
+                sAttributeNames[1] = "PartDesc";
+                //sAttributeNames[2] = "ProjectType";
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = sPartDescription;
+                //sAttributeValues[2] = sProjType;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+                //sAttributeTypes[2] = "string";
+
+                sReturn = client2.createpart(sPartNo, sPartName, sProductName, sPartType, sFolderNameAndPath, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
 
                 return sReturn;
             }
@@ -525,7 +659,7 @@ namespace WcfWCService
                     if (sReturn.StartsWith("Success"))
                     {
                         sCheckInComments = "Set referenced by link between project document and project part with the identical number " + sProjNo;
-                        sReturn2 = client2.setdoctopartref(sOriginator, sProjNo, sProjNo, sCheckInComments, Convert.ToInt16(sWebAppId));
+                        sReturn2 = client2.setdoctopartref(sOriginator, sProjNo, sProjNo, sCheckInComments, "wt.part.WTPartReferenceLink", Convert.ToInt16(sWebAppId));
                         if (sReturn2 != "Success")
                             sReturn = sReturn2;
                     }
@@ -639,6 +773,39 @@ namespace WcfWCService
             }
         }
 
+        public string SetDocAttributeStrings2(string sSessionId, string sUserId, string sDocNo, string sDocName, string sDesc, string sOriginator, string sOriginatorDocId, string sJobCode, string sCheckInComments, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaServiceClient client2 = GetWCService();
+                string[] sAttributeNames = new string[3];
+                string[] sAttributeValues = new string[3];
+
+                sAttributeNames[0] = "description";
+                sAttributeNames[1] = "Originator";
+                sAttributeNames[2] = "OrigDocId";
+
+                sAttributeValues[0] = sDesc;
+                sAttributeValues[1] = sOriginator;
+                sAttributeValues[2] = sOriginatorDocId;
+
+                if (sJobCode != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, 4);
+                    Array.Resize<string>(ref sAttributeValues, 4);
+                    sAttributeNames[3] = "JobCode";
+                    sAttributeValues[3] = sJobCode;
+                }
+
+                return client2.setdocattributestrings(sDocNo, sDocName, sAttributeNames, sAttributeValues, sCheckInComments, Convert.ToInt16(sWebAppId));
+            }
+        }
+
         public string SetDocToDocRef(string sSessionId, string sUserId, string sFullName, string sDocNo, string sReferencedDocNo, string sCheckinComments, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -701,7 +868,7 @@ namespace WcfWCService
             }
         }
 
-        public string SetDocToPartRef(string sSessionId, string sUserId, string sFullName, string sDocNo, string sPartNo, string sCheckinComments, string sWebAppId)
+        public string SetDocToPartRef(string sSessionId, string sUserId, string sFullName, string sDocNo, string sPartNo, string sCheckinComments, string sPartRefLinkType, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -711,11 +878,76 @@ namespace WcfWCService
             {
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaServiceClient client2 = GetWCService();
-                return client2.setdoctopartref(sFullName, sDocNo, sPartNo, sCheckinComments, Convert.ToInt16(sWebAppId));
+                return client2.setdoctopartref(sFullName, sDocNo, sPartNo, sCheckinComments, sPartRefLinkType, Convert.ToInt16(sWebAppId));
             }
         }
 
-        public string SetDocToPartRefs(string sSessionId, string sUserId, string sFullName, string sDocNo, string sPartNos, string sCheckinComments, string sWebAppId)
+        public string SetFuncDocToPartRef(string sSessionId, string sUserId, string sFullName, string sFuncDocNo, string sPartNo, string sSequenceNo, string sPrimaryPart, string sPartDocRefLinkType, string sCheckinComments, string sWebAppId)
+        {
+            string[] sAttributeNames = new string[2];
+            string[] sAttributeValues = new string[2];
+            string[] sAttributeTypes = new string[2];
+
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaServiceClient client2 = GetWCService();
+
+                sAttributeNames[0] = "SequenceNo";
+                sAttributeNames[1] = "PrimaryPart";
+
+                sAttributeValues[0] = sSequenceNo;
+                sAttributeValues[1] = sPrimaryPart;
+
+                sAttributeTypes[0] = "long";
+                sAttributeTypes[1] = "bool";
+
+                return client2.setpartreferencedbydoclinkwithattributes(sFullName, sFuncDocNo, sPartNo, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, sPartDocRefLinkType, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        //THis uses the special part reference type that takes attributes. Attributes for relationships cannot be updated in native Windchill with the exception of the Part to Part link.
+        public string UpdateFuncDocToPartRef(string sSessionId, string sUserId, string sFullName, string sFuncDocNo, string sPartNo, string sSequenceNo, string sPrimaryPart, string sCheckinComments, string sWebAppId)
+        {
+            string[] sAttributeNames = new string[2];
+            string[] sAttributeValues = new string[2];
+            string[] sAttributeTypes = new string[2];
+
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaServiceClient client2 = GetWCService();
+
+                sAttributeNames[0] = "SequenceNo";
+                sAttributeNames[1] = "PrimaryPart";
+
+                sAttributeValues[0] = sSequenceNo;
+
+                if (sPrimaryPart == "1" || sPrimaryPart == "Yes" || sPrimaryPart == "Y")
+                    sPrimaryPart = "true";
+                else
+                    sPrimaryPart = "false";
+
+                sAttributeValues[1] = sPrimaryPart;
+
+                sAttributeTypes[0] = "long";
+                sAttributeTypes[1] = "bool";
+
+                return client2.updatepartreferencedbydoclinkwithattributes(sFullName, sFuncDocNo, sPartNo, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string SetDocToPartRefs(string sSessionId, string sUserId, string sFullName, string sDocNo, string sPartNos, string sCheckinComments, string sPartDocRefType, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -728,7 +960,7 @@ namespace WcfWCService
                 char[] charSeparators = new char[] { '^' };
                 string[] sPartNos2 = sPartNos.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries);
 
-                return client2.setdoctopartrefs(sFullName, sDocNo, sPartNos2, sCheckinComments, Convert.ToInt16(sWebAppId));
+                return client2.setdoctopartrefs(sFullName, sDocNo, sPartNos2, sCheckinComments, sPartDocRefType, Convert.ToInt16(sWebAppId));
             }
         }
 
@@ -1575,21 +1807,21 @@ namespace WcfWCService
                 Update_User_Time(sUserId, sSessionId);
                 int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
                 ExampleService.MyJavaServiceClient client2 = GetWCService();
-                string[] sAttributeNames = new string[3];
-                string[] sAttributeValues = new string[3];
-                string[] sAttributeTypes = new string[3];
+                string[] sAttributeNames = new string[0];
+                string[] sAttributeValues = new string[0];
+                string[] sAttributeTypes = new string[0];
 
-                sAttributeNames[0] = "Originator";
-                sAttributeNames[1] = "PlantCode";
-                sAttributeNames[2] = "Comments";
+                //sAttributeNames[0] = "Originator";
+                //sAttributeNames[1] = "PlantCode";
+                //sAttributeNames[2] = "Comments";
 
-                sAttributeValues[0] = sFullName;
-                sAttributeValues[1] = sPlant;
-                sAttributeValues[2] = sComments;
+                //sAttributeValues[0] = sFullName;
+                //sAttributeValues[1] = sPlant;
+                //sAttributeValues[2] = sComments;
 
-                sAttributeTypes[0] = "string";
-                sAttributeTypes[1] = "string";
-                sAttributeTypes[2] = "string";
+                //sAttributeTypes[0] = "string";
+                //sAttributeTypes[1] = "string";
+                //sAttributeTypes[2] = "string";
 
                 return client2.createproblemreport(sImprovementRptNo, sImprovementRptName, sProductName, sPRType, sFolderNameAndPath, sAttributeNames, sAttributeValues, sAttributeTypes, iiProdOrLibrary, sNeedDate, Convert.ToInt16(sWebAppId));
             }
@@ -2477,6 +2709,228 @@ namespace WcfWCService
             }
         }
 
+        public string CreateCableSchedule(string sSessionId, string sUserId, string sDocNo, string sDocName, string sProductName, string sDocType, string sFolderNameAndPath,
+                                          string sOriginator, string sJobCode, string sComments, string sRevision, string sCheckInComments, string iProdOrLibrary, string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                string sRtn = "";
+                Update_User_Time(sUserId, sSessionId);
+                int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
+                ExampleService.MyJavaServiceClient client2 = GetWCService();
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
+
+                sAttributeNames[0] = "JobCode";
+                sAttributeNames[1] = "Originator";
+
+                sAttributeValues[0] = sJobCode;
+                sAttributeValues[1] = sOriginator;
+
+                string sRtn1 = client2.doccreate2(sDocNo, sDocName, sProductName, sDocType, sFolderNameAndPath, sRevision, sAttributeNames, sAttributeValues, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
+
+                if (sRtn1.StartsWith("Success"))
+                {
+
+                    //Get the new document number
+                    string[] sSuccess = Extract_Values(sRtn1);
+
+                    sDocNo = sSuccess[1];
+
+                    if (sComments != "")
+                    {
+
+                            string[] sAttributeNames1 = new string[1];
+                            string[] sAttributeValues1 = new string[1];
+                            string[] sAttributeTypes1 = new string[1];
+                            sAttributeNames1[0] = "Comments";
+
+                            sAttributeValues1[0] = sComments;
+
+                            sAttributeTypes1[0] = "string";
+
+                            sRtn = client2.setdocattributes(sDocNo, sDocName, sAttributeNames1, sAttributeValues1, sAttributeTypes1, sCheckInComments, Convert.ToInt16(sWebAppId));
+                    }
+
+                }
+                return sRtn1;
+            }
+        }
+
+        public string CreateCableItem(string sSessionId, string sUserId, string sCSNo, string sProductName,  string sFolderNameAndPath,
+                                      string sCableNo, string sCableName, string sFromFL, string sToFL, string dLength, string sFromLineNumber,
+                                      string sToLineNumber, string sMaterialCableCode, 
+                                      string sOriginator, string sCableComments, string sCableCheckInComments, string iProdOrLibrary, string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
+                ExampleService.MyJavaServiceClient client2 = GetWCService();
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
+                string[] sAttributeNames2 = new string[1];
+                string[] sAttributeValues2 = new string[1];
+                string[] sAttributeTypes2 = new string[1];
+
+                sAttributeNames[0] = "Originator";
+                sAttributeNames[1] = "Comments";
+
+                sAttributeValues[0] = sOriginator;
+                sAttributeValues[1] = sCableComments;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+
+                sAttributeNames2[0] = "ToOrFrom";
+                sAttributeValues2[0] = "0"; //0 = from, 1 = to
+                sAttributeTypes2[0] = "string";
+
+                string sRtn1 = client2.createpart(sCableNo, sCableName, sProductName, "local.rs.vsrs05.Regain.CablePart", sFolderNameAndPath, 
+                                                  sAttributeNames, sAttributeValues, sAttributeTypes, sCableCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
+
+                if (sRtn1.StartsWith("Success"))
+                {
+                    //Now reference it to the cable schedule
+                    string sRtn2 = client2.setdoctopartref(sUserId, sCSNo, sCableNo, "Creating reference to cable schedule " + sCSNo, "wt.part.WTPartReferenceLink", Convert.ToInt16(sWebAppId));
+
+
+                    if (sRtn2.StartsWith("Success"))
+                    {
+                        //Now create a parent child link to the cable material item
+                        string sRtn3 = client2.setpartpartlink(sUserId, sCableNo, sMaterialCableCode, Convert.ToDouble(dLength), "Creating link to cable material item " + sMaterialCableCode,
+                                                               "wt.part.WTPartUsageLink", "m", Convert.ToInt16(sWebAppId));
+
+                        if (sRtn3.StartsWith("Success"))
+                        {
+                            //Now create a parent child link between the from functional location and the cable item
+                            string sRtn4 = client2.setpartpartlinkwithattributes(sUserId, sFromFL, sCableNo, 1, "Creating link from the From functional location to the cable " + sCableNo,
+                                                                   "local.rs.vsrs05.Regain.CableUsage", "ea", Convert.ToInt32(sFromLineNumber), sAttributeNames2, sAttributeValues2, sAttributeTypes2, Convert.ToInt16(sWebAppId));
+
+                            if (sRtn4.StartsWith("Success"))
+                            {
+                                //Now create a parent child link between the to functional location and the cable item
+                                sAttributeValues2[0] = "1"; //0 = from, 1 = to
+                                string sRtn5 = client2.setpartpartlinkwithattributes(sUserId, sToFL, sCableNo, 1, "Creating link from the To functional location to the cable " + sCableNo,
+                                                                       "local.rs.vsrs05.Regain.CableUsage", "ea", Convert.ToInt32(sToLineNumber), sAttributeNames2, sAttributeValues2, sAttributeTypes2, Convert.ToInt16(sWebAppId));
+
+                                sRtn1 = sRtn5; //This happens regardless of success or not
+                            }
+                            else
+                                sRtn1 = sRtn4;
+                        }
+                        else
+                            sRtn1 = sRtn3;
+                    }
+                    else
+                        sRtn1 = sRtn2;
+                }
+
+                return sRtn1;
+            }
+        }
+
+        public string UpdateCableItem(string sSessionId, string sUserId, string sCableNo, string sCableName,
+                                      string sOriginator, string sCableComments, string sCableCheckInComments, string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaServiceClient client2 = GetWCService();
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
+
+                sAttributeNames[0] = "Originator";
+                sAttributeNames[1] = "Comments";
+
+                sAttributeValues[0] = sOriginator;
+                sAttributeValues[1] = sCableComments;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+
+                string sRtn1 = client2.setpartattributes(sCableNo, sCableName, sAttributeNames, sAttributeValues, sAttributeTypes, sCableCheckInComments, Convert.ToInt16(sWebAppId));
+
+
+                return sRtn1;
+            }
+        }
+
+        public string UpdateCableMaterial(string sSessionId, string sUserId, string sFullName, string sCableNo, 
+                                          string sLength, string sMaterialCode, string sOldMaterialCode,
+                                          string sCableCheckInComments, string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaServiceClient client2 = GetWCService();
+
+                string sRtn1 = DeletePartToPartLink(sSessionId, sUserId, sFullName, sCableNo, sOldMaterialCode, sCableCheckInComments, sWebAppId);
+
+                if (sRtn1.StartsWith("Success"))
+                {
+                    //Now create a parent child link to the cable material item
+                    string sRtn3 = client2.setpartpartlink(sUserId, sCableNo, sMaterialCode, Convert.ToDouble(sLength), "Creating link to cable material item " + sMaterialCode,
+                                                           "wt.part.WTPartUsageLink", "m", Convert.ToInt16(sWebAppId));
+                    sRtn1 = sRtn3; //This happens regardless of success or not                
+                }
+
+                return sRtn1;
+            }
+        }
+
+
+        public string CreateCablePartLink(string sSessionId, string sUserId, string sCableNo, string sFuncLoc, string sLineNumber,string sToOrFrom, string sCheckInComments, string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaServiceClient client2 = GetWCService();
+                string[] sAttributeNames2 = new string[1];
+                string[] sAttributeValues2 = new string[1];
+                string[] sAttributeTypes2 = new string[1];
+
+                sAttributeNames2[0] = "ToOrFrom";
+                sAttributeValues2[0] = sToOrFrom; //0 = from, 1 = to
+                sAttributeTypes2[0] = "string";
+
+                //Now create a parent child link between the from functional location and the cable item
+                string sRtn4 = client2.setpartpartlinkwithattributes(sUserId, sFuncLoc, sCableNo, 1, "Creating link from the From functional location to the cable " + sCableNo,
+                                                        "local.rs.vsrs05.Regain.CableUsage", "ea", Convert.ToInt32(sLineNumber), sAttributeNames2, sAttributeValues2, sAttributeTypes2, Convert.ToInt16(sWebAppId));
+
+
+                return sRtn4;
+            }
+        }
+
         public string CreateMaterialCatalogItem(string sSessionId, string sUserId, string sFullName, string sMatCatNo, string sMatCatType, string sName, string sDesc, string sLongDesc, string sCheckInComments, string sWebAppId)
         {
             string sReturn = "";
@@ -2575,9 +3029,28 @@ namespace WcfWCService
             }
         }
 
+        public string SetPartState(string sSessionId, string sUserId, string sPartNo, string sLifecycleState, string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaServiceClient client2 = GetWCService();
+
+                //Now create a parent child link between the from functional location and the cable item
+                string sRtn4 = client2.setpartstate(sPartNo, sLifecycleState, Convert.ToInt16(sWebAppId));
+
+                return sRtn4;
+            }
+        }
+
         public string CreatePlantEquipItem(string sSessionId, string sUserId, string sFullName, string sPlantEquipNo,
                                            string sPlantEquipType, string sName, string sDesc, string sLongDesc, string sContSysType, string sDriveRating,
-                                           string sEquipRegFlag, string sIPRegFlag, string sIPAddress,
+                                           string sEquipRegFlag, string sIPRegFlag, string sIPAddress, string sComments, string sOpZone,
                                            string sProduct, string sFolder, string sCheckInComments, string sWebAppId)
         {
             string sReturn = "";
@@ -2588,9 +3061,9 @@ namespace WcfWCService
             }
             else
             {
-                string[] sAttributeNames = new string[8];
-                string[] sAttributeValues = new string[8];
-                string[] sAttributeTypes = new string[8];
+                string[] sAttributeNames = new string[10];
+                string[] sAttributeValues = new string[10];
+                string[] sAttributeTypes = new string[10];
 
                 sAttributeNames[0] = "Originator";
                 sAttributeNames[1] = "PartDesc";
@@ -2600,6 +3073,8 @@ namespace WcfWCService
                 sAttributeNames[5] = "EquipRegFlag";
                 sAttributeNames[6] = "IPRegFlag";
                 sAttributeNames[7] = "IPAddress";
+                sAttributeNames[8] = "Comments";
+                sAttributeNames[9] = "OpZone";
 
                 sAttributeValues[0] = sFullName;
                 sAttributeValues[1] = sDesc;
@@ -2609,6 +3084,8 @@ namespace WcfWCService
                 sAttributeValues[5] = sEquipRegFlag;
                 sAttributeValues[6] = sIPRegFlag;
                 sAttributeValues[7] = sIPAddress;
+                sAttributeValues[8] = sComments;
+                sAttributeValues[9] = sOpZone;
 
                 sAttributeTypes[0] = "string";
                 sAttributeTypes[1] = "string";
@@ -2618,6 +3095,8 @@ namespace WcfWCService
                 sAttributeTypes[5] = "boolean";
                 sAttributeTypes[6] = "boolean";
                 sAttributeTypes[7] = "string";
+                sAttributeTypes[8] = "string";
+                sAttributeTypes[9] = "string";
 
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaServiceClient client2 = GetWCService();
@@ -2634,8 +3113,9 @@ namespace WcfWCService
 
         public string UpdatePlantEquipItem(string sSessionId, string sUserId, string sFullName, string sPlantEquipNo, 
                                            string sName, string sDesc, string sLongDesc,
-                                           string sContSysType, string sDriveRating, string sEquipRegFlag, 
-                                           string sIPRegFlag, string sIPAddress, string sCheckInComments, string sWebAppId)
+                                           string sContSysType, string sDriveRating, string sEquipRegFlag,
+                                           string sIPRegFlag, string sIPAddress, string sComments, string sOpZone, 
+                                           string sCheckInComments, string sWebAppId)
         {
             string sReturn = "";
 
@@ -2645,9 +3125,9 @@ namespace WcfWCService
             }
             else
             {
-                string[] sAttributeNames = new string[8];
-                string[] sAttributeValues = new string[8];
-                string[] sAttributeTypes = new string[8];
+                string[] sAttributeNames = new string[10];
+                string[] sAttributeValues = new string[10];
+                string[] sAttributeTypes = new string[10];
 
                 sAttributeNames[0] = "Originator";
                 sAttributeNames[1] = "PartDesc";
@@ -2657,6 +3137,8 @@ namespace WcfWCService
                 sAttributeNames[5] = "EquipRegFlag";
                 sAttributeNames[6] = "IPRegFlag";
                 sAttributeNames[7] = "IPAddress";
+                sAttributeNames[8] = "Comments";
+                sAttributeNames[9] = "OpZone";
 
                 sAttributeValues[0] = sFullName;
                 sAttributeValues[1] = sDesc;
@@ -2666,6 +3148,8 @@ namespace WcfWCService
                 sAttributeValues[5] = sEquipRegFlag;
                 sAttributeValues[6] = sIPRegFlag;
                 sAttributeValues[7] = sIPAddress;
+                sAttributeValues[8] = sComments;
+                sAttributeValues[9] = sOpZone;
 
                 sAttributeTypes[0] = "string";
                 sAttributeTypes[1] = "string";
@@ -2675,6 +3159,8 @@ namespace WcfWCService
                 sAttributeTypes[5] = "boolean";
                 sAttributeTypes[6] = "boolean";
                 sAttributeTypes[7] = "string";
+                sAttributeTypes[8] = "string";
+                sAttributeTypes[9] = "string";
 
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaServiceClient client2 = GetWCService();
@@ -2683,6 +3169,116 @@ namespace WcfWCService
 
                 return sReturn;
             }
+        }
+
+        public string SetMaintenanceTemplates(string sSessionId, string sUserId, string sWONo, string sWOName, string sTemplateIndex, string sWebAppId)
+        {
+            object nullobject = Type.Missing;
+            string sReturn = "Success";
+
+            try
+            {
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    string sBaseFolder = GetConstantValue("TemplateFolder", 2);
+                    string sOutFolder = GetConstantValue("GeneratedDocsFolder", 2);
+                    string sTemplateName = sBaseFolder;
+                    string sWONameFile = sWOName;
+                    sWONameFile = RemoveInvalidCharacters(sWONameFile);
+                    string sFileOutName = sOutFolder + @"\" + sWONo + " " + sWONameFile + ".docm";
+                    string sFileOutNamePdf = sOutFolder + @"\" + sWONo + " " + sWONameFile + ".pdf";
+                    int iTemplateIndex;
+
+                    iTemplateIndex = Convert.ToInt32(sTemplateIndex);
+
+                    sTemplateName = sTemplateName + @"\" + GetTemplateName(iTemplateIndex, 2);
+                    word.Application ap = new word.Application();
+                    word.Document doc = ap.Documents.Open(sTemplateName);
+
+                    word.Cell cell = doc.Tables[1].Cell(1, 2);
+
+                    cell.Range.Text = sWONo;
+
+                    ap.Run("btnProcess_Click");
+
+                    if (FileExists(sFileOutName))
+                        File.Delete(sFileOutName);
+
+                    doc.SaveAs2(sFileOutName);
+
+                    doc.Shapes[1].Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
+                    doc.Shapes[2].Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
+
+                    if (FileExists(sFileOutNamePdf))
+                        File.Delete(sFileOutNamePdf);
+
+                    doc.ExportAsFixedFormat(sFileOutNamePdf, word.WdExportFormat.wdExportFormatPDF, false);
+                    doc.Shapes[1].Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
+                    doc.Shapes[2].Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
+
+                    ((Microsoft.Office.Interop.Word._Document)doc).Close(ref nullobject, ref nullobject, ref nullobject);
+                    ((Microsoft.Office.Interop.Word._Application)ap).Quit(ref nullobject, ref nullobject, ref nullobject);
+
+                    return sReturn;
+                }
+            }
+            catch(Exception ex)
+            {
+                return "Failure^" + ex.Message + "^";
+            }
+        }
+        public string SetMaintenanceTemplatesOpenXML(string sSessionId, string sUserId, string sWONo, string sWOName)
+        {
+            object nullobject = Type.Missing;
+            string sReturn = "Success";
+            string sBaseFolder = @"C:\temp\";
+            string sTemplateName = sBaseFolder + "WorkOrderSummaryTemplate_v6.docm";
+            string sFileOutName = sBaseFolder + sWONo + ".docm";
+
+            word.Application ap = new word.Application();
+            word.Document doc = ap.Documents.Open(sTemplateName);
+
+            WordprocessingDocument doc2 = WordprocessingDocument.Open(sTemplateName, true);
+
+            word.Cell cell = doc.Tables[1].Cell(1, 2);
+
+            cell.Range.Text = sWONo;
+
+            if (FileExists(sFileOutName))
+                File.Delete(sFileOutName);
+
+            doc.SaveAs2(sFileOutName);
+            //doc.Close();
+            //ap.Quit();
+
+            ((Microsoft.Office.Interop.Word._Document)doc).Close(ref nullobject, ref nullobject, ref nullobject);
+            ((Microsoft.Office.Interop.Word._Application)ap).Quit(ref nullobject, ref nullobject, ref nullobject);
+
+            return sReturn;
+        }
+
+        public string RemoveInvalidCharacters(string sInputString)
+        {
+            string sOutputString = "";
+
+            sOutputString = sInputString.Replace("<", "_");
+            sOutputString = sOutputString.Replace(">", "_");
+            sOutputString = sOutputString.Replace(":", "_");
+            sOutputString = sOutputString.Replace("\"", "_");
+            sOutputString = sOutputString.Replace("/", "_");
+            sOutputString = sOutputString.Replace("\\", "_");
+            sOutputString = sOutputString.Replace("|", "_");
+            sOutputString = sOutputString.Replace("?", "_");
+            sOutputString = sOutputString.Replace("*", "_");
+            sOutputString = sOutputString.Replace("\r\n", "");
+            sOutputString = sOutputString.Replace("\r", "");
+            sOutputString = sOutputString.Replace("\n", "");
+
+            return sOutputString;
         }
 
         private ExampleService.MyJavaServiceClient GetWCService()
@@ -2728,6 +3324,14 @@ namespace WcfWCService
                 client2.emailmessage(sSubject, sBody, sAttachArr, sRecipients, sCCRecipients, sBCCRecipients, Convert.ToInt16(sWebAppId));
                 return "Success";
             }
+        }
+
+        public bool FileExists(string sFileNameAndPath)
+        {
+            if (File.Exists(sFileNameAndPath))
+                return true;
+            else
+                return false;
         }
     }
 }
