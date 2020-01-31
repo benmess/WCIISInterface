@@ -292,6 +292,12 @@
   <message name="createproblemreportResponse">
     <part name="parameters" element="tns:createproblemreportResponse" />
   </message>
+  <message name="createproblemreport2">
+    <part name="parameters" element="tns:createproblemreport2" />
+  </message>
+  <message name="createproblemreport2Response">
+    <part name="parameters" element="tns:createproblemreport2Response" />
+  </message>
   <message name="deleteprobreport">
     <part name="parameters" element="tns:deleteprobreport" />
   </message>
@@ -304,17 +310,17 @@
   <message name="deleteprattachmentResponse">
     <part name="parameters" element="tns:deleteprattachmentResponse" />
   </message>
-  <message name="setpraffectedparts">
-    <part name="parameters" element="tns:setpraffectedparts" />
+  <message name="setpraffectedobjects">
+    <part name="parameters" element="tns:setpraffectedobjects" />
   </message>
-  <message name="setpraffectedpartsResponse">
-    <part name="parameters" element="tns:setpraffectedpartsResponse" />
+  <message name="setpraffectedobjectsResponse">
+    <part name="parameters" element="tns:setpraffectedobjectsResponse" />
   </message>
-  <message name="deletepraffectedparts">
-    <part name="parameters" element="tns:deletepraffectedparts" />
+  <message name="deletepraffectedobjects">
+    <part name="parameters" element="tns:deletepraffectedobjects" />
   </message>
-  <message name="deletepraffectedpartsResponse">
-    <part name="parameters" element="tns:deletepraffectedpartsResponse" />
+  <message name="deletepraffectedobjectsResponse">
+    <part name="parameters" element="tns:deletepraffectedobjectsResponse" />
   </message>
   <message name="setproblemreportattributes">
     <part name="parameters" element="tns:setproblemreportattributes" />
@@ -357,6 +363,18 @@
   </message>
   <message name="attachdocResponse">
     <part name="parameters" element="tns:attachdocResponse" />
+  </message>
+  <message name="attachurl">
+    <part name="parameters" element="tns:attachurl" />
+  </message>
+  <message name="attachurlResponse">
+    <part name="parameters" element="tns:attachurlResponse" />
+  </message>
+  <message name="deleteurl">
+    <part name="parameters" element="tns:deleteurl" />
+  </message>
+  <message name="deleteurlResponse">
+    <part name="parameters" element="tns:deleteurlResponse" />
   </message>
   <message name="setdocdoclink">
     <part name="parameters" element="tns:setdocdoclink" />
@@ -588,6 +606,11 @@
       <output wsam:Action="http://myorg.org/MyJavaService/createproblemreportResponse" message="tns:createproblemreportResponse" />
       <fault wsam:Action="http://myorg.org/MyJavaService/createproblemreport/Fault/Exception" name="Exception" message="tns:Exception" />
     </operation>
+    <operation name="createproblemreport2">
+      <input wsam:Action="http://myorg.org/MyJavaService/createproblemreport2Request" message="tns:createproblemreport2" />
+      <output wsam:Action="http://myorg.org/MyJavaService/createproblemreport2Response" message="tns:createproblemreport2Response" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/createproblemreport2/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
     <operation name="deleteprobreport">
       <input wsam:Action="http://myorg.org/MyJavaService/deleteprobreportRequest" message="tns:deleteprobreport" />
       <output wsam:Action="http://myorg.org/MyJavaService/deleteprobreportResponse" message="tns:deleteprobreportResponse" />
@@ -598,15 +621,15 @@
       <output wsam:Action="http://myorg.org/MyJavaService/deleteprattachmentResponse" message="tns:deleteprattachmentResponse" />
       <fault wsam:Action="http://myorg.org/MyJavaService/deleteprattachment/Fault/Exception" name="Exception" message="tns:Exception" />
     </operation>
-    <operation name="setpraffectedparts">
-      <input wsam:Action="http://myorg.org/MyJavaService/setpraffectedpartsRequest" message="tns:setpraffectedparts" />
-      <output wsam:Action="http://myorg.org/MyJavaService/setpraffectedpartsResponse" message="tns:setpraffectedpartsResponse" />
-      <fault wsam:Action="http://myorg.org/MyJavaService/setpraffectedparts/Fault/Exception" name="Exception" message="tns:Exception" />
+    <operation name="setpraffectedobjects">
+      <input wsam:Action="http://myorg.org/MyJavaService/setpraffectedobjectsRequest" message="tns:setpraffectedobjects" />
+      <output wsam:Action="http://myorg.org/MyJavaService/setpraffectedobjectsResponse" message="tns:setpraffectedobjectsResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/setpraffectedobjects/Fault/Exception" name="Exception" message="tns:Exception" />
     </operation>
-    <operation name="deletepraffectedparts">
-      <input wsam:Action="http://myorg.org/MyJavaService/deletepraffectedpartsRequest" message="tns:deletepraffectedparts" />
-      <output wsam:Action="http://myorg.org/MyJavaService/deletepraffectedpartsResponse" message="tns:deletepraffectedpartsResponse" />
-      <fault wsam:Action="http://myorg.org/MyJavaService/deletepraffectedparts/Fault/Exception" name="Exception" message="tns:Exception" />
+    <operation name="deletepraffectedobjects">
+      <input wsam:Action="http://myorg.org/MyJavaService/deletepraffectedobjectsRequest" message="tns:deletepraffectedobjects" />
+      <output wsam:Action="http://myorg.org/MyJavaService/deletepraffectedobjectsResponse" message="tns:deletepraffectedobjectsResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deletepraffectedobjects/Fault/Exception" name="Exception" message="tns:Exception" />
     </operation>
     <operation name="setproblemreportattributes">
       <input wsam:Action="http://myorg.org/MyJavaService/setproblemreportattributesRequest" message="tns:setproblemreportattributes" />
@@ -646,6 +669,16 @@
       <input wsam:Action="http://myorg.org/MyJavaService/attachdocRequest" message="tns:attachdoc" />
       <output wsam:Action="http://myorg.org/MyJavaService/attachdocResponse" message="tns:attachdocResponse" />
       <fault wsam:Action="http://myorg.org/MyJavaService/attachdoc/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="attachurl">
+      <input wsam:Action="http://myorg.org/MyJavaService/attachurlRequest" message="tns:attachurl" />
+      <output wsam:Action="http://myorg.org/MyJavaService/attachurlResponse" message="tns:attachurlResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/attachurl/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="deleteurl">
+      <input wsam:Action="http://myorg.org/MyJavaService/deleteurlRequest" message="tns:deleteurl" />
+      <output wsam:Action="http://myorg.org/MyJavaService/deleteurlResponse" message="tns:deleteurlResponse" />
+      <fault wsam:Action="http://myorg.org/MyJavaService/deleteurl/Fault/Exception" name="Exception" message="tns:Exception" />
     </operation>
     <operation name="setdocdoclink">
       <input wsam:Action="http://myorg.org/MyJavaService/setdocdoclinkRequest" message="tns:setdocdoclink" />
@@ -1191,6 +1224,20 @@
         <soap:fault use="literal" name="Exception" namespace="" />
       </fault>
     </operation>
+    <operation name="createproblemreport2">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
     <operation name="deleteprobreport">
       <soap:operation soapAction="" />
       <input>
@@ -1219,7 +1266,7 @@
         <soap:fault use="literal" name="Exception" namespace="" />
       </fault>
     </operation>
-    <operation name="setpraffectedparts">
+    <operation name="setpraffectedobjects">
       <soap:operation soapAction="" />
       <input>
         <wsp:PolicyReference URI="#InputSecurityPolicy" />
@@ -1233,7 +1280,7 @@
         <soap:fault use="literal" name="Exception" namespace="" />
       </fault>
     </operation>
-    <operation name="deletepraffectedparts">
+    <operation name="deletepraffectedobjects">
       <soap:operation soapAction="" />
       <input>
         <wsp:PolicyReference URI="#InputSecurityPolicy" />
@@ -1344,6 +1391,34 @@
       </fault>
     </operation>
     <operation name="attachdoc">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="attachurl">
+      <soap:operation soapAction="" />
+      <input>
+        <wsp:PolicyReference URI="#InputSecurityPolicy" />
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <wsp:PolicyReference URI="#OutputSecurityPolicy" />
+        <soap:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="deleteurl">
       <soap:operation soapAction="" />
       <input>
         <wsp:PolicyReference URI="#InputSecurityPolicy" />

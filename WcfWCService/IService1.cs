@@ -74,12 +74,20 @@ namespace WcfWCService
                                              string sOriginator, string sRevision, string sCheckInComments, string iProdOrLibrary, string sWebAppId);
 
         [OperationContract]
+        [WebGet(UriTemplate = "attachurl/{sSessionId}/{sUserId}/{sFullname}/{sDocNo}/{sURLDesc}/{sURL}/{bSecondary}/{sAttachComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string AttachURL(string sSessionId, string sUserId, string sFullName, string sDocNo, string sURLDesc, string sURL, string bSecondary, string sAttachComments, string sWebAppId);
+
+        [OperationContract]
         [WebGet(UriTemplate = "attachwcdoc/{sSessionId}/{sUserId}/{sFullname}/{sDocNo}/{sAttachDesc}/{sAttachPath}/{bSecondary}/{sAttachComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string AttachWCDoc(string sSessionId, string sUserId, string sFullName, string sDocNo, string sAttachDesc, string sAttachPath, string bSecondary, string sAttachComments, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "deletewcdoc/{sSessionId}/{sUserId}/{sFullname}/{sDocNo}/{sAttachFile}/{bSecondary}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string DeleteWCDoc(string sSessionId, string sUserId, string sFullName, string sDocNo, string sAttachFile, string bSecondary, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "deleteurl/{sSessionId}/{sUserId}/{sFullname}/{sDocNo}/{sURL}/{bSecondary}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string DeleteURL(string sSessionId, string sUserId, string sFullName, string sDocNo, string sURL, string bSecondary, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "setdocattributestrings/{sSessionId}/{sUserId}/{sDocNo}/{sDocName}/{sLongDesc}/{sOriginator}/{sOriginatorDocId}/{sJobCode}/{sCheckInComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
@@ -166,6 +174,16 @@ namespace WcfWCService
                                     string sStartDateAndTime, string sEndDateAndTime, string dDurationInHours, string sSuspectedFailureReason, string sComments, string sWebAppId);
 
         [OperationContract]
+        [WebGet(UriTemplate = "createtechnicalaction/{sSessionId}/{sUserId}/{sFullname}/{sTechActionNo}/{sTechActionName}/{sProductName}/{sPRType}/{sFolderNameAndPath}/{sPlantCode}/{sTechActionDesc}/{sComments}/{iProdOrLibrary}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string CreateTechnicalAction(string sSessionId, string sUserId, string sFullName, string sTechActionNo, string sTechActionName, string sProductName, string sPRType, string sFolderNameAndPath,
+                                           string sPlantCode, string sTechActionDesc, string sComments, string iProdOrLibrary, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "updatetechnicalaction/{sSessionId}/{sUserId}/{sFullname}/{sTechActionNo}/{sTechActionName}/{sTechActionDesc}/{sComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string UpdateTechnicalAction(string sSessionId, string sUserId, string sFullName, string sTechActionNo, string sTechActionName, string sTechActionDesc,
+                                     string sComments, string sWebAppId);
+
+        [OperationContract]
         [WebGet(UriTemplate = "createissuereport/{sSessionId}/{sUserId}/{sFullname}/{sIssueRptNo}/{sIssueRptName}/{sPlant}/{sProductName}/{sPRType}/{sFolderNameAndPath}/{sComments}/{iProdOrLibrary}/{sNeedDate}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string CreateIssueReport(string sSessionId, string sUserId, string sFullName, string sIssueRptNo, string sIssueRptName, string sPlant, string sProductName,
                                  string sPRType, string sFolderNameAndPath, string sComments, string iProdOrLibrary, string sNeedDate, string sWebAppId);
@@ -205,12 +223,12 @@ namespace WcfWCService
         string ProgressTask(string sSessionId, string sUserId, string sWorkItemId, string sAssignedActivityId, string sRoute,  string sWebAppId);
 
         [OperationContract]
-        [WebGet(UriTemplate = "setproductionlossaffectedobjects/{sSessionId}/{sUserId}/{sProdLossNo}/{sAffectdPartsString}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
-        string SetProductionLossAffectedObjects(string sSessionId, string sUserId, string sProdLossNo, string sAffectdPartsString, string sWebAppId);
+        [WebGet(UriTemplate = "setprobrptaffectedobjects/{sSessionId}/{sUserId}/{sProdLossNo}/{sAffectdPartsString}/{sAffectdObjectTypesString}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string SetProbRptAffectedObjects(string sSessionId, string sUserId, string sProdLossNo, string sAffectdPartsString, string sAffectdObjectTypesString, string sWebAppId);
 
         [OperationContract]
-        [WebGet(UriTemplate = "deleteproductionlossaffectedobjects/{sSessionId}/{sUserId}/{sProdLossNo}/{sAffectdPartsString}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
-        string DeleteProductionLossAffectedObjects(string sSessionId, string sUserId, string sProdLossNo, string sAffectdPartsString, string sWebAppId);
+        [WebGet(UriTemplate = "deleteprobrptaffectedobjects/{sSessionId}/{sUserId}/{sProdLossNo}/{sAffectdPartsString}/{sAffectdObjectTypesString}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string DeleteProbRptAffectedObjects(string sSessionId, string sUserId, string sProdLossNo, string sAffectdPartsString, string sAffectdObjectTypesString, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "attachproductionlossdoc/{sSessionId}/{sUserId}/{sProdLossNo}/{sAttachDesc}/{sAttachPath}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]

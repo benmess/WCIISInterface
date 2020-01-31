@@ -14,6 +14,8 @@
   <xs:element name="attachdocResponse" type="tns:attachdocResponse" />
   <xs:element name="attachprdoc" type="tns:attachprdoc" />
   <xs:element name="attachprdocResponse" type="tns:attachprdocResponse" />
+  <xs:element name="attachurl" type="tns:attachurl" />
+  <xs:element name="attachurlResponse" type="tns:attachurlResponse" />
   <xs:element name="completetask" type="tns:completetask" />
   <xs:element name="completetaskResponse" type="tns:completetaskResponse" />
   <xs:element name="copypart" type="tns:copypart" />
@@ -23,6 +25,8 @@
   <xs:element name="createpart" type="tns:createpart" />
   <xs:element name="createpartResponse" type="tns:createpartResponse" />
   <xs:element name="createproblemreport" type="tns:createproblemreport" />
+  <xs:element name="createproblemreport2" type="tns:createproblemreport2" />
+  <xs:element name="createproblemreport2Response" type="tns:createproblemreport2Response" />
   <xs:element name="createproblemreportResponse" type="tns:createproblemreportResponse" />
   <xs:element name="deleteattachment" type="tns:deleteattachment" />
   <xs:element name="deleteattachmentResponse" type="tns:deleteattachmentResponse" />
@@ -48,12 +52,14 @@
   <xs:element name="deletepartpartlinkbylinenumberResponse" type="tns:deletepartpartlinkbylinenumberResponse" />
   <xs:element name="deletepartpartlinkbyproductionorder" type="tns:deletepartpartlinkbyproductionorder" />
   <xs:element name="deletepartpartlinkbyproductionorderResponse" type="tns:deletepartpartlinkbyproductionorderResponse" />
-  <xs:element name="deletepraffectedparts" type="tns:deletepraffectedparts" />
-  <xs:element name="deletepraffectedpartsResponse" type="tns:deletepraffectedpartsResponse" />
+  <xs:element name="deletepraffectedobjects" type="tns:deletepraffectedobjects" />
+  <xs:element name="deletepraffectedobjectsResponse" type="tns:deletepraffectedobjectsResponse" />
   <xs:element name="deleteprattachment" type="tns:deleteprattachment" />
   <xs:element name="deleteprattachmentResponse" type="tns:deleteprattachmentResponse" />
   <xs:element name="deleteprobreport" type="tns:deleteprobreport" />
   <xs:element name="deleteprobreportResponse" type="tns:deleteprobreportResponse" />
+  <xs:element name="deleteurl" type="tns:deleteurl" />
+  <xs:element name="deleteurlResponse" type="tns:deleteurlResponse" />
   <xs:element name="doccreate" type="tns:doccreate" />
   <xs:element name="doccreate2" type="tns:doccreate2" />
   <xs:element name="doccreate2Response" type="tns:doccreate2Response" />
@@ -96,8 +102,8 @@
   <xs:element name="setpartusageattributesfromlinenumberResponse" type="tns:setpartusageattributesfromlinenumberResponse" />
   <xs:element name="setpartusagelinkqty" type="tns:setpartusagelinkqty" />
   <xs:element name="setpartusagelinkqtyResponse" type="tns:setpartusagelinkqtyResponse" />
-  <xs:element name="setpraffectedparts" type="tns:setpraffectedparts" />
-  <xs:element name="setpraffectedpartsResponse" type="tns:setpraffectedpartsResponse" />
+  <xs:element name="setpraffectedobjects" type="tns:setpraffectedobjects" />
+  <xs:element name="setpraffectedobjectsResponse" type="tns:setpraffectedobjectsResponse" />
   <xs:element name="setproblemreportattributes" type="tns:setproblemreportattributes" />
   <xs:element name="setproblemreportattributesResponse" type="tns:setproblemreportattributesResponse" />
   <xs:element name="setproblemreportstate" type="tns:setproblemreportstate" />
@@ -260,6 +266,23 @@
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="setpartpartlinkResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="attachurl">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element minOccurs="0" name="arg5" type="xs:boolean" />
+      <xs:element minOccurs="0" name="arg6" type="xs:string" />
+      <xs:element name="arg7" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="attachurlResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="xs:string" />
     </xs:sequence>
@@ -505,6 +528,19 @@
       <xs:element minOccurs="0" name="return" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="setpraffectedobjects">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg1" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg2" nillable="true" type="xs:int" />
+      <xs:element name="arg3" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpraffectedobjectsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="deletedoctodocrefs">
     <xs:sequence>
       <xs:element minOccurs="0" name="arg0" type="xs:string" />
@@ -529,6 +565,18 @@
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="setdoctodocrefsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartstate">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element name="arg2" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartstateResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="xs:string" />
     </xs:sequence>
@@ -562,18 +610,6 @@
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="createchangenoticeResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="xs:string" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="setpartstate">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="arg0" type="xs:string" />
-      <xs:element minOccurs="0" name="arg1" type="xs:string" />
-      <xs:element name="arg2" type="xs:int" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="setpartstateResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="xs:string" />
     </xs:sequence>
@@ -631,14 +667,16 @@
       <xs:element minOccurs="0" name="return" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="setpraffectedparts">
+  <xs:complexType name="deleteurl">
     <xs:sequence>
       <xs:element minOccurs="0" name="arg0" type="xs:string" />
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg1" nillable="true" type="xs:string" />
-      <xs:element name="arg2" type="xs:int" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:boolean" />
+      <xs:element name="arg4" type="xs:int" />
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="setpraffectedpartsResponse">
+  <xs:complexType name="deleteurlResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="xs:string" />
     </xs:sequence>
@@ -684,6 +722,19 @@
       <xs:element minOccurs="0" name="return" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="deletepraffectedobjects">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg1" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg2" nillable="true" type="xs:int" />
+      <xs:element name="arg3" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deletepraffectedobjectsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="deletedoctopartdescribeby">
     <xs:sequence>
       <xs:element minOccurs="0" name="arg0" type="xs:string" />
@@ -708,18 +759,6 @@
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="setdoctopartdescribedbymultiResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="xs:string" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="deletepraffectedparts">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="arg0" type="xs:string" />
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg1" nillable="true" type="xs:string" />
-      <xs:element name="arg2" type="xs:int" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="deletepraffectedpartsResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="xs:string" />
     </xs:sequence>
@@ -896,15 +935,23 @@
       <xs:element minOccurs="0" name="return" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="setpartusagelinkqty">
+  <xs:complexType name="createproblemreport2">
     <xs:sequence>
       <xs:element minOccurs="0" name="arg0" type="xs:string" />
       <xs:element minOccurs="0" name="arg1" type="xs:string" />
-      <xs:element name="arg2" type="xs:double" />
-      <xs:element name="arg3" type="xs:int" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg6" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg7" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="arg8" nillable="true" type="xs:string" />
+      <xs:element name="arg9" type="xs:int" />
+      <xs:element minOccurs="0" name="arg10" type="xs:string" />
+      <xs:element name="arg11" type="xs:int" />
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="setpartusagelinkqtyResponse">
+  <xs:complexType name="createproblemreport2Response">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="xs:string" />
     </xs:sequence>
@@ -918,6 +965,19 @@
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="attachprdocResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartusagelinkqty">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element name="arg2" type="xs:double" />
+      <xs:element name="arg3" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setpartusagelinkqtyResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="xs:string" />
     </xs:sequence>

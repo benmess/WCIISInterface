@@ -406,6 +406,112 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
+    public partial class setpartusagelinkqtyResponse : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string returnField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string @return {
+            get {
+                return this.returnField;
+            }
+            set {
+                this.returnField = value;
+                this.RaisePropertyChanged("return");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
+    public partial class setpartusagelinkqty : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string arg0Field;
+        
+        private string arg1Field;
+        
+        private double arg2Field;
+        
+        private int arg3Field;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string arg0 {
+            get {
+                return this.arg0Field;
+            }
+            set {
+                this.arg0Field = value;
+                this.RaisePropertyChanged("arg0");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string arg1 {
+            get {
+                return this.arg1Field;
+            }
+            set {
+                this.arg1Field = value;
+                this.RaisePropertyChanged("arg1");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public double arg2 {
+            get {
+                return this.arg2Field;
+            }
+            set {
+                this.arg2Field = value;
+                this.RaisePropertyChanged("arg2");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public int arg3 {
+            get {
+                return this.arg3Field;
+            }
+            set {
+                this.arg3Field = value;
+                this.RaisePropertyChanged("arg3");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
     public partial class attachprdocResponse : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string returnField;
@@ -512,7 +618,7 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
-    public partial class setpartusagelinkqtyResponse : object, System.ComponentModel.INotifyPropertyChanged {
+    public partial class createproblemreport2Response : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string returnField;
         
@@ -544,15 +650,31 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
-    public partial class setpartusagelinkqty : object, System.ComponentModel.INotifyPropertyChanged {
+    public partial class createproblemreport2 : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string arg0Field;
         
         private string arg1Field;
         
-        private double arg2Field;
+        private string arg2Field;
         
-        private int arg3Field;
+        private string arg3Field;
+        
+        private string arg4Field;
+        
+        private string arg5Field;
+        
+        private string[] arg6Field;
+        
+        private string[] arg7Field;
+        
+        private string[] arg8Field;
+        
+        private int arg9Field;
+        
+        private string arg10Field;
+        
+        private int arg11Field;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -580,7 +702,7 @@ namespace WcfWCService.ExampleService {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
-        public double arg2 {
+        public string arg2 {
             get {
                 return this.arg2Field;
             }
@@ -592,13 +714,109 @@ namespace WcfWCService.ExampleService {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
-        public int arg3 {
+        public string arg3 {
             get {
                 return this.arg3Field;
             }
             set {
                 this.arg3Field = value;
                 this.RaisePropertyChanged("arg3");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        public string arg4 {
+            get {
+                return this.arg4Field;
+            }
+            set {
+                this.arg4Field = value;
+                this.RaisePropertyChanged("arg4");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        public string arg5 {
+            get {
+                return this.arg5Field;
+            }
+            set {
+                this.arg5Field = value;
+                this.RaisePropertyChanged("arg5");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=6)]
+        public string[] arg6 {
+            get {
+                return this.arg6Field;
+            }
+            set {
+                this.arg6Field = value;
+                this.RaisePropertyChanged("arg6");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("arg7", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=7)]
+        public string[] arg7 {
+            get {
+                return this.arg7Field;
+            }
+            set {
+                this.arg7Field = value;
+                this.RaisePropertyChanged("arg7");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("arg8", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=8)]
+        public string[] arg8 {
+            get {
+                return this.arg8Field;
+            }
+            set {
+                this.arg8Field = value;
+                this.RaisePropertyChanged("arg8");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
+        public int arg9 {
+            get {
+                return this.arg9Field;
+            }
+            set {
+                this.arg9Field = value;
+                this.RaisePropertyChanged("arg9");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=10)]
+        public string arg10 {
+            get {
+                return this.arg10Field;
+            }
+            set {
+                this.arg10Field = value;
+                this.RaisePropertyChanged("arg10");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=11)]
+        public int arg11 {
+            get {
+                return this.arg11Field;
+            }
+            set {
+                this.arg11Field = value;
+                this.RaisePropertyChanged("arg11");
             }
         }
         
@@ -2190,98 +2408,6 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
-    public partial class deletepraffectedpartsResponse : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string returnField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
-        public string @return {
-            get {
-                return this.returnField;
-            }
-            set {
-                this.returnField = value;
-                this.RaisePropertyChanged("return");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
-    public partial class deletepraffectedparts : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string arg0Field;
-        
-        private string[] arg1Field;
-        
-        private int arg2Field;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
-        public string arg0 {
-            get {
-                return this.arg0Field;
-            }
-            set {
-                this.arg0Field = value;
-                this.RaisePropertyChanged("arg0");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("arg1", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=1)]
-        public string[] arg1 {
-            get {
-                return this.arg1Field;
-            }
-            set {
-                this.arg1Field = value;
-                this.RaisePropertyChanged("arg1");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
-        public int arg2 {
-            get {
-                return this.arg2Field;
-            }
-            set {
-                this.arg2Field = value;
-                this.RaisePropertyChanged("arg2");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
     public partial class setdoctopartdescribedbymultiResponse : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string returnField;
@@ -2503,6 +2629,112 @@ namespace WcfWCService.ExampleService {
             set {
                 this.arg4Field = value;
                 this.RaisePropertyChanged("arg4");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
+    public partial class deletepraffectedobjectsResponse : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string returnField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string @return {
+            get {
+                return this.returnField;
+            }
+            set {
+                this.returnField = value;
+                this.RaisePropertyChanged("return");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
+    public partial class deletepraffectedobjects : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string arg0Field;
+        
+        private string[] arg1Field;
+        
+        private System.Nullable<int>[] arg2Field;
+        
+        private int arg3Field;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string arg0 {
+            get {
+                return this.arg0Field;
+            }
+            set {
+                this.arg0Field = value;
+                this.RaisePropertyChanged("arg0");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("arg1", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=1)]
+        public string[] arg1 {
+            get {
+                return this.arg1Field;
+            }
+            set {
+                this.arg1Field = value;
+                this.RaisePropertyChanged("arg1");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=2)]
+        public System.Nullable<int>[] arg2 {
+            get {
+                return this.arg2Field;
+            }
+            set {
+                this.arg2Field = value;
+                this.RaisePropertyChanged("arg2");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public int arg3 {
+            get {
+                return this.arg3Field;
+            }
+            set {
+                this.arg3Field = value;
+                this.RaisePropertyChanged("arg3");
             }
         }
         
@@ -2868,7 +3100,7 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
-    public partial class setpraffectedpartsResponse : object, System.ComponentModel.INotifyPropertyChanged {
+    public partial class deleteurlResponse : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string returnField;
         
@@ -2900,13 +3132,19 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
-    public partial class setpraffectedparts : object, System.ComponentModel.INotifyPropertyChanged {
+    public partial class deleteurl : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string arg0Field;
         
-        private string[] arg1Field;
+        private string arg1Field;
         
-        private int arg2Field;
+        private string arg2Field;
+        
+        private bool arg3Field;
+        
+        private bool arg3FieldSpecified;
+        
+        private int arg4Field;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -2921,8 +3159,8 @@ namespace WcfWCService.ExampleService {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("arg1", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=1)]
-        public string[] arg1 {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string arg1 {
             get {
                 return this.arg1Field;
             }
@@ -2934,13 +3172,49 @@ namespace WcfWCService.ExampleService {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
-        public int arg2 {
+        public string arg2 {
             get {
                 return this.arg2Field;
             }
             set {
                 this.arg2Field = value;
                 this.RaisePropertyChanged("arg2");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public bool arg3 {
+            get {
+                return this.arg3Field;
+            }
+            set {
+                this.arg3Field = value;
+                this.RaisePropertyChanged("arg3");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool arg3Specified {
+            get {
+                return this.arg3FieldSpecified;
+            }
+            set {
+                this.arg3FieldSpecified = value;
+                this.RaisePropertyChanged("arg3Specified");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        public int arg4 {
+            get {
+                return this.arg4Field;
+            }
+            set {
+                this.arg4Field = value;
+                this.RaisePropertyChanged("arg4");
             }
         }
         
@@ -3488,98 +3762,6 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
-    public partial class setpartstateResponse : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string returnField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
-        public string @return {
-            get {
-                return this.returnField;
-            }
-            set {
-                this.returnField = value;
-                this.RaisePropertyChanged("return");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
-    public partial class setpartstate : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string arg0Field;
-        
-        private string arg1Field;
-        
-        private int arg2Field;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
-        public string arg0 {
-            get {
-                return this.arg0Field;
-            }
-            set {
-                this.arg0Field = value;
-                this.RaisePropertyChanged("arg0");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
-        public string arg1 {
-            get {
-                return this.arg1Field;
-            }
-            set {
-                this.arg1Field = value;
-                this.RaisePropertyChanged("arg1");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
-        public int arg2 {
-            get {
-                return this.arg2Field;
-            }
-            set {
-                this.arg2Field = value;
-                this.RaisePropertyChanged("arg2");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
     public partial class createchangenoticeResponse : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string returnField;
@@ -3890,6 +4072,98 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
+    public partial class setpartstateResponse : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string returnField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string @return {
+            get {
+                return this.returnField;
+            }
+            set {
+                this.returnField = value;
+                this.RaisePropertyChanged("return");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
+    public partial class setpartstate : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string arg0Field;
+        
+        private string arg1Field;
+        
+        private int arg2Field;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string arg0 {
+            get {
+                return this.arg0Field;
+            }
+            set {
+                this.arg0Field = value;
+                this.RaisePropertyChanged("arg0");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string arg1 {
+            get {
+                return this.arg1Field;
+            }
+            set {
+                this.arg1Field = value;
+                this.RaisePropertyChanged("arg1");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public int arg2 {
+            get {
+                return this.arg2Field;
+            }
+            set {
+                this.arg2Field = value;
+                this.RaisePropertyChanged("arg2");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
     public partial class setdoctodocrefsResponse : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string returnField;
@@ -4111,6 +4385,112 @@ namespace WcfWCService.ExampleService {
             set {
                 this.arg4Field = value;
                 this.RaisePropertyChanged("arg4");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
+    public partial class setpraffectedobjectsResponse : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string returnField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string @return {
+            get {
+                return this.returnField;
+            }
+            set {
+                this.returnField = value;
+                this.RaisePropertyChanged("return");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
+    public partial class setpraffectedobjects : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string arg0Field;
+        
+        private string[] arg1Field;
+        
+        private System.Nullable<int>[] arg2Field;
+        
+        private int arg3Field;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string arg0 {
+            get {
+                return this.arg0Field;
+            }
+            set {
+                this.arg0Field = value;
+                this.RaisePropertyChanged("arg0");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("arg1", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=1)]
+        public string[] arg1 {
+            get {
+                return this.arg1Field;
+            }
+            set {
+                this.arg1Field = value;
+                this.RaisePropertyChanged("arg1");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=2)]
+        public System.Nullable<int>[] arg2 {
+            get {
+                return this.arg2Field;
+            }
+            set {
+                this.arg2Field = value;
+                this.RaisePropertyChanged("arg2");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public int arg3 {
+            get {
+                return this.arg3Field;
+            }
+            set {
+                this.arg3Field = value;
+                this.RaisePropertyChanged("arg3");
             }
         }
         
@@ -6228,6 +6608,182 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
+    public partial class attachurlResponse : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string returnField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string @return {
+            get {
+                return this.returnField;
+            }
+            set {
+                this.returnField = value;
+                this.RaisePropertyChanged("return");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
+    public partial class attachurl : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string arg0Field;
+        
+        private string arg1Field;
+        
+        private string arg2Field;
+        
+        private string arg3Field;
+        
+        private string arg4Field;
+        
+        private bool arg5Field;
+        
+        private bool arg5FieldSpecified;
+        
+        private string arg6Field;
+        
+        private int arg7Field;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string arg0 {
+            get {
+                return this.arg0Field;
+            }
+            set {
+                this.arg0Field = value;
+                this.RaisePropertyChanged("arg0");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string arg1 {
+            get {
+                return this.arg1Field;
+            }
+            set {
+                this.arg1Field = value;
+                this.RaisePropertyChanged("arg1");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public string arg2 {
+            get {
+                return this.arg2Field;
+            }
+            set {
+                this.arg2Field = value;
+                this.RaisePropertyChanged("arg2");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public string arg3 {
+            get {
+                return this.arg3Field;
+            }
+            set {
+                this.arg3Field = value;
+                this.RaisePropertyChanged("arg3");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        public string arg4 {
+            get {
+                return this.arg4Field;
+            }
+            set {
+                this.arg4Field = value;
+                this.RaisePropertyChanged("arg4");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        public bool arg5 {
+            get {
+                return this.arg5Field;
+            }
+            set {
+                this.arg5Field = value;
+                this.RaisePropertyChanged("arg5");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool arg5Specified {
+            get {
+                return this.arg5FieldSpecified;
+            }
+            set {
+                this.arg5FieldSpecified = value;
+                this.RaisePropertyChanged("arg5Specified");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        public string arg6 {
+            get {
+                return this.arg6Field;
+            }
+            set {
+                this.arg6Field = value;
+                this.RaisePropertyChanged("arg6");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
+        public int arg7 {
+            get {
+                return this.arg7Field;
+            }
+            set {
+                this.arg7Field = value;
+                this.RaisePropertyChanged("arg7");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://myorg.org/")]
     public partial class setpartpartlinkResponse : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string returnField;
@@ -7520,10 +8076,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -7546,36 +8104,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -7608,6 +8168,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -7638,10 +8200,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -7664,36 +8228,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -7726,6 +8292,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -7762,10 +8330,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -7788,36 +8358,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -7850,6 +8422,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -7886,10 +8460,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -7912,36 +8488,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -7974,6 +8552,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -8008,10 +8588,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -8034,36 +8616,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -8096,6 +8680,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -8124,10 +8710,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -8150,36 +8738,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -8212,6 +8802,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -8239,10 +8831,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -8265,36 +8859,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -8327,6 +8923,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -8357,10 +8955,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -8383,36 +8983,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -8445,6 +9047,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -8477,10 +9081,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -8503,36 +9109,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -8565,6 +9173,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -8592,10 +9202,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -8618,36 +9230,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -8680,6 +9294,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -8707,10 +9323,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -8733,36 +9351,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -8795,6 +9415,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -8822,10 +9444,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -8848,36 +9472,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -8910,6 +9536,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -8937,10 +9565,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -8963,36 +9593,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -9025,6 +9657,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -9052,10 +9686,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -9078,36 +9714,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -9140,6 +9778,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -9167,10 +9807,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -9193,36 +9835,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -9255,6 +9899,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -9282,10 +9928,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -9308,36 +9956,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -9370,6 +10020,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -9397,10 +10049,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -9423,36 +10077,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -9485,6 +10141,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -9512,10 +10170,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -9538,36 +10198,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -9600,6 +10262,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -9627,10 +10291,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -9653,36 +10319,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -9715,6 +10383,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -9742,10 +10412,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -9768,36 +10440,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -9830,6 +10504,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -9857,10 +10533,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -9883,36 +10561,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -9945,6 +10625,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -9972,10 +10654,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -9998,36 +10682,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -10060,6 +10746,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -10087,10 +10775,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -10113,36 +10803,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -10175,6 +10867,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -10202,10 +10896,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -10228,36 +10924,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -10290,6 +10988,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -10317,10 +11017,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -10343,36 +11045,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -10405,6 +11109,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -10433,10 +11139,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -10459,36 +11167,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -10521,6 +11231,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -10550,10 +11262,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -10576,36 +11290,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -10638,6 +11354,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -10670,10 +11388,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -10696,36 +11416,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -10758,6 +11480,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -10785,10 +11509,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -10811,36 +11537,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -10873,6 +11601,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -10900,10 +11630,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -10926,36 +11658,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -10988,6 +11722,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -11015,10 +11751,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -11041,36 +11779,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -11103,6 +11843,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -11123,17 +11865,19 @@ namespace WcfWCService.ExampleService {
         WcfWCService.ExampleService.createproblemreportResponse1 createproblemreport(WcfWCService.ExampleService.createproblemreportRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://myorg.org/MyJavaService/deleteprobreportRequest", ReplyAction="http://myorg.org/MyJavaService/deleteprobreportResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://myorg.org/MyJavaService/deleteprobreport/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://myorg.org/MyJavaService/createproblemreport2Request", ReplyAction="http://myorg.org/MyJavaService/createproblemreport2Response")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://myorg.org/MyJavaService/createproblemreport2/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumberResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -11156,36 +11900,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -11218,6 +11964,129 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocdoclinkResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocdoclink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbyResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebysResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebys))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Exception))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreportResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvocationTargetException))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatedispatchdocketpartpartlinkwithattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatedispatchdocketpartpartlinkwithattributes))]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.createproblemreport2Response1 createproblemreport2(WcfWCService.ExampleService.createproblemreport2Request request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://myorg.org/MyJavaService/deleteprobreportRequest", ReplyAction="http://myorg.org/MyJavaService/deleteprobreportResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://myorg.org/MyJavaService/deleteprobreport/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumberResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocref))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(copypartResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(copypart))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartref))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocref))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updateprodorderpartpartlinkwithattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updateprodorderpartpartlinkwithattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbydispatchdocketResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbydispatchdocket))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(IOException))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(eventObject))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PropertyVetoException))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FileNotFoundException))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbylinenumberResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbylinenumber))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprobreportResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprobreport))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletecnattachmentResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletecnattachment))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(emailmessageResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(emailmessage))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocattributestringsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocattributestrings))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(addResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(add))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteattachmentResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteattachment))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -11245,10 +12114,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -11271,36 +12142,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -11333,6 +12206,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -11353,17 +12228,19 @@ namespace WcfWCService.ExampleService {
         WcfWCService.ExampleService.deleteprattachmentResponse1 deleteprattachment(WcfWCService.ExampleService.deleteprattachmentRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://myorg.org/MyJavaService/setpraffectedpartsRequest", ReplyAction="http://myorg.org/MyJavaService/setpraffectedpartsResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://myorg.org/MyJavaService/setpraffectedparts/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://myorg.org/MyJavaService/setpraffectedobjectsRequest", ReplyAction="http://myorg.org/MyJavaService/setpraffectedobjectsResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://myorg.org/MyJavaService/setpraffectedobjects/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumberResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -11386,36 +12263,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -11448,6 +12327,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -11465,20 +12346,22 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatedispatchdocketpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatedispatchdocketpartpartlinkwithattributes))]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setpraffectedpartsResponse1 setpraffectedparts(WcfWCService.ExampleService.setpraffectedpartsRequest request);
+        WcfWCService.ExampleService.setpraffectedobjectsResponse1 setpraffectedobjects(WcfWCService.ExampleService.setpraffectedobjectsRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://myorg.org/MyJavaService/deletepraffectedpartsRequest", ReplyAction="http://myorg.org/MyJavaService/deletepraffectedpartsResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://myorg.org/MyJavaService/deletepraffectedparts/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://myorg.org/MyJavaService/deletepraffectedobjectsRequest", ReplyAction="http://myorg.org/MyJavaService/deletepraffectedobjectsResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://myorg.org/MyJavaService/deletepraffectedobjects/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumberResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -11501,36 +12384,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -11563,6 +12448,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -11580,7 +12467,7 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatedispatchdocketpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatedispatchdocketpartpartlinkwithattributes))]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.deletepraffectedpartsResponse1 deletepraffectedparts(WcfWCService.ExampleService.deletepraffectedpartsRequest request);
+        WcfWCService.ExampleService.deletepraffectedobjectsResponse1 deletepraffectedobjects(WcfWCService.ExampleService.deletepraffectedobjectsRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://myorg.org/MyJavaService/setproblemreportattributesRequest", ReplyAction="http://myorg.org/MyJavaService/setproblemreportattributesResponse")]
@@ -11590,10 +12477,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -11616,36 +12505,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -11678,6 +12569,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -11705,10 +12598,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -11731,36 +12626,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -11793,6 +12690,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -11824,10 +12723,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -11850,36 +12751,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -11912,6 +12815,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -11939,10 +12844,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -11965,36 +12872,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -12027,6 +12936,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -12054,10 +12965,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -12080,36 +12993,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -12142,6 +13057,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -12169,10 +13086,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -12195,36 +13114,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -12257,6 +13178,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -12284,10 +13207,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -12310,36 +13235,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -12372,6 +13299,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -12392,18 +13321,19 @@ namespace WcfWCService.ExampleService {
         WcfWCService.ExampleService.attachdocResponse1 attachdoc(WcfWCService.ExampleService.attachdocRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://myorg.org/MyJavaService/setdocdoclinkRequest", ReplyAction="http://myorg.org/MyJavaService/setdocdoclinkResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://myorg.org/MyJavaService/setdocdoclink/Fault/WTException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://myorg.org/MyJavaService/setdocdoclink/Fault/InvocationTargetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://myorg.org/MyJavaService/attachurlRequest", ReplyAction="http://myorg.org/MyJavaService/attachurlResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://myorg.org/MyJavaService/attachurl/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumberResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -12426,36 +13356,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -12488,6 +13420,251 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocdoclinkResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocdoclink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbyResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebysResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebys))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Exception))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreportResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvocationTargetException))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatedispatchdocketpartpartlinkwithattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatedispatchdocketpartpartlinkwithattributes))]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.attachurlResponse1 attachurl(WcfWCService.ExampleService.attachurlRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://myorg.org/MyJavaService/deleteurlRequest", ReplyAction="http://myorg.org/MyJavaService/deleteurlResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://myorg.org/MyJavaService/deleteurl/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumberResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocref))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(copypartResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(copypart))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartref))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocref))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updateprodorderpartpartlinkwithattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updateprodorderpartpartlinkwithattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbydispatchdocketResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbydispatchdocket))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(IOException))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(eventObject))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PropertyVetoException))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FileNotFoundException))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbylinenumberResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbylinenumber))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprobreportResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprobreport))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletecnattachmentResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletecnattachment))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(emailmessageResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(emailmessage))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocattributestringsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocattributestrings))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(addResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(add))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteattachmentResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteattachment))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocdoclinkResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocdoclink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbyResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebysResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebys))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Exception))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreportResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvocationTargetException))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatedispatchdocketpartpartlinkwithattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatedispatchdocketpartpartlinkwithattributes))]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.deleteurlResponse1 deleteurl(WcfWCService.ExampleService.deleteurlRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://myorg.org/MyJavaService/setdocdoclinkRequest", ReplyAction="http://myorg.org/MyJavaService/setdocdoclinkResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://myorg.org/MyJavaService/setdocdoclink/Fault/WTException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://myorg.org/MyJavaService/setdocdoclink/Fault/InvocationTargetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumberResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocref))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(copypartResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(copypart))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartref))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocref))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updateprodorderpartpartlinkwithattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updateprodorderpartpartlinkwithattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbydispatchdocketResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbydispatchdocket))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(IOException))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(eventObject))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PropertyVetoException))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FileNotFoundException))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbylinenumberResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbylinenumber))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprobreportResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprobreport))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletecnattachmentResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletecnattachment))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(emailmessageResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(emailmessage))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocattributestringsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocattributestrings))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(addResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(add))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteattachmentResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteattachment))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributesResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -12515,10 +13692,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -12541,36 +13720,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -12603,6 +13784,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -12630,10 +13813,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -12656,36 +13841,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -12718,6 +13905,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -12745,10 +13934,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -12771,36 +13962,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -12833,6 +14026,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -12860,10 +14055,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -12886,36 +14083,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -12948,6 +14147,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -12975,10 +14176,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -13001,36 +14204,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -13063,6 +14268,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -13090,10 +14297,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -13116,36 +14325,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -13178,6 +14389,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -13204,10 +14417,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -13230,36 +14445,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -13292,6 +14509,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -13323,10 +14542,12 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusageattributesfromlinenumber))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachcndoc))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqtyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartusagelinkqty))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdocResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachprdoc))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2Response))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createproblemreport2))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachmentResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteprattachment))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartreferencedbydoclinkwithattributesResponse))]
@@ -13349,36 +14570,38 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartref))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpartResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createpart))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedparts))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymultiResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartdescribedbymulti))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribebyResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartdescribeby))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevisionResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdocrevision))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctopartrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctopartrefs))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedpartsResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedparts))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deleteurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdocResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachdoc))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributesResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkwithattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorderResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkbyproductionorder))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenoticeResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(createchangenotice))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletepartpartlink))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstateResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setdoctodocrefs))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefsResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(deletedoctodocrefs))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjectsResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpraffectedobjects))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstateResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setproblemreportstate))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(updatepartreferencedbydoclinkwithattributesResponse))]
@@ -13411,6 +14634,8 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartmultipleusageattributes))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetaskResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(completetask))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurlResponse))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(attachurl))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlinkResponse))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(setpartpartlink))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(doccreate2Response))]
@@ -15415,6 +16640,97 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="createproblemreport2", WrapperNamespace="http://myorg.org/", IsWrapped=true)]
+    public partial class createproblemreport2Request {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg6;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute("arg7", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg7;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute("arg8", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg8;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=9)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg9;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=10)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg10;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=11)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg11;
+        
+        public createproblemreport2Request() {
+        }
+        
+        public createproblemreport2Request(string arg0, string arg1, string arg2, string arg3, string arg4, string arg5, string[] arg6, string[] arg7, string[] arg8, int arg9, string arg10, int arg11) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+            this.arg7 = arg7;
+            this.arg8 = arg8;
+            this.arg9 = arg9;
+            this.arg10 = arg10;
+            this.arg11 = arg11;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="createproblemreport2Response", WrapperNamespace="http://myorg.org/", IsWrapped=true)]
+    public partial class createproblemreport2Response1 {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public createproblemreport2Response1() {
+        }
+        
+        public createproblemreport2Response1(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
     [System.ServiceModel.MessageContractAttribute(WrapperName="deleteprobreport", WrapperNamespace="http://myorg.org/", IsWrapped=true)]
     public partial class deleteprobreportRequest {
         
@@ -15502,8 +16818,8 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setpraffectedparts", WrapperNamespace="http://myorg.org/", IsWrapped=true)]
-    public partial class setpraffectedpartsRequest {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setpraffectedobjects", WrapperNamespace="http://myorg.org/", IsWrapped=true)]
+    public partial class setpraffectedobjectsRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
@@ -15514,33 +16830,38 @@ namespace WcfWCService.ExampleService {
         public string[] arg1;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg2;
+        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public System.Nullable<int>[] arg2;
         
-        public setpraffectedpartsRequest() {
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg3;
+        
+        public setpraffectedobjectsRequest() {
         }
         
-        public setpraffectedpartsRequest(string arg0, string[] arg1, int arg2) {
+        public setpraffectedobjectsRequest(string arg0, string[] arg1, System.Nullable<int>[] arg2, int arg3) {
             this.arg0 = arg0;
             this.arg1 = arg1;
             this.arg2 = arg2;
+            this.arg3 = arg3;
         }
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setpraffectedpartsResponse", WrapperNamespace="http://myorg.org/", IsWrapped=true)]
-    public partial class setpraffectedpartsResponse1 {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setpraffectedobjectsResponse", WrapperNamespace="http://myorg.org/", IsWrapped=true)]
+    public partial class setpraffectedobjectsResponse1 {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string @return;
         
-        public setpraffectedpartsResponse1() {
+        public setpraffectedobjectsResponse1() {
         }
         
-        public setpraffectedpartsResponse1(string @return) {
+        public setpraffectedobjectsResponse1(string @return) {
             this.@return = @return;
         }
     }
@@ -15548,8 +16869,8 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepraffectedparts", WrapperNamespace="http://myorg.org/", IsWrapped=true)]
-    public partial class deletepraffectedpartsRequest {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepraffectedobjects", WrapperNamespace="http://myorg.org/", IsWrapped=true)]
+    public partial class deletepraffectedobjectsRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
@@ -15560,33 +16881,38 @@ namespace WcfWCService.ExampleService {
         public string[] arg1;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg2;
+        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public System.Nullable<int>[] arg2;
         
-        public deletepraffectedpartsRequest() {
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg3;
+        
+        public deletepraffectedobjectsRequest() {
         }
         
-        public deletepraffectedpartsRequest(string arg0, string[] arg1, int arg2) {
+        public deletepraffectedobjectsRequest(string arg0, string[] arg1, System.Nullable<int>[] arg2, int arg3) {
             this.arg0 = arg0;
             this.arg1 = arg1;
             this.arg2 = arg2;
+            this.arg3 = arg3;
         }
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepraffectedpartsResponse", WrapperNamespace="http://myorg.org/", IsWrapped=true)]
-    public partial class deletepraffectedpartsResponse1 {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepraffectedobjectsResponse", WrapperNamespace="http://myorg.org/", IsWrapped=true)]
+    public partial class deletepraffectedobjectsResponse1 {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string @return;
         
-        public deletepraffectedpartsResponse1() {
+        public deletepraffectedobjectsResponse1() {
         }
         
-        public deletepraffectedpartsResponse1(string @return) {
+        public deletepraffectedobjectsResponse1(string @return) {
             this.@return = @return;
         }
     }
@@ -16034,6 +17360,133 @@ namespace WcfWCService.ExampleService {
         }
         
         public attachdocResponse1(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="attachurl", WrapperNamespace="http://myorg.org/", IsWrapped=true)]
+    public partial class attachurlRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public bool arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg6;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg7;
+        
+        public attachurlRequest() {
+        }
+        
+        public attachurlRequest(string arg0, string arg1, string arg2, string arg3, string arg4, bool arg5, string arg6, int arg7) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+            this.arg7 = arg7;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="attachurlResponse", WrapperNamespace="http://myorg.org/", IsWrapped=true)]
+    public partial class attachurlResponse1 {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public attachurlResponse1() {
+        }
+        
+        public attachurlResponse1(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deleteurl", WrapperNamespace="http://myorg.org/", IsWrapped=true)]
+    public partial class deleteurlRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public bool arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg4;
+        
+        public deleteurlRequest() {
+        }
+        
+        public deleteurlRequest(string arg0, string arg1, string arg2, bool arg3, int arg4) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deleteurlResponse", WrapperNamespace="http://myorg.org/", IsWrapped=true)]
+    public partial class deleteurlResponse1 {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://myorg.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public deleteurlResponse1() {
+        }
+        
+        public deleteurlResponse1(string @return) {
             this.@return = @return;
         }
     }
@@ -17202,6 +18655,29 @@ namespace WcfWCService.ExampleService {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.createproblemreport2Response1 WcfWCService.ExampleService.MyJavaService.createproblemreport2(WcfWCService.ExampleService.createproblemreport2Request request) {
+            return base.Channel.createproblemreport2(request);
+        }
+        
+        public string createproblemreport2(string arg0, string arg1, string arg2, string arg3, string arg4, string arg5, string[] arg6, string[] arg7, string[] arg8, int arg9, string arg10, int arg11) {
+            WcfWCService.ExampleService.createproblemreport2Request inValue = new WcfWCService.ExampleService.createproblemreport2Request();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            inValue.arg7 = arg7;
+            inValue.arg8 = arg8;
+            inValue.arg9 = arg9;
+            inValue.arg10 = arg10;
+            inValue.arg11 = arg11;
+            WcfWCService.ExampleService.createproblemreport2Response1 retVal = ((WcfWCService.ExampleService.MyJavaService)(this)).createproblemreport2(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         WcfWCService.ExampleService.deleteprobreportResponse1 WcfWCService.ExampleService.MyJavaService.deleteprobreport(WcfWCService.ExampleService.deleteprobreportRequest request) {
             return base.Channel.deleteprobreport(request);
         }
@@ -17229,30 +18705,32 @@ namespace WcfWCService.ExampleService {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setpraffectedpartsResponse1 WcfWCService.ExampleService.MyJavaService.setpraffectedparts(WcfWCService.ExampleService.setpraffectedpartsRequest request) {
-            return base.Channel.setpraffectedparts(request);
+        WcfWCService.ExampleService.setpraffectedobjectsResponse1 WcfWCService.ExampleService.MyJavaService.setpraffectedobjects(WcfWCService.ExampleService.setpraffectedobjectsRequest request) {
+            return base.Channel.setpraffectedobjects(request);
         }
         
-        public string setpraffectedparts(string arg0, string[] arg1, int arg2) {
-            WcfWCService.ExampleService.setpraffectedpartsRequest inValue = new WcfWCService.ExampleService.setpraffectedpartsRequest();
+        public string setpraffectedobjects(string arg0, string[] arg1, System.Nullable<int>[] arg2, int arg3) {
+            WcfWCService.ExampleService.setpraffectedobjectsRequest inValue = new WcfWCService.ExampleService.setpraffectedobjectsRequest();
             inValue.arg0 = arg0;
             inValue.arg1 = arg1;
             inValue.arg2 = arg2;
-            WcfWCService.ExampleService.setpraffectedpartsResponse1 retVal = ((WcfWCService.ExampleService.MyJavaService)(this)).setpraffectedparts(inValue);
+            inValue.arg3 = arg3;
+            WcfWCService.ExampleService.setpraffectedobjectsResponse1 retVal = ((WcfWCService.ExampleService.MyJavaService)(this)).setpraffectedobjects(inValue);
             return retVal.@return;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.deletepraffectedpartsResponse1 WcfWCService.ExampleService.MyJavaService.deletepraffectedparts(WcfWCService.ExampleService.deletepraffectedpartsRequest request) {
-            return base.Channel.deletepraffectedparts(request);
+        WcfWCService.ExampleService.deletepraffectedobjectsResponse1 WcfWCService.ExampleService.MyJavaService.deletepraffectedobjects(WcfWCService.ExampleService.deletepraffectedobjectsRequest request) {
+            return base.Channel.deletepraffectedobjects(request);
         }
         
-        public string deletepraffectedparts(string arg0, string[] arg1, int arg2) {
-            WcfWCService.ExampleService.deletepraffectedpartsRequest inValue = new WcfWCService.ExampleService.deletepraffectedpartsRequest();
+        public string deletepraffectedobjects(string arg0, string[] arg1, System.Nullable<int>[] arg2, int arg3) {
+            WcfWCService.ExampleService.deletepraffectedobjectsRequest inValue = new WcfWCService.ExampleService.deletepraffectedobjectsRequest();
             inValue.arg0 = arg0;
             inValue.arg1 = arg1;
             inValue.arg2 = arg2;
-            WcfWCService.ExampleService.deletepraffectedpartsResponse1 retVal = ((WcfWCService.ExampleService.MyJavaService)(this)).deletepraffectedparts(inValue);
+            inValue.arg3 = arg3;
+            WcfWCService.ExampleService.deletepraffectedobjectsResponse1 retVal = ((WcfWCService.ExampleService.MyJavaService)(this)).deletepraffectedobjects(inValue);
             return retVal.@return;
         }
         
@@ -17376,6 +18854,41 @@ namespace WcfWCService.ExampleService {
             inValue.arg5 = arg5;
             inValue.arg6 = arg6;
             WcfWCService.ExampleService.attachdocResponse1 retVal = ((WcfWCService.ExampleService.MyJavaService)(this)).attachdoc(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.attachurlResponse1 WcfWCService.ExampleService.MyJavaService.attachurl(WcfWCService.ExampleService.attachurlRequest request) {
+            return base.Channel.attachurl(request);
+        }
+        
+        public string attachurl(string arg0, string arg1, string arg2, string arg3, string arg4, bool arg5, string arg6, int arg7) {
+            WcfWCService.ExampleService.attachurlRequest inValue = new WcfWCService.ExampleService.attachurlRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            inValue.arg7 = arg7;
+            WcfWCService.ExampleService.attachurlResponse1 retVal = ((WcfWCService.ExampleService.MyJavaService)(this)).attachurl(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.deleteurlResponse1 WcfWCService.ExampleService.MyJavaService.deleteurl(WcfWCService.ExampleService.deleteurlRequest request) {
+            return base.Channel.deleteurl(request);
+        }
+        
+        public string deleteurl(string arg0, string arg1, string arg2, bool arg3, int arg4) {
+            WcfWCService.ExampleService.deleteurlRequest inValue = new WcfWCService.ExampleService.deleteurlRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            WcfWCService.ExampleService.deleteurlResponse1 retVal = ((WcfWCService.ExampleService.MyJavaService)(this)).deleteurl(inValue);
             return retVal.@return;
         }
         
