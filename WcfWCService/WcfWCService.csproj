@@ -75,11 +75,11 @@
     <None Include="Service References\ExampleService\MyJavaService1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ExampleService\MyJavaService11.xsd">
+    <None Include="Service References\ExampleService\MyJavaService3.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\ExampleService\MyJavaService3Service.wsdl" />
     <None Include="Service References\ExampleService\MyJavaServiceService1.wsdl" />
-    <None Include="Service References\ExampleService\MyJavaServiceService11.wsdl" />
     <None Include="Service References\ExampleService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

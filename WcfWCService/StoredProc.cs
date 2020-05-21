@@ -76,15 +76,15 @@ namespace WcfWCService
             }
             if (sEnvironment == "DEVWCREGAIN")
             {
-                return @"Data Source=VSRS12;Initial Catalog=" + m_sCatalog + ";User ID=pimsadmin;Password=N33dt0kn0w";
+                return @"Data Source=VSRS25;Initial Catalog=" + m_sCatalog + ";User ID=pimsadmin;Password=N33dt0kn0w";
             }
             else if (sEnvironment == "PRODUCTIONREGAIN")
             {
-                return @"Data Source=VSRS06;Initial Catalog=" + m_sCatalog + ";User ID=pimsadmin;Password=N33dt0kn0w";
+                return @"Data Source=VSRS30;Initial Catalog=" + m_sCatalog + ";User ID=pimsadmin;Password=N33dt0kn0w";
             }
             else
             {
-                return @"Data Source=VSRS12;Initial Catalog=" + m_sCatalog + ";User ID=pimsadmin;Password=N33dt0kn0w";
+                return @"Data Source=VSRS25;Initial Catalog=" + m_sCatalog + ";User ID=pimsadmin;Password=N33dt0kn0w";
             }
 
         }
