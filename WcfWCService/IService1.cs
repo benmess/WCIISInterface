@@ -47,10 +47,11 @@ namespace WcfWCService
         string SetDocPartDescribedByLink(string sSessionId, string sUserId, string sDocNo, string sPartNo, string sWebAppId);
 
         [OperationContract]
-        [WebGet(UriTemplate = "createprojectworkitem/{sSessionId}/{sUserId}/{sFullName}/{sParentPartNo}/{sPartNo}/{sPartName}/{sProductName}/{sPartType}/{sPartUsageType}/{sPartUsageUnit}/{sFolderNameAndPath}/{sCheckInComments}/{sLineNumber}/{sPartDescription}/{iProdOrLibrary}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        [WebGet(UriTemplate = "createprojectworkitem/{sSessionId}/{sUserId}/{sFullName}/{sParentPartNo}/{sPartNo}/{sPartName}/{sProductName}/{sPartType}/{sPartUsageType}/{sPartUsageUnit}/{sFolderNameAndPath}/{sCheckInComments}/{sLineNumber}/{sPartDescription}/{sReqirementsInfo}/{sPreparationInfo}/{sReviewInfo}/{iProdOrLibrary}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string CreateProjectWorkItem(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sPartNo, string sPartName,
                                             string sProductName, string sPartType, string sPartUsageType, string sPartUsageUnit, string sFolderNameAndPath,
-                                            string sCheckInComments, string sLineNumber, string sPartDescription, string iProdOrLibrary, string sWebAppId);
+                                            string sCheckInComments, string sLineNumber, string sPartDescription,
+                                            string sReqirementsInfo, string sPreparationInfo, string sReviewInfo, string iProdOrLibrary, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "insertexistingprojectworkitem/{sSessionId}/{sUserId}/{sFullName}/{sParentPartNo}/{sExistingPWIPartNo}/{sPartUsageType}/{sPartUsageUnit}/{sCheckInComments}/{sLineNumber}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
@@ -58,10 +59,11 @@ namespace WcfWCService
                                                     string sPartUsageType, string sPartUsageUnit, string sCheckInComments, string sLineNumber, string sWebAppId);
 
         [OperationContract]
-        [WebGet(UriTemplate = "createproject/{sSessionId}/{sUserId}/{sFullName}/{sPartNo}/{sPartName}/{sProductName}/{sPartType}/{sFolderNameAndPath}/{sCheckInComments}/{sPartDescription}/{iProdOrLibrary}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        [WebGet(UriTemplate = "createproject/{sSessionId}/{sUserId}/{sFullName}/{sPartNo}/{sPartName}/{sProductName}/{sPartType}/{sFolderNameAndPath}/{sCheckInComments}/{sPartDescription}/{sReqirementsInfo}/{sPreparationInfo}/{sReviewInfo}/{iProdOrLibrary}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string CreateProject(string sSessionId, string sUserId, string sFullName, string sPartNo, string sPartName,
                                             string sProductName, string sPartType, string sFolderNameAndPath,
-                                            string sCheckInComments, string sPartDescription, string iProdOrLibrary, string sWebAppId);
+                                            string sCheckInComments, string sPartDescription,
+                                            string sReqirementsInfo, string sPreparationInfo, string sReviewInfo, string iProdOrLibrary, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "createfronesisproject/{sSessionId}/{sUserId}/{sProjNo}/{sProjDesc}/{sProductName}/{sDocType}/{sPartType}/{sFolderNameAndPath}/{sClientDesc}/{sOriginator}/{sClientProjNo}/{sRevision}/{sCheckInComments}/{iProdOrLibrary}/{sWebAppId}/{sProjType}", ResponseFormat = WebMessageFormat.Xml)]
@@ -243,8 +245,8 @@ namespace WcfWCService
         string SetProbRptAffectedObjects(string sSessionId, string sUserId, string sProdLossNo, string sAffectdPartsString, string sAffectdObjectTypesString, string sWebAppId);
 
         [OperationContract]
-        [WebGet(UriTemplate = "setprobrptstate/{sSessionId}/{sUserId}/{sFullName}/{sProbRptNo}/{sProbRptName}/{sLifecycleState}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
-        string SetProbRptState(string sSessionId, string sUserId, string sFullName, string sProbRptNo, string sProbRptName, string sLifecycleState, string sWebAppId);
+        [WebGet(UriTemplate = "setprobrptstate/{sSessionId}/{sUserId}/{sFullName}/{sProbRptNo}/{sProbRptName}/{sLifecycleState}/{sComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string SetProbRptState(string sSessionId, string sUserId, string sFullName, string sProbRptNo, string sProbRptName, string sLifecycleState, string sComments, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "deleteprobrptaffectedobjects/{sSessionId}/{sUserId}/{sProdLossNo}/{sAffectdPartsString}/{sAffectdObjectTypesString}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
@@ -432,6 +434,14 @@ namespace WcfWCService
         string CreateCablePartLink(string sSessionId, string sUserId, string sCableNo, string sFuncLoc, string sLineNumber, string sToOrFrom, string sCheckInComments, string sWebAppId);
 
         [OperationContract]
+        [WebGet(UriTemplate = "createcableterminationlink/{sSessionId}/{sUserId}/{sCableNo}/{sFuncLoc}/{sLineNumber}/{sToOrFrom}/{sTermination}/{sWireNo}/{sCoreNo}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string CreateCableTerminationLink(string sSessionId, string sUserId, string sCableNo, string sFuncLoc, string sLineNumber, string sToOrFrom, string sTermination, string sWireNo, string sCoreNo, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "updatecableterminationlink/{sSessionId}/{sUserId}/{sCableNo}/{sFuncLoc}/{sLineNumber}/{sToOrFrom}/{sTermination}/{sWireNo}/{sCoreNo}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string UpdateCableTerminationLink(string sSessionId, string sUserId, string sCableNo, string sFuncLoc, string sLineNumber, string sToOrFrom, string sTermination, string sWireNo, string sCoreNo, string sWebAppId);
+
+        [OperationContract]
         [WebGet(UriTemplate = "creatematerialcatalogitem/{sSessionId}/{sUserId}/{sFullname}/{sMatCatNo}/{sMatCatType}/{sName}/{sDesc}/{sLongDesc}/{sDrivekW}/{sCheckInComments}/{sFullLoadCurrent}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string CreateMaterialCatalogItem(string sSessionId, string sUserId, string sFullName, string sMatCatNo, string sMatCatType, string sName, string sDesc, string sLongDesc, string sDrivekW, string sFullLoadCurrent,string sCheckInComments, string sWebAppId);
 
@@ -444,7 +454,7 @@ namespace WcfWCService
         [WebGet(UriTemplate = "createplantequipitem/{sSessionId}/{sUserId}/{sFullname}/{sPlantEquipNo}/{sPlantEquipType}/{sName}/{sDesc}/{sLongDesc}/{sContSysType}/{sDriveRating}/" +
                                                    "{sEquipRegFlag}/{sIPRegFlag}/{sIPAddress}/{sComments}/{sOpZone}/{sProduct}/{sFolder}/" +
                                                    "{sPowerCable}/{sControlCable}/{sInstrumentationCable}/{sDataCable}/" +
-                                                   "{sInstRegFlag}/{sConnectingCable}/" +
+                                                   "{sInstRegFlag}/{sFullLoadCurrent}/" +
                                                    "{sCheckInComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string CreatePlantEquipItem(string sSessionId, string sUserId, string sFullName, string sPlantEquipNo,
                                            string sPlantEquipType, string sName, string sDesc, string sLongDesc,
@@ -452,21 +462,21 @@ namespace WcfWCService
                                            string sComments, string sOpZone,
                                            string sProduct, string sFolder,
                                            string sPowerCable, string sControlCable, string sInstrumentationCable, string sDataCable,
-                                           string sInstRegFlag, string sConnectingCable,
+                                           string sInstRegFlag, string sFullLoadCurrent,
                                            string sCheckInComments, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "updateplantequipitem/{sSessionId}/{sUserId}/{sFullname}/{sPlantEquipNo}/{sName}/{sDesc}/{sLongDesc}/{sContSysType}/{sDriveRating}/{sEquipRegFlag}/" +
                                                    "{sIPRegFlag}/{sIPAddress}/{sComments}/{sOpZone}/" +
                                                    "{sPowerCable}/{sControlCable}/{sInstrumentationCable}/{sDataCable}/" +
-                                                   "{sInstRegFlag}/{sConnectingCable}/" +
+                                                   "{sInstRegFlag}/{sFullLoadCurrent}/" +
                                                    "{sCheckInComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string UpdatePlantEquipItem(string sSessionId, string sUserId, string sFullName, string sPlantEquipNo, 
                                     string sName, string sDesc, string sLongDesc, string sContSysType,
                                     string sDriveRating, string sEquipRegFlag, string sIPRegFlag, string sIPAddress,
                                     string sComments, string sOpZone,
                                     string sPowerCable, string sControlCable, string sInstrumentationCable, string sDataCable,
-                                    string sInstRegFlag, string sConnectingCable,
+                                    string sInstRegFlag, string sFullLoadCurrent,
                                     string sCheckInComments, string sWebAppId);
 
         [OperationContract]

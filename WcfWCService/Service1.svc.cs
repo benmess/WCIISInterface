@@ -471,7 +471,8 @@ namespace WcfWCService
 
         public string CreateProjectWorkItem(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sPartNo, string sPartName,
                                             string sProductName, string sPartType, string sPartUsageType, string sPartUsageUnit, string sFolderNameAndPath,
-                                            string sCheckInComments, string sLineNumber, string sPartDescription, string iProdOrLibrary, string sWebAppId)
+                                            string sCheckInComments, string sLineNumber, string sPartDescription, 
+                                            string sReqirementsInfo, string sPreparationInfo, string sReviewInfo, string iProdOrLibrary, string sWebAppId)
         {
 
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -494,25 +495,42 @@ namespace WcfWCService
 
                 sAttributeNames[0] = "Originator";
                 sAttributeNames[1] = "PartDesc";
-                //sAttributeNames[2] = "ProjectType";
 
                 sAttributeValues[0] = sFullName;
                 sAttributeValues[1] = sPartDescription;
-                //sAttributeValues[2] = sProjType;
 
                 sAttributeTypes[0] = "string";
                 sAttributeTypes[1] = "string";
-                //sAttributeTypes[2] = "string";
 
-                //if (sOriginator != "")
-                //{
-                //    Array.Resize<string>(ref sAttributeNames, 4);
-                //    Array.Resize<string>(ref sAttributeValues, 4);
-                //    Array.Resize<string>(ref sAttributeTypes, 4);
-                //    sAttributeNames[3] = "Originator";
-                //    sAttributeValues[3] = sOriginator;
-                //    sAttributeTypes[3] = "string";
-                //}
+                if (sReqirementsInfo != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "RequirementsInfo";
+                    sAttributeValues[sAttributeValues.Length - 1] = sReqirementsInfo;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sPreparationInfo != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "PreparationInfo";
+                    sAttributeValues[sAttributeValues.Length - 1] = sPreparationInfo;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sReviewInfo != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "ReviewInfo";
+                    sAttributeValues[sAttributeValues.Length - 1] = sReviewInfo;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
 
                 sReturn = client2.createpart(sPartNo, sPartName, sProductName, sPartType, sFolderNameAndPath, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
                 if (sReturn.StartsWith("Success"))
@@ -530,7 +548,8 @@ namespace WcfWCService
 
         public string CreateProject(string sSessionId, string sUserId, string sFullName, string sPartNo, string sPartName,
                                             string sProductName, string sPartType, string sFolderNameAndPath,
-                                            string sCheckInComments, string sPartDescription, string iProdOrLibrary, string sWebAppId)
+                                            string sCheckInComments, string sPartDescription,
+                                            string sReqirementsInfo, string sPreparationInfo, string sReviewInfo, string iProdOrLibrary, string sWebAppId)
         {
 
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -549,15 +568,42 @@ namespace WcfWCService
 
                 sAttributeNames[0] = "Originator";
                 sAttributeNames[1] = "PartDesc";
-                //sAttributeNames[2] = "ProjectType";
 
                 sAttributeValues[0] = sFullName;
                 sAttributeValues[1] = sPartDescription;
-                //sAttributeValues[2] = sProjType;
 
                 sAttributeTypes[0] = "string";
                 sAttributeTypes[1] = "string";
-                //sAttributeTypes[2] = "string";
+
+                if (sReqirementsInfo != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "RequirementsInfo";
+                    sAttributeValues[sAttributeValues.Length - 1] = sReqirementsInfo;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sPreparationInfo != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "PreparationInfo";
+                    sAttributeValues[sAttributeValues.Length - 1] = sPreparationInfo;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sReviewInfo != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "ReviewInfo";
+                    sAttributeValues[sAttributeValues.Length - 1] = sReviewInfo;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
 
                 sReturn = client2.createpart(sPartNo, sPartName, sProductName, sPartType, sFolderNameAndPath, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
 
@@ -2330,7 +2376,7 @@ namespace WcfWCService
             }
         }
 
-        public string SetProbRptState(string sSessionId, string sUserId, string sFullName, string sProbRptNo, string sProbRptName, string sLifecycleState,  string sWebAppId)
+        public string SetProbRptState(string sSessionId, string sUserId, string sFullName, string sProbRptNo, string sProbRptName, string sLifecycleState, string sComments,  string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -2343,13 +2389,24 @@ namespace WcfWCService
 
                 string[] sAttributeNames = new string[1];
                 string[] sAttributeValues = new string[1];
-                string[] sAttributeTypes = new string[1];
+                string[] sAttributeTypes = new string[2];
 
                 sAttributeNames[0] = "Originator";
 
                 sAttributeValues[0] = sFullName;
 
                 sAttributeTypes[0] = "string";
+
+                if (sComments != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, 2);
+                    Array.Resize<string>(ref sAttributeValues, 2);
+                    Array.Resize<string>(ref sAttributeTypes, 2);
+
+                    sAttributeNames[1] = "Comments";
+                    sAttributeValues[1] = sComments;
+                    sAttributeTypes[1] = "string";
+                }
 
                 //Send empty string for need date so it is ignored at the Windchill end
                 string sRtn = client2.setproblemreportattributes(sProbRptNo, sProbRptName, sAttributeNames, sAttributeValues, sAttributeTypes, "", Convert.ToInt16(sWebAppId));
@@ -3430,6 +3487,111 @@ namespace WcfWCService
             }
         }
 
+        public string CreateCableTerminationLink(string sSessionId, string sUserId, string sCableNo, string sFuncLoc, string sLineNumber, string sToOrFrom, string sTermination, string sWireNo, string sCoreNo, string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                ArrayList arrUser = GetUserDetails(sUserId);
+                string sFullName = arrUser[2].ToString();
+
+                string[] sAttributeNames = new string[3];
+                string[] sAttributeValues = new string[3];
+                string[] sAttributeTypes = new string[3];
+                string sCheckInComments = "";
+
+                sAttributeNames[0] = "ToOrFrom";
+                sAttributeNames[1] = "Termination";
+                sAttributeNames[2] = "CoreNo";
+                sAttributeValues[0] = sToOrFrom; //0 = from, 1 = to
+                sAttributeValues[1] = sTermination;
+                sAttributeValues[2] = sCoreNo;
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+                sAttributeTypes[2] = "string";
+
+
+                if (sWireNo != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "WireNo";
+                    sAttributeValues[sAttributeValues.Length - 1] = sWireNo;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                //Now create a parent child link between the from functional location and the cable item
+                if (sToOrFrom.Equals("0"))
+                    sCheckInComments = "Creating termination link from the 'From' functional location to the cable " + sCableNo + " for termination " + sTermination;
+                if (sToOrFrom.Equals("1"))
+                    sCheckInComments = "Creating termination link from the 'To' functional location to the cable " + sCableNo + " for termination " + sTermination;
+
+                string sRtn4 = client2.setpartpartlinkwithattributes(sFullName, sFuncLoc, sCableNo, 1, sCheckInComments,
+                                                        "local.rs.vsrs05.Regain.TerminationUsage", "ea", Convert.ToInt32(sLineNumber), sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
+
+
+                return sRtn4;
+            }
+        }
+
+        public string UpdateCableTerminationLink(string sSessionId, string sUserId, string sCableNo, string sFuncLoc, string sLineNumber, string sToOrFrom, string sTermination, string sWireNo, string sCoreNo, string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                ArrayList arrUser = GetUserDetails(sUserId);
+                string sFullName = arrUser[2].ToString();
+
+                string[] sAttributeNames = new string[3];
+                string[] sAttributeValues = new string[3];
+                string[] sAttributeTypes = new string[3];
+                string sCheckInComments = "";
+
+                sAttributeNames[0] = "ToOrFrom";
+                sAttributeNames[1] = "Termination";
+                sAttributeNames[2] = "CoreNo";
+                sAttributeValues[0] = sToOrFrom; //0 = from, 1 = to
+                sAttributeValues[1] = sTermination;
+                sAttributeValues[2] = sCoreNo;
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+                sAttributeTypes[2] = "string";
+
+
+                Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                sAttributeNames[sAttributeNames.Length - 1] = "WireNo";
+                sAttributeValues[sAttributeValues.Length - 1] = sWireNo;
+                sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+
+                //Now create a parent child link between the from functional location and the cable item
+                if (sToOrFrom.Equals("0"))
+                    sCheckInComments = "Updating termination link from the 'From' functional location to the cable " + sCableNo + " for termination " + sTermination;
+                if (sToOrFrom.Equals("1"))
+                    sCheckInComments = "Updating termination link from the 'To' functional location to the cable " + sCableNo + " for termination " + sTermination;
+
+                string sRtn4 = client2.updatepartpartlinkwithattributes(sFullName, sFuncLoc, sCableNo, 1, Convert.ToInt32(sLineNumber), sCheckInComments,
+                                                        "local.rs.vsrs05.Regain.TerminationUsage", "ea", sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
+
+
+                return sRtn4;
+            }
+        }
+
         public string CreateMaterialCatalogItem(string sSessionId, string sUserId, string sFullName, string sMatCatNo, string sMatCatType, string sName, string sDesc, string sLongDesc, 
                                                 string sDrivekW, string sFullLoadCurrent, string sCheckInComments, string sWebAppId)
         {
@@ -3594,7 +3756,7 @@ namespace WcfWCService
                                            string sEquipRegFlag, string sIPRegFlag, string sIPAddress, string sComments, string sOpZone,
                                            string sProduct, string sFolder,
                                            string sPowerCable, string sControlCable, string sInstrumentationCable, string sDataCable,
-                                           string sInstRegFlag, string sConnectingCable,
+                                           string sInstRegFlag, string sFullLoadCurrent,
                                            string sCheckInComments, string sWebAppId)
         {
             string sReturn = "";
@@ -3649,7 +3811,7 @@ namespace WcfWCService
                     Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
                     sAttributeNames[sAttributeNames.Length - 1] = "PowerCable";
                     sAttributeValues[sAttributeValues.Length - 1] = sPowerCable;
-                    sAttributeTypes[sAttributeTypes.Length - 1] = "int";
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
                 }
 
                 if (sControlCable != "")
@@ -3659,7 +3821,7 @@ namespace WcfWCService
                     Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
                     sAttributeNames[sAttributeNames.Length - 1] = "ControlCable";
                     sAttributeValues[sAttributeValues.Length - 1] = sControlCable;
-                    sAttributeTypes[sAttributeTypes.Length - 1] = "int";
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
                 }
 
                 if (sInstrumentationCable != "")
@@ -3669,7 +3831,7 @@ namespace WcfWCService
                     Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
                     sAttributeNames[sAttributeNames.Length - 1] = "InstrumentationCable";
                     sAttributeValues[sAttributeValues.Length - 1] = sInstrumentationCable;
-                    sAttributeTypes[sAttributeTypes.Length - 1] = "int";
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
                 }
 
                 if (sDataCable != "")
@@ -3679,7 +3841,7 @@ namespace WcfWCService
                     Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
                     sAttributeNames[sAttributeNames.Length - 1] = "DataCable";
                     sAttributeValues[sAttributeValues.Length - 1] = sDataCable;
-                    sAttributeTypes[sAttributeTypes.Length - 1] = "int";
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
                 }
 
                 if (sInstRegFlag != "")
@@ -3692,14 +3854,14 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
                 }
 
-                if (sConnectingCable != "")
+                if (sFullLoadCurrent != "")
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
                     Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
-                    sAttributeNames[sAttributeNames.Length - 1] = "ConnectingCable";
-                    sAttributeValues[sAttributeValues.Length - 1] = sConnectingCable;
-                    sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
+                    sAttributeNames[sAttributeNames.Length - 1] = "FullLoadCurrent";
+                    sAttributeValues[sAttributeValues.Length - 1] = sFullLoadCurrent;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "double";
                 }
 
                 Update_User_Time(sUserId, sSessionId);
@@ -3720,7 +3882,7 @@ namespace WcfWCService
                                            string sContSysType, string sDriveRating, string sEquipRegFlag,
                                            string sIPRegFlag, string sIPAddress, string sComments, string sOpZone,
                                            string sPowerCable, string sControlCable, string sInstrumentationCable, string sDataCable,
-                                           string sInstRegFlag, string sConnectingCable,
+                                           string sInstRegFlag, string sFullLoadCurrent,
                                            string sCheckInComments, string sWebAppId)
         {
             string sReturn = "";
@@ -3775,7 +3937,7 @@ namespace WcfWCService
                     Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
                     sAttributeNames[sAttributeNames.Length - 1] = "PowerCable";
                     sAttributeValues[sAttributeValues.Length - 1] = sPowerCable;
-                    sAttributeTypes[sAttributeTypes.Length - 1] = "int";
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
                 }
 
                 if (sControlCable != "")
@@ -3785,7 +3947,7 @@ namespace WcfWCService
                     Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
                     sAttributeNames[sAttributeNames.Length - 1] = "ControlCable";
                     sAttributeValues[sAttributeValues.Length - 1] = sControlCable;
-                    sAttributeTypes[sAttributeTypes.Length - 1] = "int";
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
                 }
 
                 if (sInstrumentationCable != "")
@@ -3795,7 +3957,7 @@ namespace WcfWCService
                     Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
                     sAttributeNames[sAttributeNames.Length - 1] = "InstrumentationCable";
                     sAttributeValues[sAttributeValues.Length - 1] = sInstrumentationCable;
-                    sAttributeTypes[sAttributeTypes.Length - 1] = "int";
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
                 }
 
                 if (sDataCable != "")
@@ -3805,7 +3967,7 @@ namespace WcfWCService
                     Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
                     sAttributeNames[sAttributeNames.Length - 1] = "DataCable";
                     sAttributeValues[sAttributeValues.Length - 1] = sDataCable;
-                    sAttributeTypes[sAttributeTypes.Length - 1] = "int";
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
                 }
 
                 if (sInstRegFlag != "")
@@ -3818,14 +3980,14 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
                 }
 
-                if (sConnectingCable != "")
+                if (sFullLoadCurrent != "")
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
                     Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
-                    sAttributeNames[sAttributeNames.Length - 1] = "ConnectingCable";
-                    sAttributeValues[sAttributeValues.Length - 1] = sConnectingCable;
-                    sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
+                    sAttributeNames[sAttributeNames.Length - 1] = "FullLoadCurrent";
+                    sAttributeValues[sAttributeValues.Length - 1] = sFullLoadCurrent;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "double";
                 }
 
                 Update_User_Time(sUserId, sSessionId);
