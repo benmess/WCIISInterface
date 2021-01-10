@@ -107,7 +107,7 @@ namespace WcfWCService
             }
             catch
             {
-                m_ErrMessage = "Class GenericRstTable method 'rstInsert' failed Argumments sSQL: " + m_sSQL;
+                m_ErrMessage = "Class ExecuteSQL method 'rstInsert' failed Argumments sSQL: " + m_sSQL;
                 if (myConnection.State == ConnectionState.Open)
                 {
                     myConnection.Close();
@@ -144,6 +144,66 @@ namespace WcfWCService
             else
             {
                 return "";
+            }
+        }
+
+        public int Get_Int(DataSet ds, string sColumnName, int iRow)
+        {
+            int iColumnNo = 0;
+
+            if (ds.Tables.Count > 0)
+            {
+                iColumnNo = ds.Tables[0].Columns.IndexOf(sColumnName);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    if (Convert.IsDBNull(ds.Tables[0].Rows[iRow].ItemArray.GetValue(iColumnNo)))
+                    {
+                        return -1;
+                    }
+                    else
+                    {
+                        return Convert.ToInt32(ds.Tables[0].Rows[iRow].ItemArray.GetValue(iColumnNo));
+                    }
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        public double Get_Float(DataSet ds, string sColumnName, int iRow)
+        {
+            int iColumnNo = 0;
+
+            if (ds.Tables.Count > 0)
+            {
+                iColumnNo = ds.Tables[0].Columns.IndexOf(sColumnName);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    if (Convert.IsDBNull(ds.Tables[0].Rows[iRow].ItemArray.GetValue(iColumnNo)))
+                    {
+                        return -1;
+                    }
+                    else
+                    {
+                        return Convert.ToDouble(ds.Tables[0].Rows[iRow].ItemArray.GetValue(iColumnNo));
+                    }
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+            else
+            {
+                return -1;
             }
         }
 

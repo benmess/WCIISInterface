@@ -406,204 +406,65 @@ namespace WcfWCService.ExampleService {
         WcfWCService.ExampleService.addResponse add(WcfWCService.ExampleService.addRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/doccreateRequest", ReplyAction="http://regain.org/MyJavaService3/doccreateResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/doccreate/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdocrevremoveattachsRequest", ReplyAction="http://regain.org/MyJavaService3/setdocrevremoveattachsResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setdocrevremoveattachs/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.doccreateResponse doccreate(WcfWCService.ExampleService.doccreateRequest request);
+        WcfWCService.ExampleService.setdocrevremoveattachsResponse setdocrevremoveattachs(WcfWCService.ExampleService.setdocrevremoveattachsRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/doccreate2Request", ReplyAction="http://regain.org/MyJavaService3/doccreate2Response")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/doccreate2/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setpartusagelinkqtyRequest", ReplyAction="http://regain.org/MyJavaService3/setpartusagelinkqtyResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setpartusagelinkqty/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.doccreate2Response doccreate2(WcfWCService.ExampleService.doccreate2Request request);
+        WcfWCService.ExampleService.setpartusagelinkqtyResponse setpartusagelinkqty(WcfWCService.ExampleService.setpartusagelinkqtyRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/attachdocRequest", ReplyAction="http://regain.org/MyJavaService3/attachdocResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/attachdoc/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdocdoclinkwithattributesRequest", ReplyAction="http://regain.org/MyJavaService3/setdocdoclinkwithattributesResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/setdocdoclinkwithattributes/Fault/WTException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/setdocdoclinkwithattributes/Fault/InvocationTarg" +
+            "etException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.attachdocResponse attachdoc(WcfWCService.ExampleService.attachdocRequest request);
+        WcfWCService.ExampleService.setdocdoclinkwithattributesResponse setdocdoclinkwithattributes(WcfWCService.ExampleService.setdocdoclinkwithattributesRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/attachurlRequest", ReplyAction="http://regain.org/MyJavaService3/attachurlResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/attachurl/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setpartmultipleusageattributesRequest", ReplyAction="http://regain.org/MyJavaService3/setpartmultipleusageattributesResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setpartmultipleusageattributes/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.attachurlResponse attachurl(WcfWCService.ExampleService.attachurlRequest request);
+        WcfWCService.ExampleService.setpartmultipleusageattributesResponse setpartmultipleusageattributes(WcfWCService.ExampleService.setpartmultipleusageattributesRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdocattributesRequest", ReplyAction="http://regain.org/MyJavaService3/setdocattributesResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setdocattributes/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/createproblemreportRequest", ReplyAction="http://regain.org/MyJavaService3/createproblemreportResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/createproblemreport/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setdocattributesResponse setdocattributes(WcfWCService.ExampleService.setdocattributesRequest request);
+        WcfWCService.ExampleService.createproblemreportResponse createproblemreport(WcfWCService.ExampleService.createproblemreportRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deleteattachmentRequest", ReplyAction="http://regain.org/MyJavaService3/deleteattachmentResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deleteattachment/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletedoctopartrefRequest", ReplyAction="http://regain.org/MyJavaService3/deletedoctopartrefResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deletedoctopartref/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.deleteattachmentResponse deleteattachment(WcfWCService.ExampleService.deleteattachmentRequest request);
+        WcfWCService.ExampleService.deletedoctopartrefResponse deletedoctopartref(WcfWCService.ExampleService.deletedoctopartrefRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deleteurlRequest", ReplyAction="http://regain.org/MyJavaService3/deleteurlResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deleteurl/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletedoctopartrefwithattributeRequest", ReplyAction="http://regain.org/MyJavaService3/deletedoctopartrefwithattributeResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deletedoctopartrefwithattribute/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.deleteurlResponse deleteurl(WcfWCService.ExampleService.deleteurlRequest request);
+        WcfWCService.ExampleService.deletedoctopartrefwithattributeResponse deletedoctopartrefwithattribute(WcfWCService.ExampleService.deletedoctopartrefwithattributeRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdoctopartrefsRequest", ReplyAction="http://regain.org/MyJavaService3/setdoctopartrefsResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setdoctopartrefs/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/updatepartpartlinkwithattributesRequest", ReplyAction="http://regain.org/MyJavaService3/updatepartpartlinkwithattributesResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/updatepartpartlinkwithattributes/Fault/WTExcepti" +
+            "on", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/updatepartpartlinkwithattributes/Fault/Invocatio" +
+            "nTargetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setdoctopartrefsResponse setdoctopartrefs(WcfWCService.ExampleService.setdoctopartrefsRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdoctodocrefRequest", ReplyAction="http://regain.org/MyJavaService3/setdoctodocrefResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setdoctodocref/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setdoctodocrefResponse setdoctodocref(WcfWCService.ExampleService.setdoctodocrefRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/copypartRequest", ReplyAction="http://regain.org/MyJavaService3/copypartResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/copypart/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.copypartResponse copypart(WcfWCService.ExampleService.copypartRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setpartpartlinkRequest", ReplyAction="http://regain.org/MyJavaService3/setpartpartlinkResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/setpartpartlink/Fault/WTException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/setpartpartlink/Fault/InvocationTargetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setpartpartlinkResponse setpartpartlink(WcfWCService.ExampleService.setpartpartlinkRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdocdoclinkRequest", ReplyAction="http://regain.org/MyJavaService3/setdocdoclinkResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/setdocdoclink/Fault/WTException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/setdocdoclink/Fault/InvocationTargetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setdocdoclinkResponse setdocdoclink(WcfWCService.ExampleService.setdocdoclinkRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/createpartRequest", ReplyAction="http://regain.org/MyJavaService3/createpartResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/createpart/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.createpartResponse createpart(WcfWCService.ExampleService.createpartRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setpartstateRequest", ReplyAction="http://regain.org/MyJavaService3/setpartstateResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setpartstate/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setpartstateResponse setpartstate(WcfWCService.ExampleService.setpartstateRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/attachprdocRequest", ReplyAction="http://regain.org/MyJavaService3/attachprdocResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/attachprdoc/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.attachprdocResponse attachprdoc(WcfWCService.ExampleService.attachprdocRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/completetaskRequest", ReplyAction="http://regain.org/MyJavaService3/completetaskResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/completetask/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.completetaskResponse completetask(WcfWCService.ExampleService.completetaskRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deleteprobreportRequest", ReplyAction="http://regain.org/MyJavaService3/deleteprobreportResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deleteprobreport/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.deleteprobreportResponse deleteprobreport(WcfWCService.ExampleService.deleteprobreportRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/attachcndocRequest", ReplyAction="http://regain.org/MyJavaService3/attachcndocResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/attachcndoc/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.attachcndocResponse attachcndoc(WcfWCService.ExampleService.attachcndocRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdoctodocrefsRequest", ReplyAction="http://regain.org/MyJavaService3/setdoctodocrefsResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setdoctodocrefs/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setdoctodocrefsResponse setdoctodocrefs(WcfWCService.ExampleService.setdoctodocrefsRequest request);
-        
-        // CODEGEN: Parameter 'arg0' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/emailmessageRequest", ReplyAction="http://regain.org/MyJavaService3/emailmessageResponse")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        WcfWCService.ExampleService.emailmessageResponse emailmessage(WcfWCService.ExampleService.emailmessageRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdoctopartrefRequest", ReplyAction="http://regain.org/MyJavaService3/setdoctopartrefResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setdoctopartref/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setdoctopartrefResponse setdoctopartref(WcfWCService.ExampleService.setdoctopartrefRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdocrevisionRequest", ReplyAction="http://regain.org/MyJavaService3/setdocrevisionResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.FileNotFoundException), Action="http://regain.org/MyJavaService3/setdocrevision/Fault/FileNotFoundException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="FileNotFoundException")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/setdocrevision/Fault/InvocationTargetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/setdocrevision/Fault/WTException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.PropertyVetoException), Action="http://regain.org/MyJavaService3/setdocrevision/Fault/PropertyVetoException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="PropertyVetoException")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.IOException), Action="http://regain.org/MyJavaService3/setdocrevision/Fault/IOException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="IOException")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setdocrevisionResponse setdocrevision(WcfWCService.ExampleService.setdocrevisionRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdocattributestringsRequest", ReplyAction="http://regain.org/MyJavaService3/setdocattributestringsResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setdocattributestrings/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setdocattributestringsResponse setdocattributestrings(WcfWCService.ExampleService.setdocattributestringsRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdoctopartdescribedbyRequest", ReplyAction="http://regain.org/MyJavaService3/setdoctopartdescribedbyResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setdoctopartdescribedby/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setdoctopartdescribedbyResponse setdoctopartdescribedby(WcfWCService.ExampleService.setdoctopartdescribedbyRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdoctopartdescribedbymultiRequest", ReplyAction="http://regain.org/MyJavaService3/setdoctopartdescribedbymultiResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setdoctopartdescribedbymulti/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setdoctopartdescribedbymultiResponse setdoctopartdescribedbymulti(WcfWCService.ExampleService.setdoctopartdescribedbymultiRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletedoctodocusagelinkRequest", ReplyAction="http://regain.org/MyJavaService3/deletedoctodocusagelinkResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deletedoctodocusagelink/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.deletedoctodocusagelinkResponse deletedoctodocusagelink(WcfWCService.ExampleService.deletedoctodocusagelinkRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletedoctodocrefRequest", ReplyAction="http://regain.org/MyJavaService3/deletedoctodocrefResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deletedoctodocref/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.deletedoctodocrefResponse deletedoctodocref(WcfWCService.ExampleService.deletedoctodocrefRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletepraffectedobjectsRequest", ReplyAction="http://regain.org/MyJavaService3/deletepraffectedobjectsResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deletepraffectedobjects/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.deletepraffectedobjectsResponse deletepraffectedobjects(WcfWCService.ExampleService.deletepraffectedobjectsRequest request);
+        WcfWCService.ExampleService.updatepartpartlinkwithattributesResponse updatepartpartlinkwithattributes(WcfWCService.ExampleService.updatepartpartlinkwithattributesRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletepartpartlinkbylinenumberRequest", ReplyAction="http://regain.org/MyJavaService3/deletepartpartlinkbylinenumberResponse")]
@@ -622,32 +483,25 @@ namespace WcfWCService.ExampleService {
         WcfWCService.ExampleService.deletepartpartlinkbylinenumberResponse deletepartpartlinkbylinenumber(WcfWCService.ExampleService.deletepartpartlinkbylinenumberRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletecnattachmentRequest", ReplyAction="http://regain.org/MyJavaService3/deletecnattachmentResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deletecnattachment/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdoctopartdescribedbyRequest", ReplyAction="http://regain.org/MyJavaService3/setdoctopartdescribedbyResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setdoctopartdescribedby/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.deletecnattachmentResponse deletecnattachment(WcfWCService.ExampleService.deletecnattachmentRequest request);
+        WcfWCService.ExampleService.setdoctopartdescribedbyResponse setdoctopartdescribedby(WcfWCService.ExampleService.setdoctopartdescribedbyRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/createproblemreportRequest", ReplyAction="http://regain.org/MyJavaService3/createproblemreportResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/createproblemreport/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setpartattributesRequest", ReplyAction="http://regain.org/MyJavaService3/setpartattributesResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setpartattributes/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.createproblemreportResponse createproblemreport(WcfWCService.ExampleService.createproblemreportRequest request);
+        WcfWCService.ExampleService.setpartattributesResponse setpartattributes(WcfWCService.ExampleService.setpartattributesRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/createproblemreport2Request", ReplyAction="http://regain.org/MyJavaService3/createproblemreport2Response")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/createproblemreport2/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletepraffectedobjectsRequest", ReplyAction="http://regain.org/MyJavaService3/deletepraffectedobjectsResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deletepraffectedobjects/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.createproblemreport2Response createproblemreport2(WcfWCService.ExampleService.createproblemreport2Request request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletedoctodocrefsRequest", ReplyAction="http://regain.org/MyJavaService3/deletedoctodocrefsResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deletedoctodocrefs/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.deletedoctodocrefsResponse deletedoctodocrefs(WcfWCService.ExampleService.deletedoctodocrefsRequest request);
+        WcfWCService.ExampleService.deletepraffectedobjectsResponse deletepraffectedobjects(WcfWCService.ExampleService.deletepraffectedobjectsRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setproblemreportstateRequest", ReplyAction="http://regain.org/MyJavaService3/setproblemreportstateResponse")]
@@ -657,59 +511,11 @@ namespace WcfWCService.ExampleService {
         WcfWCService.ExampleService.setproblemreportstateResponse setproblemreportstate(WcfWCService.ExampleService.setproblemreportstateRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setproblemreportattributesRequest", ReplyAction="http://regain.org/MyJavaService3/setproblemreportattributesResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setproblemreportattributes/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdocattributestringsRequest", ReplyAction="http://regain.org/MyJavaService3/setdocattributestringsResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setdocattributestrings/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setproblemreportattributesResponse setproblemreportattributes(WcfWCService.ExampleService.setproblemreportattributesRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setpartmultipleusageattributesRequest", ReplyAction="http://regain.org/MyJavaService3/setpartmultipleusageattributesResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setpartmultipleusageattributes/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setpartmultipleusageattributesResponse setpartmultipleusageattributes(WcfWCService.ExampleService.setpartmultipleusageattributesRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/updatedocdoclinkwithattributesRequest", ReplyAction="http://regain.org/MyJavaService3/updatedocdoclinkwithattributesResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/updatedocdoclinkwithattributes/Fault/WTException" +
-            "", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/updatedocdoclinkwithattributes/Fault/InvocationT" +
-            "argetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.updatedocdoclinkwithattributesResponse updatedocdoclinkwithattributes(WcfWCService.ExampleService.updatedocdoclinkwithattributesRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setpraffectedobjectsRequest", ReplyAction="http://regain.org/MyJavaService3/setpraffectedobjectsResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setpraffectedobjects/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setpraffectedobjectsResponse setpraffectedobjects(WcfWCService.ExampleService.setpraffectedobjectsRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setpartusagelinkqtyRequest", ReplyAction="http://regain.org/MyJavaService3/setpartusagelinkqtyResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setpartusagelinkqty/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setpartusagelinkqtyResponse setpartusagelinkqty(WcfWCService.ExampleService.setpartusagelinkqtyRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdocrevremoveattachsRequest", ReplyAction="http://regain.org/MyJavaService3/setdocrevremoveattachsResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setdocrevremoveattachs/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setdocrevremoveattachsResponse setdocrevremoveattachs(WcfWCService.ExampleService.setdocrevremoveattachsRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/updatepartpartlinkwithattributesRequest", ReplyAction="http://regain.org/MyJavaService3/updatepartpartlinkwithattributesResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/updatepartpartlinkwithattributes/Fault/WTExcepti" +
-            "on", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/updatepartpartlinkwithattributes/Fault/Invocatio" +
-            "nTargetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.updatepartpartlinkwithattributesResponse updatepartpartlinkwithattributes(WcfWCService.ExampleService.updatepartpartlinkwithattributesRequest request);
+        WcfWCService.ExampleService.setdocattributestringsResponse setdocattributestrings(WcfWCService.ExampleService.setdocattributestringsRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletedoctopartdescribebyRequest", ReplyAction="http://regain.org/MyJavaService3/deletedoctopartdescribebyResponse")]
@@ -719,20 +525,11 @@ namespace WcfWCService.ExampleService {
         WcfWCService.ExampleService.deletedoctopartdescribebyResponse deletedoctopartdescribeby(WcfWCService.ExampleService.deletedoctopartdescribebyRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdocdoclinkwithattributesRequest", ReplyAction="http://regain.org/MyJavaService3/setdocdoclinkwithattributesResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/setdocdoclinkwithattributes/Fault/WTException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/setdocdoclinkwithattributes/Fault/InvocationTarg" +
-            "etException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletedoctodocrefsRequest", ReplyAction="http://regain.org/MyJavaService3/deletedoctodocrefsResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deletedoctodocrefs/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setdocdoclinkwithattributesResponse setdocdoclinkwithattributes(WcfWCService.ExampleService.setdocdoclinkwithattributesRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletedoctopartrefRequest", ReplyAction="http://regain.org/MyJavaService3/deletedoctopartrefResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deletedoctopartref/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.deletedoctopartrefResponse deletedoctopartref(WcfWCService.ExampleService.deletedoctopartrefRequest request);
+        WcfWCService.ExampleService.deletedoctodocrefsResponse deletedoctodocrefs(WcfWCService.ExampleService.deletedoctodocrefsRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletedoctopartrefsRequest", ReplyAction="http://regain.org/MyJavaService3/deletedoctopartrefsResponse")]
@@ -740,22 +537,6 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
         WcfWCService.ExampleService.deletedoctopartrefsResponse deletedoctopartrefs(WcfWCService.ExampleService.deletedoctopartrefsRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setpartpartlinkwithattributesRequest", ReplyAction="http://regain.org/MyJavaService3/setpartpartlinkwithattributesResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/setpartpartlinkwithattributes/Fault/WTException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/setpartpartlinkwithattributes/Fault/InvocationTa" +
-            "rgetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setpartpartlinkwithattributesResponse setpartpartlinkwithattributes(WcfWCService.ExampleService.setpartpartlinkwithattributesRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/createchangenoticeRequest", ReplyAction="http://regain.org/MyJavaService3/createchangenoticeResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/createchangenotice/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.createchangenoticeResponse createchangenotice(WcfWCService.ExampleService.createchangenoticeRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletepartpartlinkRequest", ReplyAction="http://regain.org/MyJavaService3/deletepartpartlinkResponse")]
@@ -770,11 +551,32 @@ namespace WcfWCService.ExampleService {
         WcfWCService.ExampleService.deletepartpartlinkResponse deletepartpartlink(WcfWCService.ExampleService.deletepartpartlinkRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setpartattributesRequest", ReplyAction="http://regain.org/MyJavaService3/setpartattributesResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setpartattributes/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/createchangenoticeRequest", ReplyAction="http://regain.org/MyJavaService3/createchangenoticeResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/createchangenotice/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setpartattributesResponse setpartattributes(WcfWCService.ExampleService.setpartattributesRequest request);
+        WcfWCService.ExampleService.createchangenoticeResponse createchangenotice(WcfWCService.ExampleService.createchangenoticeRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletedoctodocusagelinkRequest", ReplyAction="http://regain.org/MyJavaService3/deletedoctodocusagelinkResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deletedoctodocusagelink/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.deletedoctodocusagelinkResponse deletedoctodocusagelink(WcfWCService.ExampleService.deletedoctodocusagelinkRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletecnattachmentRequest", ReplyAction="http://regain.org/MyJavaService3/deletecnattachmentResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deletecnattachment/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.deletecnattachmentResponse deletecnattachment(WcfWCService.ExampleService.deletecnattachmentRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deleteprattachmentRequest", ReplyAction="http://regain.org/MyJavaService3/deleteprattachmentResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deleteprattachment/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.deleteprattachmentResponse deleteprattachment(WcfWCService.ExampleService.deleteprattachmentRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletedoctopartdescribebysRequest", ReplyAction="http://regain.org/MyJavaService3/deletedoctopartdescribebysResponse")]
@@ -784,11 +586,228 @@ namespace WcfWCService.ExampleService {
         WcfWCService.ExampleService.deletedoctopartdescribebysResponse deletedoctopartdescribebys(WcfWCService.ExampleService.deletedoctopartdescribebysRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deleteprattachmentRequest", ReplyAction="http://regain.org/MyJavaService3/deleteprattachmentResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deleteprattachment/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdoctopartdescribedbymultiRequest", ReplyAction="http://regain.org/MyJavaService3/setdoctopartdescribedbymultiResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setdoctopartdescribedbymulti/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.deleteprattachmentResponse deleteprattachment(WcfWCService.ExampleService.deleteprattachmentRequest request);
+        WcfWCService.ExampleService.setdoctopartdescribedbymultiResponse setdoctopartdescribedbymulti(WcfWCService.ExampleService.setdoctopartdescribedbymultiRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setpartpartlinkwithattributesRequest", ReplyAction="http://regain.org/MyJavaService3/setpartpartlinkwithattributesResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/setpartpartlinkwithattributes/Fault/WTException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/setpartpartlinkwithattributes/Fault/InvocationTa" +
+            "rgetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.setpartpartlinkwithattributesResponse setpartpartlinkwithattributes(WcfWCService.ExampleService.setpartpartlinkwithattributesRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setpraffectedobjectsRequest", ReplyAction="http://regain.org/MyJavaService3/setpraffectedobjectsResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setpraffectedobjects/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.setpraffectedobjectsResponse setpraffectedobjects(WcfWCService.ExampleService.setpraffectedobjectsRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/updatedocdoclinkwithattributesRequest", ReplyAction="http://regain.org/MyJavaService3/updatedocdoclinkwithattributesResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/updatedocdoclinkwithattributes/Fault/WTException" +
+            "", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/updatedocdoclinkwithattributes/Fault/InvocationT" +
+            "argetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.updatedocdoclinkwithattributesResponse updatedocdoclinkwithattributes(WcfWCService.ExampleService.updatedocdoclinkwithattributesRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setproblemreportattributesRequest", ReplyAction="http://regain.org/MyJavaService3/setproblemreportattributesResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setproblemreportattributes/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.setproblemreportattributesResponse setproblemreportattributes(WcfWCService.ExampleService.setproblemreportattributesRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletedoctodocrefRequest", ReplyAction="http://regain.org/MyJavaService3/deletedoctodocrefResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deletedoctodocref/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.deletedoctodocrefResponse deletedoctodocref(WcfWCService.ExampleService.deletedoctodocrefRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/createproblemreport2Request", ReplyAction="http://regain.org/MyJavaService3/createproblemreport2Response")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/createproblemreport2/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.createproblemreport2Response createproblemreport2(WcfWCService.ExampleService.createproblemreport2Request request);
+        
+        // CODEGEN: Parameter 'arg0' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/emailmessageRequest", ReplyAction="http://regain.org/MyJavaService3/emailmessageResponse")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        WcfWCService.ExampleService.emailmessageResponse emailmessage(WcfWCService.ExampleService.emailmessageRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdoctopartrefsRequest", ReplyAction="http://regain.org/MyJavaService3/setdoctopartrefsResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setdoctopartrefs/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.setdoctopartrefsResponse setdoctopartrefs(WcfWCService.ExampleService.setdoctopartrefsRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/copypartRequest", ReplyAction="http://regain.org/MyJavaService3/copypartResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/copypart/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.copypartResponse copypart(WcfWCService.ExampleService.copypartRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/attachurlRequest", ReplyAction="http://regain.org/MyJavaService3/attachurlResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/attachurl/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.attachurlResponse attachurl(WcfWCService.ExampleService.attachurlRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/doccreateRequest", ReplyAction="http://regain.org/MyJavaService3/doccreateResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/doccreate/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.doccreateResponse doccreate(WcfWCService.ExampleService.doccreateRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/createpartRequest", ReplyAction="http://regain.org/MyJavaService3/createpartResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/createpart/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.createpartResponse createpart(WcfWCService.ExampleService.createpartRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/doccreate2Request", ReplyAction="http://regain.org/MyJavaService3/doccreate2Response")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/doccreate2/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.doccreate2Response doccreate2(WcfWCService.ExampleService.doccreate2Request request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/attachdocRequest", ReplyAction="http://regain.org/MyJavaService3/attachdocResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/attachdoc/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.attachdocResponse attachdoc(WcfWCService.ExampleService.attachdocRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deleteurlRequest", ReplyAction="http://regain.org/MyJavaService3/deleteurlResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deleteurl/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.deleteurlResponse deleteurl(WcfWCService.ExampleService.deleteurlRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdoctopartrefRequest", ReplyAction="http://regain.org/MyJavaService3/setdoctopartrefResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setdoctopartref/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.setdoctopartrefResponse setdoctopartref(WcfWCService.ExampleService.setdoctopartrefRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deleteattachmentRequest", ReplyAction="http://regain.org/MyJavaService3/deleteattachmentResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deleteattachment/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.deleteattachmentResponse deleteattachment(WcfWCService.ExampleService.deleteattachmentRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/attachcndocRequest", ReplyAction="http://regain.org/MyJavaService3/attachcndocResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/attachcndoc/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.attachcndocResponse attachcndoc(WcfWCService.ExampleService.attachcndocRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdocrevisionRequest", ReplyAction="http://regain.org/MyJavaService3/setdocrevisionResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.FileNotFoundException), Action="http://regain.org/MyJavaService3/setdocrevision/Fault/FileNotFoundException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="FileNotFoundException")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/setdocrevision/Fault/InvocationTargetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/setdocrevision/Fault/WTException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.PropertyVetoException), Action="http://regain.org/MyJavaService3/setdocrevision/Fault/PropertyVetoException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="PropertyVetoException")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.IOException), Action="http://regain.org/MyJavaService3/setdocrevision/Fault/IOException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="IOException")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.setdocrevisionResponse setdocrevision(WcfWCService.ExampleService.setdocrevisionRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/completetaskRequest", ReplyAction="http://regain.org/MyJavaService3/completetaskResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/completetask/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.completetaskResponse completetask(WcfWCService.ExampleService.completetaskRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdoctodocrefRequest", ReplyAction="http://regain.org/MyJavaService3/setdoctodocrefResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setdoctodocref/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.setdoctodocrefResponse setdoctodocref(WcfWCService.ExampleService.setdoctodocrefRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setpartpartlinkRequest", ReplyAction="http://regain.org/MyJavaService3/setpartpartlinkResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/setpartpartlink/Fault/WTException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/setpartpartlink/Fault/InvocationTargetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.setpartpartlinkResponse setpartpartlink(WcfWCService.ExampleService.setpartpartlinkRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdocattributesRequest", ReplyAction="http://regain.org/MyJavaService3/setdocattributesResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setdocattributes/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.setdocattributesResponse setdocattributes(WcfWCService.ExampleService.setdocattributesRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deleteprobreportRequest", ReplyAction="http://regain.org/MyJavaService3/deleteprobreportResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/deleteprobreport/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.deleteprobreportResponse deleteprobreport(WcfWCService.ExampleService.deleteprobreportRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdoctodocrefsRequest", ReplyAction="http://regain.org/MyJavaService3/setdoctodocrefsResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setdoctodocrefs/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.setdoctodocrefsResponse setdoctodocrefs(WcfWCService.ExampleService.setdoctodocrefsRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setdocdoclinkRequest", ReplyAction="http://regain.org/MyJavaService3/setdocdoclinkResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/setdocdoclink/Fault/WTException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/setdocdoclink/Fault/InvocationTargetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.setdocdoclinkResponse setdocdoclink(WcfWCService.ExampleService.setdocdoclinkRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/attachprdocRequest", ReplyAction="http://regain.org/MyJavaService3/attachprdocResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/attachprdoc/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.attachprdocResponse attachprdoc(WcfWCService.ExampleService.attachprdocRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setpartstateRequest", ReplyAction="http://regain.org/MyJavaService3/setpartstateResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setpartstate/Fault/Exception", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.setpartstateResponse setpartstate(WcfWCService.ExampleService.setpartstateRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/updateprodorderpartpartlinkwithattributesRequest" +
+            "", ReplyAction="http://regain.org/MyJavaService3/updateprodorderpartpartlinkwithattributesRespons" +
+            "e")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/updateprodorderpartpartlinkwithattributes/Fault/" +
+            "WTException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/updateprodorderpartpartlinkwithattributes/Fault/" +
+            "InvocationTargetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.updateprodorderpartpartlinkwithattributesResponse updateprodorderpartpartlinkwithattributes(WcfWCService.ExampleService.updateprodorderpartpartlinkwithattributesRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletepartpartlinkbyproductionorderRequest", ReplyAction="http://regain.org/MyJavaService3/deletepartpartlinkbyproductionorderResponse")]
@@ -807,30 +826,6 @@ namespace WcfWCService.ExampleService {
         WcfWCService.ExampleService.deletepartpartlinkbyproductionorderResponse deletepartpartlinkbyproductionorder(WcfWCService.ExampleService.deletepartpartlinkbyproductionorderRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/updatedispatchdocketpartpartlinkwithattributesRe" +
-            "quest", ReplyAction="http://regain.org/MyJavaService3/updatedispatchdocketpartpartlinkwithattributesRe" +
-            "sponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/updatedispatchdocketpartpartlinkwithattributes/F" +
-            "ault/WTException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/updatedispatchdocketpartpartlinkwithattributes/F" +
-            "ault/InvocationTargetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.updatedispatchdocketpartpartlinkwithattributesResponse updatedispatchdocketpartpartlinkwithattributes(WcfWCService.ExampleService.updatedispatchdocketpartpartlinkwithattributesRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/updateprodorderpartpartlinkwithattributesRequest" +
-            "", ReplyAction="http://regain.org/MyJavaService3/updateprodorderpartpartlinkwithattributesRespons" +
-            "e")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/updateprodorderpartpartlinkwithattributes/Fault/" +
-            "WTException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/updateprodorderpartpartlinkwithattributes/Fault/" +
-            "InvocationTargetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.updateprodorderpartpartlinkwithattributesResponse updateprodorderpartpartlinkwithattributes(WcfWCService.ExampleService.updateprodorderpartpartlinkwithattributesRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/updatepartreferencedbydoclinkwithattributesReque" +
             "st", ReplyAction="http://regain.org/MyJavaService3/updatepartreferencedbydoclinkwithattributesRespo" +
             "nse")]
@@ -841,25 +836,6 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
         WcfWCService.ExampleService.updatepartreferencedbydoclinkwithattributesResponse updatepartreferencedbydoclinkwithattributes(WcfWCService.ExampleService.updatepartreferencedbydoclinkwithattributesRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setpartreferencedbydoclinkwithattributesRequest", ReplyAction="http://regain.org/MyJavaService3/setpartreferencedbydoclinkwithattributesResponse" +
-            "")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/setpartreferencedbydoclinkwithattributes/Fault/W" +
-            "TException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/setpartreferencedbydoclinkwithattributes/Fault/I" +
-            "nvocationTargetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setpartreferencedbydoclinkwithattributesResponse setpartreferencedbydoclinkwithattributes(WcfWCService.ExampleService.setpartreferencedbydoclinkwithattributesRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setpartusageattributesfromlinenumberRequest", ReplyAction="http://regain.org/MyJavaService3/setpartusageattributesfromlinenumberResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setpartusageattributesfromlinenumber/Fault/Excep" +
-            "tion", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        WcfWCService.ExampleService.setpartusageattributesfromlinenumberResponse setpartusageattributesfromlinenumber(WcfWCService.ExampleService.setpartusageattributesfromlinenumberRequest request);
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/deletepartpartlinkbydispatchdocketRequest", ReplyAction="http://regain.org/MyJavaService3/deletepartpartlinkbydispatchdocketResponse")]
@@ -876,6 +852,37 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
         WcfWCService.ExampleService.deletepartpartlinkbydispatchdocketResponse deletepartpartlinkbydispatchdocket(WcfWCService.ExampleService.deletepartpartlinkbydispatchdocketRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/updatedispatchdocketpartpartlinkwithattributesRe" +
+            "quest", ReplyAction="http://regain.org/MyJavaService3/updatedispatchdocketpartpartlinkwithattributesRe" +
+            "sponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/updatedispatchdocketpartpartlinkwithattributes/F" +
+            "ault/WTException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/updatedispatchdocketpartpartlinkwithattributes/F" +
+            "ault/InvocationTargetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.updatedispatchdocketpartpartlinkwithattributesResponse updatedispatchdocketpartpartlinkwithattributes(WcfWCService.ExampleService.updatedispatchdocketpartpartlinkwithattributesRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setpartusageattributesfromlinenumberRequest", ReplyAction="http://regain.org/MyJavaService3/setpartusageattributesfromlinenumberResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.Exception), Action="http://regain.org/MyJavaService3/setpartusageattributesfromlinenumber/Fault/Excep" +
+            "tion", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.setpartusageattributesfromlinenumberResponse setpartusageattributesfromlinenumber(WcfWCService.ExampleService.setpartusageattributesfromlinenumberRequest request);
+        
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(ProtectionLevel=System.Net.Security.ProtectionLevel.EncryptAndSign, Action="http://regain.org/MyJavaService3/setpartreferencedbydoclinkwithattributesRequest", ReplyAction="http://regain.org/MyJavaService3/setpartreferencedbydoclinkwithattributesResponse" +
+            "")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.WTException), Action="http://regain.org/MyJavaService3/setpartreferencedbydoclinkwithattributes/Fault/W" +
+            "TException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="WTException")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WcfWCService.ExampleService.InvocationTargetException), Action="http://regain.org/MyJavaService3/setpartreferencedbydoclinkwithattributes/Fault/I" +
+            "nvocationTargetException", ProtectionLevel=System.Net.Security.ProtectionLevel.None, Name="InvocationTargetException")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        WcfWCService.ExampleService.setpartreferencedbydoclinkwithattributesResponse setpartreferencedbydoclinkwithattributes(WcfWCService.ExampleService.setpartreferencedbydoclinkwithattributesRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -915,6 +922,2197 @@ namespace WcfWCService.ExampleService {
         }
         
         public addResponse(int @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocrevremoveattachs", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdocrevremoveattachsRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute("arg4", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute("arg5", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg6;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg7;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg8;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=9)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg9;
+        
+        public setdocrevremoveattachsRequest() {
+        }
+        
+        public setdocrevremoveattachsRequest(string arg0, string arg1, string arg2, string arg3, string[] arg4, string[] arg5, string[] arg6, string arg7, int arg8, int arg9) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+            this.arg7 = arg7;
+            this.arg8 = arg8;
+            this.arg9 = arg9;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocrevremoveattachsResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdocrevremoveattachsResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public setdocrevremoveattachsResponse() {
+        }
+        
+        public setdocrevremoveattachsResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartusagelinkqty", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setpartusagelinkqtyRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public double arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg4;
+        
+        public setpartusagelinkqtyRequest() {
+        }
+        
+        public setpartusagelinkqtyRequest(string arg0, string arg1, string arg2, double arg3, int arg4) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartusagelinkqtyResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setpartusagelinkqtyResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public setpartusagelinkqtyResponse() {
+        }
+        
+        public setpartusagelinkqtyResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocdoclinkwithattributes", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdocdoclinkwithattributesRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute("arg5", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg6;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute("arg7", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg7;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg8;
+        
+        public setdocdoclinkwithattributesRequest() {
+        }
+        
+        public setdocdoclinkwithattributesRequest(string arg0, string arg1, string arg2, string arg3, string arg4, string[] arg5, string[] arg6, string[] arg7, int arg8) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+            this.arg7 = arg7;
+            this.arg8 = arg8;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocdoclinkwithattributesResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdocdoclinkwithattributesResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public setdocdoclinkwithattributesResponse() {
+        }
+        
+        public setdocdoclinkwithattributesResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartmultipleusageattributes", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setpartmultipleusageattributesRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute("arg4", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute("arg5", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg6;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg7;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg8;
+        
+        public setpartmultipleusageattributesRequest() {
+        }
+        
+        public setpartmultipleusageattributesRequest(string arg0, string arg1, string[] arg2, string arg3, string[] arg4, string[] arg5, string[] arg6, int arg7, int arg8) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+            this.arg7 = arg7;
+            this.arg8 = arg8;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartmultipleusageattributesResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setpartmultipleusageattributesResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public setpartmultipleusageattributesResponse() {
+        }
+        
+        public setpartmultipleusageattributesResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="createproblemreport", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class createproblemreportRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute("arg5", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg6;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute("arg7", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg7;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg8;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=9)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg9;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=10)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg10;
+        
+        public createproblemreportRequest() {
+        }
+        
+        public createproblemreportRequest(string arg0, string arg1, string arg2, string arg3, string arg4, string[] arg5, string[] arg6, string[] arg7, int arg8, string arg9, int arg10) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+            this.arg7 = arg7;
+            this.arg8 = arg8;
+            this.arg9 = arg9;
+            this.arg10 = arg10;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="createproblemreportResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class createproblemreportResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public createproblemreportResponse() {
+        }
+        
+        public createproblemreportResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctopartref", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletedoctopartrefRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg4;
+        
+        public deletedoctopartrefRequest() {
+        }
+        
+        public deletedoctopartrefRequest(string arg0, string arg1, string arg2, string arg3, int arg4) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctopartrefResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletedoctopartrefResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public deletedoctopartrefResponse() {
+        }
+        
+        public deletedoctopartrefResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctopartrefwithattribute", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletedoctopartrefwithattributeRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg6;
+        
+        public deletedoctopartrefwithattributeRequest() {
+        }
+        
+        public deletedoctopartrefwithattributeRequest(string arg0, string arg1, string arg2, string arg3, string arg4, string arg5, int arg6) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctopartrefwithattributeResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletedoctopartrefwithattributeResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public deletedoctopartrefwithattributeResponse() {
+        }
+        
+        public deletedoctopartrefwithattributeResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="updatepartpartlinkwithattributes", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class updatepartpartlinkwithattributesRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public double arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public long arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg6;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg7;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute("arg8", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg8;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=9)]
+        [System.Xml.Serialization.XmlElementAttribute("arg9", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg9;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=10)]
+        [System.Xml.Serialization.XmlElementAttribute("arg10", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg10;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=11)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg11;
+        
+        public updatepartpartlinkwithattributesRequest() {
+        }
+        
+        public updatepartpartlinkwithattributesRequest(string arg0, string arg1, string arg2, double arg3, long arg4, string arg5, string arg6, string arg7, string[] arg8, string[] arg9, string[] arg10, int arg11) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+            this.arg7 = arg7;
+            this.arg8 = arg8;
+            this.arg9 = arg9;
+            this.arg10 = arg10;
+            this.arg11 = arg11;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="updatepartpartlinkwithattributesResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class updatepartpartlinkwithattributesResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public updatepartpartlinkwithattributesResponse() {
+        }
+        
+        public updatepartpartlinkwithattributesResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepartpartlinkbylinenumber", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletepartpartlinkbylinenumberRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public long arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg5;
+        
+        public deletepartpartlinkbylinenumberRequest() {
+        }
+        
+        public deletepartpartlinkbylinenumberRequest(string arg0, long arg1, string arg2, string arg3, string arg4, int arg5) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepartpartlinkbylinenumberResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletepartpartlinkbylinenumberResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public deletepartpartlinkbylinenumberResponse() {
+        }
+        
+        public deletepartpartlinkbylinenumberResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdoctopartdescribedby", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdoctopartdescribedbyRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg4;
+        
+        public setdoctopartdescribedbyRequest() {
+        }
+        
+        public setdoctopartdescribedbyRequest(string arg0, string arg1, string arg2, string arg3, int arg4) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdoctopartdescribedbyResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdoctopartdescribedbyResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public setdoctopartdescribedbyResponse() {
+        }
+        
+        public setdoctopartdescribedbyResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartattributes", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setpartattributesRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute("arg3", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute("arg4", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute("arg5", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg6;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg7;
+        
+        public setpartattributesRequest() {
+        }
+        
+        public setpartattributesRequest(string arg0, string arg1, string arg2, string[] arg3, string[] arg4, string[] arg5, string arg6, int arg7) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+            this.arg7 = arg7;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartattributesResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setpartattributesResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public setpartattributesResponse() {
+        }
+        
+        public setpartattributesResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepraffectedobjects", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletepraffectedobjectsRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute("arg1", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public System.Nullable<int>[] arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg3;
+        
+        public deletepraffectedobjectsRequest() {
+        }
+        
+        public deletepraffectedobjectsRequest(string arg0, string[] arg1, System.Nullable<int>[] arg2, int arg3) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepraffectedobjectsResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletepraffectedobjectsResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public deletepraffectedobjectsResponse() {
+        }
+        
+        public deletepraffectedobjectsResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setproblemreportstate", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setproblemreportstateRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg2;
+        
+        public setproblemreportstateRequest() {
+        }
+        
+        public setproblemreportstateRequest(string arg0, string arg1, int arg2) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setproblemreportstateResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setproblemreportstateResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public setproblemreportstateResponse() {
+        }
+        
+        public setproblemreportstateResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocattributestrings", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdocattributestringsRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute("arg3", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg5;
+        
+        public setdocattributestringsRequest() {
+        }
+        
+        public setdocattributestringsRequest(string arg0, string arg1, string[] arg2, string[] arg3, string arg4, int arg5) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocattributestringsResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdocattributestringsResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public setdocattributestringsResponse() {
+        }
+        
+        public setdocattributestringsResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctopartdescribeby", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletedoctopartdescribebyRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg4;
+        
+        public deletedoctopartdescribebyRequest() {
+        }
+        
+        public deletedoctopartdescribebyRequest(string arg0, string arg1, string arg2, string arg3, int arg4) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctopartdescribebyResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletedoctopartdescribebyResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public deletedoctopartdescribebyResponse() {
+        }
+        
+        public deletedoctopartdescribebyResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctodocrefs", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletedoctodocrefsRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg4;
+        
+        public deletedoctodocrefsRequest() {
+        }
+        
+        public deletedoctodocrefsRequest(string arg0, string arg1, string[] arg2, string arg3, int arg4) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctodocrefsResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletedoctodocrefsResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public deletedoctodocrefsResponse() {
+        }
+        
+        public deletedoctodocrefsResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctopartrefs", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletedoctopartrefsRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg4;
+        
+        public deletedoctopartrefsRequest() {
+        }
+        
+        public deletedoctopartrefsRequest(string arg0, string arg1, string[] arg2, string arg3, int arg4) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctopartrefsResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletedoctopartrefsResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public deletedoctopartrefsResponse() {
+        }
+        
+        public deletedoctopartrefsResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepartpartlink", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletepartpartlinkRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg4;
+        
+        public deletepartpartlinkRequest() {
+        }
+        
+        public deletepartpartlinkRequest(string arg0, string arg1, string arg2, string arg3, int arg4) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepartpartlinkResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletepartpartlinkResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public deletepartpartlinkResponse() {
+        }
+        
+        public deletepartpartlinkResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="createchangenotice", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class createchangenoticeRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute("arg5", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg6;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute("arg7", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg7;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg8;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=9)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg9;
+        
+        public createchangenoticeRequest() {
+        }
+        
+        public createchangenoticeRequest(string arg0, string arg1, string arg2, string arg3, string arg4, string[] arg5, string[] arg6, string[] arg7, int arg8, int arg9) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+            this.arg7 = arg7;
+            this.arg8 = arg8;
+            this.arg9 = arg9;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="createchangenoticeResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class createchangenoticeResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public createchangenoticeResponse() {
+        }
+        
+        public createchangenoticeResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctodocusagelink", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletedoctodocusagelinkRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg4;
+        
+        public deletedoctodocusagelinkRequest() {
+        }
+        
+        public deletedoctodocusagelinkRequest(string arg0, string arg1, string arg2, string arg3, int arg4) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctodocusagelinkResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletedoctodocusagelinkResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public deletedoctodocusagelinkResponse() {
+        }
+        
+        public deletedoctodocusagelinkResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletecnattachment", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletecnattachmentRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg2;
+        
+        public deletecnattachmentRequest() {
+        }
+        
+        public deletecnattachmentRequest(string arg0, string arg1, int arg2) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletecnattachmentResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletecnattachmentResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public deletecnattachmentResponse() {
+        }
+        
+        public deletecnattachmentResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deleteprattachment", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deleteprattachmentRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg2;
+        
+        public deleteprattachmentRequest() {
+        }
+        
+        public deleteprattachmentRequest(string arg0, string arg1, int arg2) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deleteprattachmentResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deleteprattachmentResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public deleteprattachmentResponse() {
+        }
+        
+        public deleteprattachmentResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctopartdescribebys", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletedoctopartdescribebysRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg4;
+        
+        public deletedoctopartdescribebysRequest() {
+        }
+        
+        public deletedoctopartdescribebysRequest(string arg0, string arg1, string[] arg2, string arg3, int arg4) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctopartdescribebysResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletedoctopartdescribebysResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public deletedoctopartdescribebysResponse() {
+        }
+        
+        public deletedoctopartdescribebysResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdoctopartdescribedbymulti", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdoctopartdescribedbymultiRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg4;
+        
+        public setdoctopartdescribedbymultiRequest() {
+        }
+        
+        public setdoctopartdescribedbymultiRequest(string arg0, string arg1, string[] arg2, string arg3, int arg4) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdoctopartdescribedbymultiResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdoctopartdescribedbymultiResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public setdoctopartdescribedbymultiResponse() {
+        }
+        
+        public setdoctopartdescribedbymultiResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartpartlinkwithattributes", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setpartpartlinkwithattributesRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public double arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg6;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public long arg7;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute("arg8", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg8;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=9)]
+        [System.Xml.Serialization.XmlElementAttribute("arg9", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg9;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=10)]
+        [System.Xml.Serialization.XmlElementAttribute("arg10", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg10;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=11)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg11;
+        
+        public setpartpartlinkwithattributesRequest() {
+        }
+        
+        public setpartpartlinkwithattributesRequest(string arg0, string arg1, string arg2, double arg3, string arg4, string arg5, string arg6, long arg7, string[] arg8, string[] arg9, string[] arg10, int arg11) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+            this.arg7 = arg7;
+            this.arg8 = arg8;
+            this.arg9 = arg9;
+            this.arg10 = arg10;
+            this.arg11 = arg11;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartpartlinkwithattributesResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setpartpartlinkwithattributesResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public setpartpartlinkwithattributesResponse() {
+        }
+        
+        public setpartpartlinkwithattributesResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setpraffectedobjects", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setpraffectedobjectsRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute("arg1", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public System.Nullable<int>[] arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg3;
+        
+        public setpraffectedobjectsRequest() {
+        }
+        
+        public setpraffectedobjectsRequest(string arg0, string[] arg1, System.Nullable<int>[] arg2, int arg3) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setpraffectedobjectsResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setpraffectedobjectsResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public setpraffectedobjectsResponse() {
+        }
+        
+        public setpraffectedobjectsResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="updatedocdoclinkwithattributes", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class updatedocdoclinkwithattributesRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute("arg5", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg6;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute("arg7", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg7;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg8;
+        
+        public updatedocdoclinkwithattributesRequest() {
+        }
+        
+        public updatedocdoclinkwithattributesRequest(string arg0, string arg1, string arg2, string arg3, string arg4, string[] arg5, string[] arg6, string[] arg7, int arg8) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+            this.arg7 = arg7;
+            this.arg8 = arg8;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="updatedocdoclinkwithattributesResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class updatedocdoclinkwithattributesResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public updatedocdoclinkwithattributesResponse() {
+        }
+        
+        public updatedocdoclinkwithattributesResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setproblemreportattributes", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setproblemreportattributesRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute("arg3", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute("arg4", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg6;
+        
+        public setproblemreportattributesRequest() {
+        }
+        
+        public setproblemreportattributesRequest(string arg0, string arg1, string[] arg2, string[] arg3, string[] arg4, string arg5, int arg6) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setproblemreportattributesResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setproblemreportattributesResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public setproblemreportattributesResponse() {
+        }
+        
+        public setproblemreportattributesResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctodocref", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletedoctodocrefRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg4;
+        
+        public deletedoctodocrefRequest() {
+        }
+        
+        public deletedoctodocrefRequest(string arg0, string arg1, string arg2, string arg3, int arg4) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctodocrefResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletedoctodocrefResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public deletedoctodocrefResponse() {
+        }
+        
+        public deletedoctodocrefResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="createproblemreport2", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class createproblemreport2Request {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg6;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute("arg7", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg7;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute("arg8", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg8;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=9)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg9;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=10)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg10;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=11)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg11;
+        
+        public createproblemreport2Request() {
+        }
+        
+        public createproblemreport2Request(string arg0, string arg1, string arg2, string arg3, string arg4, string arg5, string[] arg6, string[] arg7, string[] arg8, int arg9, string arg10, int arg11) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+            this.arg7 = arg7;
+            this.arg8 = arg8;
+            this.arg9 = arg9;
+            this.arg10 = arg10;
+            this.arg11 = arg11;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="createproblemreport2Response", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class createproblemreport2Response {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public createproblemreport2Response() {
+        }
+        
+        public createproblemreport2Response(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="emailmessage", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class emailmessageRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg6;
+        
+        public emailmessageRequest() {
+        }
+        
+        public emailmessageRequest(string arg0, string arg1, string[] arg2, string arg3, string arg4, string arg5, int arg6) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="emailmessageResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class emailmessageResponse {
+        
+        public emailmessageResponse() {
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdoctopartrefs", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdoctopartrefsRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg5;
+        
+        public setdoctopartrefsRequest() {
+        }
+        
+        public setdoctopartrefsRequest(string arg0, string arg1, string[] arg2, string arg3, string arg4, int arg5) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdoctopartrefsResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdoctopartrefsResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public setdoctopartrefsResponse() {
+        }
+        
+        public setdoctopartrefsResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="copypart", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class copypartRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg6;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg7;
+        
+        public copypartRequest() {
+        }
+        
+        public copypartRequest(string arg0, string arg1, string arg2, string arg3, string arg4, string arg5, int arg6, int arg7) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+            this.arg7 = arg7;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="copypartResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class copypartResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public copypartResponse() {
+        }
+        
+        public copypartResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="attachurl", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class attachurlRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public bool arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg6;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg7;
+        
+        public attachurlRequest() {
+        }
+        
+        public attachurlRequest(string arg0, string arg1, string arg2, string arg3, string arg4, bool arg5, string arg6, int arg7) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+            this.arg7 = arg7;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="attachurlResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class attachurlResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public attachurlResponse() {
+        }
+        
+        public attachurlResponse(string @return) {
             this.@return = @return;
         }
     }
@@ -1001,6 +3199,97 @@ namespace WcfWCService.ExampleService {
         }
         
         public doccreateResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="createpart", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class createpartRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg6;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute("arg7", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg7;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute("arg8", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg8;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=9)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg9;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=10)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg10;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=11)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg11;
+        
+        public createpartRequest() {
+        }
+        
+        public createpartRequest(string arg0, string arg1, string arg2, string arg3, string arg4, string arg5, string[] arg6, string[] arg7, string[] arg8, string arg9, int arg10, int arg11) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+            this.arg7 = arg7;
+            this.arg8 = arg8;
+            this.arg9 = arg9;
+            this.arg10 = arg10;
+            this.arg11 = arg11;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="createpartResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class createpartResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public createpartResponse() {
+        }
+        
+        public createpartResponse(string @return) {
             this.@return = @return;
         }
     }
@@ -1160,8 +3449,64 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="attachurl", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class attachurlRequest {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deleteurl", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deleteurlRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public bool arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg4;
+        
+        public deleteurlRequest() {
+        }
+        
+        public deleteurlRequest(string arg0, string arg1, string arg2, bool arg3, int arg4) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deleteurlResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deleteurlResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public deleteurlResponse() {
+        }
+        
+        public deleteurlResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdoctopartref", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdoctopartrefRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
@@ -1185,111 +3530,35 @@ namespace WcfWCService.ExampleService {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool arg5;
+        public int arg5;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg6;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg7;
-        
-        public attachurlRequest() {
+        public setdoctopartrefRequest() {
         }
         
-        public attachurlRequest(string arg0, string arg1, string arg2, string arg3, string arg4, bool arg5, string arg6, int arg7) {
+        public setdoctopartrefRequest(string arg0, string arg1, string arg2, string arg3, string arg4, int arg5) {
             this.arg0 = arg0;
             this.arg1 = arg1;
             this.arg2 = arg2;
             this.arg3 = arg3;
             this.arg4 = arg4;
             this.arg5 = arg5;
-            this.arg6 = arg6;
-            this.arg7 = arg7;
         }
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="attachurlResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class attachurlResponse {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdoctopartrefResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdoctopartrefResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string @return;
         
-        public attachurlResponse() {
+        public setdoctopartrefResponse() {
         }
         
-        public attachurlResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocattributes", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdocattributesRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute("arg3", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute("arg4", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg5;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg6;
-        
-        public setdocattributesRequest() {
-        }
-        
-        public setdocattributesRequest(string arg0, string arg1, string[] arg2, string[] arg3, string[] arg4, string arg5, int arg6) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-            this.arg6 = arg6;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocattributesResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdocattributesResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public setdocattributesResponse() {
-        }
-        
-        public setdocattributesResponse(string @return) {
+        public setdoctopartrefResponse(string @return) {
             this.@return = @return;
         }
     }
@@ -1353,8 +3622,8 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deleteurl", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deleteurlRequest {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="attachcndoc", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class attachcndocRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
@@ -1370,38 +3639,33 @@ namespace WcfWCService.ExampleService {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool arg3;
+        public int arg3;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg4;
-        
-        public deleteurlRequest() {
+        public attachcndocRequest() {
         }
         
-        public deleteurlRequest(string arg0, string arg1, string arg2, bool arg3, int arg4) {
+        public attachcndocRequest(string arg0, string arg1, string arg2, int arg3) {
             this.arg0 = arg0;
             this.arg1 = arg1;
             this.arg2 = arg2;
             this.arg3 = arg3;
-            this.arg4 = arg4;
         }
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deleteurlResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deleteurlResponse {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="attachcndocResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class attachcndocResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string @return;
         
-        public deleteurlResponse() {
+        public attachcndocResponse() {
         }
         
-        public deleteurlResponse(string @return) {
+        public attachcndocResponse(string @return) {
             this.@return = @return;
         }
     }
@@ -1409,8 +3673,8 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdoctopartrefs", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdoctopartrefsRequest {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocrevision", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdocrevisionRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
@@ -1421,48 +3685,99 @@ namespace WcfWCService.ExampleService {
         public string arg1;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
+        public int arg2;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg5;
-        
-        public setdoctopartrefsRequest() {
+        public setdocrevisionRequest() {
         }
         
-        public setdoctopartrefsRequest(string arg0, string arg1, string[] arg2, string arg3, string arg4, int arg5) {
+        public setdocrevisionRequest(string arg0, string arg1, int arg2) {
             this.arg0 = arg0;
             this.arg1 = arg1;
             this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
         }
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdoctopartrefsResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdoctopartrefsResponse {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocrevisionResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdocrevisionResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string @return;
         
-        public setdoctopartrefsResponse() {
+        public setdocrevisionResponse() {
         }
         
-        public setdoctopartrefsResponse(string @return) {
+        public setdocrevisionResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="completetask", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class completetaskRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public long arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public long arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute("arg3", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute("arg4", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute("arg5", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg6;
+        
+        public completetaskRequest() {
+        }
+        
+        public completetaskRequest(long arg0, long arg1, string arg2, string[] arg3, string[] arg4, string[] arg5, int arg6) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="completetaskResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class completetaskResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public completetaskResponse() {
+        }
+        
+        public completetaskResponse(string @return) {
             this.@return = @return;
         }
     }
@@ -1519,77 +3834,6 @@ namespace WcfWCService.ExampleService {
         }
         
         public setdoctodocrefResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="copypart", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class copypartRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg5;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg6;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg7;
-        
-        public copypartRequest() {
-        }
-        
-        public copypartRequest(string arg0, string arg1, string arg2, string arg3, string arg4, string arg5, int arg6, int arg7) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-            this.arg6 = arg6;
-            this.arg7 = arg7;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="copypartResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class copypartResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public copypartResponse() {
-        }
-        
-        public copypartResponse(string @return) {
             this.@return = @return;
         }
     }
@@ -1668,8 +3912,8 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocdoclink", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdocdoclinkRequest {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocattributes", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdocattributesRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
@@ -1680,257 +3924,8 @@ namespace WcfWCService.ExampleService {
         public string arg1;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg5;
-        
-        public setdocdoclinkRequest() {
-        }
-        
-        public setdocdoclinkRequest(string arg0, string arg1, string arg2, string arg3, string arg4, int arg5) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocdoclinkResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdocdoclinkResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public setdocdoclinkResponse() {
-        }
-        
-        public setdocdoclinkResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="createpart", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class createpartRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg5;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg6;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute("arg7", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg7;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
-        [System.Xml.Serialization.XmlElementAttribute("arg8", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg8;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=9)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg9;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=10)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg10;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=11)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg11;
-        
-        public createpartRequest() {
-        }
-        
-        public createpartRequest(string arg0, string arg1, string arg2, string arg3, string arg4, string arg5, string[] arg6, string[] arg7, string[] arg8, string arg9, int arg10, int arg11) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-            this.arg6 = arg6;
-            this.arg7 = arg7;
-            this.arg8 = arg8;
-            this.arg9 = arg9;
-            this.arg10 = arg10;
-            this.arg11 = arg11;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="createpartResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class createpartResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public createpartResponse() {
-        }
-        
-        public createpartResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartstate", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setpartstateRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg2;
-        
-        public setpartstateRequest() {
-        }
-        
-        public setpartstateRequest(string arg0, string arg1, int arg2) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartstateResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setpartstateResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public setpartstateResponse() {
-        }
-        
-        public setpartstateResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="attachprdoc", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class attachprdocRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg3;
-        
-        public attachprdocRequest() {
-        }
-        
-        public attachprdocRequest(string arg0, string arg1, string arg2, int arg3) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="attachprdocResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class attachprdocResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public attachprdocResponse() {
-        }
-        
-        public attachprdocResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="completetask", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class completetaskRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public long arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public long arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
+        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg2;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute("arg3", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
@@ -1941,17 +3936,17 @@ namespace WcfWCService.ExampleService {
         public string[] arg4;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute("arg5", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg5;
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg5;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int arg6;
         
-        public completetaskRequest() {
+        public setdocattributesRequest() {
         }
         
-        public completetaskRequest(long arg0, long arg1, string arg2, string[] arg3, string[] arg4, string[] arg5, int arg6) {
+        public setdocattributesRequest(string arg0, string arg1, string[] arg2, string[] arg3, string[] arg4, string arg5, int arg6) {
             this.arg0 = arg0;
             this.arg1 = arg1;
             this.arg2 = arg2;
@@ -1965,17 +3960,17 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="completetaskResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class completetaskResponse {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocattributesResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdocattributesResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string @return;
         
-        public completetaskResponse() {
+        public setdocattributesResponse() {
         }
         
-        public completetaskResponse(string @return) {
+        public setdocattributesResponse(string @return) {
             this.@return = @return;
         }
     }
@@ -2017,57 +4012,6 @@ namespace WcfWCService.ExampleService {
         }
         
         public deleteprobreportResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="attachcndoc", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class attachcndocRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg3;
-        
-        public attachcndocRequest() {
-        }
-        
-        public attachcndocRequest(string arg0, string arg1, string arg2, int arg3) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="attachcndocResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class attachcndocResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public attachcndocResponse() {
-        }
-        
-        public attachcndocResponse(string @return) {
             this.@return = @return;
         }
     }
@@ -2131,66 +4075,8 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="emailmessage", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class emailmessageRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg5;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg6;
-        
-        public emailmessageRequest() {
-        }
-        
-        public emailmessageRequest(string arg0, string arg1, string[] arg2, string arg3, string arg4, string arg5, int arg6) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-            this.arg6 = arg6;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="emailmessageResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class emailmessageResponse {
-        
-        public emailmessageResponse() {
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdoctopartref", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdoctopartrefRequest {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocdoclink", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdocdoclinkRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
@@ -2216,10 +4102,10 @@ namespace WcfWCService.ExampleService {
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int arg5;
         
-        public setdoctopartrefRequest() {
+        public setdocdoclinkRequest() {
         }
         
-        public setdoctopartrefRequest(string arg0, string arg1, string arg2, string arg3, string arg4, int arg5) {
+        public setdocdoclinkRequest(string arg0, string arg1, string arg2, string arg3, string arg4, int arg5) {
             this.arg0 = arg0;
             this.arg1 = arg1;
             this.arg2 = arg2;
@@ -2232,17 +4118,17 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdoctopartrefResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdoctopartrefResponse {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocdoclinkResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setdocdoclinkResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string @return;
         
-        public setdoctopartrefResponse() {
+        public setdocdoclinkResponse() {
         }
         
-        public setdoctopartrefResponse(string @return) {
+        public setdocdoclinkResponse(string @return) {
             this.@return = @return;
         }
     }
@@ -2250,115 +4136,8 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocrevision", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdocrevisionRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg2;
-        
-        public setdocrevisionRequest() {
-        }
-        
-        public setdocrevisionRequest(string arg0, string arg1, int arg2) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocrevisionResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdocrevisionResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public setdocrevisionResponse() {
-        }
-        
-        public setdocrevisionResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocattributestrings", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdocattributestringsRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute("arg3", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg5;
-        
-        public setdocattributestringsRequest() {
-        }
-        
-        public setdocattributestringsRequest(string arg0, string arg1, string[] arg2, string[] arg3, string arg4, int arg5) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocattributestringsResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdocattributestringsResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public setdocattributestringsResponse() {
-        }
-        
-        public setdocattributestringsResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdoctopartdescribedby", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdoctopartdescribedbyRequest {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="attachprdoc", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class attachprdocRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
@@ -2371,239 +4150,15 @@ namespace WcfWCService.ExampleService {
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg4;
-        
-        public setdoctopartdescribedbyRequest() {
-        }
-        
-        public setdoctopartdescribedbyRequest(string arg0, string arg1, string arg2, string arg3, int arg4) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdoctopartdescribedbyResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdoctopartdescribedbyResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public setdoctopartdescribedbyResponse() {
-        }
-        
-        public setdoctopartdescribedbyResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdoctopartdescribedbymulti", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdoctopartdescribedbymultiRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg4;
-        
-        public setdoctopartdescribedbymultiRequest() {
-        }
-        
-        public setdoctopartdescribedbymultiRequest(string arg0, string arg1, string[] arg2, string arg3, int arg4) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdoctopartdescribedbymultiResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdoctopartdescribedbymultiResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public setdoctopartdescribedbymultiResponse() {
-        }
-        
-        public setdoctopartdescribedbymultiResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctodocusagelink", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletedoctodocusagelinkRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg4;
-        
-        public deletedoctodocusagelinkRequest() {
-        }
-        
-        public deletedoctodocusagelinkRequest(string arg0, string arg1, string arg2, string arg3, int arg4) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctodocusagelinkResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletedoctodocusagelinkResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public deletedoctodocusagelinkResponse() {
-        }
-        
-        public deletedoctodocusagelinkResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctodocref", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletedoctodocrefRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg4;
-        
-        public deletedoctodocrefRequest() {
-        }
-        
-        public deletedoctodocrefRequest(string arg0, string arg1, string arg2, string arg3, int arg4) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctodocrefResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletedoctodocrefResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public deletedoctodocrefResponse() {
-        }
-        
-        public deletedoctodocrefResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepraffectedobjects", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletepraffectedobjectsRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute("arg1", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public System.Nullable<int>[] arg2;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int arg3;
         
-        public deletepraffectedobjectsRequest() {
+        public attachprdocRequest() {
         }
         
-        public deletepraffectedobjectsRequest(string arg0, string[] arg1, System.Nullable<int>[] arg2, int arg3) {
+        public attachprdocRequest(string arg0, string arg1, string arg2, int arg3) {
             this.arg0 = arg0;
             this.arg1 = arg1;
             this.arg2 = arg2;
@@ -2614,17 +4169,17 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepraffectedobjectsResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletepraffectedobjectsResponse {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="attachprdocResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class attachprdocResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string @return;
         
-        public deletepraffectedobjectsResponse() {
+        public attachprdocResponse() {
         }
         
-        public deletepraffectedobjectsResponse(string @return) {
+        public attachprdocResponse(string @return) {
             this.@return = @return;
         }
     }
@@ -2632,69 +4187,8 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepartpartlinkbylinenumber", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletepartpartlinkbylinenumberRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public long arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg5;
-        
-        public deletepartpartlinkbylinenumberRequest() {
-        }
-        
-        public deletepartpartlinkbylinenumberRequest(string arg0, long arg1, string arg2, string arg3, string arg4, int arg5) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepartpartlinkbylinenumberResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletepartpartlinkbylinenumberResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public deletepartpartlinkbylinenumberResponse() {
-        }
-        
-        public deletepartpartlinkbylinenumberResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletecnattachment", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletecnattachmentRequest {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartstate", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setpartstateRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
@@ -2708,10 +4202,10 @@ namespace WcfWCService.ExampleService {
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int arg2;
         
-        public deletecnattachmentRequest() {
+        public setpartstateRequest() {
         }
         
-        public deletecnattachmentRequest(string arg0, string arg1, int arg2) {
+        public setpartstateRequest(string arg0, string arg1, int arg2) {
             this.arg0 = arg0;
             this.arg1 = arg1;
             this.arg2 = arg2;
@@ -2721,1605 +4215,17 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletecnattachmentResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletecnattachmentResponse {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartstateResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setpartstateResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string @return;
         
-        public deletecnattachmentResponse() {
+        public setpartstateResponse() {
         }
         
-        public deletecnattachmentResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="createproblemreport", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class createproblemreportRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute("arg5", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg5;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg6;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute("arg7", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg7;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg8;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=9)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg9;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=10)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg10;
-        
-        public createproblemreportRequest() {
-        }
-        
-        public createproblemreportRequest(string arg0, string arg1, string arg2, string arg3, string arg4, string[] arg5, string[] arg6, string[] arg7, int arg8, string arg9, int arg10) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-            this.arg6 = arg6;
-            this.arg7 = arg7;
-            this.arg8 = arg8;
-            this.arg9 = arg9;
-            this.arg10 = arg10;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="createproblemreportResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class createproblemreportResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public createproblemreportResponse() {
-        }
-        
-        public createproblemreportResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="createproblemreport2", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class createproblemreport2Request {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg5;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg6;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute("arg7", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg7;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
-        [System.Xml.Serialization.XmlElementAttribute("arg8", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg8;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=9)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg9;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=10)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg10;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=11)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg11;
-        
-        public createproblemreport2Request() {
-        }
-        
-        public createproblemreport2Request(string arg0, string arg1, string arg2, string arg3, string arg4, string arg5, string[] arg6, string[] arg7, string[] arg8, int arg9, string arg10, int arg11) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-            this.arg6 = arg6;
-            this.arg7 = arg7;
-            this.arg8 = arg8;
-            this.arg9 = arg9;
-            this.arg10 = arg10;
-            this.arg11 = arg11;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="createproblemreport2Response", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class createproblemreport2Response {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public createproblemreport2Response() {
-        }
-        
-        public createproblemreport2Response(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctodocrefs", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletedoctodocrefsRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg4;
-        
-        public deletedoctodocrefsRequest() {
-        }
-        
-        public deletedoctodocrefsRequest(string arg0, string arg1, string[] arg2, string arg3, int arg4) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctodocrefsResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletedoctodocrefsResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public deletedoctodocrefsResponse() {
-        }
-        
-        public deletedoctodocrefsResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setproblemreportstate", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setproblemreportstateRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg2;
-        
-        public setproblemreportstateRequest() {
-        }
-        
-        public setproblemreportstateRequest(string arg0, string arg1, int arg2) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setproblemreportstateResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setproblemreportstateResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public setproblemreportstateResponse() {
-        }
-        
-        public setproblemreportstateResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setproblemreportattributes", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setproblemreportattributesRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute("arg3", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute("arg4", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg5;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg6;
-        
-        public setproblemreportattributesRequest() {
-        }
-        
-        public setproblemreportattributesRequest(string arg0, string arg1, string[] arg2, string[] arg3, string[] arg4, string arg5, int arg6) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-            this.arg6 = arg6;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setproblemreportattributesResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setproblemreportattributesResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public setproblemreportattributesResponse() {
-        }
-        
-        public setproblemreportattributesResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartmultipleusageattributes", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setpartmultipleusageattributesRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute("arg4", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute("arg5", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg5;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg6;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg7;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg8;
-        
-        public setpartmultipleusageattributesRequest() {
-        }
-        
-        public setpartmultipleusageattributesRequest(string arg0, string arg1, string[] arg2, string arg3, string[] arg4, string[] arg5, string[] arg6, int arg7, int arg8) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-            this.arg6 = arg6;
-            this.arg7 = arg7;
-            this.arg8 = arg8;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartmultipleusageattributesResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setpartmultipleusageattributesResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public setpartmultipleusageattributesResponse() {
-        }
-        
-        public setpartmultipleusageattributesResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="updatedocdoclinkwithattributes", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class updatedocdoclinkwithattributesRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute("arg5", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg5;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg6;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute("arg7", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg7;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg8;
-        
-        public updatedocdoclinkwithattributesRequest() {
-        }
-        
-        public updatedocdoclinkwithattributesRequest(string arg0, string arg1, string arg2, string arg3, string arg4, string[] arg5, string[] arg6, string[] arg7, int arg8) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-            this.arg6 = arg6;
-            this.arg7 = arg7;
-            this.arg8 = arg8;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="updatedocdoclinkwithattributesResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class updatedocdoclinkwithattributesResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public updatedocdoclinkwithattributesResponse() {
-        }
-        
-        public updatedocdoclinkwithattributesResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setpraffectedobjects", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setpraffectedobjectsRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute("arg1", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public System.Nullable<int>[] arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg3;
-        
-        public setpraffectedobjectsRequest() {
-        }
-        
-        public setpraffectedobjectsRequest(string arg0, string[] arg1, System.Nullable<int>[] arg2, int arg3) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setpraffectedobjectsResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setpraffectedobjectsResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public setpraffectedobjectsResponse() {
-        }
-        
-        public setpraffectedobjectsResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartusagelinkqty", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setpartusagelinkqtyRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public double arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg4;
-        
-        public setpartusagelinkqtyRequest() {
-        }
-        
-        public setpartusagelinkqtyRequest(string arg0, string arg1, string arg2, double arg3, int arg4) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartusagelinkqtyResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setpartusagelinkqtyResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public setpartusagelinkqtyResponse() {
-        }
-        
-        public setpartusagelinkqtyResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocrevremoveattachs", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdocrevremoveattachsRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute("arg4", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute("arg5", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg5;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg6;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg7;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg8;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=9)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg9;
-        
-        public setdocrevremoveattachsRequest() {
-        }
-        
-        public setdocrevremoveattachsRequest(string arg0, string arg1, string arg2, string arg3, string[] arg4, string[] arg5, string[] arg6, string arg7, int arg8, int arg9) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-            this.arg6 = arg6;
-            this.arg7 = arg7;
-            this.arg8 = arg8;
-            this.arg9 = arg9;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocrevremoveattachsResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdocrevremoveattachsResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public setdocrevremoveattachsResponse() {
-        }
-        
-        public setdocrevremoveattachsResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="updatepartpartlinkwithattributes", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class updatepartpartlinkwithattributesRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public double arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public long arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg5;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg6;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg7;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
-        [System.Xml.Serialization.XmlElementAttribute("arg8", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg8;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=9)]
-        [System.Xml.Serialization.XmlElementAttribute("arg9", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg9;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=10)]
-        [System.Xml.Serialization.XmlElementAttribute("arg10", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg10;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=11)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg11;
-        
-        public updatepartpartlinkwithattributesRequest() {
-        }
-        
-        public updatepartpartlinkwithattributesRequest(string arg0, string arg1, string arg2, double arg3, long arg4, string arg5, string arg6, string arg7, string[] arg8, string[] arg9, string[] arg10, int arg11) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-            this.arg6 = arg6;
-            this.arg7 = arg7;
-            this.arg8 = arg8;
-            this.arg9 = arg9;
-            this.arg10 = arg10;
-            this.arg11 = arg11;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="updatepartpartlinkwithattributesResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class updatepartpartlinkwithattributesResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public updatepartpartlinkwithattributesResponse() {
-        }
-        
-        public updatepartpartlinkwithattributesResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctopartdescribeby", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletedoctopartdescribebyRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg4;
-        
-        public deletedoctopartdescribebyRequest() {
-        }
-        
-        public deletedoctopartdescribebyRequest(string arg0, string arg1, string arg2, string arg3, int arg4) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctopartdescribebyResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletedoctopartdescribebyResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public deletedoctopartdescribebyResponse() {
-        }
-        
-        public deletedoctopartdescribebyResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocdoclinkwithattributes", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdocdoclinkwithattributesRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute("arg5", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg5;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg6;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute("arg7", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg7;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg8;
-        
-        public setdocdoclinkwithattributesRequest() {
-        }
-        
-        public setdocdoclinkwithattributesRequest(string arg0, string arg1, string arg2, string arg3, string arg4, string[] arg5, string[] arg6, string[] arg7, int arg8) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-            this.arg6 = arg6;
-            this.arg7 = arg7;
-            this.arg8 = arg8;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setdocdoclinkwithattributesResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setdocdoclinkwithattributesResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public setdocdoclinkwithattributesResponse() {
-        }
-        
-        public setdocdoclinkwithattributesResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctopartref", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletedoctopartrefRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg4;
-        
-        public deletedoctopartrefRequest() {
-        }
-        
-        public deletedoctopartrefRequest(string arg0, string arg1, string arg2, string arg3, int arg4) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctopartrefResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletedoctopartrefResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public deletedoctopartrefResponse() {
-        }
-        
-        public deletedoctopartrefResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctopartrefs", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletedoctopartrefsRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg4;
-        
-        public deletedoctopartrefsRequest() {
-        }
-        
-        public deletedoctopartrefsRequest(string arg0, string arg1, string[] arg2, string arg3, int arg4) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctopartrefsResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletedoctopartrefsResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public deletedoctopartrefsResponse() {
-        }
-        
-        public deletedoctopartrefsResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartpartlinkwithattributes", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setpartpartlinkwithattributesRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public double arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg5;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg6;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public long arg7;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
-        [System.Xml.Serialization.XmlElementAttribute("arg8", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg8;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=9)]
-        [System.Xml.Serialization.XmlElementAttribute("arg9", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg9;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=10)]
-        [System.Xml.Serialization.XmlElementAttribute("arg10", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg10;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=11)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg11;
-        
-        public setpartpartlinkwithattributesRequest() {
-        }
-        
-        public setpartpartlinkwithattributesRequest(string arg0, string arg1, string arg2, double arg3, string arg4, string arg5, string arg6, long arg7, string[] arg8, string[] arg9, string[] arg10, int arg11) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-            this.arg6 = arg6;
-            this.arg7 = arg7;
-            this.arg8 = arg8;
-            this.arg9 = arg9;
-            this.arg10 = arg10;
-            this.arg11 = arg11;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartpartlinkwithattributesResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setpartpartlinkwithattributesResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public setpartpartlinkwithattributesResponse() {
-        }
-        
-        public setpartpartlinkwithattributesResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="createchangenotice", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class createchangenoticeRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute("arg5", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg5;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg6;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute("arg7", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg7;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg8;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=9)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg9;
-        
-        public createchangenoticeRequest() {
-        }
-        
-        public createchangenoticeRequest(string arg0, string arg1, string arg2, string arg3, string arg4, string[] arg5, string[] arg6, string[] arg7, int arg8, int arg9) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-            this.arg6 = arg6;
-            this.arg7 = arg7;
-            this.arg8 = arg8;
-            this.arg9 = arg9;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="createchangenoticeResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class createchangenoticeResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public createchangenoticeResponse() {
-        }
-        
-        public createchangenoticeResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepartpartlink", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletepartpartlinkRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg4;
-        
-        public deletepartpartlinkRequest() {
-        }
-        
-        public deletepartpartlinkRequest(string arg0, string arg1, string arg2, string arg3, int arg4) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepartpartlinkResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletepartpartlinkResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public deletepartpartlinkResponse() {
-        }
-        
-        public deletepartpartlinkResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartattributes", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setpartattributesRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute("arg3", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute("arg4", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute("arg5", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg5;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg6;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg7;
-        
-        public setpartattributesRequest() {
-        }
-        
-        public setpartattributesRequest(string arg0, string arg1, string arg2, string[] arg3, string[] arg4, string[] arg5, string arg6, int arg7) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-            this.arg6 = arg6;
-            this.arg7 = arg7;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartattributesResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setpartattributesResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public setpartattributesResponse() {
-        }
-        
-        public setpartattributesResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctopartdescribebys", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletedoctopartdescribebysRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute("arg2", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg4;
-        
-        public deletedoctopartdescribebysRequest() {
-        }
-        
-        public deletedoctopartdescribebysRequest(string arg0, string arg1, string[] arg2, string arg3, int arg4) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletedoctopartdescribebysResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletedoctopartdescribebysResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public deletedoctopartdescribebysResponse() {
-        }
-        
-        public deletedoctopartdescribebysResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deleteprattachment", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deleteprattachmentRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg2;
-        
-        public deleteprattachmentRequest() {
-        }
-        
-        public deleteprattachmentRequest(string arg0, string arg1, int arg2) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deleteprattachmentResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deleteprattachmentResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public deleteprattachmentResponse() {
-        }
-        
-        public deleteprattachmentResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepartpartlinkbyproductionorder", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletepartpartlinkbyproductionorderRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public long arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg5;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg6;
-        
-        public deletepartpartlinkbyproductionorderRequest() {
-        }
-        
-        public deletepartpartlinkbyproductionorderRequest(string arg0, string arg1, long arg2, string arg3, string arg4, string arg5, int arg6) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-            this.arg6 = arg6;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepartpartlinkbyproductionorderResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletepartpartlinkbyproductionorderResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public deletepartpartlinkbyproductionorderResponse() {
-        }
-        
-        public deletepartpartlinkbyproductionorderResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="updatedispatchdocketpartpartlinkwithattributes", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class updatedispatchdocketpartpartlinkwithattributesRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public double arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg5;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg6;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg7;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public long arg8;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=9)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public long arg9;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=10)]
-        [System.Xml.Serialization.XmlElementAttribute("arg10", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg10;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=11)]
-        [System.Xml.Serialization.XmlElementAttribute("arg11", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg11;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=12)]
-        [System.Xml.Serialization.XmlElementAttribute("arg12", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg12;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=13)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg13;
-        
-        public updatedispatchdocketpartpartlinkwithattributesRequest() {
-        }
-        
-        public updatedispatchdocketpartpartlinkwithattributesRequest(string arg0, string arg1, string arg2, double arg3, string arg4, string arg5, string arg6, string arg7, long arg8, long arg9, string[] arg10, string[] arg11, string[] arg12, int arg13) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-            this.arg6 = arg6;
-            this.arg7 = arg7;
-            this.arg8 = arg8;
-            this.arg9 = arg9;
-            this.arg10 = arg10;
-            this.arg11 = arg11;
-            this.arg12 = arg12;
-            this.arg13 = arg13;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="updatedispatchdocketpartpartlinkwithattributesResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class updatedispatchdocketpartpartlinkwithattributesResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public updatedispatchdocketpartpartlinkwithattributesResponse() {
-        }
-        
-        public updatedispatchdocketpartpartlinkwithattributesResponse(string @return) {
+        public setpartstateResponse(string @return) {
             this.@return = @return;
         }
     }
@@ -4428,6 +4334,72 @@ namespace WcfWCService.ExampleService {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepartpartlinkbyproductionorder", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletepartpartlinkbyproductionorderRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public long arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg6;
+        
+        public deletepartpartlinkbyproductionorderRequest() {
+        }
+        
+        public deletepartpartlinkbyproductionorderRequest(string arg0, string arg1, long arg2, string arg3, string arg4, string arg5, int arg6) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepartpartlinkbyproductionorderResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletepartpartlinkbyproductionorderResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public deletepartpartlinkbyproductionorderResponse() {
+        }
+        
+        public deletepartpartlinkbyproductionorderResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
     [System.ServiceModel.MessageContractAttribute(WrapperName="updatepartreferencedbydoclinkwithattributes", WrapperNamespace="http://regain.org/", IsWrapped=true)]
     public partial class updatepartreferencedbydoclinkwithattributesRequest {
         
@@ -4492,6 +4464,244 @@ namespace WcfWCService.ExampleService {
         }
         
         public updatepartreferencedbydoclinkwithattributesResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepartpartlinkbydispatchdocket", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletepartpartlinkbydispatchdocketRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public long arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg6;
+        
+        public deletepartpartlinkbydispatchdocketRequest() {
+        }
+        
+        public deletepartpartlinkbydispatchdocketRequest(string arg0, string arg1, long arg2, string arg3, string arg4, string arg5, int arg6) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepartpartlinkbydispatchdocketResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class deletepartpartlinkbydispatchdocketResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public deletepartpartlinkbydispatchdocketResponse() {
+        }
+        
+        public deletepartpartlinkbydispatchdocketResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="updatedispatchdocketpartpartlinkwithattributes", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class updatedispatchdocketpartpartlinkwithattributesRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public double arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg6;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg7;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public long arg8;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=9)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public long arg9;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=10)]
+        [System.Xml.Serialization.XmlElementAttribute("arg10", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg10;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=11)]
+        [System.Xml.Serialization.XmlElementAttribute("arg11", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg11;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=12)]
+        [System.Xml.Serialization.XmlElementAttribute("arg12", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg12;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=13)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg13;
+        
+        public updatedispatchdocketpartpartlinkwithattributesRequest() {
+        }
+        
+        public updatedispatchdocketpartpartlinkwithattributesRequest(string arg0, string arg1, string arg2, double arg3, string arg4, string arg5, string arg6, string arg7, long arg8, long arg9, string[] arg10, string[] arg11, string[] arg12, int arg13) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+            this.arg7 = arg7;
+            this.arg8 = arg8;
+            this.arg9 = arg9;
+            this.arg10 = arg10;
+            this.arg11 = arg11;
+            this.arg12 = arg12;
+            this.arg13 = arg13;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="updatedispatchdocketpartpartlinkwithattributesResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class updatedispatchdocketpartpartlinkwithattributesResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public updatedispatchdocketpartpartlinkwithattributesResponse() {
+        }
+        
+        public updatedispatchdocketpartpartlinkwithattributesResponse(string @return) {
+            this.@return = @return;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartusageattributesfromlinenumber", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setpartusageattributesfromlinenumberRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg0;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string arg2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public long arg3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute("arg4", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg4;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute("arg5", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg5;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] arg6;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int arg7;
+        
+        public setpartusageattributesfromlinenumberRequest() {
+        }
+        
+        public setpartusageattributesfromlinenumberRequest(string arg0, string arg1, string arg2, long arg3, string[] arg4, string[] arg5, string[] arg6, int arg7) {
+            this.arg0 = arg0;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+            this.arg7 = arg7;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartusageattributesfromlinenumberResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
+    public partial class setpartusageattributesfromlinenumberResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string @return;
+        
+        public setpartusageattributesfromlinenumberResponse() {
+        }
+        
+        public setpartusageattributesfromlinenumberResponse(string @return) {
             this.@return = @return;
         }
     }
@@ -4572,143 +4782,6 @@ namespace WcfWCService.ExampleService {
         }
     }
     
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartusageattributesfromlinenumber", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setpartusageattributesfromlinenumberRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public long arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute("arg4", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute("arg5", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg5;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute("arg6", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] arg6;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg7;
-        
-        public setpartusageattributesfromlinenumberRequest() {
-        }
-        
-        public setpartusageattributesfromlinenumberRequest(string arg0, string arg1, string arg2, long arg3, string[] arg4, string[] arg5, string[] arg6, int arg7) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-            this.arg6 = arg6;
-            this.arg7 = arg7;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setpartusageattributesfromlinenumberResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class setpartusageattributesfromlinenumberResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public setpartusageattributesfromlinenumberResponse() {
-        }
-        
-        public setpartusageattributesfromlinenumberResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepartpartlinkbydispatchdocket", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletepartpartlinkbydispatchdocketRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg0;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public long arg2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg3;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg4;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string arg5;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int arg6;
-        
-        public deletepartpartlinkbydispatchdocketRequest() {
-        }
-        
-        public deletepartpartlinkbydispatchdocketRequest(string arg0, string arg1, long arg2, string arg3, string arg4, string arg5, int arg6) {
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
-            this.arg4 = arg4;
-            this.arg5 = arg5;
-            this.arg6 = arg6;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="deletepartpartlinkbydispatchdocketResponse", WrapperNamespace="http://regain.org/", IsWrapped=true)]
-    public partial class deletepartpartlinkbydispatchdocketResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://regain.org/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string @return;
-        
-        public deletepartpartlinkbydispatchdocketResponse() {
-        }
-        
-        public deletepartpartlinkbydispatchdocketResponse(string @return) {
-            this.@return = @return;
-        }
-    }
-    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface MyJavaService3Channel : WcfWCService.ExampleService.MyJavaService3, System.ServiceModel.IClientChannel {
     }
@@ -4750,6 +4823,608 @@ namespace WcfWCService.ExampleService {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.setdocrevremoveattachsResponse WcfWCService.ExampleService.MyJavaService3.setdocrevremoveattachs(WcfWCService.ExampleService.setdocrevremoveattachsRequest request) {
+            return base.Channel.setdocrevremoveattachs(request);
+        }
+        
+        public string setdocrevremoveattachs(string arg0, string arg1, string arg2, string arg3, string[] arg4, string[] arg5, string[] arg6, string arg7, int arg8, int arg9) {
+            WcfWCService.ExampleService.setdocrevremoveattachsRequest inValue = new WcfWCService.ExampleService.setdocrevremoveattachsRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            inValue.arg7 = arg7;
+            inValue.arg8 = arg8;
+            inValue.arg9 = arg9;
+            WcfWCService.ExampleService.setdocrevremoveattachsResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdocrevremoveattachs(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.setpartusagelinkqtyResponse WcfWCService.ExampleService.MyJavaService3.setpartusagelinkqty(WcfWCService.ExampleService.setpartusagelinkqtyRequest request) {
+            return base.Channel.setpartusagelinkqty(request);
+        }
+        
+        public string setpartusagelinkqty(string arg0, string arg1, string arg2, double arg3, int arg4) {
+            WcfWCService.ExampleService.setpartusagelinkqtyRequest inValue = new WcfWCService.ExampleService.setpartusagelinkqtyRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            WcfWCService.ExampleService.setpartusagelinkqtyResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setpartusagelinkqty(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.setdocdoclinkwithattributesResponse WcfWCService.ExampleService.MyJavaService3.setdocdoclinkwithattributes(WcfWCService.ExampleService.setdocdoclinkwithattributesRequest request) {
+            return base.Channel.setdocdoclinkwithattributes(request);
+        }
+        
+        public string setdocdoclinkwithattributes(string arg0, string arg1, string arg2, string arg3, string arg4, string[] arg5, string[] arg6, string[] arg7, int arg8) {
+            WcfWCService.ExampleService.setdocdoclinkwithattributesRequest inValue = new WcfWCService.ExampleService.setdocdoclinkwithattributesRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            inValue.arg7 = arg7;
+            inValue.arg8 = arg8;
+            WcfWCService.ExampleService.setdocdoclinkwithattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdocdoclinkwithattributes(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.setpartmultipleusageattributesResponse WcfWCService.ExampleService.MyJavaService3.setpartmultipleusageattributes(WcfWCService.ExampleService.setpartmultipleusageattributesRequest request) {
+            return base.Channel.setpartmultipleusageattributes(request);
+        }
+        
+        public string setpartmultipleusageattributes(string arg0, string arg1, string[] arg2, string arg3, string[] arg4, string[] arg5, string[] arg6, int arg7, int arg8) {
+            WcfWCService.ExampleService.setpartmultipleusageattributesRequest inValue = new WcfWCService.ExampleService.setpartmultipleusageattributesRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            inValue.arg7 = arg7;
+            inValue.arg8 = arg8;
+            WcfWCService.ExampleService.setpartmultipleusageattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setpartmultipleusageattributes(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.createproblemreportResponse WcfWCService.ExampleService.MyJavaService3.createproblemreport(WcfWCService.ExampleService.createproblemreportRequest request) {
+            return base.Channel.createproblemreport(request);
+        }
+        
+        public string createproblemreport(string arg0, string arg1, string arg2, string arg3, string arg4, string[] arg5, string[] arg6, string[] arg7, int arg8, string arg9, int arg10) {
+            WcfWCService.ExampleService.createproblemreportRequest inValue = new WcfWCService.ExampleService.createproblemreportRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            inValue.arg7 = arg7;
+            inValue.arg8 = arg8;
+            inValue.arg9 = arg9;
+            inValue.arg10 = arg10;
+            WcfWCService.ExampleService.createproblemreportResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).createproblemreport(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.deletedoctopartrefResponse WcfWCService.ExampleService.MyJavaService3.deletedoctopartref(WcfWCService.ExampleService.deletedoctopartrefRequest request) {
+            return base.Channel.deletedoctopartref(request);
+        }
+        
+        public string deletedoctopartref(string arg0, string arg1, string arg2, string arg3, int arg4) {
+            WcfWCService.ExampleService.deletedoctopartrefRequest inValue = new WcfWCService.ExampleService.deletedoctopartrefRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            WcfWCService.ExampleService.deletedoctopartrefResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletedoctopartref(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.deletedoctopartrefwithattributeResponse WcfWCService.ExampleService.MyJavaService3.deletedoctopartrefwithattribute(WcfWCService.ExampleService.deletedoctopartrefwithattributeRequest request) {
+            return base.Channel.deletedoctopartrefwithattribute(request);
+        }
+        
+        public string deletedoctopartrefwithattribute(string arg0, string arg1, string arg2, string arg3, string arg4, string arg5, int arg6) {
+            WcfWCService.ExampleService.deletedoctopartrefwithattributeRequest inValue = new WcfWCService.ExampleService.deletedoctopartrefwithattributeRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            WcfWCService.ExampleService.deletedoctopartrefwithattributeResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletedoctopartrefwithattribute(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.updatepartpartlinkwithattributesResponse WcfWCService.ExampleService.MyJavaService3.updatepartpartlinkwithattributes(WcfWCService.ExampleService.updatepartpartlinkwithattributesRequest request) {
+            return base.Channel.updatepartpartlinkwithattributes(request);
+        }
+        
+        public string updatepartpartlinkwithattributes(string arg0, string arg1, string arg2, double arg3, long arg4, string arg5, string arg6, string arg7, string[] arg8, string[] arg9, string[] arg10, int arg11) {
+            WcfWCService.ExampleService.updatepartpartlinkwithattributesRequest inValue = new WcfWCService.ExampleService.updatepartpartlinkwithattributesRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            inValue.arg7 = arg7;
+            inValue.arg8 = arg8;
+            inValue.arg9 = arg9;
+            inValue.arg10 = arg10;
+            inValue.arg11 = arg11;
+            WcfWCService.ExampleService.updatepartpartlinkwithattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).updatepartpartlinkwithattributes(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.deletepartpartlinkbylinenumberResponse WcfWCService.ExampleService.MyJavaService3.deletepartpartlinkbylinenumber(WcfWCService.ExampleService.deletepartpartlinkbylinenumberRequest request) {
+            return base.Channel.deletepartpartlinkbylinenumber(request);
+        }
+        
+        public string deletepartpartlinkbylinenumber(string arg0, long arg1, string arg2, string arg3, string arg4, int arg5) {
+            WcfWCService.ExampleService.deletepartpartlinkbylinenumberRequest inValue = new WcfWCService.ExampleService.deletepartpartlinkbylinenumberRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            WcfWCService.ExampleService.deletepartpartlinkbylinenumberResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletepartpartlinkbylinenumber(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.setdoctopartdescribedbyResponse WcfWCService.ExampleService.MyJavaService3.setdoctopartdescribedby(WcfWCService.ExampleService.setdoctopartdescribedbyRequest request) {
+            return base.Channel.setdoctopartdescribedby(request);
+        }
+        
+        public string setdoctopartdescribedby(string arg0, string arg1, string arg2, string arg3, int arg4) {
+            WcfWCService.ExampleService.setdoctopartdescribedbyRequest inValue = new WcfWCService.ExampleService.setdoctopartdescribedbyRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            WcfWCService.ExampleService.setdoctopartdescribedbyResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdoctopartdescribedby(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.setpartattributesResponse WcfWCService.ExampleService.MyJavaService3.setpartattributes(WcfWCService.ExampleService.setpartattributesRequest request) {
+            return base.Channel.setpartattributes(request);
+        }
+        
+        public string setpartattributes(string arg0, string arg1, string arg2, string[] arg3, string[] arg4, string[] arg5, string arg6, int arg7) {
+            WcfWCService.ExampleService.setpartattributesRequest inValue = new WcfWCService.ExampleService.setpartattributesRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            inValue.arg7 = arg7;
+            WcfWCService.ExampleService.setpartattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setpartattributes(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.deletepraffectedobjectsResponse WcfWCService.ExampleService.MyJavaService3.deletepraffectedobjects(WcfWCService.ExampleService.deletepraffectedobjectsRequest request) {
+            return base.Channel.deletepraffectedobjects(request);
+        }
+        
+        public string deletepraffectedobjects(string arg0, string[] arg1, System.Nullable<int>[] arg2, int arg3) {
+            WcfWCService.ExampleService.deletepraffectedobjectsRequest inValue = new WcfWCService.ExampleService.deletepraffectedobjectsRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            WcfWCService.ExampleService.deletepraffectedobjectsResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletepraffectedobjects(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.setproblemreportstateResponse WcfWCService.ExampleService.MyJavaService3.setproblemreportstate(WcfWCService.ExampleService.setproblemreportstateRequest request) {
+            return base.Channel.setproblemreportstate(request);
+        }
+        
+        public string setproblemreportstate(string arg0, string arg1, int arg2) {
+            WcfWCService.ExampleService.setproblemreportstateRequest inValue = new WcfWCService.ExampleService.setproblemreportstateRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            WcfWCService.ExampleService.setproblemreportstateResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setproblemreportstate(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.setdocattributestringsResponse WcfWCService.ExampleService.MyJavaService3.setdocattributestrings(WcfWCService.ExampleService.setdocattributestringsRequest request) {
+            return base.Channel.setdocattributestrings(request);
+        }
+        
+        public string setdocattributestrings(string arg0, string arg1, string[] arg2, string[] arg3, string arg4, int arg5) {
+            WcfWCService.ExampleService.setdocattributestringsRequest inValue = new WcfWCService.ExampleService.setdocattributestringsRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            WcfWCService.ExampleService.setdocattributestringsResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdocattributestrings(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.deletedoctopartdescribebyResponse WcfWCService.ExampleService.MyJavaService3.deletedoctopartdescribeby(WcfWCService.ExampleService.deletedoctopartdescribebyRequest request) {
+            return base.Channel.deletedoctopartdescribeby(request);
+        }
+        
+        public string deletedoctopartdescribeby(string arg0, string arg1, string arg2, string arg3, int arg4) {
+            WcfWCService.ExampleService.deletedoctopartdescribebyRequest inValue = new WcfWCService.ExampleService.deletedoctopartdescribebyRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            WcfWCService.ExampleService.deletedoctopartdescribebyResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletedoctopartdescribeby(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.deletedoctodocrefsResponse WcfWCService.ExampleService.MyJavaService3.deletedoctodocrefs(WcfWCService.ExampleService.deletedoctodocrefsRequest request) {
+            return base.Channel.deletedoctodocrefs(request);
+        }
+        
+        public string deletedoctodocrefs(string arg0, string arg1, string[] arg2, string arg3, int arg4) {
+            WcfWCService.ExampleService.deletedoctodocrefsRequest inValue = new WcfWCService.ExampleService.deletedoctodocrefsRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            WcfWCService.ExampleService.deletedoctodocrefsResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletedoctodocrefs(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.deletedoctopartrefsResponse WcfWCService.ExampleService.MyJavaService3.deletedoctopartrefs(WcfWCService.ExampleService.deletedoctopartrefsRequest request) {
+            return base.Channel.deletedoctopartrefs(request);
+        }
+        
+        public string deletedoctopartrefs(string arg0, string arg1, string[] arg2, string arg3, int arg4) {
+            WcfWCService.ExampleService.deletedoctopartrefsRequest inValue = new WcfWCService.ExampleService.deletedoctopartrefsRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            WcfWCService.ExampleService.deletedoctopartrefsResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletedoctopartrefs(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.deletepartpartlinkResponse WcfWCService.ExampleService.MyJavaService3.deletepartpartlink(WcfWCService.ExampleService.deletepartpartlinkRequest request) {
+            return base.Channel.deletepartpartlink(request);
+        }
+        
+        public string deletepartpartlink(string arg0, string arg1, string arg2, string arg3, int arg4) {
+            WcfWCService.ExampleService.deletepartpartlinkRequest inValue = new WcfWCService.ExampleService.deletepartpartlinkRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            WcfWCService.ExampleService.deletepartpartlinkResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletepartpartlink(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.createchangenoticeResponse WcfWCService.ExampleService.MyJavaService3.createchangenotice(WcfWCService.ExampleService.createchangenoticeRequest request) {
+            return base.Channel.createchangenotice(request);
+        }
+        
+        public string createchangenotice(string arg0, string arg1, string arg2, string arg3, string arg4, string[] arg5, string[] arg6, string[] arg7, int arg8, int arg9) {
+            WcfWCService.ExampleService.createchangenoticeRequest inValue = new WcfWCService.ExampleService.createchangenoticeRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            inValue.arg7 = arg7;
+            inValue.arg8 = arg8;
+            inValue.arg9 = arg9;
+            WcfWCService.ExampleService.createchangenoticeResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).createchangenotice(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.deletedoctodocusagelinkResponse WcfWCService.ExampleService.MyJavaService3.deletedoctodocusagelink(WcfWCService.ExampleService.deletedoctodocusagelinkRequest request) {
+            return base.Channel.deletedoctodocusagelink(request);
+        }
+        
+        public string deletedoctodocusagelink(string arg0, string arg1, string arg2, string arg3, int arg4) {
+            WcfWCService.ExampleService.deletedoctodocusagelinkRequest inValue = new WcfWCService.ExampleService.deletedoctodocusagelinkRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            WcfWCService.ExampleService.deletedoctodocusagelinkResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletedoctodocusagelink(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.deletecnattachmentResponse WcfWCService.ExampleService.MyJavaService3.deletecnattachment(WcfWCService.ExampleService.deletecnattachmentRequest request) {
+            return base.Channel.deletecnattachment(request);
+        }
+        
+        public string deletecnattachment(string arg0, string arg1, int arg2) {
+            WcfWCService.ExampleService.deletecnattachmentRequest inValue = new WcfWCService.ExampleService.deletecnattachmentRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            WcfWCService.ExampleService.deletecnattachmentResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletecnattachment(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.deleteprattachmentResponse WcfWCService.ExampleService.MyJavaService3.deleteprattachment(WcfWCService.ExampleService.deleteprattachmentRequest request) {
+            return base.Channel.deleteprattachment(request);
+        }
+        
+        public string deleteprattachment(string arg0, string arg1, int arg2) {
+            WcfWCService.ExampleService.deleteprattachmentRequest inValue = new WcfWCService.ExampleService.deleteprattachmentRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            WcfWCService.ExampleService.deleteprattachmentResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deleteprattachment(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.deletedoctopartdescribebysResponse WcfWCService.ExampleService.MyJavaService3.deletedoctopartdescribebys(WcfWCService.ExampleService.deletedoctopartdescribebysRequest request) {
+            return base.Channel.deletedoctopartdescribebys(request);
+        }
+        
+        public string deletedoctopartdescribebys(string arg0, string arg1, string[] arg2, string arg3, int arg4) {
+            WcfWCService.ExampleService.deletedoctopartdescribebysRequest inValue = new WcfWCService.ExampleService.deletedoctopartdescribebysRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            WcfWCService.ExampleService.deletedoctopartdescribebysResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletedoctopartdescribebys(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.setdoctopartdescribedbymultiResponse WcfWCService.ExampleService.MyJavaService3.setdoctopartdescribedbymulti(WcfWCService.ExampleService.setdoctopartdescribedbymultiRequest request) {
+            return base.Channel.setdoctopartdescribedbymulti(request);
+        }
+        
+        public string setdoctopartdescribedbymulti(string arg0, string arg1, string[] arg2, string arg3, int arg4) {
+            WcfWCService.ExampleService.setdoctopartdescribedbymultiRequest inValue = new WcfWCService.ExampleService.setdoctopartdescribedbymultiRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            WcfWCService.ExampleService.setdoctopartdescribedbymultiResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdoctopartdescribedbymulti(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.setpartpartlinkwithattributesResponse WcfWCService.ExampleService.MyJavaService3.setpartpartlinkwithattributes(WcfWCService.ExampleService.setpartpartlinkwithattributesRequest request) {
+            return base.Channel.setpartpartlinkwithattributes(request);
+        }
+        
+        public string setpartpartlinkwithattributes(string arg0, string arg1, string arg2, double arg3, string arg4, string arg5, string arg6, long arg7, string[] arg8, string[] arg9, string[] arg10, int arg11) {
+            WcfWCService.ExampleService.setpartpartlinkwithattributesRequest inValue = new WcfWCService.ExampleService.setpartpartlinkwithattributesRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            inValue.arg7 = arg7;
+            inValue.arg8 = arg8;
+            inValue.arg9 = arg9;
+            inValue.arg10 = arg10;
+            inValue.arg11 = arg11;
+            WcfWCService.ExampleService.setpartpartlinkwithattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setpartpartlinkwithattributes(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.setpraffectedobjectsResponse WcfWCService.ExampleService.MyJavaService3.setpraffectedobjects(WcfWCService.ExampleService.setpraffectedobjectsRequest request) {
+            return base.Channel.setpraffectedobjects(request);
+        }
+        
+        public string setpraffectedobjects(string arg0, string[] arg1, System.Nullable<int>[] arg2, int arg3) {
+            WcfWCService.ExampleService.setpraffectedobjectsRequest inValue = new WcfWCService.ExampleService.setpraffectedobjectsRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            WcfWCService.ExampleService.setpraffectedobjectsResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setpraffectedobjects(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.updatedocdoclinkwithattributesResponse WcfWCService.ExampleService.MyJavaService3.updatedocdoclinkwithattributes(WcfWCService.ExampleService.updatedocdoclinkwithattributesRequest request) {
+            return base.Channel.updatedocdoclinkwithattributes(request);
+        }
+        
+        public string updatedocdoclinkwithattributes(string arg0, string arg1, string arg2, string arg3, string arg4, string[] arg5, string[] arg6, string[] arg7, int arg8) {
+            WcfWCService.ExampleService.updatedocdoclinkwithattributesRequest inValue = new WcfWCService.ExampleService.updatedocdoclinkwithattributesRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            inValue.arg7 = arg7;
+            inValue.arg8 = arg8;
+            WcfWCService.ExampleService.updatedocdoclinkwithattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).updatedocdoclinkwithattributes(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.setproblemreportattributesResponse WcfWCService.ExampleService.MyJavaService3.setproblemreportattributes(WcfWCService.ExampleService.setproblemreportattributesRequest request) {
+            return base.Channel.setproblemreportattributes(request);
+        }
+        
+        public string setproblemreportattributes(string arg0, string arg1, string[] arg2, string[] arg3, string[] arg4, string arg5, int arg6) {
+            WcfWCService.ExampleService.setproblemreportattributesRequest inValue = new WcfWCService.ExampleService.setproblemreportattributesRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            WcfWCService.ExampleService.setproblemreportattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setproblemreportattributes(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.deletedoctodocrefResponse WcfWCService.ExampleService.MyJavaService3.deletedoctodocref(WcfWCService.ExampleService.deletedoctodocrefRequest request) {
+            return base.Channel.deletedoctodocref(request);
+        }
+        
+        public string deletedoctodocref(string arg0, string arg1, string arg2, string arg3, int arg4) {
+            WcfWCService.ExampleService.deletedoctodocrefRequest inValue = new WcfWCService.ExampleService.deletedoctodocrefRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            WcfWCService.ExampleService.deletedoctodocrefResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletedoctodocref(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.createproblemreport2Response WcfWCService.ExampleService.MyJavaService3.createproblemreport2(WcfWCService.ExampleService.createproblemreport2Request request) {
+            return base.Channel.createproblemreport2(request);
+        }
+        
+        public string createproblemreport2(string arg0, string arg1, string arg2, string arg3, string arg4, string arg5, string[] arg6, string[] arg7, string[] arg8, int arg9, string arg10, int arg11) {
+            WcfWCService.ExampleService.createproblemreport2Request inValue = new WcfWCService.ExampleService.createproblemreport2Request();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            inValue.arg7 = arg7;
+            inValue.arg8 = arg8;
+            inValue.arg9 = arg9;
+            inValue.arg10 = arg10;
+            inValue.arg11 = arg11;
+            WcfWCService.ExampleService.createproblemreport2Response retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).createproblemreport2(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.emailmessageResponse WcfWCService.ExampleService.MyJavaService3.emailmessage(WcfWCService.ExampleService.emailmessageRequest request) {
+            return base.Channel.emailmessage(request);
+        }
+        
+        public void emailmessage(string arg0, string arg1, string[] arg2, string arg3, string arg4, string arg5, int arg6) {
+            WcfWCService.ExampleService.emailmessageRequest inValue = new WcfWCService.ExampleService.emailmessageRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            WcfWCService.ExampleService.emailmessageResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).emailmessage(inValue);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.setdoctopartrefsResponse WcfWCService.ExampleService.MyJavaService3.setdoctopartrefs(WcfWCService.ExampleService.setdoctopartrefsRequest request) {
+            return base.Channel.setdoctopartrefs(request);
+        }
+        
+        public string setdoctopartrefs(string arg0, string arg1, string[] arg2, string arg3, string arg4, int arg5) {
+            WcfWCService.ExampleService.setdoctopartrefsRequest inValue = new WcfWCService.ExampleService.setdoctopartrefsRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            WcfWCService.ExampleService.setdoctopartrefsResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdoctopartrefs(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.copypartResponse WcfWCService.ExampleService.MyJavaService3.copypart(WcfWCService.ExampleService.copypartRequest request) {
+            return base.Channel.copypart(request);
+        }
+        
+        public string copypart(string arg0, string arg1, string arg2, string arg3, string arg4, string arg5, int arg6, int arg7) {
+            WcfWCService.ExampleService.copypartRequest inValue = new WcfWCService.ExampleService.copypartRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            inValue.arg7 = arg7;
+            WcfWCService.ExampleService.copypartResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).copypart(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.attachurlResponse WcfWCService.ExampleService.MyJavaService3.attachurl(WcfWCService.ExampleService.attachurlRequest request) {
+            return base.Channel.attachurl(request);
+        }
+        
+        public string attachurl(string arg0, string arg1, string arg2, string arg3, string arg4, bool arg5, string arg6, int arg7) {
+            WcfWCService.ExampleService.attachurlRequest inValue = new WcfWCService.ExampleService.attachurlRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            inValue.arg7 = arg7;
+            WcfWCService.ExampleService.attachurlResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).attachurl(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         WcfWCService.ExampleService.doccreateResponse WcfWCService.ExampleService.MyJavaService3.doccreate(WcfWCService.ExampleService.doccreateRequest request) {
             return base.Channel.doccreate(request);
         }
@@ -4768,6 +5443,29 @@ namespace WcfWCService.ExampleService {
             inValue.arg9 = arg9;
             inValue.arg10 = arg10;
             WcfWCService.ExampleService.doccreateResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).doccreate(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.createpartResponse WcfWCService.ExampleService.MyJavaService3.createpart(WcfWCService.ExampleService.createpartRequest request) {
+            return base.Channel.createpart(request);
+        }
+        
+        public string createpart(string arg0, string arg1, string arg2, string arg3, string arg4, string arg5, string[] arg6, string[] arg7, string[] arg8, string arg9, int arg10, int arg11) {
+            WcfWCService.ExampleService.createpartRequest inValue = new WcfWCService.ExampleService.createpartRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            inValue.arg7 = arg7;
+            inValue.arg8 = arg8;
+            inValue.arg9 = arg9;
+            inValue.arg10 = arg10;
+            inValue.arg11 = arg11;
+            WcfWCService.ExampleService.createpartResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).createpart(inValue);
             return retVal.@return;
         }
         
@@ -4812,39 +5510,35 @@ namespace WcfWCService.ExampleService {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.attachurlResponse WcfWCService.ExampleService.MyJavaService3.attachurl(WcfWCService.ExampleService.attachurlRequest request) {
-            return base.Channel.attachurl(request);
+        WcfWCService.ExampleService.deleteurlResponse WcfWCService.ExampleService.MyJavaService3.deleteurl(WcfWCService.ExampleService.deleteurlRequest request) {
+            return base.Channel.deleteurl(request);
         }
         
-        public string attachurl(string arg0, string arg1, string arg2, string arg3, string arg4, bool arg5, string arg6, int arg7) {
-            WcfWCService.ExampleService.attachurlRequest inValue = new WcfWCService.ExampleService.attachurlRequest();
+        public string deleteurl(string arg0, string arg1, string arg2, bool arg3, int arg4) {
+            WcfWCService.ExampleService.deleteurlRequest inValue = new WcfWCService.ExampleService.deleteurlRequest();
             inValue.arg0 = arg0;
             inValue.arg1 = arg1;
             inValue.arg2 = arg2;
             inValue.arg3 = arg3;
             inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            inValue.arg6 = arg6;
-            inValue.arg7 = arg7;
-            WcfWCService.ExampleService.attachurlResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).attachurl(inValue);
+            WcfWCService.ExampleService.deleteurlResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deleteurl(inValue);
             return retVal.@return;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setdocattributesResponse WcfWCService.ExampleService.MyJavaService3.setdocattributes(WcfWCService.ExampleService.setdocattributesRequest request) {
-            return base.Channel.setdocattributes(request);
+        WcfWCService.ExampleService.setdoctopartrefResponse WcfWCService.ExampleService.MyJavaService3.setdoctopartref(WcfWCService.ExampleService.setdoctopartrefRequest request) {
+            return base.Channel.setdoctopartref(request);
         }
         
-        public string setdocattributes(string arg0, string arg1, string[] arg2, string[] arg3, string[] arg4, string arg5, int arg6) {
-            WcfWCService.ExampleService.setdocattributesRequest inValue = new WcfWCService.ExampleService.setdocattributesRequest();
+        public string setdoctopartref(string arg0, string arg1, string arg2, string arg3, string arg4, int arg5) {
+            WcfWCService.ExampleService.setdoctopartrefRequest inValue = new WcfWCService.ExampleService.setdoctopartrefRequest();
             inValue.arg0 = arg0;
             inValue.arg1 = arg1;
             inValue.arg2 = arg2;
             inValue.arg3 = arg3;
             inValue.arg4 = arg4;
             inValue.arg5 = arg5;
-            inValue.arg6 = arg6;
-            WcfWCService.ExampleService.setdocattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdocattributes(inValue);
+            WcfWCService.ExampleService.setdoctopartrefResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdoctopartref(inValue);
             return retVal.@return;
         }
         
@@ -4865,35 +5559,49 @@ namespace WcfWCService.ExampleService {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.deleteurlResponse WcfWCService.ExampleService.MyJavaService3.deleteurl(WcfWCService.ExampleService.deleteurlRequest request) {
-            return base.Channel.deleteurl(request);
+        WcfWCService.ExampleService.attachcndocResponse WcfWCService.ExampleService.MyJavaService3.attachcndoc(WcfWCService.ExampleService.attachcndocRequest request) {
+            return base.Channel.attachcndoc(request);
         }
         
-        public string deleteurl(string arg0, string arg1, string arg2, bool arg3, int arg4) {
-            WcfWCService.ExampleService.deleteurlRequest inValue = new WcfWCService.ExampleService.deleteurlRequest();
+        public string attachcndoc(string arg0, string arg1, string arg2, int arg3) {
+            WcfWCService.ExampleService.attachcndocRequest inValue = new WcfWCService.ExampleService.attachcndocRequest();
             inValue.arg0 = arg0;
             inValue.arg1 = arg1;
             inValue.arg2 = arg2;
             inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            WcfWCService.ExampleService.deleteurlResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deleteurl(inValue);
+            WcfWCService.ExampleService.attachcndocResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).attachcndoc(inValue);
             return retVal.@return;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setdoctopartrefsResponse WcfWCService.ExampleService.MyJavaService3.setdoctopartrefs(WcfWCService.ExampleService.setdoctopartrefsRequest request) {
-            return base.Channel.setdoctopartrefs(request);
+        WcfWCService.ExampleService.setdocrevisionResponse WcfWCService.ExampleService.MyJavaService3.setdocrevision(WcfWCService.ExampleService.setdocrevisionRequest request) {
+            return base.Channel.setdocrevision(request);
         }
         
-        public string setdoctopartrefs(string arg0, string arg1, string[] arg2, string arg3, string arg4, int arg5) {
-            WcfWCService.ExampleService.setdoctopartrefsRequest inValue = new WcfWCService.ExampleService.setdoctopartrefsRequest();
+        public string setdocrevision(string arg0, string arg1, int arg2) {
+            WcfWCService.ExampleService.setdocrevisionRequest inValue = new WcfWCService.ExampleService.setdocrevisionRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            WcfWCService.ExampleService.setdocrevisionResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdocrevision(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.completetaskResponse WcfWCService.ExampleService.MyJavaService3.completetask(WcfWCService.ExampleService.completetaskRequest request) {
+            return base.Channel.completetask(request);
+        }
+        
+        public string completetask(long arg0, long arg1, string arg2, string[] arg3, string[] arg4, string[] arg5, int arg6) {
+            WcfWCService.ExampleService.completetaskRequest inValue = new WcfWCService.ExampleService.completetaskRequest();
             inValue.arg0 = arg0;
             inValue.arg1 = arg1;
             inValue.arg2 = arg2;
             inValue.arg3 = arg3;
             inValue.arg4 = arg4;
             inValue.arg5 = arg5;
-            WcfWCService.ExampleService.setdoctopartrefsResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdoctopartrefs(inValue);
+            inValue.arg6 = arg6;
+            WcfWCService.ExampleService.completetaskResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).completetask(inValue);
             return retVal.@return;
         }
         
@@ -4910,25 +5618,6 @@ namespace WcfWCService.ExampleService {
             inValue.arg3 = arg3;
             inValue.arg4 = arg4;
             WcfWCService.ExampleService.setdoctodocrefResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdoctodocref(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.copypartResponse WcfWCService.ExampleService.MyJavaService3.copypart(WcfWCService.ExampleService.copypartRequest request) {
-            return base.Channel.copypart(request);
-        }
-        
-        public string copypart(string arg0, string arg1, string arg2, string arg3, string arg4, string arg5, int arg6, int arg7) {
-            WcfWCService.ExampleService.copypartRequest inValue = new WcfWCService.ExampleService.copypartRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            inValue.arg6 = arg6;
-            inValue.arg7 = arg7;
-            WcfWCService.ExampleService.copypartResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).copypart(inValue);
             return retVal.@return;
         }
         
@@ -4952,29 +5641,12 @@ namespace WcfWCService.ExampleService {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setdocdoclinkResponse WcfWCService.ExampleService.MyJavaService3.setdocdoclink(WcfWCService.ExampleService.setdocdoclinkRequest request) {
-            return base.Channel.setdocdoclink(request);
+        WcfWCService.ExampleService.setdocattributesResponse WcfWCService.ExampleService.MyJavaService3.setdocattributes(WcfWCService.ExampleService.setdocattributesRequest request) {
+            return base.Channel.setdocattributes(request);
         }
         
-        public string setdocdoclink(string arg0, string arg1, string arg2, string arg3, string arg4, int arg5) {
-            WcfWCService.ExampleService.setdocdoclinkRequest inValue = new WcfWCService.ExampleService.setdocdoclinkRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            WcfWCService.ExampleService.setdocdoclinkResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdocdoclink(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.createpartResponse WcfWCService.ExampleService.MyJavaService3.createpart(WcfWCService.ExampleService.createpartRequest request) {
-            return base.Channel.createpart(request);
-        }
-        
-        public string createpart(string arg0, string arg1, string arg2, string arg3, string arg4, string arg5, string[] arg6, string[] arg7, string[] arg8, string arg9, int arg10, int arg11) {
-            WcfWCService.ExampleService.createpartRequest inValue = new WcfWCService.ExampleService.createpartRequest();
+        public string setdocattributes(string arg0, string arg1, string[] arg2, string[] arg3, string[] arg4, string arg5, int arg6) {
+            WcfWCService.ExampleService.setdocattributesRequest inValue = new WcfWCService.ExampleService.setdocattributesRequest();
             inValue.arg0 = arg0;
             inValue.arg1 = arg1;
             inValue.arg2 = arg2;
@@ -4982,59 +5654,7 @@ namespace WcfWCService.ExampleService {
             inValue.arg4 = arg4;
             inValue.arg5 = arg5;
             inValue.arg6 = arg6;
-            inValue.arg7 = arg7;
-            inValue.arg8 = arg8;
-            inValue.arg9 = arg9;
-            inValue.arg10 = arg10;
-            inValue.arg11 = arg11;
-            WcfWCService.ExampleService.createpartResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).createpart(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setpartstateResponse WcfWCService.ExampleService.MyJavaService3.setpartstate(WcfWCService.ExampleService.setpartstateRequest request) {
-            return base.Channel.setpartstate(request);
-        }
-        
-        public string setpartstate(string arg0, string arg1, int arg2) {
-            WcfWCService.ExampleService.setpartstateRequest inValue = new WcfWCService.ExampleService.setpartstateRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            WcfWCService.ExampleService.setpartstateResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setpartstate(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.attachprdocResponse WcfWCService.ExampleService.MyJavaService3.attachprdoc(WcfWCService.ExampleService.attachprdocRequest request) {
-            return base.Channel.attachprdoc(request);
-        }
-        
-        public string attachprdoc(string arg0, string arg1, string arg2, int arg3) {
-            WcfWCService.ExampleService.attachprdocRequest inValue = new WcfWCService.ExampleService.attachprdocRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            WcfWCService.ExampleService.attachprdocResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).attachprdoc(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.completetaskResponse WcfWCService.ExampleService.MyJavaService3.completetask(WcfWCService.ExampleService.completetaskRequest request) {
-            return base.Channel.completetask(request);
-        }
-        
-        public string completetask(long arg0, long arg1, string arg2, string[] arg3, string[] arg4, string[] arg5, int arg6) {
-            WcfWCService.ExampleService.completetaskRequest inValue = new WcfWCService.ExampleService.completetaskRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            inValue.arg6 = arg6;
-            WcfWCService.ExampleService.completetaskResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).completetask(inValue);
+            WcfWCService.ExampleService.setdocattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdocattributes(inValue);
             return retVal.@return;
         }
         
@@ -5048,21 +5668,6 @@ namespace WcfWCService.ExampleService {
             inValue.arg0 = arg0;
             inValue.arg1 = arg1;
             WcfWCService.ExampleService.deleteprobreportResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deleteprobreport(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.attachcndocResponse WcfWCService.ExampleService.MyJavaService3.attachcndoc(WcfWCService.ExampleService.attachcndocRequest request) {
-            return base.Channel.attachcndoc(request);
-        }
-        
-        public string attachcndoc(string arg0, string arg1, string arg2, int arg3) {
-            WcfWCService.ExampleService.attachcndocRequest inValue = new WcfWCService.ExampleService.attachcndocRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            WcfWCService.ExampleService.attachcndocResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).attachcndoc(inValue);
             return retVal.@return;
         }
         
@@ -5083,605 +5688,48 @@ namespace WcfWCService.ExampleService {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.emailmessageResponse WcfWCService.ExampleService.MyJavaService3.emailmessage(WcfWCService.ExampleService.emailmessageRequest request) {
-            return base.Channel.emailmessage(request);
+        WcfWCService.ExampleService.setdocdoclinkResponse WcfWCService.ExampleService.MyJavaService3.setdocdoclink(WcfWCService.ExampleService.setdocdoclinkRequest request) {
+            return base.Channel.setdocdoclink(request);
         }
         
-        public void emailmessage(string arg0, string arg1, string[] arg2, string arg3, string arg4, string arg5, int arg6) {
-            WcfWCService.ExampleService.emailmessageRequest inValue = new WcfWCService.ExampleService.emailmessageRequest();
+        public string setdocdoclink(string arg0, string arg1, string arg2, string arg3, string arg4, int arg5) {
+            WcfWCService.ExampleService.setdocdoclinkRequest inValue = new WcfWCService.ExampleService.setdocdoclinkRequest();
             inValue.arg0 = arg0;
             inValue.arg1 = arg1;
             inValue.arg2 = arg2;
             inValue.arg3 = arg3;
             inValue.arg4 = arg4;
             inValue.arg5 = arg5;
-            inValue.arg6 = arg6;
-            WcfWCService.ExampleService.emailmessageResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).emailmessage(inValue);
+            WcfWCService.ExampleService.setdocdoclinkResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdocdoclink(inValue);
+            return retVal.@return;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setdoctopartrefResponse WcfWCService.ExampleService.MyJavaService3.setdoctopartref(WcfWCService.ExampleService.setdoctopartrefRequest request) {
-            return base.Channel.setdoctopartref(request);
+        WcfWCService.ExampleService.attachprdocResponse WcfWCService.ExampleService.MyJavaService3.attachprdoc(WcfWCService.ExampleService.attachprdocRequest request) {
+            return base.Channel.attachprdoc(request);
         }
         
-        public string setdoctopartref(string arg0, string arg1, string arg2, string arg3, string arg4, int arg5) {
-            WcfWCService.ExampleService.setdoctopartrefRequest inValue = new WcfWCService.ExampleService.setdoctopartrefRequest();
+        public string attachprdoc(string arg0, string arg1, string arg2, int arg3) {
+            WcfWCService.ExampleService.attachprdocRequest inValue = new WcfWCService.ExampleService.attachprdocRequest();
             inValue.arg0 = arg0;
             inValue.arg1 = arg1;
             inValue.arg2 = arg2;
             inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            WcfWCService.ExampleService.setdoctopartrefResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdoctopartref(inValue);
+            WcfWCService.ExampleService.attachprdocResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).attachprdoc(inValue);
             return retVal.@return;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setdocrevisionResponse WcfWCService.ExampleService.MyJavaService3.setdocrevision(WcfWCService.ExampleService.setdocrevisionRequest request) {
-            return base.Channel.setdocrevision(request);
+        WcfWCService.ExampleService.setpartstateResponse WcfWCService.ExampleService.MyJavaService3.setpartstate(WcfWCService.ExampleService.setpartstateRequest request) {
+            return base.Channel.setpartstate(request);
         }
         
-        public string setdocrevision(string arg0, string arg1, int arg2) {
-            WcfWCService.ExampleService.setdocrevisionRequest inValue = new WcfWCService.ExampleService.setdocrevisionRequest();
+        public string setpartstate(string arg0, string arg1, int arg2) {
+            WcfWCService.ExampleService.setpartstateRequest inValue = new WcfWCService.ExampleService.setpartstateRequest();
             inValue.arg0 = arg0;
             inValue.arg1 = arg1;
             inValue.arg2 = arg2;
-            WcfWCService.ExampleService.setdocrevisionResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdocrevision(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setdocattributestringsResponse WcfWCService.ExampleService.MyJavaService3.setdocattributestrings(WcfWCService.ExampleService.setdocattributestringsRequest request) {
-            return base.Channel.setdocattributestrings(request);
-        }
-        
-        public string setdocattributestrings(string arg0, string arg1, string[] arg2, string[] arg3, string arg4, int arg5) {
-            WcfWCService.ExampleService.setdocattributestringsRequest inValue = new WcfWCService.ExampleService.setdocattributestringsRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            WcfWCService.ExampleService.setdocattributestringsResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdocattributestrings(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setdoctopartdescribedbyResponse WcfWCService.ExampleService.MyJavaService3.setdoctopartdescribedby(WcfWCService.ExampleService.setdoctopartdescribedbyRequest request) {
-            return base.Channel.setdoctopartdescribedby(request);
-        }
-        
-        public string setdoctopartdescribedby(string arg0, string arg1, string arg2, string arg3, int arg4) {
-            WcfWCService.ExampleService.setdoctopartdescribedbyRequest inValue = new WcfWCService.ExampleService.setdoctopartdescribedbyRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            WcfWCService.ExampleService.setdoctopartdescribedbyResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdoctopartdescribedby(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setdoctopartdescribedbymultiResponse WcfWCService.ExampleService.MyJavaService3.setdoctopartdescribedbymulti(WcfWCService.ExampleService.setdoctopartdescribedbymultiRequest request) {
-            return base.Channel.setdoctopartdescribedbymulti(request);
-        }
-        
-        public string setdoctopartdescribedbymulti(string arg0, string arg1, string[] arg2, string arg3, int arg4) {
-            WcfWCService.ExampleService.setdoctopartdescribedbymultiRequest inValue = new WcfWCService.ExampleService.setdoctopartdescribedbymultiRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            WcfWCService.ExampleService.setdoctopartdescribedbymultiResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdoctopartdescribedbymulti(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.deletedoctodocusagelinkResponse WcfWCService.ExampleService.MyJavaService3.deletedoctodocusagelink(WcfWCService.ExampleService.deletedoctodocusagelinkRequest request) {
-            return base.Channel.deletedoctodocusagelink(request);
-        }
-        
-        public string deletedoctodocusagelink(string arg0, string arg1, string arg2, string arg3, int arg4) {
-            WcfWCService.ExampleService.deletedoctodocusagelinkRequest inValue = new WcfWCService.ExampleService.deletedoctodocusagelinkRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            WcfWCService.ExampleService.deletedoctodocusagelinkResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletedoctodocusagelink(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.deletedoctodocrefResponse WcfWCService.ExampleService.MyJavaService3.deletedoctodocref(WcfWCService.ExampleService.deletedoctodocrefRequest request) {
-            return base.Channel.deletedoctodocref(request);
-        }
-        
-        public string deletedoctodocref(string arg0, string arg1, string arg2, string arg3, int arg4) {
-            WcfWCService.ExampleService.deletedoctodocrefRequest inValue = new WcfWCService.ExampleService.deletedoctodocrefRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            WcfWCService.ExampleService.deletedoctodocrefResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletedoctodocref(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.deletepraffectedobjectsResponse WcfWCService.ExampleService.MyJavaService3.deletepraffectedobjects(WcfWCService.ExampleService.deletepraffectedobjectsRequest request) {
-            return base.Channel.deletepraffectedobjects(request);
-        }
-        
-        public string deletepraffectedobjects(string arg0, string[] arg1, System.Nullable<int>[] arg2, int arg3) {
-            WcfWCService.ExampleService.deletepraffectedobjectsRequest inValue = new WcfWCService.ExampleService.deletepraffectedobjectsRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            WcfWCService.ExampleService.deletepraffectedobjectsResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletepraffectedobjects(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.deletepartpartlinkbylinenumberResponse WcfWCService.ExampleService.MyJavaService3.deletepartpartlinkbylinenumber(WcfWCService.ExampleService.deletepartpartlinkbylinenumberRequest request) {
-            return base.Channel.deletepartpartlinkbylinenumber(request);
-        }
-        
-        public string deletepartpartlinkbylinenumber(string arg0, long arg1, string arg2, string arg3, string arg4, int arg5) {
-            WcfWCService.ExampleService.deletepartpartlinkbylinenumberRequest inValue = new WcfWCService.ExampleService.deletepartpartlinkbylinenumberRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            WcfWCService.ExampleService.deletepartpartlinkbylinenumberResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletepartpartlinkbylinenumber(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.deletecnattachmentResponse WcfWCService.ExampleService.MyJavaService3.deletecnattachment(WcfWCService.ExampleService.deletecnattachmentRequest request) {
-            return base.Channel.deletecnattachment(request);
-        }
-        
-        public string deletecnattachment(string arg0, string arg1, int arg2) {
-            WcfWCService.ExampleService.deletecnattachmentRequest inValue = new WcfWCService.ExampleService.deletecnattachmentRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            WcfWCService.ExampleService.deletecnattachmentResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletecnattachment(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.createproblemreportResponse WcfWCService.ExampleService.MyJavaService3.createproblemreport(WcfWCService.ExampleService.createproblemreportRequest request) {
-            return base.Channel.createproblemreport(request);
-        }
-        
-        public string createproblemreport(string arg0, string arg1, string arg2, string arg3, string arg4, string[] arg5, string[] arg6, string[] arg7, int arg8, string arg9, int arg10) {
-            WcfWCService.ExampleService.createproblemreportRequest inValue = new WcfWCService.ExampleService.createproblemreportRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            inValue.arg6 = arg6;
-            inValue.arg7 = arg7;
-            inValue.arg8 = arg8;
-            inValue.arg9 = arg9;
-            inValue.arg10 = arg10;
-            WcfWCService.ExampleService.createproblemreportResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).createproblemreport(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.createproblemreport2Response WcfWCService.ExampleService.MyJavaService3.createproblemreport2(WcfWCService.ExampleService.createproblemreport2Request request) {
-            return base.Channel.createproblemreport2(request);
-        }
-        
-        public string createproblemreport2(string arg0, string arg1, string arg2, string arg3, string arg4, string arg5, string[] arg6, string[] arg7, string[] arg8, int arg9, string arg10, int arg11) {
-            WcfWCService.ExampleService.createproblemreport2Request inValue = new WcfWCService.ExampleService.createproblemreport2Request();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            inValue.arg6 = arg6;
-            inValue.arg7 = arg7;
-            inValue.arg8 = arg8;
-            inValue.arg9 = arg9;
-            inValue.arg10 = arg10;
-            inValue.arg11 = arg11;
-            WcfWCService.ExampleService.createproblemreport2Response retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).createproblemreport2(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.deletedoctodocrefsResponse WcfWCService.ExampleService.MyJavaService3.deletedoctodocrefs(WcfWCService.ExampleService.deletedoctodocrefsRequest request) {
-            return base.Channel.deletedoctodocrefs(request);
-        }
-        
-        public string deletedoctodocrefs(string arg0, string arg1, string[] arg2, string arg3, int arg4) {
-            WcfWCService.ExampleService.deletedoctodocrefsRequest inValue = new WcfWCService.ExampleService.deletedoctodocrefsRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            WcfWCService.ExampleService.deletedoctodocrefsResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletedoctodocrefs(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setproblemreportstateResponse WcfWCService.ExampleService.MyJavaService3.setproblemreportstate(WcfWCService.ExampleService.setproblemreportstateRequest request) {
-            return base.Channel.setproblemreportstate(request);
-        }
-        
-        public string setproblemreportstate(string arg0, string arg1, int arg2) {
-            WcfWCService.ExampleService.setproblemreportstateRequest inValue = new WcfWCService.ExampleService.setproblemreportstateRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            WcfWCService.ExampleService.setproblemreportstateResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setproblemreportstate(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setproblemreportattributesResponse WcfWCService.ExampleService.MyJavaService3.setproblemreportattributes(WcfWCService.ExampleService.setproblemreportattributesRequest request) {
-            return base.Channel.setproblemreportattributes(request);
-        }
-        
-        public string setproblemreportattributes(string arg0, string arg1, string[] arg2, string[] arg3, string[] arg4, string arg5, int arg6) {
-            WcfWCService.ExampleService.setproblemreportattributesRequest inValue = new WcfWCService.ExampleService.setproblemreportattributesRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            inValue.arg6 = arg6;
-            WcfWCService.ExampleService.setproblemreportattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setproblemreportattributes(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setpartmultipleusageattributesResponse WcfWCService.ExampleService.MyJavaService3.setpartmultipleusageattributes(WcfWCService.ExampleService.setpartmultipleusageattributesRequest request) {
-            return base.Channel.setpartmultipleusageattributes(request);
-        }
-        
-        public string setpartmultipleusageattributes(string arg0, string arg1, string[] arg2, string arg3, string[] arg4, string[] arg5, string[] arg6, int arg7, int arg8) {
-            WcfWCService.ExampleService.setpartmultipleusageattributesRequest inValue = new WcfWCService.ExampleService.setpartmultipleusageattributesRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            inValue.arg6 = arg6;
-            inValue.arg7 = arg7;
-            inValue.arg8 = arg8;
-            WcfWCService.ExampleService.setpartmultipleusageattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setpartmultipleusageattributes(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.updatedocdoclinkwithattributesResponse WcfWCService.ExampleService.MyJavaService3.updatedocdoclinkwithattributes(WcfWCService.ExampleService.updatedocdoclinkwithattributesRequest request) {
-            return base.Channel.updatedocdoclinkwithattributes(request);
-        }
-        
-        public string updatedocdoclinkwithattributes(string arg0, string arg1, string arg2, string arg3, string arg4, string[] arg5, string[] arg6, string[] arg7, int arg8) {
-            WcfWCService.ExampleService.updatedocdoclinkwithattributesRequest inValue = new WcfWCService.ExampleService.updatedocdoclinkwithattributesRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            inValue.arg6 = arg6;
-            inValue.arg7 = arg7;
-            inValue.arg8 = arg8;
-            WcfWCService.ExampleService.updatedocdoclinkwithattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).updatedocdoclinkwithattributes(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setpraffectedobjectsResponse WcfWCService.ExampleService.MyJavaService3.setpraffectedobjects(WcfWCService.ExampleService.setpraffectedobjectsRequest request) {
-            return base.Channel.setpraffectedobjects(request);
-        }
-        
-        public string setpraffectedobjects(string arg0, string[] arg1, System.Nullable<int>[] arg2, int arg3) {
-            WcfWCService.ExampleService.setpraffectedobjectsRequest inValue = new WcfWCService.ExampleService.setpraffectedobjectsRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            WcfWCService.ExampleService.setpraffectedobjectsResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setpraffectedobjects(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setpartusagelinkqtyResponse WcfWCService.ExampleService.MyJavaService3.setpartusagelinkqty(WcfWCService.ExampleService.setpartusagelinkqtyRequest request) {
-            return base.Channel.setpartusagelinkqty(request);
-        }
-        
-        public string setpartusagelinkqty(string arg0, string arg1, string arg2, double arg3, int arg4) {
-            WcfWCService.ExampleService.setpartusagelinkqtyRequest inValue = new WcfWCService.ExampleService.setpartusagelinkqtyRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            WcfWCService.ExampleService.setpartusagelinkqtyResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setpartusagelinkqty(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setdocrevremoveattachsResponse WcfWCService.ExampleService.MyJavaService3.setdocrevremoveattachs(WcfWCService.ExampleService.setdocrevremoveattachsRequest request) {
-            return base.Channel.setdocrevremoveattachs(request);
-        }
-        
-        public string setdocrevremoveattachs(string arg0, string arg1, string arg2, string arg3, string[] arg4, string[] arg5, string[] arg6, string arg7, int arg8, int arg9) {
-            WcfWCService.ExampleService.setdocrevremoveattachsRequest inValue = new WcfWCService.ExampleService.setdocrevremoveattachsRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            inValue.arg6 = arg6;
-            inValue.arg7 = arg7;
-            inValue.arg8 = arg8;
-            inValue.arg9 = arg9;
-            WcfWCService.ExampleService.setdocrevremoveattachsResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdocrevremoveattachs(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.updatepartpartlinkwithattributesResponse WcfWCService.ExampleService.MyJavaService3.updatepartpartlinkwithattributes(WcfWCService.ExampleService.updatepartpartlinkwithattributesRequest request) {
-            return base.Channel.updatepartpartlinkwithattributes(request);
-        }
-        
-        public string updatepartpartlinkwithattributes(string arg0, string arg1, string arg2, double arg3, long arg4, string arg5, string arg6, string arg7, string[] arg8, string[] arg9, string[] arg10, int arg11) {
-            WcfWCService.ExampleService.updatepartpartlinkwithattributesRequest inValue = new WcfWCService.ExampleService.updatepartpartlinkwithattributesRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            inValue.arg6 = arg6;
-            inValue.arg7 = arg7;
-            inValue.arg8 = arg8;
-            inValue.arg9 = arg9;
-            inValue.arg10 = arg10;
-            inValue.arg11 = arg11;
-            WcfWCService.ExampleService.updatepartpartlinkwithattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).updatepartpartlinkwithattributes(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.deletedoctopartdescribebyResponse WcfWCService.ExampleService.MyJavaService3.deletedoctopartdescribeby(WcfWCService.ExampleService.deletedoctopartdescribebyRequest request) {
-            return base.Channel.deletedoctopartdescribeby(request);
-        }
-        
-        public string deletedoctopartdescribeby(string arg0, string arg1, string arg2, string arg3, int arg4) {
-            WcfWCService.ExampleService.deletedoctopartdescribebyRequest inValue = new WcfWCService.ExampleService.deletedoctopartdescribebyRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            WcfWCService.ExampleService.deletedoctopartdescribebyResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletedoctopartdescribeby(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setdocdoclinkwithattributesResponse WcfWCService.ExampleService.MyJavaService3.setdocdoclinkwithattributes(WcfWCService.ExampleService.setdocdoclinkwithattributesRequest request) {
-            return base.Channel.setdocdoclinkwithattributes(request);
-        }
-        
-        public string setdocdoclinkwithattributes(string arg0, string arg1, string arg2, string arg3, string arg4, string[] arg5, string[] arg6, string[] arg7, int arg8) {
-            WcfWCService.ExampleService.setdocdoclinkwithattributesRequest inValue = new WcfWCService.ExampleService.setdocdoclinkwithattributesRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            inValue.arg6 = arg6;
-            inValue.arg7 = arg7;
-            inValue.arg8 = arg8;
-            WcfWCService.ExampleService.setdocdoclinkwithattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setdocdoclinkwithattributes(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.deletedoctopartrefResponse WcfWCService.ExampleService.MyJavaService3.deletedoctopartref(WcfWCService.ExampleService.deletedoctopartrefRequest request) {
-            return base.Channel.deletedoctopartref(request);
-        }
-        
-        public string deletedoctopartref(string arg0, string arg1, string arg2, string arg3, int arg4) {
-            WcfWCService.ExampleService.deletedoctopartrefRequest inValue = new WcfWCService.ExampleService.deletedoctopartrefRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            WcfWCService.ExampleService.deletedoctopartrefResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletedoctopartref(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.deletedoctopartrefsResponse WcfWCService.ExampleService.MyJavaService3.deletedoctopartrefs(WcfWCService.ExampleService.deletedoctopartrefsRequest request) {
-            return base.Channel.deletedoctopartrefs(request);
-        }
-        
-        public string deletedoctopartrefs(string arg0, string arg1, string[] arg2, string arg3, int arg4) {
-            WcfWCService.ExampleService.deletedoctopartrefsRequest inValue = new WcfWCService.ExampleService.deletedoctopartrefsRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            WcfWCService.ExampleService.deletedoctopartrefsResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletedoctopartrefs(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setpartpartlinkwithattributesResponse WcfWCService.ExampleService.MyJavaService3.setpartpartlinkwithattributes(WcfWCService.ExampleService.setpartpartlinkwithattributesRequest request) {
-            return base.Channel.setpartpartlinkwithattributes(request);
-        }
-        
-        public string setpartpartlinkwithattributes(string arg0, string arg1, string arg2, double arg3, string arg4, string arg5, string arg6, long arg7, string[] arg8, string[] arg9, string[] arg10, int arg11) {
-            WcfWCService.ExampleService.setpartpartlinkwithattributesRequest inValue = new WcfWCService.ExampleService.setpartpartlinkwithattributesRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            inValue.arg6 = arg6;
-            inValue.arg7 = arg7;
-            inValue.arg8 = arg8;
-            inValue.arg9 = arg9;
-            inValue.arg10 = arg10;
-            inValue.arg11 = arg11;
-            WcfWCService.ExampleService.setpartpartlinkwithattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setpartpartlinkwithattributes(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.createchangenoticeResponse WcfWCService.ExampleService.MyJavaService3.createchangenotice(WcfWCService.ExampleService.createchangenoticeRequest request) {
-            return base.Channel.createchangenotice(request);
-        }
-        
-        public string createchangenotice(string arg0, string arg1, string arg2, string arg3, string arg4, string[] arg5, string[] arg6, string[] arg7, int arg8, int arg9) {
-            WcfWCService.ExampleService.createchangenoticeRequest inValue = new WcfWCService.ExampleService.createchangenoticeRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            inValue.arg6 = arg6;
-            inValue.arg7 = arg7;
-            inValue.arg8 = arg8;
-            inValue.arg9 = arg9;
-            WcfWCService.ExampleService.createchangenoticeResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).createchangenotice(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.deletepartpartlinkResponse WcfWCService.ExampleService.MyJavaService3.deletepartpartlink(WcfWCService.ExampleService.deletepartpartlinkRequest request) {
-            return base.Channel.deletepartpartlink(request);
-        }
-        
-        public string deletepartpartlink(string arg0, string arg1, string arg2, string arg3, int arg4) {
-            WcfWCService.ExampleService.deletepartpartlinkRequest inValue = new WcfWCService.ExampleService.deletepartpartlinkRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            WcfWCService.ExampleService.deletepartpartlinkResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletepartpartlink(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setpartattributesResponse WcfWCService.ExampleService.MyJavaService3.setpartattributes(WcfWCService.ExampleService.setpartattributesRequest request) {
-            return base.Channel.setpartattributes(request);
-        }
-        
-        public string setpartattributes(string arg0, string arg1, string arg2, string[] arg3, string[] arg4, string[] arg5, string arg6, int arg7) {
-            WcfWCService.ExampleService.setpartattributesRequest inValue = new WcfWCService.ExampleService.setpartattributesRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            inValue.arg6 = arg6;
-            inValue.arg7 = arg7;
-            WcfWCService.ExampleService.setpartattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setpartattributes(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.deletedoctopartdescribebysResponse WcfWCService.ExampleService.MyJavaService3.deletedoctopartdescribebys(WcfWCService.ExampleService.deletedoctopartdescribebysRequest request) {
-            return base.Channel.deletedoctopartdescribebys(request);
-        }
-        
-        public string deletedoctopartdescribebys(string arg0, string arg1, string[] arg2, string arg3, int arg4) {
-            WcfWCService.ExampleService.deletedoctopartdescribebysRequest inValue = new WcfWCService.ExampleService.deletedoctopartdescribebysRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            WcfWCService.ExampleService.deletedoctopartdescribebysResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletedoctopartdescribebys(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.deleteprattachmentResponse WcfWCService.ExampleService.MyJavaService3.deleteprattachment(WcfWCService.ExampleService.deleteprattachmentRequest request) {
-            return base.Channel.deleteprattachment(request);
-        }
-        
-        public string deleteprattachment(string arg0, string arg1, int arg2) {
-            WcfWCService.ExampleService.deleteprattachmentRequest inValue = new WcfWCService.ExampleService.deleteprattachmentRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            WcfWCService.ExampleService.deleteprattachmentResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deleteprattachment(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.deletepartpartlinkbyproductionorderResponse WcfWCService.ExampleService.MyJavaService3.deletepartpartlinkbyproductionorder(WcfWCService.ExampleService.deletepartpartlinkbyproductionorderRequest request) {
-            return base.Channel.deletepartpartlinkbyproductionorder(request);
-        }
-        
-        public string deletepartpartlinkbyproductionorder(string arg0, string arg1, long arg2, string arg3, string arg4, string arg5, int arg6) {
-            WcfWCService.ExampleService.deletepartpartlinkbyproductionorderRequest inValue = new WcfWCService.ExampleService.deletepartpartlinkbyproductionorderRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            inValue.arg6 = arg6;
-            WcfWCService.ExampleService.deletepartpartlinkbyproductionorderResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletepartpartlinkbyproductionorder(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.updatedispatchdocketpartpartlinkwithattributesResponse WcfWCService.ExampleService.MyJavaService3.updatedispatchdocketpartpartlinkwithattributes(WcfWCService.ExampleService.updatedispatchdocketpartpartlinkwithattributesRequest request) {
-            return base.Channel.updatedispatchdocketpartpartlinkwithattributes(request);
-        }
-        
-        public string updatedispatchdocketpartpartlinkwithattributes(string arg0, string arg1, string arg2, double arg3, string arg4, string arg5, string arg6, string arg7, long arg8, long arg9, string[] arg10, string[] arg11, string[] arg12, int arg13) {
-            WcfWCService.ExampleService.updatedispatchdocketpartpartlinkwithattributesRequest inValue = new WcfWCService.ExampleService.updatedispatchdocketpartpartlinkwithattributesRequest();
-            inValue.arg0 = arg0;
-            inValue.arg1 = arg1;
-            inValue.arg2 = arg2;
-            inValue.arg3 = arg3;
-            inValue.arg4 = arg4;
-            inValue.arg5 = arg5;
-            inValue.arg6 = arg6;
-            inValue.arg7 = arg7;
-            inValue.arg8 = arg8;
-            inValue.arg9 = arg9;
-            inValue.arg10 = arg10;
-            inValue.arg11 = arg11;
-            inValue.arg12 = arg12;
-            inValue.arg13 = arg13;
-            WcfWCService.ExampleService.updatedispatchdocketpartpartlinkwithattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).updatedispatchdocketpartpartlinkwithattributes(inValue);
+            WcfWCService.ExampleService.setpartstateResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setpartstate(inValue);
             return retVal.@return;
         }
         
@@ -5711,6 +5759,24 @@ namespace WcfWCService.ExampleService {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.deletepartpartlinkbyproductionorderResponse WcfWCService.ExampleService.MyJavaService3.deletepartpartlinkbyproductionorder(WcfWCService.ExampleService.deletepartpartlinkbyproductionorderRequest request) {
+            return base.Channel.deletepartpartlinkbyproductionorder(request);
+        }
+        
+        public string deletepartpartlinkbyproductionorder(string arg0, string arg1, long arg2, string arg3, string arg4, string arg5, int arg6) {
+            WcfWCService.ExampleService.deletepartpartlinkbyproductionorderRequest inValue = new WcfWCService.ExampleService.deletepartpartlinkbyproductionorderRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            WcfWCService.ExampleService.deletepartpartlinkbyproductionorderResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletepartpartlinkbyproductionorder(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         WcfWCService.ExampleService.updatepartreferencedbydoclinkwithattributesResponse WcfWCService.ExampleService.MyJavaService3.updatepartreferencedbydoclinkwithattributes(WcfWCService.ExampleService.updatepartreferencedbydoclinkwithattributesRequest request) {
             return base.Channel.updatepartreferencedbydoclinkwithattributes(request);
         }
@@ -5730,12 +5796,30 @@ namespace WcfWCService.ExampleService {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.setpartreferencedbydoclinkwithattributesResponse WcfWCService.ExampleService.MyJavaService3.setpartreferencedbydoclinkwithattributes(WcfWCService.ExampleService.setpartreferencedbydoclinkwithattributesRequest request) {
-            return base.Channel.setpartreferencedbydoclinkwithattributes(request);
+        WcfWCService.ExampleService.deletepartpartlinkbydispatchdocketResponse WcfWCService.ExampleService.MyJavaService3.deletepartpartlinkbydispatchdocket(WcfWCService.ExampleService.deletepartpartlinkbydispatchdocketRequest request) {
+            return base.Channel.deletepartpartlinkbydispatchdocket(request);
         }
         
-        public string setpartreferencedbydoclinkwithattributes(string arg0, string arg1, string arg2, string[] arg3, string[] arg4, string[] arg5, string arg6, string arg7, int arg8) {
-            WcfWCService.ExampleService.setpartreferencedbydoclinkwithattributesRequest inValue = new WcfWCService.ExampleService.setpartreferencedbydoclinkwithattributesRequest();
+        public string deletepartpartlinkbydispatchdocket(string arg0, string arg1, long arg2, string arg3, string arg4, string arg5, int arg6) {
+            WcfWCService.ExampleService.deletepartpartlinkbydispatchdocketRequest inValue = new WcfWCService.ExampleService.deletepartpartlinkbydispatchdocketRequest();
+            inValue.arg0 = arg0;
+            inValue.arg1 = arg1;
+            inValue.arg2 = arg2;
+            inValue.arg3 = arg3;
+            inValue.arg4 = arg4;
+            inValue.arg5 = arg5;
+            inValue.arg6 = arg6;
+            WcfWCService.ExampleService.deletepartpartlinkbydispatchdocketResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletepartpartlinkbydispatchdocket(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        WcfWCService.ExampleService.updatedispatchdocketpartpartlinkwithattributesResponse WcfWCService.ExampleService.MyJavaService3.updatedispatchdocketpartpartlinkwithattributes(WcfWCService.ExampleService.updatedispatchdocketpartpartlinkwithattributesRequest request) {
+            return base.Channel.updatedispatchdocketpartpartlinkwithattributes(request);
+        }
+        
+        public string updatedispatchdocketpartpartlinkwithattributes(string arg0, string arg1, string arg2, double arg3, string arg4, string arg5, string arg6, string arg7, long arg8, long arg9, string[] arg10, string[] arg11, string[] arg12, int arg13) {
+            WcfWCService.ExampleService.updatedispatchdocketpartpartlinkwithattributesRequest inValue = new WcfWCService.ExampleService.updatedispatchdocketpartpartlinkwithattributesRequest();
             inValue.arg0 = arg0;
             inValue.arg1 = arg1;
             inValue.arg2 = arg2;
@@ -5745,7 +5829,12 @@ namespace WcfWCService.ExampleService {
             inValue.arg6 = arg6;
             inValue.arg7 = arg7;
             inValue.arg8 = arg8;
-            WcfWCService.ExampleService.setpartreferencedbydoclinkwithattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setpartreferencedbydoclinkwithattributes(inValue);
+            inValue.arg9 = arg9;
+            inValue.arg10 = arg10;
+            inValue.arg11 = arg11;
+            inValue.arg12 = arg12;
+            inValue.arg13 = arg13;
+            WcfWCService.ExampleService.updatedispatchdocketpartpartlinkwithattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).updatedispatchdocketpartpartlinkwithattributes(inValue);
             return retVal.@return;
         }
         
@@ -5769,12 +5858,12 @@ namespace WcfWCService.ExampleService {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WcfWCService.ExampleService.deletepartpartlinkbydispatchdocketResponse WcfWCService.ExampleService.MyJavaService3.deletepartpartlinkbydispatchdocket(WcfWCService.ExampleService.deletepartpartlinkbydispatchdocketRequest request) {
-            return base.Channel.deletepartpartlinkbydispatchdocket(request);
+        WcfWCService.ExampleService.setpartreferencedbydoclinkwithattributesResponse WcfWCService.ExampleService.MyJavaService3.setpartreferencedbydoclinkwithattributes(WcfWCService.ExampleService.setpartreferencedbydoclinkwithattributesRequest request) {
+            return base.Channel.setpartreferencedbydoclinkwithattributes(request);
         }
         
-        public string deletepartpartlinkbydispatchdocket(string arg0, string arg1, long arg2, string arg3, string arg4, string arg5, int arg6) {
-            WcfWCService.ExampleService.deletepartpartlinkbydispatchdocketRequest inValue = new WcfWCService.ExampleService.deletepartpartlinkbydispatchdocketRequest();
+        public string setpartreferencedbydoclinkwithattributes(string arg0, string arg1, string arg2, string[] arg3, string[] arg4, string[] arg5, string arg6, string arg7, int arg8) {
+            WcfWCService.ExampleService.setpartreferencedbydoclinkwithattributesRequest inValue = new WcfWCService.ExampleService.setpartreferencedbydoclinkwithattributesRequest();
             inValue.arg0 = arg0;
             inValue.arg1 = arg1;
             inValue.arg2 = arg2;
@@ -5782,7 +5871,9 @@ namespace WcfWCService.ExampleService {
             inValue.arg4 = arg4;
             inValue.arg5 = arg5;
             inValue.arg6 = arg6;
-            WcfWCService.ExampleService.deletepartpartlinkbydispatchdocketResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).deletepartpartlinkbydispatchdocket(inValue);
+            inValue.arg7 = arg7;
+            inValue.arg8 = arg8;
+            WcfWCService.ExampleService.setpartreferencedbydoclinkwithattributesResponse retVal = ((WcfWCService.ExampleService.MyJavaService3)(this)).setpartreferencedbydoclinkwithattributes(inValue);
             return retVal.@return;
         }
     }
