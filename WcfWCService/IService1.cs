@@ -517,6 +517,10 @@ namespace WcfWCService
         string CreateCablePartLink(string sSessionId, string sUserId, string sCableNo, string sFuncLoc, string sLineNumber, string sToOrFrom, string sCheckInComments, string sWebAppId);
 
         [OperationContract]
+        [WebGet(UriTemplate = "updatecablefromdetails/{sSessionId}/{sUserId}/{sCableNo}/{sNewFuncLoc}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string UpdateCableFromDetails(string sSessionId, string sUserId, string sCableNo, string sNewFuncLoc, string sWebAppId);
+
+        [OperationContract]
         [WebGet(UriTemplate = "createcableterminationlink/{sSessionId}/{sUserId}/{sCableNo}/{sFuncLoc}/{sLineNumber}/{sToOrFrom}/{sTermination}/{sWireNo}/{sCoreNo}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string CreateCableTerminationLink(string sSessionId, string sUserId, string sCableNo, string sFuncLoc, string sLineNumber, string sToOrFrom, string sTermination, string sWireNo, string sCoreNo, string sWebAppId);
 
@@ -610,12 +614,16 @@ namespace WcfWCService
         string ProcessIOSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
 
         [OperationContract]
+        [WebGet(UriTemplate = "processiopreallocationspreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string ProcessIOPreallocatedSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
+
+        [OperationContract]
         [WebGet(UriTemplate = "processcablespreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string ProcessCableSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
 
         [OperationContract]
-        [WebGet(UriTemplate = "processterminationspreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
-        string ProcessTerminationSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
+        [WebGet(UriTemplate = "processterminationspreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}/{sFLOrMat}", ResponseFormat = WebMessageFormat.Xml)]
+        string ProcessTerminationSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId, string sFLOrMat);
 
         [OperationContract]
         [WebGet(UriTemplate = "emailmessage/{sSessionId}/{sUserId}/{sSubject}/{sBody}/{sAttachments}/{sRecipients}/{sCCRecipients}/{sBCCRecipients}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
