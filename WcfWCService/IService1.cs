@@ -562,16 +562,16 @@ namespace WcfWCService
         string DeleteTestAndTagItem(string sSessionId, string sUserId, string sFullName, string sGroupNo, string sTestAndTagItemNo, string sCheckInComments, string sWebAppId);
 
         [OperationContract]
-        [WebGet(UriTemplate = "creatematerialcatalogitem/{sSessionId}/{sUserId}/{sFullname}/{sMatCatNo}/{sMatCatType}/{sName}/{sDesc}/{sLongDesc}/{sDrivekW}/{sFullLoadCurrent}/{sUnitWeight}/{sLeadTime}/{sRepairable}/{sCheckInComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        [WebGet(UriTemplate = "creatematerialcatalogitem/{sSessionId}/{sUserId}/{sFullname}/{sMatCatNo}/{sMatCatType}/{sName}/{sDesc}/{sLongDesc}/{sDrivekW}/{sFullLoadCurrent}/{sUnitWeight}/{sLeadTime}/{sRepairable}/{sSpareRqd}/{sCheckInComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string CreateMaterialCatalogItem(string sSessionId, string sUserId, string sFullName, string sMatCatNo, string sMatCatType, string sName, 
                                          string sDesc, string sLongDesc, string sDrivekW, string sFullLoadCurrent,
-                                         string sUnitWeight, string sLeadTime, string sRepairable, string sCheckInComments, string sWebAppId);
+                                         string sUnitWeight, string sLeadTime, string sRepairable, string sSpareRqd, string sCheckInComments, string sWebAppId);
 
         [OperationContract]
-        [WebGet(UriTemplate = "updatematerialcatalogitem/{sSessionId}/{sUserId}/{sFullname}/{sMatCatNo}/{sMatCatNewType}/{sMatCatOldType}/{sName}/{sDesc}/{sLongDesc}/{sDrivekW}/{sFullLoadCurrent}/{sUnitWeight}/{sLeadTime}/{sRepairable}/{sCheckInComments}/{sWebAppId}/{sNewLink}", ResponseFormat = WebMessageFormat.Xml)]
+        [WebGet(UriTemplate = "updatematerialcatalogitem/{sSessionId}/{sUserId}/{sFullname}/{sMatCatNo}/{sMatCatNewType}/{sMatCatOldType}/{sName}/{sDesc}/{sLongDesc}/{sDrivekW}/{sFullLoadCurrent}/{sUnitWeight}/{sLeadTime}/{sRepairable}/{sSpareRqd}/{sCheckInComments}/{sWebAppId}/{sNewLink}", ResponseFormat = WebMessageFormat.Xml)]
         string UpdateMaterialCatalogItem(string sSessionId, string sUserId, string sFullName, string sMatCatNo, string sMatCatNewType, string sMatCatOldType, string sName, 
                                          string sDesc, string sLongDesc, string sDrivekW, string sFullLoadCurrent,
-                                         string sUnitWeight, string sLeadTime, string sRepairable, string sCheckInComments, string sWebAppId, string sNewLink);
+                                         string sUnitWeight, string sLeadTime, string sRepairable, string sSpareRqd, string sCheckInComments, string sWebAppId, string sNewLink);
 
 
         [OperationContract]
@@ -606,8 +606,8 @@ namespace WcfWCService
                                     string sCheckInComments, string sWebAppId);
 
         [OperationContract]
-        [WebGet(UriTemplate = "setmaintenancetemplates/{sSessionId}/{sUserId}/{sWONo}/{sWOName}/{sTemplateIndex}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
-        string SetMaintenanceTemplates(string sSessionId, string sUserId, string sWONo, string sWOName, string sTemplateIndex, string sWebAppId);
+        [WebGet(UriTemplate = "setmaintenancetemplates/{sSessionId}/{sUserId}/{sWONo}/{sWOName}/{sTemplateIndex}/{sWPNo}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string SetMaintenanceTemplates(string sSessionId, string sUserId, string sWONo, string sWOName, string sTemplateIndex, string sWPNo, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "processiospreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]

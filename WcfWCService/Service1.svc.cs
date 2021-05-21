@@ -38,6 +38,15 @@ namespace WcfWCService
             public bool bReturnValue;
             public int iLineNumber = 0;
         }
+        public class rtnStringArray
+        {
+            public bool bReturnValue;
+            public string sReturnValue;
+            public int[] iLineNumber;
+            public string[] sChildPart;
+            public string[] sChildName;
+        }
+
         public class rtnTerms
         {
             public bool bReturnValue;
@@ -48,6 +57,7 @@ namespace WcfWCService
             public int iFromLineNumber = 0;
             public string sToTermination;
             public int iToLineNumber = 0;
+            public bool bTermsExist;
         }
 
         public string CookieLogin(string sUsername, string sPassword, string sWebAppId)
@@ -4261,7 +4271,10 @@ namespace WcfWCService
 
                 if (!rtnbTerminations[0].bReturnValue)
                 {
-                    return "Failure";
+                    if(rtnbTerminations[0].bTermsExist)
+                        return "Success";
+                    else
+                        return "Failure";
                 }
                 else
                 {
@@ -4886,6 +4899,29 @@ namespace WcfWCService
 
                     }
                 }
+                else
+                {
+                    //Get the parent termination functional location
+                    rtnString rtn1 = CablePartLinkParent(sCoreNo, Convert.ToInt32(sToOrFrom), iWebAppId);
+                    if (rtn1.bReturnValue)
+                    {
+                        //This means the termination for this core and side has changed
+                        if (!rtn1.sReturnValue.Equals(sTermination))
+                        {
+                            if (sToOrFrom.Equals("0"))
+                                sCheckInComments = "Deleting termination link from the 'From' termination functional location " + rtn1.sReturnValue + " to the cable " + sCableNo + " core " + sCoreNo;
+                            if (sToOrFrom.Equals("1"))
+                                sCheckInComments = "Deleting termination link from the 'To' termination functional location " + rtn1.sReturnValue + " to the cable " + sCableNo + " core " + sCoreNo;
+                            string sRtn2 = client2.deletepartpartlinkbylinenumber(sFullName, Convert.ToInt64(rtn1.iLineNumber), rtn1.sReturnValue, sCoreNo, sCheckInComments, iWebAppId);
+                            if (!sRtn2.StartsWith("Success"))
+                            {
+                                return sRtn2;
+                            }
+                        }
+
+                    }
+
+                }
 
                 //Remove any existing link to the wire number if it has changed
                 rtnString rtnWireLink = GetChildPartOfType(sCoreNo, "local.rs.vsrs05.Regain.CableWire", "", iWebAppId);
@@ -5212,7 +5248,7 @@ namespace WcfWCService
         }
 
         public string CreateMaterialCatalogItem(string sSessionId, string sUserId, string sFullName, string sMatCatNo, string sMatCatType, string sName, string sDesc, string sLongDesc,
-                                                string sDrivekW, string sFullLoadCurrent, string sUnitWeight, string sLeadTime, string sRepairable, string sCheckInComments, string sWebAppId)
+                                                string sDrivekW, string sFullLoadCurrent, string sUnitWeight, string sLeadTime, string sRepairable, string sSpareRqd, string sCheckInComments, string sWebAppId)
         {
             string sReturn = "";
             string sReturn3 = "";
@@ -5293,6 +5329,16 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
                 }
 
+                if (sSpareRqd != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "SpareRequired";
+                    sAttributeValues[sAttributeValues.Length - 1] = sSpareRqd;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
+                }
+
                 sReturn = client2.createpart("", sName, "Regain Material Catalogue", "local.rs.vsrs05.Regain.AutoNumberedPart", sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, 1, Convert.ToInt16(sWebAppId));
                 if (sReturn.StartsWith("Success"))
                 {
@@ -5308,7 +5354,7 @@ namespace WcfWCService
 
         public string UpdateMaterialCatalogItem(string sSessionId, string sUserId, string sFullName, string sMatCatNo, string sMatCatNewType, string sMatCatOldType,
                                                 string sName, string sDesc, string sLongDesc, string sDrivekW, string sFullLoadCurrent,
-                                                string sUnitWeight, string sLeadTime, string sRepairable, string sCheckInComments, string sWebAppId, string sNewLink)
+                                                string sUnitWeight, string sLeadTime, string sRepairable, string sSpareRqd, string sCheckInComments, string sWebAppId, string sNewLink)
         {
             string sReturn = "";
             string sReturn2 = "";
@@ -5373,6 +5419,13 @@ namespace WcfWCService
                 Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
                 sAttributeNames[sAttributeNames.Length - 1] = "Repairable";
                 sAttributeValues[sAttributeValues.Length - 1] = sRepairable;
+                sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
+
+                Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                sAttributeNames[sAttributeNames.Length - 1] = "SpareRequired";
+                sAttributeValues[sAttributeValues.Length - 1] = sSpareRqd;
                 sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
 
                 sReturn = client2.setpartattributes(sMatCatNo, sName, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, Convert.ToInt16(sWebAppId));
@@ -5778,10 +5831,11 @@ namespace WcfWCService
             }
         }
 
-        public string SetMaintenanceTemplates(string sSessionId, string sUserId, string sWONo, string sWOName, string sTemplateIndex, string sWebAppId)
+        public string SetMaintenanceTemplates(string sSessionId, string sUserId, string sWONo, string sWOName, string sTemplateIndex, string sWPNo, string sWebAppId)
         {
             object nullobject = Type.Missing;
             string sReturn = "Success";
+            rtnStringArray rtnChildItems = new rtnStringArray();
 
             try
             {
@@ -5799,6 +5853,12 @@ namespace WcfWCService
                     string sFileOutName = sOutFolder + @"\" + sWONo + " " + sWONameFile + ".docm";
                     string sFileOutNamePdf = sOutFolder + @"\" + sWONo + " " + sWONameFile + ".pdf";
                     int iTemplateIndex;
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+                    string sRecipeints = arrUser[3].ToString();
+                    int iWPType = 0, i;
+                    rtnInt rtnWPType = new rtnInt();
+                    int iWebAppId = Convert.ToInt32(sWebAppId);
 
                     iTemplateIndex = Convert.ToInt32(sTemplateIndex);
 
@@ -5830,6 +5890,34 @@ namespace WcfWCService
                     ((Microsoft.Office.Interop.Word._Document)doc).Close(ref nullobject, ref nullobject, ref nullobject);
                     ((Microsoft.Office.Interop.Word._Application)ap).Quit(ref nullobject, ref nullobject, ref nullobject);
 
+                    //Now attach the documents to the Work order
+                    AttachWCDoc(sSessionId, sUserId, sFullName, sWONo, "Work Order (pdf version)", sFileOutNamePdf, "false", "", sWebAppId);
+                    AttachWCDoc(sSessionId, sUserId, sFullName, sWONo, "Work Order (word version)", sFileOutName, "true", "", sWebAppId);
+
+
+                    rtnWPType = GetPartIntAttribute(sWPNo, "WorkPackageChildTemplateType", iWebAppId);
+
+                    if(rtnWPType.bReturnValue)
+                    {
+                        iWPType = rtnWPType.iReturnValue;
+                    }
+
+                    switch(iWPType)
+                    {
+                        case 1:
+                            rtnChildItems = GetChildPartsFromParentPart("local.rs.vsrs05.Regain.PlannedActionGroup", sWPNo, iWebAppId);
+
+                            for(i=0; i < rtnChildItems.sChildPart.Length; i++)
+                            {
+                                sReturn = SetTestandTagTemplate(sSessionId, sUserId, sWONo, rtnChildItems.sChildPart[i], rtnChildItems.sChildName[i], sFullName, sWebAppId);
+
+                                if (sReturn != "Success")
+                                    return sReturn;
+                            }
+                            break;
+                    }
+
+
                     return sReturn;
                 }
             }
@@ -5837,6 +5925,72 @@ namespace WcfWCService
             {
                 return "Failure^" + ex.Message + "^";
             }
+        }
+
+        public string SetTestandTagTemplate(string sSessionId, string sUserId, string sWONo, string sTestAndTagCode, string sTestAndTagName, string sFullName, string sWebAppId)
+        {
+            object nullobject = Type.Missing;
+            string sReturn = "Success";
+            try
+            {
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    string sBaseFolder = GetConstantValue("TemplateFolder", 2);
+                    string sOutFolder = GetConstantValue("GeneratedDocsFolder", 2);
+                    string sTemplateName = sBaseFolder;
+                    sTestAndTagName = RemoveInvalidCharacters(sTestAndTagName);
+                    int iTemplateIndex = 3; //This is the template index for a test and tag template
+                    string sFileOutName = sOutFolder + @"\" + sTestAndTagCode + " " + sTestAndTagName + ".docm";
+                    string sFileOutNamePdf = sOutFolder + @"\" + sTestAndTagCode + " " + sTestAndTagName + ".pdf";
+
+                    sTemplateName = sTemplateName + @"\" + GetTemplateName(iTemplateIndex, 2);
+
+                    word.Application ap = new word.Application();
+                    word.Document doc = ap.Documents.Open(sTemplateName);
+
+                    word.Cell cell = doc.Tables[1].Cell(1, 2);
+
+                    cell.Range.Text = sTestAndTagCode;
+
+                    ap.Run("btnProcess_Click");
+
+                    if (FileExists(sFileOutName))
+                        File.Delete(sFileOutName);
+
+                    doc.SaveAs2(sFileOutName);
+
+                    doc.Shapes[1].Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
+                    doc.Shapes[2].Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
+
+                    if (FileExists(sFileOutNamePdf))
+                        File.Delete(sFileOutNamePdf);
+
+                    doc.ExportAsFixedFormat(sFileOutNamePdf, word.WdExportFormat.wdExportFormatPDF, false);
+                    doc.Shapes[1].Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
+                    doc.Shapes[2].Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
+
+                    ((Microsoft.Office.Interop.Word._Document)doc).Close(ref nullobject, ref nullobject, ref nullobject);
+                    ((Microsoft.Office.Interop.Word._Application)ap).Quit(ref nullobject, ref nullobject, ref nullobject);
+
+                    //Now attach the documents to the Work order
+                    AttachWCDoc(sSessionId, sUserId, sFullName, sWONo, "Test and Tag " + sTestAndTagName + " (pdf version)", sFileOutNamePdf, "true", "", sWebAppId);
+                    AttachWCDoc(sSessionId, sUserId, sFullName, sWONo, "Test and Tag " + sTestAndTagName + " (word version)", sFileOutName, "true", "", sWebAppId);
+
+                    return sReturn;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return "Failure^" + ex.Message + "^";
+            }
+
+
+        
         }
         public string SetMaintenanceTemplatesOpenXML(string sSessionId, string sUserId, string sWONo, string sWOName)
         {
@@ -5908,12 +6062,12 @@ namespace WcfWCService
                             sParentPartNo = xlRange.Cells[i, 1].Value2.ToString();
 
                         string sExisitngChildPartNo = "";
-                        if (xlRange.Cells[i, 9].Value2 != null)
-                            sExisitngChildPartNo = xlRange.Cells[i, 9].Value2.ToString();
+                        if (xlRange.Cells[i, 10].Value2 != null)
+                            sExisitngChildPartNo = xlRange.Cells[i, 10].Value2.ToString();
 
                         string sChildPartNoNew = "";
-                        if (xlRange.Cells[i, 10].Value2 != null)
-                            sChildPartNoNew = xlRange.Cells[i, 10].Value2.ToString();
+                        if (xlRange.Cells[i, 11].Value2 != null)
+                            sChildPartNoNew = xlRange.Cells[i, 11].Value2.ToString();
 
                         string sIOType = "";
                         if (xlRange.Cells[i, 7].Value2 != null)
@@ -5924,8 +6078,8 @@ namespace WcfWCService
                             sIOTag = xlRange.Cells[i, 8].Value2.ToString();
 
                         string sAction = "";
-                        if (xlRange.Cells[i, 11].Value2 != null)
-                            sAction = xlRange.Cells[i, 11].Value2.ToString();
+                        if (xlRange.Cells[i, 12].Value2 != null)
+                            sAction = xlRange.Cells[i, 12].Value2.ToString();
 
                         sAction = sAction.ToUpper();
 
@@ -6460,6 +6614,9 @@ namespace WcfWCService
 
                                                                     int iNewFromLineNumber = GetNewLineNumber(sFromEquipNo, iWebAppId);
                                                                     int iNewToLineNumber = GetNewLineNumber(sToEquipNo, iWebAppId);
+                                                                    if (sFromEquipNo.Equals(sToEquipNo))
+                                                                        iNewToLineNumber += 10;
+
                                                                     sCheckinComments = "Adding cable " + sCableNo + " via spreadsheet processing";
                                                                     string sRtn = CreateCableItem(sSessionId, sUserId, sProductName, sFolder,
                                                                                                   sCableNo, "Cable " + sCableNo, sFromEquipNo, sToEquipNo, dCableLength.ToString(),
@@ -6539,6 +6696,196 @@ namespace WcfWCService
                                                 else
                                                 {
                                                     string sRtn = "";
+                                                    if (!sExistingComments.Equals(sComments))
+                                                    {
+                                                        sCheckinComments = "Updating cable " + sCableNo + " via spreadsheet processing";
+                                                        sRtn = UpdateCableItem(sSessionId, sUserId, sCableNo, "Cable " + sCableNo, sFullName, sComments, sCheckinComments, sWebAppId);
+                                                    }
+                                                    else
+                                                        sRtn = "Success";
+
+                                                    if (!sRtn.Equals("Success"))
+                                                    {
+                                                        sRowMsg += "The cable material code " + sMaterialCode + " on row " + i + " of file " + sFile + " could not be updated.\r\n";
+                                                    }
+                                                    else
+                                                    {
+                                                        if (sExistingMaterialCode.Equals(sMaterialCode))
+                                                        {
+                                                            double dExistingQty = GetUsageLinkExistingQty(sCableNo, sExistingMaterialCode, lExistingMaterialLineNumber, iWebAppId);
+                                                            if (dCableLength != dExistingQty)
+                                                                sRtn = SetPartUsageLinkQty(sSessionId, sUserId, sCableNo, sExistingMaterialCode, dCableLength.ToString(), sWebAppId);
+                                                            else
+                                                                sRtn = "Success";
+                                                        }
+                                                        else
+                                                        {
+                                                            sCheckinComments = "Creating link between cable no " + sCableNo + " and material with code " + sMaterialCode;
+                                                            sRtn = UpdateCableMaterial(sSessionId, sUserId, sFullName, sCableNo, dCableLength.ToString(), sMaterialCode, sExistingMaterialCode, sCheckinComments, sWebAppId);
+                                                            if (!sRtn.Equals("Success"))
+                                                            {
+                                                                sRowMsg += "The link between cable material code " + sMaterialCode + " and cable no " + sCableNo + " on row " + i + " of file " + sFile + " could not be updated.\r\n";
+                                                            }
+
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    break;
+                                case "UPDATE OTER":
+                                    if (!bCableExists)
+                                    {
+                                        sRowMsg = "The cable " + sCableNo + " on row " + i + " of file " + sFile + " does not exist. Cables must exist before you can perform an update. Maybe you wanted to have the action as an 'Add' instead.\r\n";
+
+                                    }
+                                    else
+                                    {
+                                        if (!bToPartExists)
+                                        {
+                                            sRowMsg = "The 'To' Equipment " + sToEquipNo + " on row " + i + " of file " + sFile + " does not exist. Plant equipment must exist before you can connect a cable.\r\n";
+                                        }
+                                        else
+                                        {
+                                            //Add in the To end link if it doesn't exist but do not delete the existing one.
+                                            string sRtn = "";
+                                            string sCheckInComments = "";
+                                            rtnString clsToLinkParentOTER = CablePartLinkParentExact(sCableNo, sToEquipNo, 1, iWebAppId);
+                                            if(!clsToLinkParentOTER.bReturnValue)
+                                            {
+
+                                                sCheckInComments = "Adding to functional location " + sToEquipNo + " link to cable " + sCableNo;
+                                                int iNewLineNumber = GetNewLineNumber(sToEquipNo, iWebAppId);
+                                                sRtn = CreateCablePartLink(sSessionId, sUserId, sCableNo, sToEquipNo, iNewLineNumber.ToString(), "1", sCheckinComments, sWebAppId);
+                                                if (!sRtn.StartsWith("Success"))
+                                                {
+                                                    sRowMsg = "Could not process row " + i + " of file " + sFile + ". Could not add link to functional location " + sToEquipNo + ".\r\n";
+                                                }
+                                            }
+
+                                            if (sRtn.StartsWith("Success"))
+                                            {
+                                                if (!bFromPartExists && !sFromEquipNo.Equals(""))
+                                                    sRowMsg = "The 'From' Equipment " + sFromEquipNo + " on row " + i + " of file " + sFile + " does not exist. Plant equipment must exist before you can connect a cable.\r\n";
+                                                else
+                                                {
+                                                    if (bFromPartExists && !sFromEquipNo.Equals(sExistingFromEquip))
+                                                    {
+                                                        if (!sExistingFromEquip.Equals(""))
+                                                        {
+                                                            sRtn = UpdateCableFromDetails(sSessionId, sUserId, sCableNo, sFromEquipNo, sWebAppId);
+                                                            if (!sRtn.StartsWith("Success"))
+                                                            {
+                                                                sRowMsg = "Could not process row " + i + " of file " + sFile + ". Could not swap terminations from functional location " + sExistingFromEquip +
+                                                                          " to functional location " + sFromEquipNo + ".\r\n";
+                                                            }
+
+                                                            sCheckInComments = "Deleting link to cable " + sCableNo;
+                                                            sRtn = DeletePartToPartLinkByLineNumber(sSessionId, sUserId, sFullName, iExistingFromLineNumber.ToString(),
+                                                                                                          sExistingFromEquip, sCableNo, sCheckInComments, "2");
+                                                            if (!sRtn.StartsWith("Success"))
+                                                            {
+                                                                sRowMsg = "Could not process row " + i + " of file " + sFile + ". Could not remove exisitng link from functional location " + sExistingFromEquip + ".\r\n";
+                                                            }
+                                                        }
+                                                        else
+                                                            sRtn = "Success";
+
+                                                        if (sRtn.StartsWith("Success"))
+                                                        {
+                                                            sCheckInComments = "Adding from functional location " + sFromEquipNo + " link to cable " + sCableNo;
+                                                            int iNewLineNumber = GetNewLineNumber(sFromEquipNo, iWebAppId);
+                                                            sRtn = CreateCablePartLink(sSessionId, sUserId, sCableNo, sFromEquipNo, iNewLineNumber.ToString(), "0", sCheckinComments, sWebAppId);
+                                                            if (!sRtn.StartsWith("Success"))
+                                                            {
+                                                                sRowMsg = "Could not process row " + i + " of file " + sFile + ". Could not add link to funcitonal location " + sFromEquipNo + ".\r\n";
+                                                            }
+                                                        }
+                                                    }
+
+                                                    if (!bCableMaterialExists)
+                                                        sRowMsg = "The cable material code " + sMaterialCode + " on row " + i + " of file " + sFile + " does not exist. You cannot add cable material unless it exists.\r\n";
+                                                    else
+                                                    {
+                                                        sRtn = "";
+                                                        if (!sExistingComments.Equals(sComments))
+                                                        {
+                                                            sCheckinComments = "Updating cable " + sCableNo + " via spreadsheet processing";
+                                                            sRtn = UpdateCableItem(sSessionId, sUserId, sCableNo, "Cable " + sCableNo, sFullName, sComments, sCheckinComments, sWebAppId);
+                                                        }
+                                                        else
+                                                            sRtn = "Success";
+
+                                                        if (!sRtn.Equals("Success"))
+                                                        {
+                                                            sRowMsg += "The cable material code " + sMaterialCode + " on row " + i + " of file " + sFile + " could not be updated.\r\n";
+                                                        }
+                                                        else
+                                                        {
+                                                            if (sExistingMaterialCode.Equals(sMaterialCode))
+                                                            {
+                                                                double dExistingQty = GetUsageLinkExistingQty(sCableNo, sExistingMaterialCode, lExistingMaterialLineNumber, iWebAppId);
+                                                                if (dCableLength != dExistingQty)
+                                                                    sRtn = SetPartUsageLinkQty(sSessionId, sUserId, sCableNo, sExistingMaterialCode, dCableLength.ToString(), sWebAppId);
+                                                                else
+                                                                    sRtn = "Success";
+                                                            }
+                                                            else
+                                                            {
+                                                                sCheckinComments = "Creating link betwwwn cable no " + sCableNo + " and material with code " + sMaterialCode;
+                                                                sRtn = UpdateCableMaterial(sSessionId, sUserId, sFullName, sCableNo, dCableLength.ToString(), sMaterialCode, sExistingMaterialCode, sCheckinComments, sWebAppId);
+                                                                if (!sRtn.Equals("Success"))
+                                                                {
+                                                                    sRowMsg += "The link between cable material code " + sMaterialCode + " and cable no " + sCableNo + " on row " + i + " of file " + sFile + " could not be updated.\r\n";
+                                                                }
+
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    break;
+                                case "UPDATE OFER":
+                                    if (!bCableExists)
+                                    {
+                                        sRowMsg = "The cable " + sCableNo + " on row " + i + " of file " + sFile + " does not exist. Cables must exist before you can perform an update. Maybe you wanted to have the action as an 'Add' instead.\r\n";
+
+                                    }
+                                    else
+                                    {
+                                        if (!bToPartExists)
+                                        {
+                                            sRowMsg = "The 'To' Equipment " + sToEquipNo + " on row " + i + " of file " + sFile + " does not exist. Plant equipment must exist before you can connect a cable.\r\n";
+                                        }
+                                        else
+                                        {
+                                            string sRtn = "";
+                                            string sCheckInComments = "";
+                                            if (!bFromPartExists && !sFromEquipNo.Equals(""))
+                                                    sRowMsg = "The 'From' Equipment " + sFromEquipNo + " on row " + i + " of file " + sFile + " does not exist. Plant equipment must exist before you can connect a cable.\r\n";
+                                            else
+                                            {
+                                                if (bFromPartExists && !sFromEquipNo.Equals(sExistingFromEquip))
+                                                {
+                                                    sCheckInComments = "Adding from functional location " + sFromEquipNo + " link to cable " + sCableNo;
+                                                    int iNewLineNumber = GetNewLineNumber(sFromEquipNo, iWebAppId);
+                                                    sRtn = CreateCablePartLink(sSessionId, sUserId, sCableNo, sFromEquipNo, iNewLineNumber.ToString(), "0", sCheckinComments, sWebAppId);
+                                                    if (!sRtn.StartsWith("Success"))
+                                                    {
+                                                        sRowMsg = "Could not process row " + i + " of file " + sFile + ". Could not add link to funcitonal location " + sFromEquipNo + ".\r\n";
+                                                    }
+                                                }
+
+                                                if (!bCableMaterialExists)
+                                                    sRowMsg = "The cable material code " + sMaterialCode + " on row " + i + " of file " + sFile + " does not exist. You cannot add cable material unless it exists.\r\n";
+                                                else
+                                                {
+                                                    sRtn = "";
                                                     if (!sExistingComments.Equals(sComments))
                                                     {
                                                         sCheckinComments = "Updating cable " + sCableNo + " via spreadsheet processing";
@@ -6843,6 +7190,12 @@ namespace WcfWCService
                             switch (sAction)
                             {
                                 case "ADD":
+                                case "ADD OTER":
+                                    int iOTER = 0;
+
+                                    if (sAction.Equals("ADD OTER"))
+                                        iOTER = 1;
+
                                     if (!bCableExists)
                                     {
                                         sRowMsg = "The cable on row " + i + " of file " + sFile + " does not exist. You cannot terminate unless the cable exists.\r\n";
@@ -6860,7 +7213,7 @@ namespace WcfWCService
                                         {
                                             iIsNumber = 0;
                                             bool bCableCounter = int.TryParse(sCableNo.Substring(sCableNo.Length - 1, 1), out iIsNumber);
-                                            if (!sCableNo.Substring(0, sCableNo.IndexOf("-")).Equals(sToEquipNo) || !bCableCounter)
+                                            if ((!sCableNo.Substring(0, sCableNo.IndexOf("-")).Equals(sToEquipNo) || !bCableCounter) && iOTER != 1)
                                             {
                                                 sRowMsg = "The cable no " + sCableNo + " on row " + i + " of file " + sFile + " does not match the 'To' Equipment " + sToEquipNo + ". The cable no has the same prefix as the 'To' Equipment followed by a '-' and then P,C,I,D or E and a number.\r\n";
                                             }
@@ -6929,6 +7282,12 @@ namespace WcfWCService
                                     }
                                     break;
                                 case "UPDATE":
+                                case "UPDATE OTER":
+                                    int iUOTER = 0;
+
+                                    if (sAction.Equals("UPDATE OTER"))
+                                        iUOTER = 1;
+
                                     if (!bCableExists)
                                     {
                                         sRowMsg = "The cable on row " + i + " of file " + sFile + " does not exist. You cannot terminate unless the cable exists.\r\n";
@@ -6946,7 +7305,7 @@ namespace WcfWCService
                                         {
                                             iIsNumber = 0;
                                             bool bCableCounter = int.TryParse(sCableNo.Substring(sCableNo.Length - 1, 1), out iIsNumber);
-                                            if (!sCableNo.Substring(0, sCableNo.IndexOf("-")).Equals(sToEquipNo) || !bCableCounter)
+                                            if ((!sCableNo.Substring(0, sCableNo.IndexOf("-")).Equals(sToEquipNo) || !bCableCounter) && iUOTER == 0)
                                             {
                                                 sRowMsg = "The cable no " + sCableNo + " on row " + i + " of file " + sFile + " does not match the 'To' Equipment " + sToEquipNo + ". The cable no has the same prefix as the 'To' Equipment followed by a '-' and then P,C,I,D or E and a number.\r\n";
                                             }
@@ -6975,7 +7334,7 @@ namespace WcfWCService
                                                             {
                                                                 //If we have go to here then all items check out properly and we can add the termination row
                                                                 int iTermFromLineNumber = 0;
-                                                                iTermFromLineNumber = GetNewLineNumber(sFromEquipNo, iWebAppId);
+                                                                iTermFromLineNumber = GetNewLineNumber(sFromEquipNo + "-" + sFromTermination, iWebAppId);
                                                                 string sRtn = "";
                                                                 if (!sFromEquipNo.Equals("") && !sFromTermination.Equals(""))
                                                                     sRtn = UpdateCableTerminationLink2(sSessionId, sUserId, sCableNo, sFromEquipNo, iTermFromLineNumber.ToString(), "0",
@@ -6990,7 +7349,7 @@ namespace WcfWCService
                                                                 else
                                                                 {
                                                                     int iTermToLineNumber = 0;
-                                                                    iTermToLineNumber = GetNewLineNumber(sFromEquipNo, iWebAppId);
+                                                                    iTermToLineNumber = GetNewLineNumber(sToEquipNo + "-" + sToTermination, iWebAppId);
                                                                     string sRtn2 = UpdateCableTerminationLink2(sSessionId, sUserId, sCableNo, sToEquipNo, iTermToLineNumber.ToString(), "1",
                                                                                                               sToTermination, sWireNo, sCoreNo, sCoreLabel, sWebAppId);
 
@@ -7344,6 +7703,42 @@ namespace WcfWCService
             return rtnCls;
         }
 
+        // iToOrFrom = 1 - To End
+        //           = 0 - From End
+        public rtnString CablePartLinkParentExact(String sCablePartNo, string sParentNo, int iToOrFrom, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            string sRtnValue = "";
+            rtnString rtnCls = new rtnString();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select isnull(VIO1.PMAPartNumber,'') as PMAPartNumber, isnull(LineNumber, -1) as LineNumber " +
+                          "from vwWindchillPartUsageStringAttributes VIO1 " +
+                          "where VIO1.PMBPartNumber = '" + sCablePartNo + "' " +
+                          "and VIO1.PMAPartNumber = '" + sParentNo + "' " +
+                          "and VIO1.name = 'ToOrFrom' " +
+                          "and VIO1.value = '" + iToOrFrom + "'";
+
+            //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+
+            if (rst.m_RecordCount > 0)
+            {
+                sRtnValue = rst.Get_NVarchar(ds, "PMAPartNumber", 0);
+                int iLineNumber = rst.Get_Int(ds, "LineNumber", 0);
+                rtnCls.bReturnValue = true;
+                rtnCls.sReturnValue = sRtnValue;
+                rtnCls.iLineNumber = iLineNumber;
+                ds.Dispose();
+            }
+            else
+            {
+                rtnCls.bReturnValue = false;
+                rtnCls.sReturnValue = sRtnValue;
+            }
+
+            return rtnCls;
+        }
+
         public rtnInt CableMaterialLinkExists(String sCablePartNo, String sMaterialPartNo, int iWebAppId)
         {
             RecordSet rst = new RecordSet();
@@ -7535,6 +7930,61 @@ namespace WcfWCService
 
             ds.Dispose();
             return rtnCls;
+        }
+
+        public rtnStringArray GetChildPartsFromParentPart(String sChildPartType, String sParentPartNumber, int iWebAppId)
+        {
+            String[] sParamNames = new String[2];
+            Object[] objParamValues = new Object[2];
+            int i;
+            rtnStringArray rtnClass = new rtnStringArray();
+
+            StoredProc SP = new StoredProc();
+            RecordSet rs = new RecordSet();
+
+            SP.SetProcName("SP_GetWindchillChildParts");
+            SP.SetParam("@pvchParentPartNumber", sParentPartNumber);
+            SP.SetParam("@pvchChildPartType", sChildPartType);
+            int iRecordCount = SP.RunStoredProcDataSet();
+
+
+            if (iRecordCount < 0)
+            {
+                rtnClass.bReturnValue = false;
+                rtnClass.sReturnValue = "No child parts of type " + sChildPartType + " for parent with part number " + sParentPartNumber;
+                return rtnClass;
+            }
+            else
+            {
+                try
+                {
+                    DataSet ds = SP.GetDataSet();
+
+                    if (iRecordCount > 0)
+                    {
+                        Array.Resize<string>(ref rtnClass.sChildPart, iRecordCount);
+                        Array.Resize<string>(ref rtnClass.sChildName, iRecordCount);
+
+                        for (i = 0; i < iRecordCount; i++)
+                        {
+                            string sPartNo = rs.Get_NVarchar(ds, "WTPartNumber", i);
+                            string sPartName = rs.Get_NVarchar(ds, "PartName", i);
+                            rtnClass.sChildPart[i] = sPartNo;
+                            rtnClass.sChildName[i] = sPartName;
+                        }
+                    }
+
+                    rtnClass.bReturnValue = true;
+                    return rtnClass;
+                }
+                catch (Exception e)
+                {
+                    rtnClass.bReturnValue = false;
+                    rtnClass.sReturnValue = e.Message;
+                    return rtnClass;
+                }
+            }
+
         }
 
         public rtnString GetParentPartOfType(String sChildPart, string sType, int iWebAppId)
@@ -7794,17 +8244,23 @@ namespace WcfWCService
                         rtnTerminations[i].sWireNo = rst.Get_NVarchar(ds, "WireNo", i);
                         rtnTerminations[i].sCoreLabel = rst.Get_NVarchar(ds, "CoreLabel", i);
                         rtnTerminations[i].bReturnValue = true;
+                        rtnTerminations[i].bTermsExist = true;
                     }
                     ds.Dispose();
                 }
                 else
                 {
+                    //This means no terminations set but cable exists and has cores
+                    rtnTerminations[0] = new rtnTerms();
                     rtnTerminations[0].bReturnValue = false;
+                    rtnTerminations[0].bTermsExist = true;
                 }
             }
             else
             {
+                rtnTerminations[0] = new rtnTerms();
                 rtnTerminations[0].bReturnValue = false;
+                rtnTerminations[0].bTermsExist = false;
             }
 
             return rtnTerminations;
