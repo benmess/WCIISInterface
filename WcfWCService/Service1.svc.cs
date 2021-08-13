@@ -344,27 +344,29 @@ namespace WcfWCService
                 Update_User_Time(sUserId, sSessionId);
                 int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
-                string[] sAttributeNames = new string[2];
-                string[] sAttributeValues = new string[2];
+                string[] sAttributeNames = new string[3];
+                string[] sAttributeValues = new string[3];
 
                 sAttributeNames[0] = "description";
                 sAttributeNames[1] = "Originator";
+                sAttributeNames[2] = "RegainPortalUser";
 
 
                 sAttributeValues[0] = sDesc;
                 sAttributeValues[1] = sOriginator;
+                sAttributeValues[2] = sOriginator;
 
                 if (sOriginatorDocId != "")
                 {
-                    Array.Resize<string>(ref sAttributeNames, 3);
-                    Array.Resize<string>(ref sAttributeValues, 3);
+                    Array.Resize<string>(ref sAttributeNames, 4);
+                    Array.Resize<string>(ref sAttributeValues, 4);
                     sAttributeNames[2] = "OrigDocId";
                     sAttributeValues[2] = sOriginatorDocId;
 
                     if (sJobCode != "")
                     {
-                        Array.Resize<string>(ref sAttributeNames, 4);
-                        Array.Resize<string>(ref sAttributeValues, 4);
+                        Array.Resize<string>(ref sAttributeNames, 5);
+                        Array.Resize<string>(ref sAttributeValues, 5);
                         sAttributeNames[3] = "JobCode";
                         sAttributeValues[3] = sJobCode;
                     }
@@ -374,8 +376,8 @@ namespace WcfWCService
                 {
                     if (sJobCode != "")
                     {
-                        Array.Resize<string>(ref sAttributeNames, 3);
-                        Array.Resize<string>(ref sAttributeValues, 3);
+                        Array.Resize<string>(ref sAttributeNames, 4);
+                        Array.Resize<string>(ref sAttributeValues, 4);
                         sAttributeNames[2] = "JobCode";
                         sAttributeValues[2] = sJobCode;
                     }
@@ -383,7 +385,7 @@ namespace WcfWCService
                 }
 
 
-                return client2.doccreate(sDocNo, sDocName, sProductName, sDocType, sFolderNameAndPath, sRevision, sAttributeNames, sAttributeValues, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
+                return client2.doccreate2(sDocNo, sDocName, sProductName, sDocType, sFolderNameAndPath, sRevision, sAttributeNames, sAttributeValues, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
             }
         }
 
@@ -1273,6 +1275,28 @@ namespace WcfWCService
             }
         }
 
+        public string setDocToDocLink(string sSessionId, string sUserId, string sFullName, string sParentDoc, string sChildDocNo,  string sCheckInComments, string sDocUsageType, string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[1];
+                string[] sAttributeValues = new string[1];
+                string[] sAttributeTypes = new string[1];
+                string sReturn = "";
+                string sReturn2 = "";
+
+                sReturn = client2.setdocdoclink(sFullName, sParentDoc, sChildDocNo, sCheckInComments, sDocUsageType, Convert.ToInt16(sWebAppId));
+                return sReturn;
+            }
+        }
+
         public string AttachWCDoc(string sSessionId, string sUserId, string sFullName, string sDocNo, string sAttachDesc, string sAttachPath, string bSecondary, string sAttachComments, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -2042,6 +2066,20 @@ namespace WcfWCService
             }
         }
 
+        public string RenamePart(string sSessionId, string sUserId, string sFullName, string sPartNo, string sNewPartNo, string sNewPartName,string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                return client2.renamepart(sPartNo, sNewPartNo, sNewPartName, sFullName, Convert.ToInt16(sWebAppId));
+            }
+        }
         public string SetPartToPartLink(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNumber, string dQty, string sCheckInComments, string sPartUsageType, string sUnit, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -5771,6 +5809,165 @@ namespace WcfWCService
             }
         }
 
+        public string CreateRequiredActionItem(string sSessionId, string sUserId, string sFullName, string sReqdActionNo,
+                                               string sDocType, string sName, string sDesc, string sComments, string sCompletionStatus,
+                                               string sCompletionDate, string sProduct, string sFolder,
+                                               string sCheckInComments, string sWebAppId)
+        {
+            string sReturn = "";
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                string[] sAttributeNames = new string[4];
+                string[] sAttributeValues = new string[4];
+                string[] sAttributeTypes = new string[4];
+
+                string[] sAttributeNames2 = new string[2];
+                string[] sAttributeValues2 = new string[2];
+                string[] sAttributeTypes2 = new string[2];
+
+
+                sAttributeNames[0] = "Originator";
+                sAttributeNames[1] = "LongDescription";
+                sAttributeNames[2] = "Comments";
+                sAttributeNames[3] = "RegainPortalUser";
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = sDesc;
+                sAttributeValues[2] = sComments;
+                sAttributeValues[3] = sFullName;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+                sAttributeTypes[2] = "string";
+                sAttributeTypes[3] = "string";
+
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                int iCompletionStatus = 0;
+
+                if (bool.Parse(sCompletionStatus))
+                    iCompletionStatus = 1;
+
+                sAttributeNames2[0] = "CompletionStatus";
+                sAttributeValues2[0] = iCompletionStatus.ToString();
+                sAttributeTypes2[0] = "long";
+
+                sAttributeNames2[1] = "RegainPortalUser";
+                sAttributeValues2[1] = sFullName;
+                sAttributeTypes2[1] = "string";
+
+                if (sCompletionDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames2, 3);
+                    Array.Resize<string>(ref sAttributeValues2, 3);
+                    Array.Resize<string>(ref sAttributeTypes2, 3);
+                    sAttributeNames2[2] = "CompletedDate";
+                    sAttributeValues2[2] = sCompletionDate;
+                    sAttributeTypes2[2] = "date";
+                }
+
+
+                sReturn = client2.doccreate(sReqdActionNo, sName, sProduct, sDocType, sFolder, "A", sAttributeNames, sAttributeValues, sCheckInComments, 0, Convert.ToInt16(sWebAppId));
+                if (sReturn.StartsWith("Success"))
+                {
+                    sReturn = client2.setdocattributes(sReqdActionNo, sName, sAttributeNames2, sAttributeValues2, sAttributeTypes2, sCheckInComments, Convert.ToInt16(sWebAppId));
+                    if (sReturn.StartsWith("Success"))
+                    {
+                        if (bool.Parse(sCompletionStatus))
+                        {
+                            sReturn = client2.setdocstate(sReqdActionNo, "Completed", Convert.ToInt16(sWebAppId));
+                            if (sReturn.StartsWith("Success"))
+                            {
+                                sReturn = "Success";
+                            }
+                        }
+                        else
+                            sReturn = "Success";
+                    }
+                }
+
+                return sReturn;
+            }
+        }
+
+        public string UpdateRequiredActionItem(string sSessionId, string sUserId, string sFullName, string sReqdActionNo,
+                                               string sName, string sDesc, string sComments, string sCompletionStatus, 
+                                               string sCompletionDate, string sCheckInComments, string sWebAppId)
+        {
+            string sReturn = "";
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                string[] sAttributeNames = new string[5];
+                string[] sAttributeValues = new string[5];
+                string[] sAttributeTypes = new string[5];
+
+                int iCompletionStatus = 0;
+
+                if (bool.Parse(sCompletionStatus))
+                    iCompletionStatus = 1;
+
+                sAttributeNames[0] = "Originator";
+                sAttributeNames[1] = "LongDescription";
+                sAttributeNames[2] = "Comments";
+                sAttributeNames[3] = "CompletionStatus";
+                sAttributeNames[4] = "RegainPortalUser";
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = sDesc;
+                sAttributeValues[2] = sComments;
+                sAttributeValues[3] = iCompletionStatus.ToString();
+                sAttributeValues[4] = sFullName;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+                sAttributeTypes[2] = "string";
+                sAttributeTypes[3] = "long";
+                sAttributeTypes[4] = "string";
+
+                if (sCompletionDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, 6);
+                    Array.Resize<string>(ref sAttributeValues, 6);
+                    Array.Resize<string>(ref sAttributeTypes, 6);
+                    sAttributeNames[5] = "CompletedDate";
+                    sAttributeValues[5] = sCompletionDate;
+                    sAttributeTypes[5] = "date";
+                }
+
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                sReturn = client2.setdocattributes(sReqdActionNo, sName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, Convert.ToInt16(sWebAppId));
+
+                if (sReturn.StartsWith("Success"))
+                {
+                    if (bool.Parse(sCompletionStatus))
+                    {
+                        sReturn = client2.setdocstate(sReqdActionNo, "Completed", Convert.ToInt16(sWebAppId));
+                        if (sReturn.StartsWith("Success"))
+                        {
+                            sReturn = "Success";
+                        }
+                    }
+                    else
+                        sReturn = "Success";
+                }
+
+                return sReturn;
+            }
+        }
+
         public string SetMaterialIOPartToPartLink(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNo, string sLineNumber, string sIOType, string sIOTag, string sCheckinComments, string sWebAppId)
         {
             string[] sAttributeNames = new string[2];
@@ -6261,7 +6458,7 @@ namespace WcfWCService
                     ArrayList arrUser = GetUserDetails(sUserId);
                     string sFullName = arrUser[2].ToString();
                     string sRecipeints = arrUser[3].ToString();
-                    string sCheckinComments = "";
+//                    string sCheckinComments = "";
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
@@ -6974,6 +7171,14 @@ namespace WcfWCService
                                         {
                                             sRowMsg = "Could not process row " + i + " of file " + sFile + ". Could not set the state of cable no " + sCableNo + " to obsolete." + ".\r\n";
                                         }
+
+                                        string sNewCableNo = GetDeletionCableNo(sCableNo, iWebAppId);
+                                        string sRtn6 = RenameCable(sSessionId, sUserId, sCableNo, sNewCableNo, iWebAppId);
+
+                                        if (!sRtn6.StartsWith("Success"))
+                                        {
+                                            sRowMsg = "Could not process row " + i + " of file " + sFile + ". Could not rename cable no " + sCableNo + " and its cores." + ".\r\n";
+                                        }
                                     }
 
                                     break;
@@ -7029,6 +7234,93 @@ namespace WcfWCService
             }
         }
 
+        public string RenameCable(String sSessionId, String sUserId, String sCableNo, String sNewCableNo, int iWebAppId) 
+	    {
+
+            string rtn2 = "";
+            int i;
+            String sNewNumber = "", sNewName = "", sExistingNumber = "", sExistingName = "";
+		    try
+		    {
+                ArrayList arrUser = GetUserDetails(sUserId);
+                string sFullName = arrUser[2].ToString();
+                string sRecipeints = arrUser[3].ToString();
+
+                string sRtn = "";
+
+                rtnStringArray rtnCores = GetChildPartsFromParentPart("local.rs.vsrs05.Regain.CableCore", sCableNo, iWebAppId);
+			
+			    for(i=0; i<rtnCores.sChildPart.Length; i++)
+			    {
+				    sExistingNumber = rtnCores.sChildPart[i];
+                    sExistingName = rtnCores.sChildName[i];
+                    sNewNumber = sExistingNumber.Replace(sCableNo, sNewCableNo);
+				    sNewName = sExistingName.Replace(sCableNo, sNewCableNo);
+				    rtn2 = RenamePart(sSessionId, sUserId, sFullName, sExistingNumber, sNewNumber, sNewName, iWebAppId.ToString());
+				
+				    if(!rtn2.StartsWith("Success"))
+				    {
+		 		        return rtn2;					
+				    }
+                }
+
+                //If we are here all the cores are renamed
+                sNewNumber = sNewCableNo;
+			    sNewName = "Cable " + sNewCableNo;
+			
+			    rtn2 = RenamePart(sSessionId, sUserId, sFullName, sCableNo, sNewNumber, sNewName, iWebAppId.ToString());
+
+                if (!rtn2.StartsWith("Success"))
+                {
+                    return rtn2;
+                }
+
+                sRtn = "Success";
+
+                return sRtn;
+	        }
+	        catch (Exception e)
+	        {
+                return "Failure" + e.Message;
+	        }
+
+	    }
+
+        public string GetDeletionCableNo(string sCableNo, int iWebAppId)
+        {
+            string sNewDeletionCableNo = "";
+            int i;
+            bool bFound = false;
+            string[] sDeleteCombo = {"ZZZ", "ZZY", "ZZX", "ZZW", "ZZV", "ZZU","ZZT", "ZZS", "ZZR", "ZZQ",
+                                     "ZZP", "ZZN", "ZZM", "ZZL", "ZZK", "ZZJ","ZZH", "ZZG", "ZZF", "ZZE",
+                                     "ZYZ", "ZYY", "ZYX", "ZYW", "ZYV", "ZYU","ZYT", "ZYS", "ZYR", "ZYQ",
+                                     "ZYP", "ZYN", "ZYM", "ZYL", "ZYK", "ZYJ","ZYH", "ZYG", "ZYF", "ZYE",
+                                     "ZXZ", "ZXY", "ZXX", "ZXW", "ZXV", "ZXU","ZXT", "ZXS", "ZXR", "ZXQ",
+                                     "ZXP", "ZXN", "ZXM", "ZXL", "ZXK", "ZXJ","ZXH", "ZXG", "ZXF", "ZXE",
+                                     "ZWZ", "ZWY", "ZWX", "ZWW", "ZWV", "ZWU","ZWT", "ZWS", "ZWR", "ZWQ",
+                                     "ZWP", "ZWN", "ZWM", "ZWL", "ZWK", "ZWJ","ZWH", "ZWG", "ZWF", "ZWE",
+                                     "ZVZ", "ZVY", "ZVX", "ZVW", "ZVV", "ZVU","ZVT", "ZVS", "ZVR", "ZVQ",
+                                     "ZVP", "ZVN", "ZVM", "ZVL", "ZVK", "ZVJ","ZVH", "ZVG", "ZVF", "ZVE"};
+
+
+            //Try 100 possibilities
+            for (i = 0; i < sDeleteCombo.Length; i++)
+            {
+                sNewDeletionCableNo = sCableNo.Replace("-", "-" + sDeleteCombo[i]);
+                bool bPart = PartExists(sNewDeletionCableNo, iWebAppId);
+
+                if (!bPart)
+                {
+                    bFound = true;
+                    break;
+                }
+            }
+
+            if (!bFound)
+                sNewDeletionCableNo = sCableNo.Replace("-", "-AAA");
+            return sNewDeletionCableNo;
+
+        }
 
         public string ProcessTerminationSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId, string sFLOrMat)
         {
@@ -7972,6 +8264,11 @@ namespace WcfWCService
                             rtnClass.sChildPart[i] = sPartNo;
                             rtnClass.sChildName[i] = sPartName;
                         }
+                    }
+                    else
+                    {
+                        Array.Resize<string>(ref rtnClass.sChildPart, 0);
+                        Array.Resize<string>(ref rtnClass.sChildName, 0);
                     }
 
                     rtnClass.bReturnValue = true;

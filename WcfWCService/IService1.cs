@@ -165,6 +165,11 @@ namespace WcfWCService
         string SetDocToDocRefs(string sSessionId, string sUserId, string sFullName, string sDocNo, string sReferencedDocNos, string sCheckinComments, string sWebAppId);
 
         [OperationContract]
+        [WebGet(UriTemplate = "setdoctodoclink/{sSessionId}/{sUserId}/{sFullname}/{sParentDoc}/{sChildDocNo}/{sCheckinComments}/{sDocUsageType}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string setDocToDocLink(string sSessionId, string sUserId, string sFullName, string sParentDoc, string sChildDocNo, string sCheckInComments, string sDocUsageType, string sWebAppId);
+
+
+        [OperationContract]
         [WebGet(UriTemplate = "setdocreviewer/{sSessionId}/{sUserId}/{sFullname}/{sDocNo}/{sReviewerNo}/{sCheckinComments}/{sReviewerTypeName}/{sCompletionDate}/{sCompletionStatus}/{sComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string SetDocReviewer(string sSessionId, string sUserId, string sFullName, string sDocNo, string sReviewerNo, string sCheckinComments, string sReviewerTypeName, string sCompletionDate, string sCompletionStatus, string sComments, string sWebAppId);
 
@@ -238,6 +243,10 @@ namespace WcfWCService
         [OperationContract]
         [WebGet(UriTemplate = "updatprojectstatus/{sSessionId}/{sUserId}/{sFullname}/{sProjCode}/{sProjName}/{sProjStatus}/{sCheckInComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string UpdateProjectStatus(string sSessionId, string sUserId, string sFullName, string sProjCode, string sProjName, string sProjStatus, string sCheckinComments, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "renamepart/{sSessionId}/{sUserId}/{sFullname}/{sPartNo}/{sNewPartNo}/{sNewPartName}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string RenamePart(string sSessionId, string sUserId, string sFullName, string sPartNo, string sNewPartNo, string sNewPartName, string sWebAppId);
 
 
         [OperationContract]
@@ -604,6 +613,23 @@ namespace WcfWCService
                                     string sDataCable, string sEarthCable,
                                     string sInstRegFlag, string sFullLoadCurrent, string sConstructionDate, string sFLGrouping,
                                     string sCheckInComments, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "createrequiredactionitem/{sSessionId}/{sUserId}/{sFullname}/{sReqdActionNo}/{sPlantEquipType}/{sName}/{sDesc}/{sComments}/{sCompletionStatus}/{sCompletionDate}/{sProduct}/{sFolder}/" +
+                                                       "{sCheckInComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string CreateRequiredActionItem(string sSessionId, string sUserId, string sFullName, string sReqdActionNo,
+                                        string sPlantEquipType, string sName, string sDesc, 
+                                        string sComments, string sCompletionStatus,string sCompletionDate,
+                                        string sProduct, string sFolder,
+                                        string sCheckInComments, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "updaterequiredactionitem/{sSessionId}/{sUserId}/{sFullname}/{sReqdActionNo}/{sName}/{sDesc}/{sComments}/{sCompletionStatus}/" +
+                                                   "{sCompletionDate}/{sCheckInComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string UpdateRequiredActionItem(string sSessionId, string sUserId, string sFullName, string sReqdActionNo,
+                                        string sName, string sDesc, string sComments, string sCompletionStatus,
+                                        string sCompletionDate,
+                                        string sCheckInComments, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "setmaintenancetemplates/{sSessionId}/{sUserId}/{sWONo}/{sWOName}/{sTemplateIndex}/{sWPNo}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
