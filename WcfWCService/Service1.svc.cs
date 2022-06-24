@@ -46,6 +46,12 @@ namespace WcfWCService
             public string[] sChildPart;
             public string[] sChildName;
         }
+        public class rtnStringArray2
+        {
+            public bool bReturnValue;
+            public string sReturnValue;
+            public string[] sArray;
+        }
 
         public class rtnTerms
         {
@@ -59,6 +65,8 @@ namespace WcfWCService
             public int iToLineNumber = 0;
             public bool bTermsExist;
         }
+
+        string[] garrReviewTypes = new string[] { "Prepare", "Check", "Review", "Approve" };
 
         public string CookieLogin(string sUsername, string sPassword, string sWebAppId)
         {
@@ -360,15 +368,15 @@ namespace WcfWCService
                 {
                     Array.Resize<string>(ref sAttributeNames, 4);
                     Array.Resize<string>(ref sAttributeValues, 4);
-                    sAttributeNames[2] = "OrigDocId";
-                    sAttributeValues[2] = sOriginatorDocId;
+                    sAttributeNames[3] = "OrigDocId";
+                    sAttributeValues[3] = sOriginatorDocId;
 
                     if (sJobCode != "")
                     {
                         Array.Resize<string>(ref sAttributeNames, 5);
                         Array.Resize<string>(ref sAttributeValues, 5);
-                        sAttributeNames[3] = "JobCode";
-                        sAttributeValues[3] = sJobCode;
+                        sAttributeNames[4] = "JobCode";
+                        sAttributeValues[4] = sJobCode;
                     }
 
                 }
@@ -378,8 +386,8 @@ namespace WcfWCService
                     {
                         Array.Resize<string>(ref sAttributeNames, 4);
                         Array.Resize<string>(ref sAttributeValues, 4);
-                        sAttributeNames[2] = "JobCode";
-                        sAttributeValues[2] = sJobCode;
+                        sAttributeNames[3] = "JobCode";
+                        sAttributeValues[3] = sJobCode;
                     }
 
                 }
@@ -1480,28 +1488,76 @@ namespace WcfWCService
 
                 if (sCompletionDate != "")
                 {
-                    Array.Resize<string>(ref sAttributeNames, 3);
-                    Array.Resize<string>(ref sAttributeValues, 3);
-                    Array.Resize<string>(ref sAttributeTypes, 3);
-                    sAttributeNames[2] = "CompletedDate";
-                    sAttributeValues[2] = sCompletionDate;
-                    sAttributeTypes[2] = "date";
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "CompletedDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCompletionDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
 
-                    if (sComments != "")
-                    {
-                        Array.Resize<string>(ref sAttributeNames, 4);
-                        Array.Resize<string>(ref sAttributeValues, 4);
-                        Array.Resize<string>(ref sAttributeTypes, 4);
-                        sAttributeNames[3] = "Comments";
-                        sAttributeValues[3] = sComments;
-                        sAttributeTypes[3] = "string";
-                    }
+                if (sComments != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "Comments";
+                    sAttributeValues[sAttributeValues.Length - 1] = sComments;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
 
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
                 return client2.setdocdoclinkwithattributes(sFullName, sDocNo, sReviewerNo, sCheckinComments, "local.rs.vsrs05.Regain.ReviewerDocLink", sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string SetDocReviewerForDocRevision(string sSessionId, string sUserId, string sFullName, string sDocNo, string sDocRev, string sReviewerNo, string sCheckinComments, string sReviewerTypeName, string sCompletionDate, string sCompletionStatus, string sComments, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
+
+                sAttributeNames[0] = "ReviewerTypeName";
+                sAttributeNames[1] = "CompletionStatus";
+
+                sAttributeValues[0] = sReviewerTypeName;
+                sAttributeValues[1] = sCompletionStatus;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "long";
+
+                if (sCompletionDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "CompletedDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCompletionDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
+
+                if (sComments != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "Comments";
+                    sAttributeValues[sAttributeValues.Length - 1] = sComments;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                return client2.setdocdoclinkwithattributesandrevision(sFullName, sDocNo, sDocRev, sReviewerNo, sCheckinComments, "local.rs.vsrs05.Regain.ReviewerDocLink", sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
             }
         }
 
@@ -1528,27 +1584,74 @@ namespace WcfWCService
 
                 if (sCompletionDate != "")
                 {
-                    Array.Resize<string>(ref sAttributeNames, 3);
-                    Array.Resize<string>(ref sAttributeValues, 3);
-                    Array.Resize<string>(ref sAttributeTypes, 3);
-                    sAttributeNames[2] = "CompletedDate";
-                    sAttributeValues[2] = sCompletionDate;
-                    sAttributeTypes[2] = "date";
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "CompletedDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCompletionDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
 
-                    if (sComments != "")
-                    {
-                        Array.Resize<string>(ref sAttributeNames, 4);
-                        Array.Resize<string>(ref sAttributeValues, 4);
-                        Array.Resize<string>(ref sAttributeTypes, 4);
-                        sAttributeNames[3] = "Comments";
-                        sAttributeValues[3] = sComments;
-                        sAttributeTypes[3] = "string";
-                    }
+                if (sComments != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "Comments";
+                    sAttributeValues[sAttributeValues.Length - 1] = sComments;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
                 return client2.updatedocdoclinkwithattributes(sFullName, sDocNo, sReviewerNo, sCheckinComments, "local.rs.vsrs05.Regain.ReviewerDocLink", sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string UpdateDocReviewerForDocRevision(string sSessionId, string sUserId, string sFullName, string sDocNo, string sDocRev, string sReviewerNo, string sCheckinComments, string sReviewerTypeName, string sCompletionDate, string sCompletionStatus, string sComments, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
+
+                sAttributeNames[0] = "ReviewerTypeName";
+                sAttributeNames[1] = "CompletionStatus";
+
+                sAttributeValues[0] = sReviewerTypeName;
+                sAttributeValues[1] = sCompletionStatus;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "long";
+
+                if (sCompletionDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "CompletedDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCompletionDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
+
+                if (sComments != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "Comments";
+                    sAttributeValues[sAttributeValues.Length - 1] = sComments;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                return client2.updatedocdoclinkwithattributesandrevision(sFullName, sDocNo, sDocRev, sReviewerNo, sCheckinComments, "local.rs.vsrs05.Regain.ReviewerDocLink", sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
             }
         }
 
@@ -1578,21 +1681,18 @@ namespace WcfWCService
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
                     Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
-                    sAttributeNames[2] = "CompletedDate";
-                    sAttributeValues[2] = sCompletionDate;
-                    sAttributeTypes[2] = "date";
+                    sAttributeNames[sAttributeNames.Length - 1] = "CompletedDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCompletionDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
                 }
 
 
-                if (sComments != "")
-                {
-                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
-                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
-                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
-                    sAttributeNames[3] = "Comments";
-                    sAttributeValues[3] = sComments;
-                    sAttributeTypes[3] = "string";
-                }
+                Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                sAttributeNames[sAttributeNames.Length - 1] = "Comments";
+                sAttributeValues[sAttributeValues.Length - 1] = sComments;
+                sAttributeTypes[sAttributeTypes.Length - 1] = "string";
 
                 if (sAccountableFlag != "")
                 {
@@ -1603,8 +1703,6 @@ namespace WcfWCService
                     sAttributeValues[sAttributeValues.Length - 1] = sAccountableFlag;
                     sAttributeTypes[sAttributeTypes.Length - 1] = "long";
                 }
-
-
 
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
@@ -1639,18 +1737,18 @@ namespace WcfWCService
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
                     Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
-                    sAttributeNames[2] = "CompletedDate";
-                    sAttributeValues[2] = sCompletionDate;
-                    sAttributeTypes[2] = "date";
+                    sAttributeNames[sAttributeNames.Length - 1] = "CompletedDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCompletionDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
                 }
 
 
                 Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                 Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
                 Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
-                sAttributeNames[3] = "Comments";
-                sAttributeValues[3] = sComments;
-                sAttributeTypes[3] = "string";
+                sAttributeNames[sAttributeNames.Length - 1] = "Comments";
+                sAttributeValues[sAttributeValues.Length - 1] = sComments;
+                sAttributeTypes[sAttributeTypes.Length - 1] = "string";
 
                 if (sAccountableFlag != "")
                 {
@@ -1679,6 +1777,34 @@ namespace WcfWCService
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
                 return client2.deletedoctodocusagelink(sFullName, sParentDocNo, sChildDocNo, sCheckinComments, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string DeleteDocToDocUsageLinkWithStringAttribute(string sSessionId, string sUserId, string sFullName, string sParentDocNo, string sChildDocNo, string sCheckinComments, string sAttributeName, string sAttributeValue, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                return client2.deletedoctodocusagelinkwithstringattribute(sFullName, sParentDocNo, sChildDocNo, sCheckinComments, sAttributeName, sAttributeValue, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string DeleteDocToDocUsageLinkWithStringAttributeForDocRevision(string sSessionId, string sUserId, string sFullName, string sParentDocNo, string sParentDocRev, string sChildDocNo, string sCheckinComments, string sAttributeName, string sAttributeValue, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                return client2.deletedoctodocusagelinkwithstringattributeandrevision(sFullName, sParentDocNo, sParentDocRev, sChildDocNo, sCheckinComments, sAttributeName, sAttributeValue, Convert.ToInt16(sWebAppId));
             }
         }
 
@@ -2080,6 +2206,21 @@ namespace WcfWCService
                 return client2.renamepart(sPartNo, sNewPartNo, sNewPartName, sFullName, Convert.ToInt16(sWebAppId));
             }
         }
+        public string RenameDocument(string sSessionId, string sUserId, string sFullName, string sDocumentNo, string sNewDocumentNo, string sNewDocumentName, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                return client2.renamedocument(sDocumentNo, sNewDocumentNo, sNewDocumentName, sFullName, Convert.ToInt16(sWebAppId));
+            }
+        }
+
         public string SetPartToPartLink(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNumber, string dQty, string sCheckInComments, string sPartUsageType, string sUnit, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -2369,7 +2510,8 @@ namespace WcfWCService
                                   string dTargetAl2O3, string dActualAl2O3, string dTargetCaO, string dActualCaO, string dTargetF, string dActualF,
                                   string dTargetFe2O3, string dActualFe2O3, string dTargetK2O, string dActualK2O, string dTargetMgO, string dActualMgO,
                                   string dTargetMnO, string dActualMnO, string dTargetNa2O3, string dActualNa2O3, string dTargetSiO2, string dActualSiO2,
-                                  string dTargetC, string dActualC, string dTargetSO3, string dActualSO3, string dTargetCN, string dActualCN, string sWebAppId)
+                                  string dTargetC, string dActualC, string dTargetSO3, string dActualSO3, string dTargetCN, string dActualCN, string sProductCode, 
+                                  string sBatchDate, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -2380,9 +2522,9 @@ namespace WcfWCService
                 Update_User_Time(sUserId, sSessionId);
                 int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
-                string[] sAttributeNames = new string[29];
-                string[] sAttributeValues = new string[29];
-                string[] sAttributeTypes = new string[29];
+                string[] sAttributeNames = new string[30];
+                string[] sAttributeValues = new string[30];
+                string[] sAttributeTypes = new string[30];
 
                 sAttributeNames[0] = "Originator";
                 sAttributeNames[1] = "QtyTarget";
@@ -2413,6 +2555,7 @@ namespace WcfWCService
                 sAttributeNames[26] = "SO3Actual";
                 sAttributeNames[27] = "CNTarget";
                 sAttributeNames[28] = "CNActual";
+                sAttributeNames[29] = "JobCode";
 
                 sAttributeValues[0] = sFullName;
                 sAttributeValues[1] = dTargetQty;
@@ -2443,6 +2586,7 @@ namespace WcfWCService
                 sAttributeValues[26] = dActualSO3;
                 sAttributeValues[27] = dTargetCN;
                 sAttributeValues[28] = dActualCN;
+                sAttributeValues[29] = sProductCode;
 
                 sAttributeTypes[0] = "string";
                 sAttributeTypes[1] = "double";
@@ -2473,14 +2617,25 @@ namespace WcfWCService
                 sAttributeTypes[26] = "double";
                 sAttributeTypes[27] = "double";
                 sAttributeTypes[28] = "double";
+                sAttributeTypes[29] = "string";
 
+                if (sBatchDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "BatchDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sBatchDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
 
                 return client2.createpart(sBatchNo, sBatchName, sProductName, sBatchType, sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
             }
         }
 
         public string CreateMBA(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sProductName, string sFolder, string sBatchType,
-                                  string sCheckInComments, string iProdOrLibrary, string dMoisturePercentage, string sWebAppId)
+                                  string sCheckInComments, string iProdOrLibrary, string dMoisturePercentage, string sProductCode, string sBatchDate, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -2503,6 +2658,212 @@ namespace WcfWCService
 
                 sAttributeTypes[0] = "string";
                 sAttributeTypes[1] = "double";
+
+                if (sProductCode != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "JobCode";
+                    sAttributeValues[sAttributeValues.Length - 1] = sProductCode;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sBatchDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "BatchDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sBatchDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
+
+                return client2.createpart(sBatchNo, sBatchName, sProductName, sBatchType, sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string CreateShippingLoad(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sProductName, string sFolder, string sBatchType,
+                                         string sCheckInComments, string iProdOrLibrary, string dMoisturePercentage, string sContainerSealNo, string sProductCode, string sBatchDate, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
+
+                sAttributeNames[0] = "Originator";
+                sAttributeNames[1] = "MoistureContent";
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = dMoisturePercentage;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "double";
+
+                if (sContainerSealNo != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "ContainerSealNo";
+                    sAttributeValues[sAttributeValues.Length - 1] = sContainerSealNo;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sProductCode != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "JobCode";
+                    sAttributeValues[sAttributeValues.Length - 1] = sProductCode;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sBatchDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "BatchDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sBatchDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
+
+                return client2.createpart(sBatchNo, sBatchName, sProductName, sBatchType, sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string CreateShippingContainer(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sProductName, string sFolder, string sBatchType,
+                                              string sCheckInComments, string iProdOrLibrary, string dMoisturePercentage, string dTareWeight, string sProductCode, string sBatchDate, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
+
+                sAttributeNames[0] = "Originator";
+                sAttributeNames[1] = "MoistureContent";
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = dMoisturePercentage;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "double";
+
+                if (dTareWeight != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "TareWeight";
+                    sAttributeValues[sAttributeValues.Length - 1] = dTareWeight;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "double";
+                }
+
+                if (sProductCode != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "JobCode";
+                    sAttributeValues[sAttributeValues.Length - 1] = sProductCode;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sBatchDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "BatchDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sBatchDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
+
+                return client2.createpart(sBatchNo, sBatchName, sProductName, sBatchType, sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string CreateShippingBooking(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sProductName, string sFolder, string sBatchType,
+                                            string sCheckInComments, string iProdOrLibrary, string sProductCode, string sComments, string sBatchDate, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[1];
+                string[] sAttributeValues = new string[1];
+                string[] sAttributeTypes = new string[1];
+
+                sAttributeNames[0] = "Originator";
+
+                sAttributeValues[0] = sFullName;
+
+                sAttributeTypes[0] = "string";
+
+
+                if (sComments != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "Comments";
+                    sAttributeValues[sAttributeValues.Length - 1] = sComments;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sProductCode != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "JobCode";
+                    sAttributeValues[sAttributeValues.Length - 1] = sProductCode;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sBatchDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "BatchDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sBatchDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
 
                 return client2.createpart(sBatchNo, sBatchName, sProductName, sBatchType, sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
             }
@@ -2532,7 +2893,7 @@ namespace WcfWCService
                                   string dTargetAl2O3, string dActualAl2O3, string dTargetCaO, string dActualCaO, string dTargetF, string dActualF,
                                   string dTargetFe2O3, string dActualFe2O3, string dTargetK2O, string dActualK2O, string dTargetMgO, string dActualMgO,
                                   string dTargetMnO, string dActualMnO, string dTargetNa2O3, string dActualNa2O3, string dTargetSiO2, string dActualSiO2,
-                                  string dTargetC, string dActualC, string dTargetSO3, string dActualSO3, string dTargetCN, string dActualCN, string sWebAppId)
+                                  string dTargetC, string dActualC, string dTargetSO3, string dActualSO3, string dTargetCN, string dActualCN, string sProductCode, string sBatchDate, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -2542,9 +2903,9 @@ namespace WcfWCService
             {
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
-                string[] sAttributeNames = new string[29];
-                string[] sAttributeValues = new string[29];
-                string[] sAttributeTypes = new string[29];
+                string[] sAttributeNames = new string[30];
+                string[] sAttributeValues = new string[30];
+                string[] sAttributeTypes = new string[30];
 
                 sAttributeNames[0] = "Originator";
                 sAttributeNames[1] = "QtyTarget";
@@ -2575,6 +2936,7 @@ namespace WcfWCService
                 sAttributeNames[26] = "SO3Actual";
                 sAttributeNames[27] = "CNTarget";
                 sAttributeNames[28] = "CNActual";
+                sAttributeNames[29] = "JobCode";
 
                 sAttributeValues[0] = sFullName;
                 sAttributeValues[1] = dTargetQty;
@@ -2605,6 +2967,7 @@ namespace WcfWCService
                 sAttributeValues[26] = dActualSO3;
                 sAttributeValues[27] = dTargetCN;
                 sAttributeValues[28] = dActualCN;
+                sAttributeValues[29] = sProductCode;
 
                 sAttributeTypes[0] = "string";
                 sAttributeTypes[1] = "double";
@@ -2635,12 +2998,25 @@ namespace WcfWCService
                 sAttributeTypes[26] = "double";
                 sAttributeTypes[27] = "double";
                 sAttributeTypes[28] = "double";
+                sAttributeTypes[29] = "string";
+
+                if (sBatchDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "BatchDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sBatchDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
 
                 return client2.setpartattributes(sBatchNo, sBatchName, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, Convert.ToInt16(sWebAppId));
             }
         }
 
-        public string UpdateMBA(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sCheckinComments, string dMoisturePercentage, string sWebAppId)
+        public string UpdateBatchQty(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sCheckinComments,
+                                  string dActualQty, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -2655,13 +3031,299 @@ namespace WcfWCService
                 string[] sAttributeTypes = new string[2];
 
                 sAttributeNames[0] = "Originator";
-                sAttributeNames[1] = "MoistureContent";
+                sAttributeNames[1] = "QtyActual";
 
                 sAttributeValues[0] = sFullName;
-                sAttributeValues[1] = dMoisturePercentage;
+                sAttributeValues[1] = dActualQty;
 
                 sAttributeTypes[0] = "string";
                 sAttributeTypes[1] = "double";
+
+                return client2.setpartattributes(sBatchNo, sBatchName, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, Convert.ToInt16(sWebAppId));
+            }
+        }
+        public string UpdateMBA(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sCheckinComments, string dMoisturePercentage, string sBatchDate, 
+                                string sComments, string sProductCode, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[1];
+                string[] sAttributeValues = new string[1];
+                string[] sAttributeTypes = new string[1];
+
+                sAttributeNames[0] = "Originator";
+
+                sAttributeValues[0] = sFullName;
+
+                sAttributeTypes[0] = "string";
+
+                if (dMoisturePercentage != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length-1] = "MoistureContent";
+                    sAttributeValues[sAttributeValues.Length - 1] = dMoisturePercentage;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "double";
+                }
+
+                if (sComments != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "Comments";
+                    sAttributeValues[sAttributeValues.Length - 1] = sComments;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sBatchDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "BatchDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sBatchDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
+
+                if (sProductCode != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "JobCode";
+                    sAttributeValues[sAttributeValues.Length - 1] = sProductCode;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                return client2.setpartattributes(sBatchNo, sBatchName, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string UpdateShippingLoad(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sCheckinComments, string dMoisturePercentage, 
+                                         string sBatchDate, string sComments, string sContainerSealNo, string sProductCode, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[1];
+                string[] sAttributeValues = new string[1];
+                string[] sAttributeTypes = new string[1];
+
+                sAttributeNames[0] = "Originator";
+
+                sAttributeValues[0] = sFullName;
+
+                sAttributeTypes[0] = "string";
+
+                if (dMoisturePercentage != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "MoistureContent";
+                    sAttributeValues[sAttributeValues.Length - 1] = dMoisturePercentage;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "double";
+                }
+
+                if (sComments != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "Comments";
+                    sAttributeValues[sAttributeValues.Length - 1] = sComments;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sBatchDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "BatchDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sBatchDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
+
+                if (sContainerSealNo != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "ContainerSealNo";
+                    sAttributeValues[sAttributeValues.Length - 1] = sContainerSealNo;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sProductCode != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "JobCode";
+                    sAttributeValues[sAttributeValues.Length - 1] = sProductCode;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                return client2.setpartattributes(sBatchNo, sBatchName, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string UpdateShippingContainer(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sCheckinComments, string dMoisturePercentage,
+                                         string sBatchDate, string sComments, string dTareWeight, string sProductCode, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[1];
+                string[] sAttributeValues = new string[1];
+                string[] sAttributeTypes = new string[1];
+
+                sAttributeNames[0] = "Originator";
+
+                sAttributeValues[0] = sFullName;
+
+                sAttributeTypes[0] = "string";
+
+                if (dMoisturePercentage != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "MoistureContent";
+                    sAttributeValues[sAttributeValues.Length - 1] = dMoisturePercentage;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "double";
+                }
+
+                if (sComments != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "Comments";
+                    sAttributeValues[sAttributeValues.Length - 1] = sComments;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sBatchDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "BatchDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sBatchDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
+
+                if (dTareWeight != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "TareWeight";
+                    sAttributeValues[sAttributeValues.Length - 1] = dTareWeight;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "double";
+                }
+
+                if (sProductCode != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "JobCode";
+                    sAttributeValues[sAttributeValues.Length - 1] = sProductCode;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                return client2.setpartattributes(sBatchNo, sBatchName, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string UpdateShippingBooking(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sCheckinComments, 
+                                         string sBatchDate, string sComments, string sProductCode, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[1];
+                string[] sAttributeValues = new string[1];
+                string[] sAttributeTypes = new string[1];
+
+                sAttributeNames[0] = "Originator";
+
+                sAttributeValues[0] = sFullName;
+
+                sAttributeTypes[0] = "string";
+
+                if (sComments != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "Comments";
+                    sAttributeValues[sAttributeValues.Length - 1] = sComments;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sBatchDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "BatchDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sBatchDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
+
+                if (sProductCode != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "JobCode";
+                    sAttributeValues[sAttributeValues.Length - 1] = sProductCode;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
 
                 return client2.setpartattributes(sBatchNo, sBatchName, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, Convert.ToInt16(sWebAppId));
             }
@@ -3090,6 +3752,28 @@ namespace WcfWCService
             }
         }
 
+        //This is a function to simply progress a contorl document on approval.
+        public string SetTaskControlDocExpiryDate(string sSessionId, string sUserId, string sWorkItemId, string sAssignedActivityId, string sRoute, string sExpiryDate, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sVariableNames = new string[1];
+                string[] sVariableValues = new string[1];
+                string[] sVariableTypes = new string[1];
+
+                sVariableNames[0] = "gdtNextExpiryDate";
+                sVariableValues[0] = sExpiryDate;
+                sVariableTypes[0] = "date";
+
+                return client2.completetask(Convert.ToInt32(sWorkItemId), Convert.ToInt32(sAssignedActivityId), sRoute, sVariableNames, sVariableTypes, sVariableValues, Convert.ToInt16(sWebAppId));
+            }
+        }
         public string ProgressTask(string sSessionId, string sUserId, string sWorkItemId, string sAssignedActivityId, string sRoute, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -3262,7 +3946,8 @@ namespace WcfWCService
                                                          string sLongDesc, string sOriginator, string sOriginatorDocId, string sJobCode,
                                                          string sCheckInComments, string sIncludeHyperlinks, string sWebAppId)
         {
-
+            int i;
+            string sRtn = "";
             //String sDocNumber, String sDocName, String sRevision, String sUser,  
             //				  String[] sAttributeName, String[] sAttributeValue, String[] sAttributeType,
             //                                                      String sCheckInComments, int iWebAppId
@@ -3274,6 +3959,7 @@ namespace WcfWCService
             {
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
+                rtnStringArray2 rtnCls = new rtnStringArray2();
 
                 string[] sAttributeNames = new string[3];
                 string[] sAttributeValues = new string[3];
@@ -3305,9 +3991,36 @@ namespace WcfWCService
                 //                return client2.setdocrevision(sDocNo, sRevision, Convert.ToInt16(sWebAppId));
                 int iIncludeHyperlinks = Convert.ToInt16(sIncludeHyperlinks);
 
-                string sRtn = client2.setdocrevremoveattachs(sDocNo, sDocName, sRevision, sFullname,
-                                                                       sAttributeNames, sAttributeValues, sAttributeTypes,
-                                                                       sCheckInComments, iIncludeHyperlinks, Convert.ToInt16(sWebAppId));
+                //Get any problem reports linked to this document
+                rtnCls = GetProbReportsFromDocument(sDocNo, Convert.ToInt16(sWebAppId));
+
+                if (rtnCls.bReturnValue)
+                {
+                    for (i = 0; i < rtnCls.sArray.Length; i++)
+                    {
+                        string sRtn2 = DeleteProbRptAffectedObjects(sSessionId, sUserId, rtnCls.sArray[i], sDocNo, "1", sWebAppId);
+
+                        if (sRtn2 != "Success")
+                            return sRtn2;
+                    }
+
+                    sRtn = client2.setdocrevremoveattachs(sDocNo, sDocName, sRevision, sFullname,
+                                                          sAttributeNames, sAttributeValues, sAttributeTypes,
+                                                          sCheckInComments, iIncludeHyperlinks, Convert.ToInt16(sWebAppId));
+                    if (sRtn.Equals("Success"))
+                    {
+                        for (i = 0; i < rtnCls.sArray.Length; i++)
+                        {
+                            string sRtn3 = SetProbRptAffectedObjects(sSessionId, sUserId, rtnCls.sArray[i], sDocNo, "1", sWebAppId);
+
+                            if (sRtn3 != "Success")
+                                return sRtn3;
+                        }
+                    }
+                }
+                else
+                    sRtn = rtnCls.sReturnValue;
+
                 return sRtn;
             }
         }
@@ -3668,6 +4381,53 @@ namespace WcfWCService
 
                 return client2.updateprodorderpartpartlinkwithattributes(sFullName, sParentPartNo, sChildPartNo, ddQty, sProdOrderNo, sCheckInComments, "local.rs.vsrs05.Regain.MBAUsageLink", "tonne",
                                                                               llOldLineNumber, llNewLineNumber, sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string UpdateMBAPartUsageLinkFromBatch(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNo,
+                                                   string dQty, string lLineNumber, string sCheckInComments, string sDispatchDocketNo,
+                                                   string sTransactionDate, string sComments, string sMoisturePercentage, string sInvoiceStatus,
+                                                   string sBatchNo, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                long llLineNumber = Convert.ToInt64(lLineNumber);
+                double ddQty = Convert.ToDouble(dQty);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[6];
+                string[] sAttributeValues = new string[6];
+                string[] sAttributeTypes = new string[6];
+
+                sAttributeNames[0] = "DispatchDocketNo";
+                sAttributeNames[1] = "DispatchDocketDate"; //For some reason this has to be the underlying global attribute name
+                sAttributeNames[2] = "UsageComments";
+                sAttributeNames[3] = "MoistureContent";
+                sAttributeNames[4] = "InvoiceStatus";
+                sAttributeNames[5] = "BatchNo";
+
+
+                sAttributeValues[0] = sDispatchDocketNo;
+                sAttributeValues[1] = sTransactionDate;
+                sAttributeValues[2] = sComments;
+                sAttributeValues[3] = sMoisturePercentage;
+                sAttributeValues[4] = sInvoiceStatus;
+                sAttributeValues[5] = sBatchNo;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "date";
+                sAttributeTypes[2] = "string";
+                sAttributeTypes[3] = "double";
+                sAttributeTypes[4] = "long";
+                sAttributeTypes[5] = "string";
+
+
+                return client2.updatepartpartlinkwithattributes(sFullName, sParentPartNo, sChildPartNo, ddQty, llLineNumber, sCheckInComments, "local.rs.vsrs05.Regain.MBAUsageLink", "tonne",
+                                                                sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
             }
         }
 
@@ -5507,6 +6267,25 @@ namespace WcfWCService
             }
         }
 
+        public string SetDocumentState(string sSessionId, string sUserId, string sDocumentNo, string sLifecycleState, string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                //Now create a parent child link between the from functional location and the cable item
+                string sRtn4 = client2.setdocstate(sDocumentNo, sLifecycleState, Convert.ToInt16(sWebAppId));
+
+                return sRtn4;
+            }
+        }
+
         public string CreatePlantEquipItem(string sSessionId, string sUserId, string sFullName, string sPlantEquipNo,
                                            string sPlantEquipType, string sName, string sDesc, string sLongDesc, string sContSysType, string sDriveRating,
                                            string sEquipRegFlag, string sIPRegFlag, string sIPAddress, string sComments, string sOpZone,
@@ -5809,6 +6588,173 @@ namespace WcfWCService
             }
         }
 
+        public string CreateWorkPackageItem(string sSessionId, string sUserId, string sFullName, string sWPNo,
+                                            string sPartType, string sName, string sDesc, string sMaintenanceType, string sTrigThreshold, string sElapsedNextDate,
+                                            string sMonitoredPart, string sAccumThreshold, string sWarningAlert, 
+                                            string sProduct, string sFolder, string sCheckInComments, string sWebAppId)
+        {
+            string sReturn = "";
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                string[] sAttributeNames = new string[4];
+                string[] sAttributeValues = new string[4];
+                string[] sAttributeTypes = new string[4];
+
+                sAttributeNames[0] = "Originator";
+                sAttributeNames[1] = "PartDesc";
+                sAttributeNames[2] = "MaintenanceTrigger";
+                sAttributeNames[3] = "TriggerThreshold";
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = sDesc;
+                sAttributeValues[2] = sMaintenanceType;
+                sAttributeValues[3] = sTrigThreshold;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+                sAttributeTypes[2] = "string";
+                sAttributeTypes[3] = "long";
+
+                if (sElapsedNextDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "ElapsedNextDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sElapsedNextDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
+
+                if (sMonitoredPart != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "MonitoredPart";
+                    sAttributeValues[sAttributeValues.Length - 1] = sMonitoredPart;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sAccumThreshold != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "AccumulatedTriggerThreshold";
+                    sAttributeValues[sAttributeValues.Length - 1] = sAccumThreshold;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
+                }
+
+                if (sWarningAlert != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "WarningLeadTime";
+                    sAttributeValues[sAttributeValues.Length - 1] = sWarningAlert;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
+                }
+
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                sReturn = client2.createpart(sWPNo, sName, sProduct, sPartType, sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, 0, Convert.ToInt16(sWebAppId));
+                if (sReturn.StartsWith("Success"))
+                {
+                    sReturn = "Success";
+                }
+
+                return sReturn;
+            }
+        }
+
+        public string UpdateWorkPackageItem(string sSessionId, string sUserId, string sFullName, string sWPNo,
+                                            string sName, string sDesc, string sMaintenanceType, string sTrigThreshold, string sElapsedNextDate,
+                                            string sMonitoredPart, string sAccumThreshold, string sWarningAlert,
+                                            string sCheckInComments, string sWebAppId)
+        {
+            string sReturn = "";
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                string[] sAttributeNames = new string[4];
+                string[] sAttributeValues = new string[4];
+                string[] sAttributeTypes = new string[4];
+
+                sAttributeNames[0] = "Originator";
+                sAttributeNames[1] = "PartDesc";
+                sAttributeNames[2] = "MaintenanceTrigger";
+                sAttributeNames[3] = "TriggerThreshold";
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = sDesc;
+                sAttributeValues[2] = sMaintenanceType;
+                sAttributeValues[3] = sTrigThreshold;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+                sAttributeTypes[2] = "string";
+                sAttributeTypes[3] = "long";
+
+                if (sElapsedNextDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "ElapsedNextDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sElapsedNextDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
+
+                if (sMonitoredPart != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "MonitoredPart";
+                    sAttributeValues[sAttributeValues.Length - 1] = sMonitoredPart;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sAccumThreshold != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "AccumulatedTriggerThreshold";
+                    sAttributeValues[sAttributeValues.Length - 1] = sAccumThreshold;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
+                }
+
+                if (sWarningAlert != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "WarningLeadTime";
+                    sAttributeValues[sAttributeValues.Length - 1] = sWarningAlert;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
+                }
+
+
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                sReturn = client2.setpartattributes(sWPNo, sName, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, Convert.ToInt16(sWebAppId));
+
+                return sReturn;
+            }
+        }
+
         public string CreateRequiredActionItem(string sSessionId, string sUserId, string sFullName, string sReqdActionNo,
                                                string sDocType, string sName, string sDesc, string sComments, string sCompletionStatus,
                                                string sCompletionDate, string sProduct, string sFolder,
@@ -5851,8 +6797,8 @@ namespace WcfWCService
 
                 int iCompletionStatus = 0;
 
-                if (bool.Parse(sCompletionStatus))
-                    iCompletionStatus = 1;
+                if (int.TryParse(sCompletionStatus, out int iCompStat))
+                    iCompletionStatus = Convert.ToInt16(sCompletionStatus);
 
                 sAttributeNames2[0] = "CompletionStatus";
                 sAttributeValues2[0] = iCompletionStatus.ToString();
@@ -5879,9 +6825,23 @@ namespace WcfWCService
                     sReturn = client2.setdocattributes(sReqdActionNo, sName, sAttributeNames2, sAttributeValues2, sAttributeTypes2, sCheckInComments, Convert.ToInt16(sWebAppId));
                     if (sReturn.StartsWith("Success"))
                     {
-                        if (bool.Parse(sCompletionStatus))
+                        string sState = "";
+                        switch (iCompletionStatus)
                         {
-                            sReturn = client2.setdocstate(sReqdActionNo, "Completed", Convert.ToInt16(sWebAppId));
+                            case 0:
+                            default:
+                                sState = "InWork";
+                                break;
+                            case 1:
+                                sState = "Completed";
+                                break;
+                            case 2:
+                                sState = "Cancelled";
+                                break;
+                        }
+                        if (iCompletionStatus >= 0)
+                        {
+                            sReturn = client2.setdocstate(sReqdActionNo, sState, Convert.ToInt16(sWebAppId));
                             if (sReturn.StartsWith("Success"))
                             {
                                 sReturn = "Success";
@@ -5890,6 +6850,7 @@ namespace WcfWCService
                         else
                             sReturn = "Success";
                     }
+
                 }
 
                 return sReturn;
@@ -5914,8 +6875,8 @@ namespace WcfWCService
 
                 int iCompletionStatus = 0;
 
-                if (bool.Parse(sCompletionStatus))
-                    iCompletionStatus = 1;
+                if (int.TryParse(sCompletionStatus, out int iCompStat))
+                    iCompletionStatus = Convert.ToInt16(sCompletionStatus);
 
                 sAttributeNames[0] = "Originator";
                 sAttributeNames[1] = "LongDescription";
@@ -5952,9 +6913,23 @@ namespace WcfWCService
 
                 if (sReturn.StartsWith("Success"))
                 {
-                    if (bool.Parse(sCompletionStatus))
+                    string sState = "";
+                    switch (iCompletionStatus)
                     {
-                        sReturn = client2.setdocstate(sReqdActionNo, "Completed", Convert.ToInt16(sWebAppId));
+                        case 0:
+                        default:
+                            sState = "InWork";
+                            break;
+                        case 1:
+                            sState = "Completed";
+                            break;
+                        case 2:
+                            sState = "Cancelled";
+                            break;
+                    }
+                    if (iCompletionStatus >= 0)
+                    {
+                        sReturn = client2.setdocstate(sReqdActionNo, sState, Convert.ToInt16(sWebAppId));
                         if (sReturn.StartsWith("Success"))
                         {
                             sReturn = "Success";
@@ -5963,6 +6938,370 @@ namespace WcfWCService
                     else
                         sReturn = "Success";
                 }
+
+                return sReturn;
+            }
+        }
+
+        public string CreateBatchActionItem(string sSessionId, string sUserId, string sFullName, string sBatchNo,
+                                            string sBatchActionNo, string sDesc, string sVerify, string sCompletionStatus,
+                                            string sCompletionDate, string sCompletedBy, string sActionedDate, string sActionedBy,
+                                            string sProduct, string sFolder,
+                                            string sCheckInComments, string sWebAppId)
+        {
+            string sReturn = "";
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
+
+                string[] sAttributeNames2 = new string[1];
+                string[] sAttributeValues2 = new string[1];
+                string[] sAttributeTypes2 = new string[1];
+
+
+                sAttributeNames[0] = "Originator";
+                sAttributeNames[1] = "RegainPortalUser";
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = sFullName;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+
+                if (sVerify != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length -1] = "description";
+                    sAttributeValues[sAttributeValues.Length - 1] = sVerify;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                int iCompletionStatus = 0;
+
+                if (int.TryParse(sCompletionStatus, out int iCompStat))
+                    iCompletionStatus = Convert.ToInt16(sCompletionStatus);
+
+                sAttributeNames2[0] = "CompletionStatus";
+                sAttributeValues2[0] = iCompletionStatus.ToString();
+                sAttributeTypes2[0] = "long";
+
+
+
+                if (sCompletionDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames2, sAttributeNames2.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues2, sAttributeValues2.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes2, sAttributeTypes2.Length + 1);
+                    sAttributeNames2[sAttributeNames2.Length - 1] = "CompletedDate";
+                    sAttributeValues2[sAttributeValues2.Length - 1] = sCompletionDate;
+                    sAttributeTypes2[sAttributeTypes2.Length - 1] = "date";
+                }
+
+                if (sCompletedBy != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames2, sAttributeNames2.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues2, sAttributeValues2.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes2, sAttributeTypes2.Length + 1);
+                    sAttributeNames2[sAttributeNames2.Length - 1] = "CompletedBy";
+                    sAttributeValues2[sAttributeValues2.Length - 1] = sCompletedBy;
+                    sAttributeTypes2[sAttributeTypes2.Length - 1] = "string";
+                }
+
+                if (sActionedDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames2, sAttributeNames2.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues2, sAttributeValues2.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes2, sAttributeTypes2.Length + 1);
+                    sAttributeNames2[sAttributeNames2.Length - 1] = "ActionedDate";
+                    sAttributeValues2[sAttributeValues2.Length - 1] = sActionedDate;
+                    sAttributeTypes2[sAttributeTypes2.Length - 1] = "date";
+                }
+
+                if (sActionedBy != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames2, sAttributeNames2.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues2, sAttributeValues2.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes2, sAttributeTypes2.Length + 1);
+                    sAttributeNames2[sAttributeNames2.Length - 1] = "ActionedBy";
+                    sAttributeValues2[sAttributeValues2.Length - 1] = sActionedBy;
+                    sAttributeTypes2[sAttributeTypes2.Length - 1] = "string";
+                }
+
+                sReturn = client2.doccreate(sBatchActionNo, sDesc, sProduct, "local.rs.vsrs05.Regain.BatchAction", sFolder, "A", sAttributeNames, sAttributeValues, sCheckInComments, 0, Convert.ToInt16(sWebAppId));
+                if (sReturn.StartsWith("Success"))
+                {
+                    sReturn = client2.setdocdoclinkwithattributes(sUserId, sBatchNo, sBatchActionNo, sCheckInComments, "local.rs.vsrs05.Regain.ActionLink", 
+                                                                  sAttributeNames2, sAttributeValues2, sAttributeTypes2, Convert.ToInt16(sWebAppId));
+                }
+
+                return sReturn;
+            }
+        }
+
+        public string UpdateBatchActionItem(string sSessionId, string sUserId, string sFullName, string sBatchNo,
+                                               string sBatchActionNo, string sDesc, string sVerify, string sCompletionStatus,
+                                               string sCompletionDate, string sCompletedBy, string sActionedDate, string sActionedBy,
+                                               string sCheckInComments, string sWebAppId)
+        {
+            string sReturn = "";
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
+
+                string[] sAttributeNames2 = new string[1];
+                string[] sAttributeValues2 = new string[1];
+                string[] sAttributeTypes2 = new string[1];
+
+
+                sAttributeNames[0] = "Originator";
+                sAttributeNames[1] = "RegainPortalUser";
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = sFullName;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+
+                if (sVerify != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "description";
+                    sAttributeValues[sAttributeValues.Length - 1] = sVerify;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                int iCompletionStatus = 0;
+
+                if (int.TryParse(sCompletionStatus, out int iCompStat))
+                    iCompletionStatus = Convert.ToInt16(sCompletionStatus);
+
+                sAttributeNames2[0] = "CompletionStatus";
+                sAttributeValues2[0] = iCompletionStatus.ToString();
+                sAttributeTypes2[0] = "long";
+
+
+
+                if (sCompletionDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames2, sAttributeNames2.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues2, sAttributeValues2.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes2, sAttributeTypes2.Length + 1);
+                    sAttributeNames2[sAttributeNames2.Length - 1] = "CompletedDate";
+                    sAttributeValues2[sAttributeValues2.Length - 1] = sCompletionDate;
+                    sAttributeTypes2[sAttributeTypes2.Length - 1] = "date";
+                }
+
+                if (sCompletedBy != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames2, sAttributeNames2.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues2, sAttributeValues2.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes2, sAttributeTypes2.Length + 1);
+                    sAttributeNames2[sAttributeNames2.Length - 1] = "CompletedBy";
+                    sAttributeValues2[sAttributeValues2.Length - 1] = sCompletedBy;
+                    sAttributeTypes2[sAttributeTypes2.Length - 1] = "string";
+                }
+
+                if (sActionedDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames2, sAttributeNames2.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues2, sAttributeValues2.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes2, sAttributeTypes2.Length + 1);
+                    sAttributeNames2[sAttributeNames2.Length - 1] = "ActionedDate";
+                    sAttributeValues2[sAttributeValues2.Length - 1] = sActionedDate;
+                    sAttributeTypes2[sAttributeTypes2.Length - 1] = "date";
+                }
+
+                if (sActionedBy != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames2, sAttributeNames2.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues2, sAttributeValues2.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes2, sAttributeTypes2.Length + 1);
+                    sAttributeNames2[sAttributeNames2.Length - 1] = "ActionedBy";
+                    sAttributeValues2[sAttributeValues2.Length - 1] = sActionedBy;
+                    sAttributeTypes2[sAttributeTypes2.Length - 1] = "string";
+                }
+
+
+                sReturn = client2.setdocattributes(sBatchActionNo, sDesc, sAttributeNames, sAttributeValues, sAttributeTypes,  sCheckInComments, Convert.ToInt16(sWebAppId));
+                if (sReturn.StartsWith("Success"))
+                {
+                    sReturn = client2.updatedocdoclinkwithattributes(sUserId, sBatchNo, sBatchActionNo, sCheckInComments, "local.rs.vsrs05.Regain.ActionLink",
+                                                                  sAttributeNames2, sAttributeValues2, sAttributeTypes2, Convert.ToInt16(sWebAppId));
+                }
+
+                return sReturn;
+            }
+        }
+
+        public string CreateOrganisationItem(string sSessionId, string sUserId, string sFullName, string sOrganisationNo,
+                                               string sDocType, string sName, string sDesc, string sEmail, 
+                                               string sProduct, string sFolder,
+                                               string sCheckInComments, string sWebAppId)
+        {
+            string sReturn = "";
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                string[] sAttributeNames = new string[3];
+                string[] sAttributeValues = new string[3];
+                string[] sAttributeTypes = new string[3];
+
+
+                sAttributeNames[0] = "RegainPortalUser";
+                sAttributeNames[1] = "LongDescription";
+                sAttributeNames[2] = "ContactEmail";
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = sDesc;
+                sAttributeValues[2] = sEmail;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+                sAttributeTypes[2] = "string";
+
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                sReturn = client2.doccreate2(sOrganisationNo, sName, sProduct, sDocType, sFolder, "A", sAttributeNames, sAttributeValues, sCheckInComments, 0, Convert.ToInt16(sWebAppId));
+
+                return sReturn;
+            }
+        }
+
+        public string UpdateOrganisationItem(string sSessionId, string sUserId, string sFullName, string sOrganisationNo,
+                                             string sName, string sDesc, string sEmail, string sCheckInComments, string sWebAppId)
+        {
+            string sReturn = "";
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                string[] sAttributeNames = new string[3];
+                string[] sAttributeValues = new string[3];
+                string[] sAttributeTypes = new string[3];
+
+                sAttributeNames[0] = "RegainPortalUser";
+                sAttributeNames[1] = "LongDescription";
+                sAttributeNames[2] = "ContactEmail";
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = sDesc;
+                sAttributeValues[2] = sEmail;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+                sAttributeTypes[2] = "string";
+
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                sReturn = client2.setdocattributes(sOrganisationNo, sName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, Convert.ToInt16(sWebAppId));
+
+                return sReturn;
+            }
+        }
+
+        public string CreatePersonItem(string sSessionId, string sUserId, string sFullName, string sPersonNo,
+                                               string sDocType, string sName, string sDesc, string sEmail,
+                                               string sProduct, string sFolder,
+                                               string sCheckInComments, string sWebAppId)
+        {
+            string sReturn = "";
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                string[] sAttributeNames = new string[3];
+                string[] sAttributeValues = new string[3];
+                string[] sAttributeTypes = new string[3];
+
+
+                sAttributeNames[0] = "RegainPortalUser";
+                sAttributeNames[1] = "LongDescription";
+                sAttributeNames[2] = "PersonEmail";
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = sDesc;
+                sAttributeValues[2] = sEmail;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+                sAttributeTypes[2] = "string";
+
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                sReturn = client2.doccreate2(sPersonNo, sName, sProduct, sDocType, sFolder, "A", sAttributeNames, sAttributeValues, sCheckInComments, 0, Convert.ToInt16(sWebAppId));
+
+                return sReturn;
+            }
+        }
+
+        public string UpdatePersonItem(string sSessionId, string sUserId, string sFullName, string sOrganisationNo,
+                                             string sName, string sDesc, string sEmail, string sCheckInComments, string sWebAppId)
+        {
+            string sReturn = "";
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                string[] sAttributeNames = new string[3];
+                string[] sAttributeValues = new string[3];
+                string[] sAttributeTypes = new string[3];
+
+                sAttributeNames[0] = "RegainPortalUser";
+                sAttributeNames[1] = "LongDescription";
+                sAttributeNames[2] = "PersonEmail";
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = sDesc;
+                sAttributeValues[2] = sEmail;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+                sAttributeTypes[2] = "string";
+
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                sReturn = client2.setdocattributes(sOrganisationNo, sName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, Convert.ToInt16(sWebAppId));
 
                 return sReturn;
             }
@@ -6025,6 +7364,95 @@ namespace WcfWCService
                 sAttributeTypes[1] = "string";
 
                 return client2.updatepartpartlinkwithattributes(sFullName, sParentPartNo, sChildPartNo, 1, lLineNumber, sCheckinComments, "wt.part.WTPartUsageLink", "ea", sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string RemoveOwnAccreditationItem(string sSessionId, string sUserId, string sFullName, string sOrgOrPersonNo, string sOwnAccreditationNo, string sWorkflowId, string sCheckinComments, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                try
+                {
+                    Update_User_Time(sUserId, sSessionId);
+                    ExampleService.MyJavaService3Client client2 = GetWCService();
+                    long lWorkflowId = Convert.ToInt32(sWorkflowId);
+                    string sReturn = "";
+
+                    sReturn = client2.deletedoctodocusagelink(sFullName, sOrgOrPersonNo, sOwnAccreditationNo, sCheckinComments, Convert.ToInt16(sWebAppId));
+
+                    if (sReturn != "Success")
+                        return sReturn;
+
+                    sReturn = client2.setdocstate(sOwnAccreditationNo, "Closed", Convert.ToInt16(sWebAppId));
+
+                    if (sReturn != "Success")
+                        return sReturn;
+
+                    sReturn = client2.terminateworkflow(lWorkflowId, Convert.ToInt16(sWebAppId));
+
+                    if (sReturn != "Success")
+                        return sReturn;
+
+                    return sReturn;
+                }
+                catch (Exception ex)
+                {
+                    return "Failure^" + ex.Message + "^";
+                }
+            }
+        }
+
+        public string ReassignPartLifecycle(string sSessionId, string sUserId, string sPartNo, string sLifecycleName, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                try
+                {
+                    Update_User_Time(sUserId, sSessionId);
+                    ExampleService.MyJavaService3Client client2 = GetWCService();
+                    string sReturn = "";
+
+                    sReturn = client2.reassignlifecyclepart(sPartNo, sLifecycleName, Convert.ToInt16(sWebAppId));
+
+                    return sReturn;
+                }
+                catch (Exception ex)
+                {
+                    return "Failure^" + ex.Message + "^";
+                }
+            }
+        }
+
+        public string ReassignDocumentLifecycle(string sSessionId, string sUserId, string sDocumentNo, string sLifecycleName, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                try
+                {
+                    Update_User_Time(sUserId, sSessionId);
+                    ExampleService.MyJavaService3Client client2 = GetWCService();
+                    string sReturn = "";
+
+                    sReturn = client2.reassignlifecycledocument(sDocumentNo, sLifecycleName, Convert.ToInt16(sWebAppId));
+
+                    return sReturn;
+                }
+                catch (Exception ex)
+                {
+                    return "Failure^" + ex.Message + "^";
+                }
             }
         }
 
@@ -7353,7 +8781,17 @@ namespace WcfWCService
                     int rowCount = xlRange.Rows.Count;
                     int colCount = xlRange.Columns.Count;
                     int i = 0;
+                    int iExceptionRpt = 0;
                     string sBody = "";
+                    string sActionColumnHeader = "";
+
+                    //Find out if the column 8 (Column H) is the action. It could be a missing terminations sheet which is column 12
+                    sActionColumnHeader = xlRange.Cells[6, 8].Value2.ToString();
+
+                    if (sActionColumnHeader.Equals("To Termination"))
+                        iExceptionRpt = 1;
+                    else
+                        iExceptionRpt = 0;
 
                     for (i = 7; i <= rowCount; i++)
                     {
@@ -7413,12 +8851,19 @@ namespace WcfWCService
                             if (xlRange.Cells[i, 9].Value2 != null)
                                 sToEquipNo = xlRange.Cells[i, 9].Value2.ToString();
 
-                            if (xlRange.Cells[i, 11].Value2 != null)
-                                sAction = xlRange.Cells[i, 11].Value2.ToString();
+                            if (iExceptionRpt == 0)
+                            {
+                                if (xlRange.Cells[i, 11].Value2 != null)
+                                    sAction = xlRange.Cells[i, 11].Value2.ToString();
+                            }
+                            else
+                            {
+                                if (xlRange.Cells[i, 12].Value2 != null)
+                                    sAction = xlRange.Cells[i, 12].Value2.ToString();
+                            }
                         }
                         else
                         {
-
                             if (xlRange.Cells[i, 2].Value2 != null)
                             {
                                 string sCoreRaw = xlRange.Cells[i, 2].Value2.ToString();
@@ -8093,6 +9538,138 @@ namespace WcfWCService
             return rtnCls;
         }
 
+        public bool DocExists(String sDocNo, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select * from vwWindchillLatestDoc where WTDocumentNumber = '" + sDocNo + "' COLLATE SQL_Latin1_General_CP1_CI_AS";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+            bool bRtn = false;
+
+            if (rst.m_RecordCount > 0)
+            {
+                bRtn = true;
+            }
+
+
+            ds.Dispose();
+
+            return bRtn;
+        }
+
+        public string GetDocName(String sDocNo, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select * from vwWindchillLatestDocumentWithType where WTDocumentNumber = '" + sDocNo + "' COLLATE SQL_Latin1_General_CP1_CI_AS";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+            string sRtnValue = "";
+
+            if (rst.m_RecordCount > 0)
+            {
+                sRtnValue = rst.Get_NVarchar(ds, "DocumentName", 0);
+            }
+
+
+            ds.Dispose();
+
+            return sRtnValue;
+        }
+
+
+        public rtnInt DocDocUsageLinkExists(String sParentDocNo, String sChildDocNo, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            int iRtnValue = -1;
+            rtnInt rtnCls = new rtnInt();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select DMBDocumentNumber " +
+                          "from vwWindchillDocumentToDocumentUsage VIO1 " +
+                          "where VIO1.DMADocumentNumber = '" + sParentDocNo + "' " +
+                          "and VIO1.DMBDocumentNumber = '" + sChildDocNo + "'";
+
+            //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+            bool bRtn = false;
+
+            if (rst.m_RecordCount > 0)
+            {
+                iRtnValue = 10;
+                rtnCls.bReturnValue = true;
+                rtnCls.iReturnValue = iRtnValue;
+                ds.Dispose();
+            }
+            else
+            {
+                rtnCls.bReturnValue = false;
+                rtnCls.iReturnValue = iRtnValue;
+            }
+
+            return rtnCls;
+        }
+
+        public rtnString DocDocUsageLinkStringExists(String sParentDocNo, String sChildDocNo, string sAttributeName, string sAttributeValue, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            rtnString rtnCls = new rtnString();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select VIO1.[value] as StringValue " +
+                          "from vwWindchillDocumentUsageStringAttributes VIO1 " +
+                          "where VIO1.DMADocumentNumber = '" + sParentDocNo + "' " +
+                          "and VIO1.DMBDocumentNumber = '" + sChildDocNo + "' " +
+                          "and VIO1.[name] = '" + sAttributeName + "' " +
+                          "and VIO1.[value] = '" + sAttributeValue + "'";
+
+            //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+
+            if (rst.m_RecordCount > 0)
+            {
+                rtnCls.bReturnValue = true;
+                rtnCls.sReturnValue = sAttributeValue;
+                ds.Dispose();
+            }
+            else
+            {
+                rtnCls.bReturnValue = false;
+                rtnCls.sReturnValue = "";
+            }
+
+            return rtnCls;
+        }
+
+        public rtnInt DocDocRefLinkExists(String sParentDocNo, String sChildDocNo, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            int iRtnValue = -1;
+            rtnInt rtnCls = new rtnInt();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select DMBDocNumber " +
+                          "from vwWindchillDocRefDocInfo VIO1 " +
+                          "where VIO1.DMADocNumber = '" + sParentDocNo + "' " +
+                          "and VIO1.DMBDocNumber = '" + sChildDocNo + "'";
+
+            //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+            bool bRtn = false;
+
+            if (rst.m_RecordCount > 0)
+            {
+                iRtnValue = 10;
+                rtnCls.bReturnValue = true;
+                rtnCls.iReturnValue = iRtnValue;
+                ds.Dispose();
+            }
+            else
+            {
+                rtnCls.bReturnValue = false;
+                rtnCls.iReturnValue = iRtnValue;
+            }
+
+            return rtnCls;
+        }
+
+
         public rtnInt GetPartIntAttribute(String sPartNo, String sAttributeName, int iWebAppId)
         {
             RecordSet rst = new RecordSet();
@@ -8395,6 +9972,61 @@ namespace WcfWCService
             return rtnCls;
         }
 
+        public rtnStringArray2 GetProbReportsFromDocument(String sDocumentNumber, int iWebAppId)
+        {
+            String[] sParamNames = new String[1];
+            Object[] objParamValues = new Object[1];
+            int i;
+            rtnStringArray2 rtnClass = new rtnStringArray2();
+
+            StoredProc SP = new StoredProc();
+            RecordSet rs = new RecordSet();
+
+            SP.SetProcName("SP_GetWindchillDocumentProbReports");
+            SP.SetParam("@pvchDocumentNumber", sDocumentNumber);
+            int iRecordCount = SP.RunStoredProcDataSet();
+
+
+            if (iRecordCount < 0)
+            {
+                rtnClass.bReturnValue = false;
+                rtnClass.sReturnValue = "Error in stored procedure SP_GetWindchillDocumentProbReports";
+                return rtnClass;
+            }
+            else
+            {
+                try
+                {
+                    DataSet ds = SP.GetDataSet();
+
+                    if (iRecordCount > 0)
+                    {
+                        Array.Resize<string>(ref rtnClass.sArray, iRecordCount);
+
+                        for (i = 0; i < iRecordCount; i++)
+                        {
+                            string sProbRptNo = rs.Get_NVarchar(ds, "ProbRptNo", i);
+                            rtnClass.sArray[i] = sProbRptNo;
+                        }
+                    }
+                    else
+                    {
+                        Array.Resize<string>(ref rtnClass.sArray, 0);
+                    }
+
+                    rtnClass.bReturnValue = true;
+                    return rtnClass;
+                }
+                catch (Exception e)
+                {
+                    rtnClass.bReturnValue = false;
+                    rtnClass.sReturnValue = e.Message;
+                    return rtnClass;
+                }
+            }
+
+        }
+
         public rtnString GetProductFromJob(string sJob, int iProdOrLib, int iWebAppId)
         {
             RecordSet rst = new RecordSet();
@@ -8585,6 +10217,602 @@ namespace WcfWCService
             return bRtn;
         }
 
+        public string ProcessFixActionSupportLink(string sSessionId, string sUserId, string sFile, string sWebAppId)
+        {
 
+            Excel.Application xlApp = null;
+            Excel.Workbooks xlWbks = null;
+            string sRtn = "";
+            try
+            {
+                int iWebAppId = Convert.ToInt32(sWebAppId);
+
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    Update_User_Time(sUserId, sSessionId);
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+                    string sRecipeints = arrUser[3].ToString();
+
+                    xlApp = new Excel.Application();
+                    xlWbks = xlApp.Workbooks;
+
+                    Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
+                    Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+                    Excel.Range xlRange = xlWorksheet.UsedRange;
+
+                    int rowCount = xlRange.Rows.Count;
+                    int colCount = xlRange.Columns.Count;
+                    int i = 0;
+                    string sBody = "";
+
+                    for (i = 7; i <= rowCount; i++)
+                    {
+                        string sReqdAction = "";
+                        if (xlRange.Cells[i, 1].Value2 != null)
+                            sReqdAction = xlRange.Cells[i, 1].Value2.ToString();
+
+                        string sActionSuppDoc = "";
+                        if (xlRange.Cells[i, 2].Value2 != null)
+                            sActionSuppDoc = xlRange.Cells[i, 2].Value2.ToString();
+
+                        //Remove the reference link 
+                        rtnInt rtnDocRef1 = DocDocRefLinkExists(sReqdAction, sActionSuppDoc, iWebAppId);
+
+                        if (rtnDocRef1.bReturnValue)
+                        {
+                            sRtn = DeleteDocToDocRef(sSessionId, sUserId, sFullName, sActionSuppDoc, sReqdAction, "Removing link to " + sActionSuppDoc, sWebAppId);
+                            if (!sRtn.Equals("Success"))
+                            {
+                                sBody += "Required action " + sReqdAction + " could not be updated because removal link failed." + sRtn + "\r\n";
+                            }
+                        }
+
+                        //Remove the reverse reference link 
+                        rtnInt rtnDocRef2 = DocDocRefLinkExists(sActionSuppDoc, sReqdAction, iWebAppId);
+
+                        if (rtnDocRef2.bReturnValue)
+                        {
+                            sRtn = DeleteDocToDocRef(sSessionId, sUserId, sFullName, sReqdAction, sActionSuppDoc, "Removing link to " + sActionSuppDoc, sWebAppId);
+                            if (!sRtn.Equals("Success"))
+                            {
+                                sBody += "Required action " + sReqdAction + " could not be updated because removal link failed." + sRtn + "\r\n";
+                            }
+                        }
+                        //Add the parent child link
+                        rtnInt rtnDocDoc = DocDocUsageLinkExists(sReqdAction, sActionSuppDoc, iWebAppId);
+
+                        if (!rtnDocDoc.bReturnValue)
+                        {
+                            setDocToDocLink(sSessionId, sUserId, sFullName, sReqdAction, sActionSuppDoc, "Adding link to " + sActionSuppDoc, "wt.doc.WTDocumentUsageLink", sWebAppId);
+                            if (!sRtn.Equals("Success"))
+                            {
+                                sBody += "Required action " + sReqdAction + " could not be updated because adding link failed." + sRtn + "\r\n";
+                            }
+                        }
+                    }
+
+                    xlWorkbook.Close(true);
+                    xlWbks.Close();
+                    xlApp.Quit();
+
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWbks) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorksheet) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlRange) != 0) ;
+                    xlApp = null;
+                    xlWbks = null;
+                    xlWorkbook = null;
+                    xlWorksheet = null;
+                    xlRange = null;
+
+                    //Now email the user
+                    string sSubject = "Processing of File " + sFile;
+                    if (sBody.Length == 0)
+                        sBody = "No issues.";
+                    sBody = "File " + sFile + " was processed with the following issues.\r\n" + sBody;
+                    //                    emailmessage(sSessionId, sUserId, sSubject, sBody, " ", sRecipeints, "", "", sWebAppId);
+
+                    return "Success^" + sBody;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Failure:" + ex.Message + "^";
+            }
+            finally
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
+                {
+                    proc.Kill();
+                }
+            }
+        }
+
+        public string ProcessBulkUpdateDocumentLifecycle(string sSessionId, string sUserId, string sFile, string sWebAppId, string sLatestOrHistory)
+        {
+
+            Excel.Application xlApp = null;
+            Excel.Workbooks xlWbks = null;
+            string sRtn = "";
+            try
+            {
+                int iWebAppId = Convert.ToInt32(sWebAppId);
+                int iLatestOrHistory = Convert.ToInt32(sLatestOrHistory);
+
+
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    Update_User_Time(sUserId, sSessionId);
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+                    string sRecipeints = arrUser[3].ToString();
+
+                    xlApp = new Excel.Application();
+                    xlWbks = xlApp.Workbooks;
+
+                    Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
+                    Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+                    Excel.Range xlRange = xlWorksheet.UsedRange;
+
+                    int rowCount = xlRange.Rows.Count;
+                    int colCount = xlRange.Columns.Count;
+                    int i = 0;
+                    string sBody = "";
+                    string sValidReviewTypeString = GetValidReviewTypeString();
+                    string sCheckinComments = "";
+                    int iCompStatus = 0; //0 = Not Completed, 1 = Completed, 2 = Not Required
+                    double d, d2;
+
+                    for (i = 7; i <= rowCount; i++)
+                    {
+                        string sDocNo = "";
+                        if (xlRange.Cells[i, 1].Value2 != null)
+                            sDocNo = xlRange.Cells[i, 1].Value2.ToString();
+
+                        bool bDocExists = DocExists(sDocNo, iWebAppId);
+
+                        string sDocName = GetDocName(sDocNo, iWebAppId);
+
+                        string sRevision = "";
+                        if (iLatestOrHistory == 1)
+                        {
+                            if (xlRange.Cells[i, 3].Value2 != null)
+                                sRevision = xlRange.Cells[i, 3].Value2.ToString();
+                        }
+
+                        string sReviewerCode = "";
+                        if (iLatestOrHistory == 1)
+                        {
+                            if (xlRange.Cells[i, 4].Value2 != null)
+                                sReviewerCode = xlRange.Cells[i, 4].Value2.ToString();
+                        }
+                        else
+                        {
+                            if (xlRange.Cells[i, 3].Value2 != null)
+                                sReviewerCode = xlRange.Cells[i, 3].Value2.ToString();
+                        }
+
+                        bool bReviewerExists = DocExists(sReviewerCode, iWebAppId);
+
+                        string sReviewerName = GetDocName(sReviewerCode, iWebAppId);
+
+                        string sReviewType = "";
+                        if(iLatestOrHistory == 1)
+                        {
+                            if (xlRange.Cells[i, 6].Value2 != null)
+                                sReviewType = xlRange.Cells[i, 6].Value2.ToString();
+                        }
+                        else
+                        {
+                            if (xlRange.Cells[i, 5].Value2 != null)
+                                sReviewType = xlRange.Cells[i, 5].Value2.ToString();
+                        }
+
+
+                        bool bValidReviewType = IsValidReviewType(sReviewType);
+
+                        string sCompletionDate = "";
+                        if (iLatestOrHistory == 1)
+                        {
+                            if (xlRange.Cells[i, 8].Value2 != null)
+                            {
+                                string sThisCompDate = xlRange.Cells[i, 8].Value2.ToString();
+                                if (!sThisCompDate.Equals(""))
+                                {
+                                    if (Double.TryParse(sThisCompDate, out d2))
+                                    {
+                                        d = Double.Parse(sThisCompDate);
+                                        DateTime dtCompDate = DateTime.FromOADate(d);
+                                        if (dtCompDate.Hour == 0 && dtCompDate.Minute == 0 && dtCompDate.Second == 0)
+                                            sCompletionDate = dtCompDate.ToString("dd/MM/yyyy");
+                                        else
+                                            sCompletionDate = dtCompDate.ToString("dd/MM/yyyy hh:mm:ss tt");
+                                    }
+
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (xlRange.Cells[i, 7].Value2 != null)
+                            {
+                                string sThisCompDate = xlRange.Cells[i, 7].Value2.ToString();
+                                if (!sThisCompDate.Equals(""))
+                                {
+                                    if (Double.TryParse(sThisCompDate, out d2))
+                                    {
+                                        d = Double.Parse(sThisCompDate);
+                                        DateTime dtCompDate = DateTime.FromOADate(d);
+                                        if (dtCompDate.Hour == 0 && dtCompDate.Minute == 0 && dtCompDate.Second == 0)
+                                            sCompletionDate = dtCompDate.ToString("dd/MM/yyyy");
+                                        else
+                                            sCompletionDate = dtCompDate.ToString("dd/MM/yyyy hh:mm:ss tt");
+                                    }
+
+                                }
+                            }
+                        }
+
+                        string sOrigCompDate = sCompletionDate;
+
+                        string sCompletionStatus = "";
+                        if (iLatestOrHistory == 1)
+                        {
+                            if (xlRange.Cells[i, 7].Value2 != null)
+                                sCompletionStatus = xlRange.Cells[i, 7].Value2.ToString();
+                        }
+                        else
+                        {
+                            if (xlRange.Cells[i, 6].Value2 != null)
+                                sCompletionStatus = xlRange.Cells[i, 6].Value2.ToString();
+                        }
+
+
+                        iCompStatus = -1;
+
+                        switch(sCompletionStatus)
+                        {
+                            case "Not Completed" :
+                                iCompStatus = 0;
+                                break;
+                            case "Not Required":
+                                iCompStatus = 1;
+                                break;
+                            case "Completed":
+                                iCompStatus = 2;
+                                break;
+                        }
+
+                        bool bValidDate = false;
+
+                        if (!sCompletionDate.Equals(""))
+                        {
+                            //Now check to see if the date has a time component
+                            if (!sCompletionDate.Contains(" "))
+                            {
+                                //Deemed to be a date only
+                                string sTime = DateTime.Now.ToString("hh:mm:ss tt");
+                                sTime = "12:00:00 AM"; //Override the current time to 12:00 AM because it is putting in at GMT.
+                                sCompletionDate = sCompletionDate + " " + sTime;
+                            }
+
+                            if (ValidDate(sCompletionDate, "dd/MM/yyyy hh:mm:ss tt"))
+                            {
+                                bValidDate = true;
+                            }
+                        }
+                        else
+                            bValidDate = true;
+
+                        string sComments = "";
+                        if (iLatestOrHistory == 1)
+                        {
+                            if (xlRange.Cells[i, 9].Value2 != null)
+                                sComments = xlRange.Cells[i, 9].Value2.ToString();
+                        }
+                        else
+                        {
+                            if (xlRange.Cells[i, 8].Value2 != null)
+                                sComments = xlRange.Cells[i, 8].Value2.ToString();
+                        }
+
+
+
+                        string sAction = "";
+                        if (iLatestOrHistory == 1)
+                        {
+                            if (xlRange.Cells[i, 10].Value2 != null)
+                                sAction = xlRange.Cells[i, 10].Value2.ToString();
+                        }
+                        else
+                        {
+                            if (xlRange.Cells[i, 9].Value2 != null)
+                                sAction = xlRange.Cells[i, 9].Value2.ToString();
+                        }
+
+                        sAction = sAction.ToUpper();
+
+                        rtnString clsReviewerExists = DocDocUsageLinkStringExists(sDocNo, sReviewerCode, "ReviewerTypeName", sReviewType, iWebAppId);
+
+                        if (!sAction.Equals(""))
+                        {
+                            switch (sAction)
+                            {
+                                case "ADD":
+                                    if (clsReviewerExists.bReturnValue)
+                                    {
+                                        sBody += "Row " + i + " document " + sDocNo + " - " + sDocName + " already has a reviewer " + sReviewerCode + " - " + sReviewerName + " with action type " + sReviewType + ". The action ADD is for new reviewer actions. Change the action to UPDATE or DELETE or remove the action." + "\r\n";
+                                    }
+                                    else
+                                    {
+                                        if (!bDocExists)
+                                        {
+
+                                            sBody += "Row " + i + " document " + sDocNo + " does not exist. You cannot ADD." + "\r\n";
+                                        }
+                                        else
+                                        {
+
+                                            if (!bReviewerExists)
+                                            {
+
+                                                sBody += "Row " + i + " reviewer " + sReviewerCode + " does not exist. You cannot ADD." + "\r\n";
+                                            }
+                                            else
+                                            {
+                                                if (!bValidReviewType)
+                                                {
+
+                                                    sBody += "Row " + i + " lifecycle action type " + sReviewType + " does not exist. It must be one of " + sValidReviewTypeString +  ". You cannot ADD." + "\r\n";
+                                                }
+                                                else
+                                                {
+                                                    if (iCompStatus < 0)
+                                                    {
+
+                                                        sBody += "Row " + i + " completion status " + sCompletionStatus + " does not exist. It must be one of Not Completed, Completed, Not Required. You cannot ADD." + "\r\n";
+                                                    }
+                                                    else
+                                                    {
+                                                        //Everything is valid so add the item
+                                                        if (!bValidDate)
+                                                        {
+
+                                                            sBody += "Row " + i + " completion date " + sOrigCompDate + " is invalid. Please correct the completion date. You cannot ADD." + "\r\n";
+                                                        }
+                                                        else
+                                                        {
+                                                            sCheckinComments = "Adding reviewer " + sReviewerName + " with review type " + sReviewType + " to docuemnt " + sDocNo;
+                                                            if(sRevision.Equals(""))
+                                                                sRtn = SetDocReviewer(sSessionId, sUserId, sFullName, sDocNo, sReviewerCode, sCheckinComments, sReviewType, sCompletionDate, iCompStatus.ToString(), sComments, sWebAppId);
+                                                            else
+                                                                sRtn = SetDocReviewerForDocRevision(sSessionId, sUserId, sFullName, sDocNo, sRevision, sReviewerCode, sCheckinComments, sReviewType, sCompletionDate, iCompStatus.ToString(), sComments, sWebAppId);
+                                                            if (!sRtn.Equals("Success"))
+                                                            {
+                                                                sBody += "Document lifecycle review row " + i + " could not be added." + sRtn + "\r\n";
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case "UPDATE":
+                                    if (!bDocExists)
+                                    {
+
+                                        sBody += "Row " + i + " document " + sDocNo + " does not exist. You cannot UPDATE." + "\r\n";
+                                    }
+                                    else
+                                    {
+
+                                        if (!bReviewerExists)
+                                        {
+
+                                            sBody += "Row " + i + " reviewer " + sReviewerCode + " does not exist. You cannot UPDATE." + "\r\n";
+                                        }
+                                        else
+                                        {
+                                            if (!bValidReviewType)
+                                            {
+
+                                                sBody += "Row " + i + " lifecycle action type " + sReviewType + " does not exist. It must be one of " + sValidReviewTypeString + ". You cannot UPDATE." + "\r\n";
+                                            }
+                                            else
+                                            {
+                                                if (iCompStatus < 0)
+                                                {
+
+                                                    sBody += "Row " + i + " completion status " + sCompletionStatus + " does not exist. It must be one of Not Completed, Completed, Not Required. You cannot UPDATE." + "\r\n";
+                                                }
+                                                else
+                                                {
+                                                    if (!bValidDate)
+                                                    {
+
+                                                        sBody += "Row " + i + " completion date " + sOrigCompDate + " is invalid. Please correct the completion date. You cannot UPDATE." + "\r\n";
+                                                    }
+                                                    else
+                                                    {
+                                                        if (!clsReviewerExists.bReturnValue)
+                                                        {
+                                                            sBody += "Row " + i + " document " + sDocNo + " - " + sDocName + " does not have a reviewer " + sReviewerCode + " - " + sReviewerName + " with action type " + sReviewType + ". The action UPDATE is for existing reviewer actions. Change the action to ADD or remove the action." + "\r\n";
+                                                        }
+                                                        else
+                                                        {
+                                                            //Everything is valid so add the item
+                                                            sCheckinComments = "Updating reviewer " + sReviewerName + " with review type " + sReviewType + " to document " + sDocNo;
+                                                            if (sRevision.Equals(""))
+                                                                sRtn = UpdateDocReviewer(sSessionId, sUserId, sFullName, sDocNo, sReviewerCode, sCheckinComments, sReviewType, sCompletionDate, iCompStatus.ToString(), sComments, sWebAppId);
+                                                            else
+                                                                sRtn = UpdateDocReviewerForDocRevision(sSessionId, sUserId, sFullName, sDocNo, sRevision, sReviewerCode, sCheckinComments, sReviewType, sCompletionDate, iCompStatus.ToString(), sComments, sWebAppId);
+                                                            if (!sRtn.Equals("Success"))
+                                                            {
+                                                                sBody += "Document lifecycle review row " + i + " could not be updated." + sRtn + "\r\n";
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                    break;
+                                case "DELETE":
+                                    if (!bDocExists)
+                                    {
+
+                                        sBody += "Row " + i + " document " + sDocNo + " does not exist. You cannot DELETE." + "\r\n";
+                                    }
+                                    else
+                                    {
+
+                                        if (!bReviewerExists)
+                                        {
+
+                                            sBody += "Row " + i + " reviewer " + sReviewerCode + " does not exist. You cannot DELETE." + "\r\n";
+                                        }
+                                        else
+                                        {
+                                            if (!bValidReviewType)
+                                            {
+
+                                                sBody += "Row " + i + " lifecycle action type " + sReviewType + " does not exist. It must be one of " + sValidReviewTypeString + ". You cannot DELETE." + "\r\n";
+                                            }
+                                            else
+                                            {
+                                                if (!clsReviewerExists.bReturnValue)
+                                                {
+                                                    sBody += "Row " + i + " document " + sDocNo + " - " + sDocName + " does not have a reviewer " + sReviewerCode + " - " + sReviewerName + " with action type " + sReviewType + ". The action DELETE is for existing reviewer actions. Change the action to ADD or remove the action." + "\r\n";
+                                                }
+                                                else
+                                                {
+                                                    //Everything is valid so add the item
+                                                    sCheckinComments = "Deleting reviewer " + sReviewerName + " with review type " + sReviewType + " to document " + sDocNo;
+                                                    if (sRevision.Equals(""))
+                                                        sRtn = DeleteDocToDocUsageLinkWithStringAttribute(sSessionId, sUserId, sFullName, sDocNo, sReviewerCode, sCheckinComments, "ReviewerTypeName", sReviewType, sWebAppId);
+                                                    else
+                                                        sRtn = DeleteDocToDocUsageLinkWithStringAttributeForDocRevision(sSessionId, sUserId, sFullName, sDocNo, sRevision, sReviewerCode, sCheckinComments, "ReviewerTypeName", sReviewType, sWebAppId);
+                                                    if (!sRtn.Equals("Success"))
+                                                    {
+                                                        sBody += "Document lifecycle review row " + i + " could not be deleted." + sRtn + "\r\n";
+                                                    }
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                    break;
+                            }
+                        }
+
+                    }
+
+                    xlWorkbook.Close(true);
+                    xlWbks.Close();
+                    xlApp.Quit();
+
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWbks) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorksheet) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlRange) != 0) ;
+                    xlApp = null;
+                    xlWbks = null;
+                    xlWorkbook = null;
+                    xlWorksheet = null;
+                    xlRange = null;
+
+                    //Now email the user
+                    string sSubject = "Processing of File " + sFile;
+                    if (sBody.Length == 0)
+                        sBody = "No issues.";
+                    sBody = "File " + sFile + " was processed with the following issues.\r\n" + sBody;
+                    //                    emailmessage(sSessionId, sUserId, sSubject, sBody, " ", sRecipeints, "", "", sWebAppId);
+
+                    return "Success^" + sBody;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Failure:" + ex.Message + "^";
+            }
+            finally
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
+                {
+                    proc.Kill();
+                }
+            }
+        }
+
+        bool IsValidReviewType(string sReviewType)
+        {
+            int i;
+
+            for(i=0; i< garrReviewTypes.Length; i++)
+            {
+                if(garrReviewTypes[i].ToUpper().Equals(sReviewType.ToUpper()))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        string GetValidReviewTypeString()
+        {
+            int i;
+            string sRtn = "";
+
+            for (i = 0; i < garrReviewTypes.Length; i++)
+            {
+                sRtn += garrReviewTypes[i] + ",";
+            }
+
+            return sRtn.Substring(0,sRtn.Length - 1);
+        }
+
+        bool ValidDate(string sDate, string sFormat)
+        {
+            DateTime dateValue;
+
+            return DateTime.TryParseExact(sDate, sFormat, new System.Globalization.CultureInfo("en-AU"),
+                                          System.Globalization.DateTimeStyles.None,
+                                          out dateValue);
+        }
+
+        DateTime GetDateFromString(string sDate, string sFormat)
+        {
+            DateTime dateValue;
+
+            if (DateTime.TryParseExact(sDate, sFormat, new System.Globalization.CultureInfo("en-AU"),
+                                          System.Globalization.DateTimeStyles.None,
+                                          out dateValue))
+                return dateValue;
+            else
+                return dateValue;
+        }
     }
 }
