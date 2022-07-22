@@ -31,6 +31,12 @@ namespace WcfWCService
             public int iReturnValue;
             public bool bReturnValue;
         }
+        public class rtnFloat
+        {
+            public double dReturnValue;
+            public bool bReturnValue;
+        }
+
         public class rtnString
         {
             public string sReturnValue;
@@ -2682,6 +2688,194 @@ namespace WcfWCService
                 }
 
                 return client2.createpart(sBatchNo, sBatchName, sProductName, sBatchType, sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string SetShippingLoadItem(string sSessionId, string sUserId, string sFullName, string sBookingNo, string sContainerNo, string sContainerTare, string sLoadNo, string sSealNo,
+                                          string sBatchNo, string sBatchLineNumber, string sBatchQty, string sItemComments, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                double dQty;
+                long lNewLineNumber;
+                string sCheckinComments;
+                int iWebAppId = Convert.ToInt16(sWebAppId);
+                rtnString rtnLoad = new rtnString();
+                rtnString rtnJobCode = new rtnString();
+                rtnString rtnProduct = new rtnString();
+                bool bContainerExists;
+                bool bCreateLoad = false;
+                string sJobCode = "";
+                string sProduct = "";
+                string sFolder = "";
+                string sRtn = "";
+                long lLineNumber = Convert.ToInt64(sBatchLineNumber);
+                double dContainerTare = Convert.ToDouble(sContainerTare);
+
+                rtnJobCode = GetPartStringAttribute(sBookingNo, "JobCode", iWebAppId);
+                if(rtnJobCode.bReturnValue)
+                {
+                    sJobCode = rtnJobCode.sReturnValue;
+                }
+
+                rtnProduct = GetProductFromJob(sJobCode, 0, iWebAppId);
+
+                if(rtnProduct.bReturnValue)
+                {
+                    sProduct = rtnProduct.sReturnValue;
+                }
+
+                bContainerExists = PartExists(sContainerNo, iWebAppId);
+
+                if (bContainerExists)
+                {
+                    //Check to see if the tare weight has changed
+                    rtnFloat rtnTW = GetPartFloatAttribute(sContainerNo, "TareWeight", iWebAppId);
+
+                    if(rtnTW.bReturnValue)
+                    {
+                        if(dContainerTare != rtnTW.dReturnValue)
+                        {
+                            string sPartName = "Container " + sContainerNo;
+                            string[] sAttributeNames4 = new string[1];
+                            string[] sAttributeValues4 = new string[1];
+                            string[] sAttributeTypes4 = new string[1];
+
+                            sAttributeNames4[0] = "TareWeight";
+                            sAttributeValues4[0] = sContainerTare;
+                            sAttributeTypes4[0] = "double";
+
+                            sCheckinComments = "Updating tare weight on container " + sContainerNo + " to " + sContainerTare + " tonnes";
+                            sRtn = client2.setpartattributes(sContainerNo, sPartName, sFullName, sAttributeNames4, sAttributeValues4, sAttributeTypes4, sCheckinComments, iWebAppId);
+
+                            if (!sRtn.StartsWith("Success"))
+                            {
+                                sRtn = "Could not update container " + sContainerNo + " with new tare weight " + sContainerTare;
+                            }
+                        }
+                    }
+
+                    rtnLoad = GetShippingLoadExists(sBookingNo, sContainerNo, sSealNo, iWebAppId);
+
+                    //The load doesn't exist so create it
+                    if (!rtnLoad.bReturnValue)
+                    {
+                        bCreateLoad = true;
+                    }
+                }
+                else
+                {
+                    bCreateLoad = true;
+
+                    //Create a container object
+                    sFolder = "Product Shipping/";
+                    string sPartName = "Container " + sContainerNo;
+                    sCheckinComments = "Creating a container " + sContainerNo;
+                    string[] sAttributeNames3 = new string[1];
+                    string[] sAttributeValues3 = new string[1];
+                    string[] sAttributeTypes3 = new string[1];
+
+                    sAttributeNames3[0] = "TareWeight";
+                    sAttributeValues3[0] = sContainerTare;
+                    sAttributeTypes3[0] = "double";
+
+                    //The containers go into a library
+                    sRtn = client2.createpart(sContainerNo, sPartName, "Production Materials", "local.rs.vsrs05.Regain.Mass_Balance_Container", sFolder, sFullName, sAttributeNames3, sAttributeValues3, sAttributeTypes3, sCheckinComments, 1, iWebAppId);
+
+                    if (!sRtn.StartsWith("Success"))
+                    {
+                        sRtn = "Could not create container " + sContainerNo;
+                        bCreateLoad = false;
+                    }
+                }
+
+                if (bCreateLoad)
+                {
+                    if (sProduct.Length > 0)
+                    {
+                        sFolder = sJobCode + " Production Material/" + sJobCode + " Production Material Shipping/";
+                        string sPartName = "Load for " + sBookingNo + " : " + sContainerNo;
+                        sCheckinComments = "Creating a load for booking " + sBookingNo + " and container " + sContainerNo;
+                        string[] sAttributeNames = new string[1];
+                        string[] sAttributeValues = new string[1];
+                        string[] sAttributeTypes = new string[1];
+
+                        sAttributeNames[0] = "ContainerSealNo";
+                        sAttributeValues[0] = sSealNo;
+                        sAttributeTypes[0] = "string";
+                        sRtn = client2.createpart("", sPartName, sProduct, "local.rs.vsrs05.Regain.Mass_Balance_Load", sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, 0, iWebAppId);
+
+                        if (sRtn.StartsWith("Success"))
+                        {
+                            sLoadNo = sRtn.Substring(sRtn.IndexOf("^") + 1, (sRtn.Length - sRtn.IndexOf("^") - 2));
+
+                            //Link to the booking
+                            sCheckinComments = "Creating the link between booking " + sBookingNo + " and load " + sLoadNo;
+                            sRtn = client2.setpartpartlink(sFullName, sBookingNo, sLoadNo, 1.0, sCheckinComments, "wt.part.WTPartUsageLink", "ea", iWebAppId);
+                            if (sRtn.StartsWith("Success"))
+                            {
+
+                                //Link to the container
+                                sCheckinComments = "Creating the link between container " + sContainerNo + " and load " + sLoadNo;
+                                sRtn = client2.setpartpartlink(sFullName, sContainerNo, sLoadNo, 1.0, sCheckinComments, "wt.part.WTPartUsageLink", "ea", iWebAppId);
+                            }
+                            else
+                                sRtn = "Could not create link between booking number " + sBookingNo + " and laod no " + sLoadNo;
+                        }
+                        else
+                            sRtn = "Could not create shipping load object for booking number " + sBookingNo + " and container no " + sContainerNo;
+                    }
+                }
+                else
+                    sRtn = "Success";
+
+                if (sRtn.StartsWith("Success"))
+                {
+                    string[] sAttributeNames2 = new string[1];
+                    string[] sAttributeValues2 = new string[1];
+                    string[] sAttributeTypes2 = new string[1];
+
+                    sAttributeNames2[0] = "Comments";
+                    sAttributeValues2[0] = sItemComments;
+                    sAttributeTypes2[0] = "string";
+
+                    dQty = Convert.ToDouble(sBatchQty);
+                    sCheckinComments = "Setting link to batch " + sBatchNo + " with quantity " + sBatchQty;
+                    if (lLineNumber > 0)
+                    {
+                        sRtn = client2.updatepartpartlinkwithattributes(sFullName, sLoadNo, sBatchNo, dQty, lLineNumber, sCheckinComments, "local.rs.vsrs05.Regain.MBAUsageLink", "tonne",
+                                                                        sAttributeNames2, sAttributeValues2, sAttributeTypes2, iWebAppId);
+                        if (!sRtn.StartsWith("Success"))
+                        {
+                            sRtn = "Could not update link between shipping load number " + sLoadNo + " and batch no " + sBatchNo + " for " + sBatchQty + " tonnes";
+                        }
+                        else
+                            sRtn = "Success^" + sLoadNo + "^" + lLineNumber + "^";
+                    }
+                    else
+                    {
+                        lNewLineNumber = GetNewLineNumber(sLoadNo, iWebAppId);
+
+                        sRtn = client2.setpartpartlinkwithattributes(sFullName, sLoadNo, sBatchNo, dQty, sCheckinComments, "local.rs.vsrs05.Regain.MBAUsageLink", "tonne",
+                                                                     lNewLineNumber, sAttributeNames2, sAttributeValues2, sAttributeTypes2, iWebAppId);
+
+                        if (!sRtn.StartsWith("Success"))
+                        {
+                            sRtn = "Could not create link between shipping load number " + sLoadNo + " and batch no " + sBatchNo + " for " + sBatchQty + " tonnes";
+                        }
+                        else
+                            sRtn = "Success^" + sLoadNo + "^" + lNewLineNumber + "^";
+                    }
+                }
+
+                return sRtn;
             }
         }
 
@@ -9698,6 +9892,34 @@ namespace WcfWCService
             return rtnCls;
         }
 
+        public rtnFloat GetPartFloatAttribute(String sPartNo, String sAttributeName, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            double dRtnValue = -1;
+            rtnFloat rtnCls = new rtnFloat();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select value from vwWindchillPartFloatAttributes where WTPartNumber = '" + sPartNo + "' and name = '" + sAttributeName + "'";
+
+            //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+            bool bRtn = false;
+
+            if (rst.m_RecordCount > 0)
+            {
+                dRtnValue = rst.Get_Float(ds, "value", 0);
+                rtnCls.bReturnValue = true;
+                rtnCls.dReturnValue = dRtnValue;
+                ds.Dispose();
+            }
+            else
+            {
+                rtnCls.bReturnValue = false;
+                rtnCls.dReturnValue = dRtnValue;
+            }
+
+            return rtnCls;
+        }
+
         public rtnString GetPartStringAttribute(String sPartNo, String sAttributeName, int iWebAppId)
         {
             RecordSet rst = new RecordSet();
@@ -10099,6 +10321,33 @@ namespace WcfWCService
             }
 
             return dRtnValue;
+        }
+
+        public rtnString GetShippingLoadExists(String sBookingNo, string sContainerNo, string sSealNo, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            string sRtnValue = "";
+            rtnString rtnCls = new rtnString();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "exec SP_GetWindchillShippingLoadExists @pvchBookingNo = '" + sBookingNo + "', @pvchContainerNo = '" + sContainerNo + "', @pvchSealNo = '" + sSealNo + "'";
+
+            //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+
+            if (rst.m_RecordCount > 0)
+            {
+                sRtnValue = rst.Get_NVarchar(ds, "LoadNo", 0);
+                rtnCls.bReturnValue = true;
+                rtnCls.sReturnValue = sRtnValue;
+                ds.Dispose();
+            }
+            else
+            {
+                rtnCls.bReturnValue = false;
+                rtnCls.sReturnValue = sRtnValue;
+            }
+
+            return rtnCls;
         }
 
         public rtnString GetCableCoreLabel(String sCableCoreNo, int iWebAppId)

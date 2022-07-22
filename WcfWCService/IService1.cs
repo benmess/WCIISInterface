@@ -486,10 +486,16 @@ namespace WcfWCService
                          string sBatchType, string sCheckInComments, string iProdOrLibrary, string dMoisturePercentage, string sProductCode, string sBatchDate, string sWebAppId);
 
         [OperationContract]
+        [WebGet(UriTemplate = "setshippingloaditem/{sSessionId}/{sUserId}/{sFullname}/{sBookingNo}/{sContainerNo}/{sContainerTare}/{sLoadNo}/{sSealNo}/" +
+                              "{sBatchNo}/{sBatchLineNumber}/{sBatchQty}/{sItemComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string SetShippingLoadItem(string sSessionId, string sUserId, string sFullName, string sBookingNo, string sContainerNo, string sContainerTare, string sLoadNo, string sSealNo,
+                                   string sBatchNo, string sBatchLineNumber, string sBatchQty, string sItemComments, string sWebAppId);
+
+        [OperationContract]
         [WebGet(UriTemplate = "createshippingload/{sSessionId}/{sUserId}/{sFullname}/{sBatchNo}/{sBatchName}/{sProductName}/{sFolder}/" +
                               "{sBatchType}/{sCheckInComments}/{iProdOrLibrary}/{dMoisturePercentage}/{sContainerSealNo}/{sProductCode}/{sBatchDate}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string CreateShippingLoad(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sProductName, string sFolder,
-                         string sBatchType, string sCheckInComments, string iProdOrLibrary, string dMoisturePercentage, string sContainerSealNo, 
+                         string sBatchType, string sCheckInComments, string iProdOrLibrary, string dMoisturePercentage, string sContainerSealNo,
                          string sProductCode, string sBatchDate, string sWebAppId);
 
         [OperationContract]
