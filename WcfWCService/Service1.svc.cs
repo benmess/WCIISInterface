@@ -2769,13 +2769,18 @@ namespace WcfWCService
                     {
                         bCreateLoad = true;
                     }
+                    else
+                    {
+                        sLoadNo = rtnLoad.sReturnValue;
+                        sRtn = "Success";
+                    }
                 }
                 else
                 {
                     bCreateLoad = true;
 
                     //Create a container object
-                    sFolder = "Product Shipping/";
+                    sFolder = "Product Shipping/Containers/";
                     string sPartName = "Container " + sContainerNo;
                     sCheckinComments = "Creating a container " + sContainerNo;
                     string[] sAttributeNames3 = new string[1];
@@ -2787,12 +2792,15 @@ namespace WcfWCService
                     sAttributeTypes3[0] = "double";
 
                     //The containers go into a library
-                    sRtn = client2.createpart(sContainerNo, sPartName, "Production Materials", "local.rs.vsrs05.Regain.Mass_Balance_Container", sFolder, sFullName, sAttributeNames3, sAttributeValues3, sAttributeTypes3, sCheckinComments, 1, iWebAppId);
-
-                    if (!sRtn.StartsWith("Success"))
+                    if (!sContainerNo.Equals("LC-"))
                     {
-                        sRtn = "Could not create container " + sContainerNo;
-                        bCreateLoad = false;
+                        sRtn = client2.createpart(sContainerNo, sPartName, "Production Materials", "local.rs.vsrs05.Regain.Mass_Balance_Container", sFolder, sFullName, sAttributeNames3, sAttributeValues3, sAttributeTypes3, sCheckinComments, 1, iWebAppId);
+
+                        if (!sRtn.StartsWith("Success"))
+                        {
+                            sRtn = "Could not create container " + sContainerNo;
+                            bCreateLoad = false;
+                        }
                     }
                 }
 
@@ -2823,18 +2831,69 @@ namespace WcfWCService
                             {
 
                                 //Link to the container
-                                sCheckinComments = "Creating the link between container " + sContainerNo + " and load " + sLoadNo;
-                                sRtn = client2.setpartpartlink(sFullName, sContainerNo, sLoadNo, 1.0, sCheckinComments, "wt.part.WTPartUsageLink", "ea", iWebAppId);
+                                if (!sContainerNo.Equals("LC-"))
+                                {
+
+                                    sCheckinComments = "Creating the link between container " + sContainerNo + " and load " + sLoadNo;
+                                    sRtn = client2.setpartpartlink(sFullName, sContainerNo, sLoadNo, 1.0, sCheckinComments, "wt.part.WTPartUsageLink", "ea", iWebAppId);
+                                }
+                                else
+                                    sRtn = "Success";
                             }
                             else
-                                sRtn = "Could not create link between booking number " + sBookingNo + " and laod no " + sLoadNo;
+                                sRtn = "Could not create link between booking number " + sBookingNo + " and load no " + sLoadNo;
                         }
                         else
                             sRtn = "Could not create shipping load object for booking number " + sBookingNo + " and container no " + sContainerNo;
                     }
                 }
                 else
-                    sRtn = "Success";
+                {
+                    //The load could exist and the container could exist but there might not be a link
+                    rtnInt rtnContainerLoadLink = PartPartLinkExists(sContainerNo, sLoadNo, iWebAppId);
+
+                    if(!rtnContainerLoadLink.bReturnValue)
+                    {
+                        if (!sContainerNo.Equals("LC-"))
+                        {
+
+                            sCheckinComments = "Creating the link between container " + sContainerNo + " and load " + sLoadNo;
+                            sRtn = client2.setpartpartlink(sFullName, sContainerNo, sLoadNo, 1.0, sCheckinComments, "wt.part.WTPartUsageLink", "ea", iWebAppId);
+                        }
+                        else
+                            sRtn = "Success";
+                    }
+
+                    //Also the seal number could have changed
+                    rtnString rtnSealNo = GetPartStringAttribute(sLoadNo, "ContainerSealNo", iWebAppId);
+                    string sExistingSealNo = sSealNo;
+
+                    if (rtnSealNo.bReturnValue)
+                        sExistingSealNo = rtnSealNo.sReturnValue;
+
+                    if(!sExistingSealNo.Equals(sSealNo))
+                    {
+                        string sPartName = "Load " + sLoadNo;
+                        string[] sAttributeNames5 = new string[1];
+                        string[] sAttributeValues5 = new string[1];
+                        string[] sAttributeTypes5 = new string[1];
+
+                        sAttributeNames5[0] = "ContainerSealNo";
+                        sAttributeValues5[0] = sSealNo;
+                        sAttributeTypes5[0] = "double";
+
+                        sCheckinComments = "Updating seal no on load " + sLoadNo + " to " + sSealNo;
+                        sRtn = client2.setpartattributes(sLoadNo, sPartName, sFullName, sAttributeNames5, sAttributeValues5, sAttributeTypes5, sCheckinComments, iWebAppId);
+
+                        if (!sRtn.StartsWith("Success"))
+                        {
+                            sRtn = "Could not update load " + sLoadNo + " with new seal no " + sSealNo;
+                        }
+
+                    }
+                    else
+                        sRtn = "Success";
+                }
 
                 if (sRtn.StartsWith("Success"))
                 {
@@ -2850,8 +2909,26 @@ namespace WcfWCService
                     sCheckinComments = "Setting link to batch " + sBatchNo + " with quantity " + sBatchQty;
                     if (lLineNumber > 0)
                     {
-                        sRtn = client2.updatepartpartlinkwithattributes(sFullName, sLoadNo, sBatchNo, dQty, lLineNumber, sCheckinComments, "local.rs.vsrs05.Regain.MBAUsageLink", "tonne",
-                                                                        sAttributeNames2, sAttributeValues2, sAttributeTypes2, iWebAppId);
+                        rtnFloat rtnQty =   GetPartUsageQuantity(sLoadNo, sBatchNo, lLineNumber, iWebAppId);
+                        double dQtyOld = dQty;
+
+                        if (rtnQty.bReturnValue)
+                            dQtyOld = rtnQty.dReturnValue;
+
+                        rtnString rtnComments = GetPartUsageStringAttribute(sLoadNo, sBatchNo, lLineNumber, "Comments", iWebAppId);
+                        string  sCommentsOld = sItemComments;
+
+                        if (rtnComments.bReturnValue)
+                            sCommentsOld = rtnComments.sReturnValue;
+
+                        if (!sCommentsOld.Equals(sItemComments) || dQty != dQtyOld)
+                        {
+                            sRtn = client2.updatepartpartlinkwithattributes(sFullName, sLoadNo, sBatchNo, dQty, lLineNumber, sCheckinComments, "local.rs.vsrs05.Regain.MBAUsageLink", "tonne",
+                                                                            sAttributeNames2, sAttributeValues2, sAttributeTypes2, iWebAppId);
+                        }
+                        else
+                            sRtn = "Success";
+
                         if (!sRtn.StartsWith("Success"))
                         {
                             sRtn = "Could not update link between shipping load number " + sLoadNo + " and batch no " + sBatchNo + " for " + sBatchQty + " tonnes";
@@ -9927,6 +10004,62 @@ namespace WcfWCService
             rtnString rtnCls = new rtnString();
             rst.SetWebApp(iWebAppId);
             string sSQL = "select value from vwWindchillPartStringAttributes where WTPartNumber = '" + sPartNo + "' and name = '" + sAttributeName + "'";
+
+            //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+            bool bRtn = false;
+
+            if (rst.m_RecordCount > 0)
+            {
+                sRtnValue = rst.Get_NVarchar(ds, "value", 0);
+                rtnCls.bReturnValue = true;
+                rtnCls.sReturnValue = sRtnValue;
+                ds.Dispose();
+            }
+            else
+            {
+                rtnCls.bReturnValue = false;
+                rtnCls.sReturnValue = sRtnValue;
+            }
+
+            return rtnCls;
+        }
+
+        public rtnFloat GetPartUsageQuantity(String sParentPartNo, String sChildPartNo, long lLineNumber, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            double dRtnValue = -1;
+            rtnFloat rtnCls = new rtnFloat();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select Quantity from vwWindchillPartUsageInfo where PMAPartNumber = '" + sParentPartNo + "' and PMBPartNumber = '" + sChildPartNo + "' and LineNumber = " + lLineNumber;
+
+            //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+            bool bRtn = false;
+
+            if (rst.m_RecordCount > 0)
+            {
+                dRtnValue = rst.Get_Float(ds, "Quantity", 0);
+                rtnCls.bReturnValue = true;
+                rtnCls.dReturnValue = dRtnValue;
+                ds.Dispose();
+            }
+            else
+            {
+                rtnCls.bReturnValue = false;
+                rtnCls.dReturnValue = dRtnValue;
+            }
+
+            return rtnCls;
+        }
+
+        public rtnString GetPartUsageStringAttribute(String sParentPartNo, String sChildPartNo, long lLineNumber, string sAttributeName, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            string sRtnValue = "";
+            rtnString rtnCls = new rtnString();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select value from vwWindchillPartUsageStringAttributes where PMAPartNumber = '" + sParentPartNo + "' and PMBPartNumber = '" + sChildPartNo + "' and LineNumber = " + lLineNumber + " and name = '" + sAttributeName + "'";
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
