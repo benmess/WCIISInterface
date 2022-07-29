@@ -2691,7 +2691,8 @@ namespace WcfWCService
             }
         }
 
-        public string SetShippingLoadItem(string sSessionId, string sUserId, string sFullName, string sBookingNo, string sContainerNo, string sContainerTare, string sLoadNo, string sSealNo,
+        public string SetShippingLoadItem(string sSessionId, string sUserId, string sFullName, string sBookingNo, string sContainerNo, 
+                                          string sContainerTare, string sLoadNo, string sLoadLineNumber, string sSealNo,
                                           string sBatchNo, string sBatchLineNumber, string sBatchQty, string sItemComments, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -2708,6 +2709,7 @@ namespace WcfWCService
                 string sCheckinComments;
                 int iWebAppId = Convert.ToInt16(sWebAppId);
                 rtnString rtnLoad = new rtnString();
+                rtnString rtnLoad2 = new rtnString();
                 rtnString rtnJobCode = new rtnString();
                 rtnString rtnProduct = new rtnString();
                 bool bContainerExists;
@@ -2767,17 +2769,50 @@ namespace WcfWCService
                     //The load doesn't exist so create it
                     if (!rtnLoad.bReturnValue)
                     {
-                        bCreateLoad = true;
+                        //It is possible that the booking and load only are connected and you would thus not have to create the load, just link to the container
+                        rtnLoad2 = GetShippingLoadExists(sBookingNo, "", sSealNo, iWebAppId);
+
+                        if (!rtnLoad2.bReturnValue)
+                        {
+                            bCreateLoad = true;
+                        }
+                        else
+                        {
+                            sLoadNo = rtnLoad2.sReturnValue;
+                            sLoadLineNumber = rtnLoad2.iLineNumber.ToString();
+                            sRtn = "Success";
+                        }
                     }
                     else
                     {
-                        sLoadNo = rtnLoad.sReturnValue;
-                        sRtn = "Success";
+                        if(!sLoadNo.Equals(rtnLoad.sReturnValue))
+                        {
+                            //It is possible that the booking and load only are connected and you would thus not have to create the load, just link to the container
+                            rtnLoad2 = GetShippingLoadExists(sBookingNo, "", sSealNo, iWebAppId);
+
+                            if (!rtnLoad2.bReturnValue)
+                            {
+                                bCreateLoad = true;
+                            }
+                            else
+                            {
+                                sLoadNo = rtnLoad2.sReturnValue;
+                                sLoadLineNumber = rtnLoad2.iLineNumber.ToString();
+                                sRtn = "Success";
+                            }
+
+                        }
+                        else
+                        {
+                            sLoadNo = rtnLoad.sReturnValue;
+                            sLoadLineNumber = rtnLoad.iLineNumber.ToString();
+                            sRtn = "Success";
+
+                        }
                     }
                 }
                 else
                 {
-                    bCreateLoad = true;
 
                     //Create a container object
                     sFolder = "Product Shipping/Containers/";
@@ -2791,15 +2826,34 @@ namespace WcfWCService
                     sAttributeValues3[0] = sContainerTare;
                     sAttributeTypes3[0] = "double";
 
-                    //The containers go into a library
                     if (!sContainerNo.Equals("LC-"))
                     {
+                        bCreateLoad = true;
+
+                        //The containers go into a library
                         sRtn = client2.createpart(sContainerNo, sPartName, "Production Materials", "local.rs.vsrs05.Regain.Mass_Balance_Container", sFolder, sFullName, sAttributeNames3, sAttributeValues3, sAttributeTypes3, sCheckinComments, 1, iWebAppId);
 
                         if (!sRtn.StartsWith("Success"))
                         {
                             sRtn = "Could not create container " + sContainerNo;
                             bCreateLoad = false;
+                        }
+                    }
+                    else
+                    {
+                        //Get the load connected directly to the booking
+                        rtnLoad = GetShippingLoadExists(sBookingNo, "", sSealNo, iWebAppId);
+
+                        //The load doesn't exist so create it
+                        if (!rtnLoad.bReturnValue)
+                        {
+                            bCreateLoad = true;
+                        }
+                        else
+                        {
+                            sLoadNo = rtnLoad.sReturnValue;
+                            sLoadLineNumber = rtnLoad.iLineNumber.ToString();
+                            sRtn = "Success";
                         }
                     }
                 }
@@ -2809,8 +2863,8 @@ namespace WcfWCService
                     if (sProduct.Length > 0)
                     {
                         sFolder = sJobCode + " Production Material/" + sJobCode + " Production Material Shipping/";
-                        string sPartName = "Load for " + sBookingNo + " : " + sContainerNo;
-                        sCheckinComments = "Creating a load for booking " + sBookingNo + " and container " + sContainerNo;
+                        string sPartName = "Load for " + sBookingNo;
+                        sCheckinComments = "Creating a load for booking " + sBookingNo;
                         string[] sAttributeNames = new string[1];
                         string[] sAttributeValues = new string[1];
                         string[] sAttributeTypes = new string[1];
@@ -2826,9 +2880,17 @@ namespace WcfWCService
 
                             //Link to the booking
                             sCheckinComments = "Creating the link between booking " + sBookingNo + " and load " + sLoadNo;
-                            sRtn = client2.setpartpartlink(sFullName, sBookingNo, sLoadNo, 1.0, sCheckinComments, "wt.part.WTPartUsageLink", "ea", iWebAppId);
+                            lNewLineNumber = GetNewLineNumber(sBookingNo, iWebAppId);
+
+                            //Set some empty attribute arrays
+                            string[] sAttributeNames6 = new string[0];
+                            string[] sAttributeValues6 = new string[0];
+                            string[] sAttributeTypes6 = new string[0];
+
+                            sRtn = client2.setpartpartlinkwithattributes(sFullName, sBookingNo, sLoadNo, 1.0, sCheckinComments, "wt.part.WTPartUsageLink", "ea", lNewLineNumber, sAttributeNames6, sAttributeValues6, sAttributeTypes6, iWebAppId);
                             if (sRtn.StartsWith("Success"))
                             {
+                                sLoadLineNumber = lNewLineNumber.ToString();
 
                                 //Link to the container
                                 if (!sContainerNo.Equals("LC-"))
@@ -2934,7 +2996,7 @@ namespace WcfWCService
                             sRtn = "Could not update link between shipping load number " + sLoadNo + " and batch no " + sBatchNo + " for " + sBatchQty + " tonnes";
                         }
                         else
-                            sRtn = "Success^" + sLoadNo + "^" + lLineNumber + "^";
+                            sRtn = "Success^" + sLoadNo + "^" + lLineNumber + "^" + sLoadLineNumber + "^";
                     }
                     else
                     {
@@ -2948,7 +3010,7 @@ namespace WcfWCService
                             sRtn = "Could not create link between shipping load number " + sLoadNo + " and batch no " + sBatchNo + " for " + sBatchQty + " tonnes";
                         }
                         else
-                            sRtn = "Success^" + sLoadNo + "^" + lNewLineNumber + "^";
+                            sRtn = "Success^" + sLoadNo + "^" + lNewLineNumber + "^" + sLoadLineNumber + "^";
                     }
                 }
 
@@ -10460,6 +10522,7 @@ namespace WcfWCService
         {
             RecordSet rst = new RecordSet();
             string sRtnValue = "";
+            int iLineNumber = 0;
             rtnString rtnCls = new rtnString();
             rst.SetWebApp(iWebAppId);
             string sSQL = "exec SP_GetWindchillShippingLoadExists @pvchBookingNo = '" + sBookingNo + "', @pvchContainerNo = '" + sContainerNo + "', @pvchSealNo = '" + sSealNo + "'";
@@ -10470,16 +10533,19 @@ namespace WcfWCService
             if (rst.m_RecordCount > 0)
             {
                 sRtnValue = rst.Get_NVarchar(ds, "LoadNo", 0);
+                iLineNumber = rst.Get_Int(ds, "LoadLineNumber", 0);
                 rtnCls.bReturnValue = true;
                 rtnCls.sReturnValue = sRtnValue;
-                ds.Dispose();
+                rtnCls.iLineNumber = iLineNumber;
             }
             else
             {
                 rtnCls.bReturnValue = false;
                 rtnCls.sReturnValue = sRtnValue;
+                rtnCls.iLineNumber = iLineNumber;
             }
 
+            ds.Dispose();
             return rtnCls;
         }
 

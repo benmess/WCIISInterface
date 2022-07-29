@@ -486,9 +486,10 @@ namespace WcfWCService
                          string sBatchType, string sCheckInComments, string iProdOrLibrary, string dMoisturePercentage, string sProductCode, string sBatchDate, string sWebAppId);
 
         [OperationContract]
-        [WebGet(UriTemplate = "setshippingloaditem/{sSessionId}/{sUserId}/{sFullname}/{sBookingNo}/{sContainerNo}/{sContainerTare}/{sLoadNo}/{sSealNo}/" +
+        [WebGet(UriTemplate = "setshippingloaditem/{sSessionId}/{sUserId}/{sFullname}/{sBookingNo}/{sContainerNo}/{sContainerTare}/{sLoadNo}/{sLoadLineNumber}/{sSealNo}/" +
                               "{sBatchNo}/{sBatchLineNumber}/{sBatchQty}/{sItemComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
-        string SetShippingLoadItem(string sSessionId, string sUserId, string sFullName, string sBookingNo, string sContainerNo, string sContainerTare, string sLoadNo, string sSealNo,
+        string SetShippingLoadItem(string sSessionId, string sUserId, string sFullName, string sBookingNo, string sContainerNo, string sContainerTare, 
+                                   string sLoadNo, string sLoadLineNumber, string sSealNo,
                                    string sBatchNo, string sBatchLineNumber, string sBatchQty, string sItemComments, string sWebAppId);
 
         [OperationContract]
