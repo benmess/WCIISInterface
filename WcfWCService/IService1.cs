@@ -277,6 +277,11 @@ namespace WcfWCService
                                  string sCheckInComments, string sPartUsageType, string sUnit, string sWebAppId);
 
         [OperationContract]
+        [WebGet(UriTemplate = "setparttopartlinkwithlinenumber/{sSessionId}/{sUserId}/{sFullname}/{sParentPartNo}/{sChildPartNumber}/{dQty}/{sLineNumber}/{sCheckInComments}/{sPartUsageType}/{sUnit}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string SetPartToPartLinkWithLineNumber(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNumber, 
+                                               string dQty, string sLineNumber, string sCheckInComments, string sPartUsageType, string sUnit, string sWebAppId);
+
+        [OperationContract]
         [WebGet(UriTemplate = "setpartusagelinkqty/{sSessionId}/{sUserId}/{sParentPartNo}/{sChildPartNo}/{dQty}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string SetPartUsageLinkQty(string sSessionId, string sUserId, string sParentPartNo, string sChildPartNo, string dQty, string sWebAppId);
 
@@ -487,10 +492,12 @@ namespace WcfWCService
 
         [OperationContract]
         [WebGet(UriTemplate = "setshippingloaditem/{sSessionId}/{sUserId}/{sFullname}/{sBookingNo}/{sContainerNo}/{sContainerTare}/{sLoadNo}/{sLoadLineNumber}/{sSealNo}/" +
-                              "{sBatchNo}/{sBatchLineNumber}/{sBatchQty}/{sItemComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+                              "{sBatchNo}/{sBatchLineNumber}/{sBatchQty}/{sItemComments}/" +
+                              "{sDispatchDocketNo}/{sDestinationCode}/{sDDDate}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string SetShippingLoadItem(string sSessionId, string sUserId, string sFullName, string sBookingNo, string sContainerNo, string sContainerTare, 
                                    string sLoadNo, string sLoadLineNumber, string sSealNo,
-                                   string sBatchNo, string sBatchLineNumber, string sBatchQty, string sItemComments, string sWebAppId);
+                                   string sBatchNo, string sBatchLineNumber, string sBatchQty, string sItemComments, 
+                                   string sDispatchDocketNo, string sDestinationCode, string sDDDate, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "createshippingload/{sSessionId}/{sUserId}/{sFullname}/{sBatchNo}/{sBatchName}/{sProductName}/{sFolder}/" +
@@ -508,10 +515,10 @@ namespace WcfWCService
 
         [OperationContract]
         [WebGet(UriTemplate = "createshippingbooking/{sSessionId}/{sUserId}/{sFullname}/{sBatchNo}/{sBatchName}/{sProductName}/{sFolder}/" +
-                              "{sBatchType}/{sCheckInComments}/{iProdOrLibrary}/{sProductCode}/{sComments}/{sBatchDate}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+                              "{sBatchType}/{sCheckInComments}/{iProdOrLibrary}/{sProductCode}/{sComments}/{sBatchDate}/{sBookingType}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string CreateShippingBooking(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sProductName, string sFolder,
                          string sBatchType, string sCheckInComments, string iProdOrLibrary,
-                         string sProductCode, string sComments, string sBatchDate, string sWebAppId);
+                         string sProductCode, string sComments, string sBatchDate, string sBookingType, string sWebAppId);
 
 
         [OperationContract]
@@ -553,8 +560,9 @@ namespace WcfWCService
         string UpdateShippingContainer(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sCheckinComments, string dMoisturePercentage, string sBatchDate, string sComments, string dTareWeight, string sProductCode, string sWebAppId);
 
         [OperationContract]
-        [WebGet(UriTemplate = "updateshippingbooking/{sSessionId}/{sUserId}/{sFullname}/{sBatchNo}/{sBatchName}/{sCheckinComments}/{sBatchDate}/{sComments}/{sProductCode}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
-        string UpdateShippingBooking(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sCheckinComments, string sBatchDate, string sComments,string sProductCode, string sWebAppId);
+        [WebGet(UriTemplate = "updateshippingbooking/{sSessionId}/{sUserId}/{sFullname}/{sBatchNo}/{sBatchName}/{sCheckinComments}/{sBatchDate}/{sBookingType}/{sComments}/{sProductCode}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string UpdateShippingBooking(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sCheckinComments, string sBatchDate,
+                                     string sBookingType, string sComments,string sProductCode, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "createprodorder/{sSessionId}/{sUserId}/{sDocNo}/{sDocName}/{sProductName}/{sDocType}/{sFolderNameAndPath}/" +
@@ -797,6 +805,10 @@ namespace WcfWCService
         [OperationContract]
         [WebGet(UriTemplate = "processterminationspreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}/{sFLOrMat}", ResponseFormat = WebMessageFormat.Xml)]
         string ProcessTerminationSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId, string sFLOrMat);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "processshippingbookingspreadsheet/{sSessionId}/{sUserId}/{sPassedBookingNo}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string ProcessShippingBookingSpreadsheet(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "emailmessage/{sSessionId}/{sUserId}/{sSubject}/{sBody}/{sAttachments}/{sRecipients}/{sCCRecipients}/{sBCCRecipients}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]

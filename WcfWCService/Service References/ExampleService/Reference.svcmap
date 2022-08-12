@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="5a633a5f-8295-43e9-9221-b242b720afb5" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="5705d222-6e6b-4dd1-a571-2e314c176169" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
     <EnableDataBinding>true</EnableDataBinding>
     <ExcludedTypes />
     <ImportXmlTypes>false</ImportXmlTypes>
@@ -21,8 +22,8 @@
     <MetadataSource Address="http://vsrs24/Windchill/servlet/MyJavaService3?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="MyJavaService3.xsd" MetadataType="Schema" ID="e76b55ef-2c3f-4665-951b-74991f88ce03" SourceId="1" SourceUrl="http://vsrs24/Windchill/servlet/MyJavaService3?xsd=1" />
-    <MetadataFile FileName="MyJavaService3Service.wsdl" MetadataType="Wsdl" ID="714e26c2-ffdf-4776-a382-b81a80fe09ca" SourceId="1" SourceUrl="http://vsrs24/Windchill/servlet/MyJavaService3?wsdl" />
+    <MetadataFile FileName="MyJavaService3.xsd" MetadataType="Schema" ID="e9ee8ef5-be77-450a-8ef5-38d170014260" SourceId="1" SourceUrl="http://vsrs24/Windchill/servlet/MyJavaService3?xsd=1" />
+    <MetadataFile FileName="MyJavaService3Service.wsdl" MetadataType="Wsdl" ID="922587a3-21c2-4a20-9a5c-6e7d1ddfb927" SourceId="1" SourceUrl="http://vsrs24/Windchill/servlet/MyJavaService3?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

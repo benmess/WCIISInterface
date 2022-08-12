@@ -76,17 +76,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="libman.json" />
     <None Include="packages.config" />
     <None Include="Service References\ExampleService\configuration91.svcinfo" />
     <None Include="Service References\ExampleService\configuration.svcinfo" />
-    <None Include="Service References\ExampleService\MyJavaService1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ExampleService\MyJavaService3.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ExampleService\MyJavaService3Service.wsdl" />
-    <None Include="Service References\ExampleService\MyJavaServiceService1.wsdl" />
     <None Include="Service References\ExampleService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -113,6 +106,220 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Service References\ExampleService\MyJavaService3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ExampleService\MyJavaService3Service.wsdl" />
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.addResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.attachcndocResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.attachdocResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.attachprdocResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.attachurlResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.completetaskResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.copypartResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.createchangenoticeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.createpartResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.createproblemreport2Response.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.createproblemreportResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deleteattachmentResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deletecnattachmentResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deletedoctodocrefResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deletedoctodocrefsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deletedoctodocusagelinkResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deletedoctodocusagelinkwithstringattributeandrevisionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deletedoctodocusagelinkwithstringattributeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deletedoctopartdescribebyResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deletedoctopartdescribebysResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deletedoctopartrefResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deletedoctopartrefsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deletedoctopartrefwithattributeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deletepartpartlinkbydispatchdocketResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deletepartpartlinkbylinenumberResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deletepartpartlinkbyproductionorderResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deletepartpartlinkResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deletepraffectedobjectsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deleteprattachmentResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deleteprobreportResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.deleteurlResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.doccreate2Response.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.doccreateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.emailmessageResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.reassignlifecycledocumentResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.reassignlifecyclepartResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.renamedocumentResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.renamepartResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setdocattributesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setdocattributestringsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setdocdoclinkResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setdocdoclinkwithattributesandrevisionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setdocdoclinkwithattributesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setdocrevisionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setdocrevremoveattachsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setdocstateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setdoctodocrefResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setdoctodocrefsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setdoctopartdescribedbymultiResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setdoctopartdescribedbyResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setdoctopartrefResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setdoctopartrefsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setpartattributesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setpartmultipleusageattributesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setpartpartlinkResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setpartpartlinkwithattributesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setpartreferencedbydoclinkwithattributesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setpartstateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setpartusageattributesfromlinenumberResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setpartusagelinkqtyResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setpraffectedobjectsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setproblemreportattributesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.setproblemreportstateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.terminateworkflowResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.updatedispatchdocketpartpartlinkwithattributesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.updatedocdoclinkwithattributesandrevisionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.updatedocdoclinkwithattributesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.updatepartpartlinkwithattributesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.updatepartreferencedbydoclinkwithattributesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ExampleService\WcfWCService.ExampleService.updateprodorderpartpartlinkwithattributesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -123,9 +330,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Service References\ExampleService\" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">
@@ -146,6 +350,9 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\ExampleService\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -168,6 +375,7 @@
           <CustomServerUrl>
           </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <EnableWcfTestClientForSVCDefaultValue>False</EnableWcfTestClientForSVCDefaultValue>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

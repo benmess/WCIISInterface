@@ -72,6 +72,25 @@ namespace WcfWCService
             public bool bTermsExist;
         }
 
+        public class arrBookingItem
+        {
+            public string sBookingNo;
+            public string sContainerNo;
+            public string sLoadNo;
+            public string sSealNo;
+            public string sBatchNo;
+            public string sDispatchDocketNo;
+            public string sDestinationCode;
+            public string sDDDate;
+            public double dBatchQty;
+            public bool bAlreadyExists = false;
+            public bool bInsert = false;
+            public double dTareWeight;
+            public double dNetWeight;
+            public int iFileRowNo;
+            public int iLineNumber;
+        }
+
         string[] garrReviewTypes = new string[] { "Prepare", "Check", "Review", "Approve" };
 
         public string CookieLogin(string sUsername, string sPassword, string sWebAppId)
@@ -2243,6 +2262,28 @@ namespace WcfWCService
             }
         }
 
+        public string SetPartToPartLinkWithLineNumber(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNumber, string dQty, string sLineNumber, string sCheckInComments, string sPartUsageType, string sUnit, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                double ddQty = Convert.ToDouble(dQty);
+                long lLineNumber = Convert.ToInt64(sLineNumber);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[0];
+                string[] sAttributeValues = new string[0];
+                string[] sAttributeTypes = new string[0];
+
+                return client2.setpartpartlinkwithattributes(sFullName, sParentPartNo, sChildPartNumber, ddQty, sCheckInComments, sPartUsageType, sUnit, lLineNumber,
+                                                             sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+
         public string SetPartUsageLinkQty(string sSessionId, string sUserId, string sParentPartNo, string sChildPartNo, string dQty, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -2693,7 +2734,8 @@ namespace WcfWCService
 
         public string SetShippingLoadItem(string sSessionId, string sUserId, string sFullName, string sBookingNo, string sContainerNo, 
                                           string sContainerTare, string sLoadNo, string sLoadLineNumber, string sSealNo,
-                                          string sBatchNo, string sBatchLineNumber, string sBatchQty, string sItemComments, string sWebAppId)
+                                          string sBatchNo, string sBatchLineNumber, string sBatchQty, string sItemComments, 
+                                          string sDispatchDocketNo, string sDestinationCode, string sDDDate, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -2718,6 +2760,7 @@ namespace WcfWCService
                 string sProduct = "";
                 string sFolder = "";
                 string sRtn = "";
+                string sRtn2 = "";
                 long lLineNumber = Convert.ToInt64(sBatchLineNumber);
                 double dContainerTare = Convert.ToDouble(sContainerTare);
 
@@ -2957,20 +3000,38 @@ namespace WcfWCService
                         sRtn = "Success";
                 }
 
+                string sLoadDDNo = sDispatchDocketNo; //Initialise to the new dispatch docket no. If this is brand new then it will always be the same. If it exists it could have chnaged.
+
                 if (sRtn.StartsWith("Success"))
                 {
-                    string[] sAttributeNames2 = new string[1];
-                    string[] sAttributeValues2 = new string[1];
-                    string[] sAttributeTypes2 = new string[1];
+                    string[] sAttributeNames2 = new string[3];
+                    string[] sAttributeValues2 = new string[3];
+                    string[] sAttributeTypes2 = new string[3];
 
                     sAttributeNames2[0] = "Comments";
                     sAttributeValues2[0] = sItemComments;
                     sAttributeTypes2[0] = "string";
 
+                    sAttributeNames2[1] = "DispatchDocketDate";  //For some reason this has to be the underlying global internal name and not the attribute name against the object type
+                    sAttributeValues2[1] = sDDDate + " 12:00:00 AM";
+                    sAttributeTypes2[1] = "date";
+
+                    sAttributeNames2[2] = "DispatchDocketNo";
+                    sAttributeValues2[2] = sDispatchDocketNo;
+                    sAttributeTypes2[2] = "string";
+
                     dQty = Convert.ToDouble(sBatchQty);
                     sCheckinComments = "Setting link to batch " + sBatchNo + " with quantity " + sBatchQty;
                     if (lLineNumber > 0)
                     {
+                        //Get the dispatch docket number from the load
+                        rtnString rtnLoadDD = GetPartUsageStringAttribute(sLoadNo, sBatchNo, lLineNumber, "DispatchDocketNo", iWebAppId);
+
+                        if (rtnLoadDD.bReturnValue)
+                        {
+                            sLoadDDNo = rtnLoadDD.sReturnValue;
+                        }
+
                         rtnFloat rtnQty =   GetPartUsageQuantity(sLoadNo, sBatchNo, lLineNumber, iWebAppId);
                         double dQtyOld = dQty;
 
@@ -3011,6 +3072,159 @@ namespace WcfWCService
                         }
                         else
                             sRtn = "Success^" + sLoadNo + "^" + lNewLineNumber + "^" + sLoadLineNumber + "^";
+                    }
+                }
+
+                //Create the dispatch docket item
+                if (sRtn.StartsWith("Success"))
+                {
+                    if (!sDispatchDocketNo.Equals(""))
+                    {
+                        bool bDDChanged  = false;
+
+                        //Firstly check that the dispatch docket exists
+                        bool bDispatchDocket = DocExists(sDispatchDocketNo, iWebAppId);
+
+                        if (bDispatchDocket)
+                        {
+                            //This measn teh dispatch docket number has changed from sLoadDDNo to sDispatchDocketNo
+                            if(!sLoadDDNo.Equals(sDispatchDocketNo))
+                            {
+                                bDDChanged = true;
+
+                                //Remove the link to the existing load
+                                sCheckinComments = "Removing link from dispatch docket " + sLoadDDNo;
+                                sRtn2 = DeleteDocToPartRef(sSessionId, sUserId, sFullName, sLoadDDNo, sLoadNo, sCheckinComments, sWebAppId);
+                                if (sRtn2.StartsWith("Success"))
+                                {
+                                    //Remove the link to the existing batch
+                                    sCheckinComments = "Removing link from dispatch docket " + sLoadDDNo;
+                                    sRtn2 = DeleteDocToPartRef(sSessionId, sUserId, sFullName, sLoadDDNo, sBatchNo, sCheckinComments, sWebAppId);
+                                    if (!sRtn2.StartsWith("Success"))
+                                    {
+                                        sRtn2 = "Dispatch docket " + sLoadDDNo + " could not be removed from batch " + sBatchNo + ".^" + sRtn;
+                                        return sRtn2;
+                                    }
+
+                                }
+                                else
+                                {
+                                    sRtn2 = "Dispatch docket " + sLoadDDNo + " could not be removed from load " + sLoadNo + ".^" + sRtn;
+                                    return sRtn2;
+                                }
+                            }
+
+                            //Check to see that this transaction for the dispatch docket doesn't already exist
+                            rtnInt DDTrans = DispatchDocketTransactionExists(sDispatchDocketNo, sBatchNo, sDestinationCode, iWebAppId);
+
+                            //Create the MBA transaction
+                            if (!DDTrans.bReturnValue)
+                            {
+                                lNewLineNumber = GetNewLineNumber(sDestinationCode, iWebAppId);
+                                sCheckinComments = "Creating dispatch docket transaction for " + sDispatchDocketNo;
+
+                                sRtn2 = CreateMBAPartUsageLink(sSessionId, sUserId, sFullName, sDestinationCode, sBatchNo, sBatchQty, lNewLineNumber.ToString(), sCheckinComments,
+                                                               sDispatchDocketNo, sDDDate, "", "", "", sContainerNo, "0", "", sWebAppId);
+                                if (sRtn2.StartsWith("Success"))
+                                {
+                                    //Set the link between the destination and the dispatch docket WTDocument
+                                    sCheckinComments = "Creating link from destination " + sDestinationCode + " and dispatch docket document " + sDispatchDocketNo;
+                                    sRtn2 = SetDocToPartRef(sSessionId, sUserId, sFullName, sDispatchDocketNo, sDestinationCode, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
+
+                                    if (sRtn2.StartsWith("Success"))
+                                    {
+                                        //Set the link between the destination and the dispatch docket WTDocument
+                                        sCheckinComments = "Creating link from batch " + sBatchNo + " and dispatch docket document " + sDispatchDocketNo;
+                                        sRtn2 = SetDocToPartRef(sSessionId, sUserId, sFullName, sDispatchDocketNo, sBatchNo, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
+                                        if (!sRtn2.StartsWith("Success"))
+                                        {
+                                            sRtn2 = "Dispatch docket " + sDispatchDocketNo + " could not be linked to the batch " + sBatchNo + ".^" + sRtn;
+                                            return sRtn2;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        sRtn2 = "Dispatch docket " + sDispatchDocketNo + " could not be linked to the destination " + sDestinationCode + ".^" + sRtn;
+                                        return sRtn2;
+                                    }
+                                }
+                                else
+                                {
+                                    sRtn2 = "Dispatch docket transaction " + sDispatchDocketNo + " could not be created.^" + sRtn;
+                                    return sRtn2;
+                                }
+                            }
+                            else
+                            {
+
+                                if(bDDChanged)
+                                {
+                                    //Remove the link to the existing destination
+                                    sCheckinComments = "Removing link from dispatch docket " + sDestinationCode;
+                                    sRtn2 = DeleteDocToPartRef(sSessionId, sUserId, sFullName, sLoadDDNo, sDestinationCode, sCheckinComments, sWebAppId);
+
+                                    if (!sRtn2.StartsWith("Success"))
+                                    {
+                                        sRtn2 = "Dispatch docket " + sLoadDDNo + " could not be removed from destination " + sDestinationCode + ".^" + sRtn;
+                                        return sRtn2;
+                                    }
+                                }
+
+                                sCheckinComments = "Updating dispatch docket transaction for " + sDispatchDocketNo;
+                                int lOldLineNumber = DDTrans.iReturnValue;
+                                lNewLineNumber = GetNewLineNumber(sDestinationCode, iWebAppId);
+                                sRtn2 = UpdateMBAPartUsageLinkFromDD(sSessionId, sUserId, sFullName, sDestinationCode, sBatchNo, sBatchQty, lOldLineNumber.ToString(),
+                                                                     lOldLineNumber.ToString(), sCheckinComments, sDispatchDocketNo, sDDDate, "", "", sContainerNo, "", "0", sWebAppId);
+                                if (sRtn2.StartsWith("Success"))
+                                {
+                                    if (sRtn2.StartsWith("Success"))
+                                    {
+                                        //Set the link between the destination and the dispatch docket WTDocument
+                                        sCheckinComments = "Creating link from destination " + sDestinationCode + " and dispatch docket document " + sDispatchDocketNo;
+                                        sRtn2 = SetDocToPartRef(sSessionId, sUserId, sFullName, sDispatchDocketNo, sDestinationCode, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
+
+                                        if (sRtn2.StartsWith("Success"))
+                                        {
+                                            //Set the link between the destination and the dispatch docket WTDocument
+                                            sCheckinComments = "Creating link from batch " + sBatchNo + " and dispatch docket document " + sDispatchDocketNo;
+                                            sRtn2 = SetDocToPartRef(sSessionId, sUserId, sFullName, sDispatchDocketNo, sBatchNo, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
+                                            if (!sRtn2.StartsWith("Success"))
+                                            {
+                                                sRtn2 = "Dispatch docket " + sDispatchDocketNo + " could not be linked to the batch " + sBatchNo + ".^" + sRtn;
+                                                return sRtn2;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            sRtn2 = "Dispatch docket " + sDispatchDocketNo + " could not be linked to the destination " + sDestinationCode + ".^" + sRtn;
+                                            return sRtn2;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        sRtn2 = "Dispatch docket transaction " + sDispatchDocketNo + " could not be created.^" + sRtn;
+                                        return sRtn2;
+                                    }
+                                }
+                                else
+                                {
+                                    sRtn2 = "Dispatch docket transaction " + sDispatchDocketNo + " could not be updated.^" + sRtn;
+                                    return sRtn2;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            sRtn2 = "Dispatch docket " + sDispatchDocketNo + " does not exist.^" + sRtn;
+                            return sRtn2;
+                        }
+                    }
+                    else
+                        sRtn2 = "Success";
+
+                    if(!sRtn2.StartsWith("Success"))
+                    {
+                        sRtn = sRtn2;
                     }
                 }
 
@@ -3143,7 +3357,7 @@ namespace WcfWCService
         }
 
         public string CreateShippingBooking(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sProductName, string sFolder, string sBatchType,
-                                            string sCheckInComments, string iProdOrLibrary, string sProductCode, string sComments, string sBatchDate, string sWebAppId)
+                                            string sCheckInComments, string iProdOrLibrary, string sProductCode, string sComments, string sBatchDate, string sBookingType, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -3196,6 +3410,17 @@ namespace WcfWCService
                     sAttributeNames[sAttributeNames.Length - 1] = "BatchDate";
                     sAttributeValues[sAttributeValues.Length - 1] = sBatchDate;
                     sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
+
+                if (sBookingType != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "BookingType";
+                    sAttributeValues[sAttributeValues.Length - 1] = sBookingType;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
                 return client2.createpart(sBatchNo, sBatchName, sProductName, sBatchType, sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
@@ -3605,7 +3830,7 @@ namespace WcfWCService
         }
 
         public string UpdateShippingBooking(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sCheckinComments, 
-                                         string sBatchDate, string sComments, string sProductCode, string sWebAppId)
+                                            string sBatchDate, string sBookingType, string sComments, string sProductCode, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -3655,6 +3880,17 @@ namespace WcfWCService
 
                     sAttributeNames[sAttributeNames.Length - 1] = "JobCode";
                     sAttributeValues[sAttributeValues.Length - 1] = sProductCode;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sBookingType != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "BookingType";
+                    sAttributeValues[sAttributeValues.Length - 1] = sBookingType;
                     sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
@@ -9548,6 +9784,7 @@ namespace WcfWCService
             string sCertVal = env.Get_Environment_String_Value("CertificateValue");
 
             ExampleService.MyJavaService3Client client2 = new ExampleService.MyJavaService3Client();
+            //ExampleService.MyJavaService3Client client2 = new ExampleService.MyJavaService3Client("MyJavaService3"); //Tried this because was 2 endpoints in the web.config file. (Not the web.debug.config or web.release.config)
 
             client2.ClientCredentials.UserName.UserName = "benmess";
             client2.ClientCredentials.UserName.Password = "mo9anaapr!";
@@ -9871,6 +10108,38 @@ namespace WcfWCService
             return rtnCls;
         }
 
+        public rtnInt PartPartLinkWithQtyExists(String sParentPartNo, String sChiildPartNo, double dQty, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            int iRtnValue = -1;
+            rtnInt rtnCls = new rtnInt();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select isnull(VIO1.LineNumber,-1) as LineNumber " +
+                          "from vwWindchillPartUsageInfo VIO1 " +
+                          "where VIO1.PMAPartNumber = '" + sParentPartNo + "' " +
+                          "and VIO1.PMBPartNumber = '" + sChiildPartNo + "' " +
+                          "and Quantity = " + dQty;
+
+            //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+            bool bRtn = false;
+
+            if (rst.m_RecordCount > 0)
+            {
+                iRtnValue = rst.Get_Int(ds, "LineNumber", 0);
+                rtnCls.bReturnValue = true;
+                rtnCls.iReturnValue = iRtnValue;
+                ds.Dispose();
+            }
+            else
+            {
+                rtnCls.bReturnValue = false;
+                rtnCls.iReturnValue = iRtnValue;
+            }
+
+            return rtnCls;
+        }
+
         public bool DocExists(String sDocNo, int iWebAppId)
         {
             RecordSet rst = new RecordSet();
@@ -10002,6 +10271,30 @@ namespace WcfWCService
             return rtnCls;
         }
 
+
+        public rtnInt DispatchDocketTransactionExists(String sDispatchDocketNo, string sBatchNo, string sDestination, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select * from vwWindchillPartUsageStringAttributes where value = '" + sDispatchDocketNo + "' and PMAPartNumber = '" + sDestination + "' and PMBPartNumber = '" + sBatchNo + "'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+            bool bRtn = false;
+            int iRtnValue = -1;
+            rtnInt rtn = new rtnInt();
+
+            if (rst.m_RecordCount > 0)
+            {
+                iRtnValue = rst.Get_Int(ds, "LineNumber", 0);
+                bRtn = true;
+            }
+
+            rtn.bReturnValue = bRtn;
+            rtn.iReturnValue = iRtnValue;
+
+            ds.Dispose();
+
+            return rtn;
+        }
 
         public rtnInt GetPartIntAttribute(String sPartNo, String sAttributeName, int iWebAppId)
         {
@@ -10537,6 +10830,7 @@ namespace WcfWCService
                 rtnCls.bReturnValue = true;
                 rtnCls.sReturnValue = sRtnValue;
                 rtnCls.iLineNumber = iLineNumber;
+                ds.Dispose();
             }
             else
             {
@@ -10545,7 +10839,37 @@ namespace WcfWCService
                 rtnCls.iLineNumber = iLineNumber;
             }
 
-            ds.Dispose();
+            return rtnCls;
+        }
+
+        public rtnString GetShippingContainerExists(String sBookingNo, string sContainerNo, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            string sRtnValue = "";
+            int iLineNumber = 0;
+            rtnString rtnCls = new rtnString();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "exec SP_GetWindchillShippingContainerExists @pvchBookingNo = '" + sBookingNo + "', @pvchContainerNo = '" + sContainerNo + "'";
+
+            //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+
+            if (rst.m_RecordCount > 0)
+            {
+                sRtnValue = rst.Get_NVarchar(ds, "SealNo", 0);
+                iLineNumber = rst.Get_Int(ds, "LoadLineNumber", 0);
+                rtnCls.bReturnValue = true;
+                rtnCls.sReturnValue = sRtnValue;
+                rtnCls.iLineNumber = iLineNumber;
+                ds.Dispose();
+            }
+            else
+            {
+                rtnCls.bReturnValue = false;
+                rtnCls.sReturnValue = sRtnValue;
+                rtnCls.iLineNumber = iLineNumber;
+            }
+
             return rtnCls;
         }
 
@@ -11240,6 +11564,339 @@ namespace WcfWCService
             }
 
             return sRtn.Substring(0,sRtn.Length - 1);
+        }
+
+        public string ProcessShippingBookingSpreadsheet(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sWebAppId)
+        {
+            Excel.Application xlApp = null;
+            Excel.Workbooks xlWbks = null;
+            try
+            {
+                int iWebAppId = Convert.ToInt32(sWebAppId);
+
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    Update_User_Time(sUserId, sSessionId);
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+                    string sRecipeints = arrUser[3].ToString();
+                    string sRtn = "";
+                    double d, d2;
+
+                    xlApp = new Excel.Application();
+                    xlWbks = xlApp.Workbooks;
+
+                    Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
+                    Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+                    Excel.Range xlRange = xlWorksheet.UsedRange;
+
+                    int rowCount = xlRange.Rows.Count;
+                    int colCount = xlRange.Columns.Count;
+                    int i = 0, j = 0, iRowCount;
+                    string sBody = "";
+                    string sBookingNo = "", sDestinationCode= "";
+
+                    if (xlRange.Cells[3, 3].Value2 != null)
+                        sBookingNo = "LB-" + xlRange.Cells[3, 3].Value2.ToString();
+
+                    if (!sBookingNo.Equals(sPassedBookingNo))
+                    {
+                        sBody += "The booking number submitted against this file " + sFile + " is " + sPassedBookingNo + " but the number in cell C3 of the first sheet is " + sBookingNo +
+                                 ". These do not match so the file will not be processed.\r\n";
+                    }
+                    else
+                    {
+
+                        //Get the proper row count because sometimes the range rowcount is wrong
+                        iRowCount = rowCount;
+                        for (i = 5; i <= rowCount; i++)
+                        {
+                            if (xlRange.Cells[i, 1].Value2 == null)
+                            {
+                                iRowCount = i - 2;
+                                break;
+                            }
+                            else
+                            {
+                                string sACell = xlRange.Cells[i, 1].Value2.ToString();
+                                if (!Double.TryParse(sACell, out d2))
+                                {
+                                    iRowCount = i - 1;
+                                    break;
+                                }
+                            }
+                        }
+
+                        rowCount = iRowCount;
+
+                        rtnString rtnDest = GetParentPartOfType(sBookingNo, "local.rs.vsrs05.Regain.Mass_Balance_Destination", iWebAppId);
+
+                        if(rtnDest.bReturnValue)
+                        {
+                            sDestinationCode = rtnDest.sReturnValue;
+                        }
+
+                        arrBookingItem[] arrItems = new arrBookingItem[rowCount - 4];
+                        for (i = 5; i <= rowCount; i++)
+                        {
+                            string sContainerNo = "";
+                            if (xlRange.Cells[i, 6].Value2 != null)
+                                sContainerNo = xlRange.Cells[i, 6].Value2.ToString();
+
+                            string sSealNo = "";
+                            if (xlRange.Cells[i, 8].Value2 != null)
+                                sSealNo = xlRange.Cells[i, 8].Value2.ToString();
+
+                            double dTareWeight = 0.0;
+                            if (xlRange.Cells[i, 7].Value2 != null)
+                                dTareWeight = Convert.ToDouble(xlRange.Cells[i, 7].Value2.ToString());
+
+                            double dNetWeight = 0.0;
+                            if (xlRange.Cells[i, 12].Value2 != null)
+                                dNetWeight = Convert.ToDouble(xlRange.Cells[i, 12].Value2.ToString());
+
+                            string sBatchNo = "";
+                            if (xlRange.Cells[i, 16].Value2 != null)
+                                sBatchNo = xlRange.Cells[i, 16].Value2.ToString();
+
+                            string sDispatchDocketNo = "";
+                            if (xlRange.Cells[i, 15].Value2 != null)
+                                sDispatchDocketNo = "D" + xlRange.Cells[i, 15].Value2.ToString("000000"); //This makes the dispatch docket start with a D and have 6 digits with leading zeros if necessary
+
+                            string sDDDate = "";
+                            if (xlRange.Cells[i, 9].Value2 != null)
+                                sDDDate = xlRange.Cells[i, 9].Value2.ToString();
+
+                            string sDisDocDate = "";
+                            if (!sDDDate.Equals(""))
+                            {
+                                if (Double.TryParse(sDDDate, out d2))
+                                {
+                                    d = Double.Parse(sDDDate);
+                                    DateTime dtDDDate = DateTime.FromOADate(d);
+                                    if (dtDDDate.Hour == 0 && dtDDDate.Minute == 0 && dtDDDate.Second == 0)
+                                        sDisDocDate = dtDDDate.ToString("dd/MM/yyyy");
+                                    else
+                                        sDisDocDate = dtDDDate.ToString("dd/MM/yyyy hh:mm:ss tt");
+                                }
+
+                            }
+
+                            arrItems[i-5] = new arrBookingItem();
+
+                            arrItems[i - 5].sBookingNo = sBookingNo;
+                            arrItems[i - 5].sContainerNo = "LC-" + sContainerNo;
+                            arrItems[i - 5].sSealNo = sSealNo;
+                            arrItems[i - 5].dTareWeight = dTareWeight;
+                            arrItems[i - 5].dNetWeight = dNetWeight;
+                            arrItems[i - 5].sBatchNo = sBatchNo;
+                            arrItems[i - 5].sDispatchDocketNo = sDispatchDocketNo;
+                            arrItems[i - 5].sDestinationCode = sDestinationCode;
+                            arrItems[i - 5].sDDDate = sDisDocDate;
+                            arrItems[i - 5].iFileRowNo = i;
+                            arrItems[i - 5].iLineNumber = -1;
+
+                            rtnString rtnLoad = GetShippingLoadExists(sBookingNo, "LC-" + sContainerNo, sSealNo, iWebAppId);
+
+                            if (rtnLoad.bReturnValue)
+                            {
+                                arrItems[i - 5].sLoadNo = rtnLoad.sReturnValue;
+
+                                rtnInt rtnBatch = PartPartLinkWithQtyExists(arrItems[i - 5].sLoadNo, arrItems[i - 5].sBatchNo, arrItems[i - 5].dNetWeight, iWebAppId);
+                                if (rtnBatch.bReturnValue)
+                                {
+                                    //The laod to batch transaction may exist but not the dispatch docket
+                                    arrItems[i - 5].iLineNumber = rtnBatch.iReturnValue;
+
+                                    //Also the dispatch docket stuff has to exist
+                                    rtnInt rtnDD = DispatchDocketTransactionExists(arrItems[i - 5].sDispatchDocketNo, arrItems[i - 5].sBatchNo, arrItems[i - 5].sDestinationCode, iWebAppId);
+                                    if(rtnDD.bReturnValue)
+                                        arrItems[i - 5].bAlreadyExists = true;
+                                }
+                            }
+
+
+                            //                            sBody += sRowMsg;
+
+                        }
+
+                        //Now we have everything in an array and we know what is already exists and is in the system
+                        //We need to check if anything that does not exist is inconsistent with any other line
+                        for (i = 0; i < rowCount - 4; i++)
+                        {
+                            bool bToBeInserted = true;
+                            if(arrItems[i].bAlreadyExists)
+                            {
+                                sBody += "Item on row " + arrItems[i].iFileRowNo + " is already in the system. The row will be ignored.\r\n";
+                            }
+                            else
+                            {
+                                //If the batch number doesn't exist
+                                if(!PartExists(arrItems[i].sBatchNo, iWebAppId))
+                                {
+                                    sBody += "The batch number " + arrItems[i].sBatchNo + " on row " + arrItems[i].iFileRowNo + " does not exist. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+
+                                }
+
+                                //If the dispatch docket doesn't exist
+                                if (!DocExists(arrItems[i].sDispatchDocketNo, iWebAppId))
+                                {
+                                    sBody += "The dispatch docket " + arrItems[i].sDispatchDocketNo + " on row " + arrItems[i].iFileRowNo + " does not exist. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+
+                                }
+                                //If the seal number is there but no container
+                                if (arrItems[i].sContainerNo.Equals("") && !arrItems[i].sSealNo.Equals(""))
+                                {
+                                    sBody += "The container number on row " + arrItems[i].iFileRowNo + " is empty but the seal number isn't. The seal number will be ignored.\r\n";
+                                    arrItems[i].sSealNo = "";
+                                }
+
+                                //If tare weight is there but no container
+                                if (arrItems[i].sContainerNo.Equals("") && arrItems[i].dTareWeight != 0.0)
+                                {
+                                    sBody += "The container number on row " + arrItems[i].iFileRowNo + " is empty but the tare weight isn't. The tare weight will be ignored.\r\n";
+                                    arrItems[i].dTareWeight = 0.0;
+                                }
+
+                                //If the container is there but no seal number
+                                if (!arrItems[i].sContainerNo.Equals("") && arrItems[i].sSealNo.Equals(""))
+                                {
+                                    sBody += "The seal number on row " + arrItems[i].iFileRowNo + " is empty but the container number isn't. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If the container is there but no tare weight
+                                if (!arrItems[i].sContainerNo.Equals("") && arrItems[i].dTareWeight == 0.0)
+                                {
+                                    sBody += "The tare weight on row " + arrItems[i].iFileRowNo + " is empty but the container number isn't. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If there is no batch number
+                                if (arrItems[i].sBatchNo.Equals(""))
+                                {
+                                    sBody += "The batch number on row " + arrItems[i].iFileRowNo + " is empty. You must provide at least a batch number and a net weight. Row " + arrItems[i].iFileRowNo +
+                                             " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If no net weight
+                                if (arrItems[i].dNetWeight == 0.0)
+                                {
+                                    sBody += "The net weight on row " + arrItems[i].iFileRowNo + " is empty. You must provide at least a batch number and a net weight. Row " + arrItems[i].iFileRowNo +
+                                             " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If there is a container is the system with a different seal number
+                                rtnString rtnContainer = GetShippingContainerExists(arrItems[i].sBookingNo, arrItems[i].sContainerNo, iWebAppId);
+
+                                if(rtnContainer.bReturnValue)
+                                {
+                                    if(!rtnContainer.sReturnValue.Equals(arrItems[i].sSealNo))
+                                    {
+                                        sBody += "The container number on row " + arrItems[i].iFileRowNo + " already exists with seal number " + rtnContainer.sReturnValue + 
+                                                 " but the seal number " + arrItems[i].sSealNo + " is different. Row " + arrItems[i].iFileRowNo +
+                                                 " has not been processed.\r\n";
+                                        arrItems[i].bInsert = false;
+                                        bToBeInserted = false;
+                                    }
+                                }
+
+                                //Look at any earlier rows
+                                for (j = rowCount - 5; j >=0 ; j--)
+                                {
+                                    if (j != i)
+                                    {
+                                        if (arrItems[i].sContainerNo.Equals(arrItems[j].sContainerNo) && !arrItems[i].sSealNo.Equals(arrItems[j].sSealNo))
+                                        {
+                                            sBody += "The container number on rows " + arrItems[i].iFileRowNo + " and " + arrItems[j].iFileRowNo + " match but the respective seal numbers " +
+                                                     arrItems[i].sSealNo + " and " + arrItems[j].sSealNo + " do not match. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                            arrItems[i].bInsert = false;
+                                            bToBeInserted = false;
+                                            break;
+                                        }
+                                    }
+
+                                }
+
+                                if (bToBeInserted)
+                                {
+                                    arrItems[i].bInsert = true;
+                                    arrItems[i].sLoadNo = "";
+                                }
+                            }
+                        }
+
+                        //Now just process all the rows that are valid. bInsert = true
+                        for (i = 0; i < rowCount - 4; i++)
+                        {
+                            if(arrItems[i].bInsert)
+                            {
+                                sRtn = SetShippingLoadItem(sSessionId, sUserId, sFullName, arrItems[i].sBookingNo, arrItems[i].sContainerNo, arrItems[i].dTareWeight.ToString(),
+                                                           arrItems[i].sLoadNo, "-1", arrItems[i].sSealNo, arrItems[i].sBatchNo, arrItems[i].iLineNumber.ToString(), arrItems[i].dNetWeight.ToString(), "", 
+                                                           arrItems[i].sDispatchDocketNo, arrItems[i].sDestinationCode,arrItems[i].sDDDate,sWebAppId);
+
+                                if(!sRtn.StartsWith("Success"))
+                                {
+                                    sBody += "Failed inserting row " + arrItems[i].iFileRowNo + " due to : " + sRtn;
+                                }
+                            }
+                        }
+                    }
+
+                    xlWorkbook.Close(true);
+                    xlWbks.Close();
+                    xlApp.Quit();
+
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWbks) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorksheet) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlRange) != 0) ;
+                    xlApp = null;
+                    xlWbks = null;
+                    xlWorkbook = null;
+                    xlWorksheet = null;
+                    xlRange = null;
+
+                    //Now email the user
+                    string sSubject = "Processing of File " + sFile + " for Shipping Booking Items Import";
+                    if (sBody.Length == 0)
+                        sBody = "No issues.";
+                    sBody = "File " + sFile + " for Shipping Booking Items Import was processed with the following issues.\r\n" + sBody;
+                    //                    emailmessage(sSessionId, sUserId, sSubject, sBody, " ", sRecipeints, "", "", sWebAppId);
+
+                    return "Success^" + sBody;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Failure:" + ex.Message + "^";
+            }
+            finally
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
+                {
+                    proc.Kill();
+                }
+            }
         }
 
         bool ValidDate(string sDate, string sFormat)
