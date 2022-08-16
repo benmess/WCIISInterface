@@ -443,6 +443,11 @@ namespace WcfWCService
                                                string sBatchNo, string sWebAppId);
 
         [OperationContract]
+        [WebGet(UriTemplate = "updatembadispatchdocket/{sSessionId}/{sUserId}/{sFullname}/{sParentPartNo}/{sChildPartNo}/{sLineNumber}/{sDDno}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string UpdateMBADispatchDocketNo(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNo,
+                                         string sLineNumber, string sDDno, string sWebAppId);
+
+        [OperationContract]
         [WebGet(UriTemplate = "updatembatransactioninvoicestatus/{sSessionId}/{sUserId}/{sFullname}/{sParentPartNo}/{sChildPartNo}/{sLineNumber}/{sInvoiceStatus}/{sInvoiceNo}/{sBatchList}/{sCutoffDate}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string UpdateMBATransactionInvoiceStatus(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNo, string sLineNumber,
                                                  string sInvoiceStatus, string sInvoiceNo, string sBatchList, string sCutoffDate, string sWebAppId);
