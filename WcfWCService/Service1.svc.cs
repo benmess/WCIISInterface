@@ -2790,7 +2790,7 @@ namespace WcfWCService
                 string sProduct = "";
                 string sFolder = "";
                 string sRtn = "";
-                string sRtn2 = "";
+                string sRtn2 = "", sCrossRef = "";
                 long lLineNumber = Convert.ToInt64(sBatchLineNumber);
                 double dContainerTare = Convert.ToDouble(sContainerTare);
 
@@ -3062,21 +3062,26 @@ namespace WcfWCService
                             sLoadDDNo = rtnLoadDD.sReturnValue;
                         }
 
-                        rtnFloat rtnQty =   GetPartUsageQuantity(sLoadNo, sBatchNo, lLineNumber, iWebAppId);
+                        rtnFloat rtnQty = GetPartUsageQuantity(sLoadNo, sBatchNo, lLineNumber, iWebAppId);
                         double dQtyOld = dQty;
 
                         if (rtnQty.bReturnValue)
                             dQtyOld = rtnQty.dReturnValue;
 
                         rtnString rtnComments = GetPartUsageStringAttribute(sLoadNo, sBatchNo, lLineNumber, "Comments", iWebAppId);
-                        string  sCommentsOld = sItemComments;
+                        string sCommentsOld = sItemComments;
 
                         if (rtnComments.bReturnValue)
                             sCommentsOld = rtnComments.sReturnValue;
 
-                        if (!sCommentsOld.Equals(sItemComments) || dQty != dQtyOld)
+                        rtnString rtnTransDate = GetPartUsageDateAttribute(sLoadNo, sBatchNo, lLineNumber, "DispatchDocketDate", true, iWebAppId);
+                        string sTransDateOld = sDDDate;
+                        sTransDateOld = rtnTransDate.sReturnValue; //Do this regardless, in case the date has never been set or is set to blank
+
+                        if (!sCommentsOld.Equals(sItemComments) || dQty != dQtyOld || !sTransDateOld.Equals(sDDDate))
                         {
-                            sRtn = client2.updatepartpartlinkwithattributes(sFullName, sLoadNo, sBatchNo, dQty, lLineNumber, sCheckinComments, "local.rs.vsrs05.Regain.MBAUsageLink", "tonne",
+                            sRtn = client2.updatepartpartlinkwithattributes(sFullName, sLoadNo, sBatchNo, dQty, lLineNumber, sCheckinComments, 
+                                                                            "local.rs.vsrs05.Regain.MBAUsageLink", "tonne",
                                                                             sAttributeNames2, sAttributeValues2, sAttributeTypes2, iWebAppId);
                         }
                         else
@@ -3092,6 +3097,7 @@ namespace WcfWCService
                     else
                     {
                         lNewLineNumber = GetNewLineNumber(sLoadNo, iWebAppId);
+                        lLineNumber = lNewLineNumber;
 
                         sRtn = client2.setpartpartlinkwithattributes(sFullName, sLoadNo, sBatchNo, dQty, sCheckinComments, "local.rs.vsrs05.Regain.MBAUsageLink", "tonne",
                                                                      lNewLineNumber, sAttributeNames2, sAttributeValues2, sAttributeTypes2, iWebAppId);
@@ -3108,8 +3114,9 @@ namespace WcfWCService
                 //Create the dispatch docket item
                 if (sRtn.StartsWith("Success"))
                 {
+                    sCrossRef = sLoadNo + "-" + lLineNumber; //This is the load to the batch line number
                     //Check to see that this transaction for the dispatch docket doesn't already exist
-                    rtnInt DDTrans = DispatchDocketTransactionExists(sDispatchDocketNo, sBatchNo, sDestinationCode, iWebAppId);
+                    rtnInt DDTrans = DestinationTransactionExists(sCrossRef, sBatchNo, sDestinationCode, iWebAppId);
 
                     if (!sDispatchDocketNo.Equals(""))
                     {
@@ -3120,7 +3127,7 @@ namespace WcfWCService
 
                         if (bDispatchDocket)
                         {
-                            //This measn teh dispatch docket number has changed from sLoadDDNo to sDispatchDocketNo
+                            //This measn the dispatch docket number has changed from sLoadDDNo to sDispatchDocketNo
                             if(!sLoadDDNo.Equals(sDispatchDocketNo))
                             {
                                 bDDChanged = true;
@@ -3152,14 +3159,48 @@ namespace WcfWCService
                             {
                                 lNewLineNumber = GetNewLineNumber(sDestinationCode, iWebAppId);
                                 sCheckinComments = "Creating dispatch docket transaction for " + sDispatchDocketNo;
+                                sCrossRef = sLoadNo + "-" + lLineNumber;
 
-                                sRtn2 = CreateMBAPartUsageLink(sSessionId, sUserId, sFullName, sDestinationCode, sBatchNo, sBatchQty, lNewLineNumber.ToString(), sCheckinComments,
-                                                               sDispatchDocketNo, sDDDate, "", "", "", sContainerNo, "0", "", sWebAppId);
+                                string[] sAttributeNames3 = new string[3];
+                                string[] sAttributeValues3 = new string[3];
+                                string[] sAttributeTypes3 = new string[3];
+
+                                sAttributeNames3[0] = "DispatchDocketDate";  //For some reason this has to be the underlying global internal name and not the attribute name against the object type
+                                sAttributeValues3[0] = sDDDate + " 12:00:00 AM";
+                                sAttributeTypes3[0] = "date";
+
+                                sAttributeNames3[1] = "DispatchDocketNo";
+                                sAttributeValues3[1] = sDispatchDocketNo;
+                                sAttributeTypes3[1] = "string";
+
+                                sAttributeNames3[2] = "CrossRef";
+                                sAttributeValues3[2] = sCrossRef;
+                                sAttributeTypes3[2] = "string";
+
+                                long lNewDestLineNumber = GetNewLineNumber(sDestinationCode, iWebAppId);
+
+
+                                if (!sDestinationCode.Equals(""))
+                                {
+                                    sRtn2 = client2.setpartpartlinkwithattributes(sFullName, sDestinationCode, sBatchNo, Convert.ToDouble(sBatchQty), sCheckinComments,
+                                                                                  "local.rs.vsrs05.Regain.MBAUsageLink", "tonne", lNewDestLineNumber,
+                                                                                  sAttributeNames3, sAttributeValues3, sAttributeTypes3, iWebAppId);
+                                }
+                                else
+                                    sRtn2 = "Success";
+
+                                //sRtn2 = CreateMBAPartUsageLink(sSessionId, sUserId, sFullName, sDestinationCode, sBatchNo, sBatchQty, lNewLineNumber.ToString(), sCheckinComments,
+                                //                               sDispatchDocketNo, sDDDate + " 12:00:00 AM", "", "", "", sContainerNo, "0", "", sWebAppId);
                                 if (sRtn2.StartsWith("Success"))
                                 {
-                                    //Set the link between the destination and the dispatch docket WTDocument
-                                    sCheckinComments = "Creating link from destination " + sDestinationCode + " and dispatch docket document " + sDispatchDocketNo;
-                                    sRtn2 = SetDocToPartRef(sSessionId, sUserId, sFullName, sDispatchDocketNo, sDestinationCode, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
+                                    if (!sDestinationCode.Equals(""))
+                                    {
+                                        //Set the link between the destination and the dispatch docket WTDocument
+                                        sCheckinComments = "Creating link from destination " + sDestinationCode + " and dispatch docket document " + sDispatchDocketNo;
+                                        sRtn2 = SetDocToPartRef(sSessionId, sUserId, sFullName, sDispatchDocketNo, sDestinationCode, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
+                                    }
+                                    else
+                                        sRtn2 = "Success";
 
                                     if (sRtn2.StartsWith("Success"))
                                     {
@@ -3183,7 +3224,7 @@ namespace WcfWCService
                                             return sRtn2;
                                         }
 
-                                        sRtn += lNewLineNumber + "^";
+                                        sRtn += lNewDestLineNumber + "^";
                                     }
                                     else
                                     {
@@ -3213,44 +3254,59 @@ namespace WcfWCService
                                     }
                                 }
 
+                                sCrossRef = sLoadNo + "-" + lLineNumber;
                                 sCheckinComments = "Updating dispatch docket transaction for " + sDispatchDocketNo;
-                                int lOldLineNumber = DDTrans.iReturnValue;
-                                lNewLineNumber = GetNewLineNumber(sDestinationCode, iWebAppId);
-                                sRtn2 = UpdateMBAPartUsageLinkFromDD(sSessionId, sUserId, sFullName, sDestinationCode, sBatchNo, sBatchQty, lOldLineNumber.ToString(),
-                                                                     lOldLineNumber.ToString(), sCheckinComments, sDispatchDocketNo, sDDDate, "", "", sContainerNo, "", "0", sWebAppId);
+                                long lOldDestLineNumber = (long)DDTrans.iReturnValue;
+                                string[] sAttributeNames3 = new string[3];
+                                string[] sAttributeValues3 = new string[3];
+                                string[] sAttributeTypes3 = new string[3];
+
+                                sAttributeNames3[0] = "DispatchDocketDate";  //For some reason this has to be the underlying global internal name and not the attribute name against the object type
+                                sAttributeValues3[0] = sDDDate + " 12:00:00 AM";
+                                sAttributeTypes3[0] = "date";
+
+                                sAttributeNames3[1] = "DispatchDocketNo";
+                                sAttributeValues3[1] = sDispatchDocketNo;
+                                sAttributeTypes3[1] = "string";
+
+                                sAttributeNames3[2] = "CrossRef";
+                                sAttributeValues3[2] = sCrossRef;
+                                sAttributeTypes3[2] = "string";
+
+                                sRtn2 = client2.updatepartpartlinkwithattributes(sFullName, sDestinationCode, sBatchNo, Convert.ToDouble(sBatchQty), lOldDestLineNumber,
+                                                                                 sCheckinComments, "local.rs.vsrs05.Regain.MBAUsageLink", "tonne",
+                                                                                 sAttributeNames3, sAttributeValues3, sAttributeTypes3, iWebAppId);
+
+
+
+                                //sRtn2 = UpdateMBAPartUsageLinkFromDD(sSessionId, sUserId, sFullName, sDestinationCode, sBatchNo, sBatchQty, lOldLineNumber.ToString(),
+                                //                                     lOldLineNumber.ToString(), sCheckinComments, sDispatchDocketNo, sDDDate + " 12:00:00 AM", "", "", sContainerNo, "", "0", sWebAppId);
+
                                 if (sRtn2.StartsWith("Success"))
                                 {
+                                    //Set the link between the destination and the dispatch docket WTDocument
+                                    sCheckinComments = "Creating link from destination " + sDestinationCode + " and dispatch docket document " + sDispatchDocketNo;
+                                    sRtn2 = SetDocToPartRef(sSessionId, sUserId, sFullName, sDispatchDocketNo, sDestinationCode, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
+
                                     if (sRtn2.StartsWith("Success"))
                                     {
                                         //Set the link between the destination and the dispatch docket WTDocument
-                                        sCheckinComments = "Creating link from destination " + sDestinationCode + " and dispatch docket document " + sDispatchDocketNo;
-                                        sRtn2 = SetDocToPartRef(sSessionId, sUserId, sFullName, sDispatchDocketNo, sDestinationCode, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
-
-                                        if (sRtn2.StartsWith("Success"))
+                                        sCheckinComments = "Creating link from batch " + sBatchNo + " and dispatch docket document " + sDispatchDocketNo;
+                                        sRtn2 = SetDocToPartRef(sSessionId, sUserId, sFullName, sDispatchDocketNo, sBatchNo, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
+                                        if (!sRtn2.StartsWith("Success"))
                                         {
-                                            //Set the link between the destination and the dispatch docket WTDocument
-                                            sCheckinComments = "Creating link from batch " + sBatchNo + " and dispatch docket document " + sDispatchDocketNo;
-                                            sRtn2 = SetDocToPartRef(sSessionId, sUserId, sFullName, sDispatchDocketNo, sBatchNo, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
-                                            if (!sRtn2.StartsWith("Success"))
-                                            {
-                                                sRtn2 = "Dispatch docket " + sDispatchDocketNo + " could not be linked to the batch " + sBatchNo + ".^" + sRtn;
-                                                return sRtn2;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            sRtn2 = "Dispatch docket " + sDispatchDocketNo + " could not be linked to the destination " + sDestinationCode + ".^" + sRtn;
+                                            sRtn2 = "Dispatch docket " + sDispatchDocketNo + " could not be linked to the batch " + sBatchNo + ".^" + sRtn;
                                             return sRtn2;
                                         }
-
-                                        sRtn += lOldLineNumber + "^";
-
                                     }
                                     else
                                     {
-                                        sRtn2 = "Dispatch docket transaction " + sDispatchDocketNo + " could not be created.^" + sRtn;
+                                        sRtn2 = "Dispatch docket " + sDispatchDocketNo + " could not be linked to the destination " + sDestinationCode + ".^" + sRtn;
                                         return sRtn2;
                                     }
+
+                                    sRtn += lOldDestLineNumber + "^";
+
                                 }
                                 else
                                 {
@@ -3268,10 +3324,65 @@ namespace WcfWCService
                     else
                     {
                         //Need to add the destination line number should it not have been created
-                        if(DDTrans.bReturnValue)
+                        if (DDTrans.bReturnValue)
                         {
                             int lExistingLineNumber = DDTrans.iReturnValue;
                             sRtn += lExistingLineNumber + "^";
+
+                        }
+                        else
+                        {
+                            //If we are creating a destination at this point it is for a bulk shipment item and
+                            //we need to make the dispatch docket on the transaction a combination of the
+                            //load number and load to batch line number so we can match the transaction
+                            if (!sDestinationCode.Equals(""))
+                            {
+                                sCrossRef = sLoadNo + "-" + lLineNumber;
+                                //Check to see that this transaction for the dispatch docket doesn't already exist
+                                rtnInt DDTrans2 = DestinationTransactionExists(sCrossRef, sBatchNo, sDestinationCode, iWebAppId);
+
+                                if (!DDTrans2.bReturnValue)
+                                {
+                                    lNewLineNumber = GetNewLineNumber(sDestinationCode, iWebAppId);
+                                    sCheckinComments = "Creating destination to batch transaction for laod transaction with line number " + sDispatchDocketNo;
+
+                                    string[] sAttributeNames3 = new string[2];
+                                    string[] sAttributeValues3 = new string[2];
+                                    string[] sAttributeTypes3 = new string[2];
+
+                                    sAttributeNames3[0] = "DispatchDocketDate";  //For some reason this has to be the underlying global internal name and not the attribute name against the object type
+                                    sAttributeValues3[0] = sDDDate + " 12:00:00 AM";
+                                    sAttributeTypes3[0] = "date";
+
+                                    sAttributeNames3[1] = "CrossRef";
+                                    sAttributeValues3[1] = sDispatchDocketNo;
+                                    sAttributeTypes3[1] = "string";
+
+                                    long lNewDestLineNumber = GetNewLineNumber(sDestinationCode, iWebAppId);
+
+                                    sRtn2 = client2.setpartpartlinkwithattributes(sFullName, sDestinationCode, sBatchNo, Convert.ToDouble(sBatchQty), sCheckinComments,
+                                                                                  "local.rs.vsrs05.Regain.MBAUsageLink", "tonne", lNewDestLineNumber,
+                                                                                  sAttributeNames3, sAttributeValues3, sAttributeTypes3, iWebAppId);
+                                    if (sRtn2.StartsWith("Success"))
+                                    {
+                                        sRtn += lNewDestLineNumber + "^"; //New destination batch transaction based on dispatch docket as LoadNo-NewLoadBatchLineNumber
+                                    }
+                                    else
+                                    {
+                                        sRtn2 = "Destination to batch transaction " + sDestinationCode + "/" + sBatchNo + " could not be created.^" + sRtn;
+                                        return sRtn2;
+                                    }
+
+                                }
+                                else
+                                {
+                                    sRtn += DDTrans2.iReturnValue + "^"; //Existing destination batch transaction based on LoadNo-LoadBatchLineNumber
+                                }
+                            }
+                            else
+                            {
+                                sRtn += "-1" + "^"; //No destination batch transaction
+                            }
 
                         }
                         sRtn2 = "Success";
@@ -4929,7 +5040,7 @@ namespace WcfWCService
                 string[] sAttributeTypes = new string[7];
 
                 sAttributeNames[0] = "DispatchDocketNo";
-                sAttributeNames[1] = "DispatchDocketDate"; //For some reason this has to be the underlying global attribute name
+                sAttributeNames[1] = "DispatchDate"; //For some reason this has to be the underlying global attribute name
                 sAttributeNames[2] = "UsageComments";
                 sAttributeNames[3] = "ProdOrderNo";
                 sAttributeNames[4] = "ContainerId";
@@ -10352,6 +10463,31 @@ namespace WcfWCService
             return rtn;
         }
 
+        public rtnInt DestinationTransactionExists(String sCrossRef, string sBatchNo, string sDestination, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select * from vwWindchillPartUsageStringAttributes where value = '" + sCrossRef + "' and PMAPartNumber = '" + sDestination +
+                          "' and PMBPartNumber = '" + sBatchNo + "' and name = 'CrossRef'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+            bool bRtn = false;
+            int iRtnValue = -1;
+            rtnInt rtn = new rtnInt();
+
+            if (rst.m_RecordCount > 0)
+            {
+                iRtnValue = rst.Get_Int(ds, "LineNumber", 0);
+                bRtn = true;
+            }
+
+            rtn.bReturnValue = bRtn;
+            rtn.iReturnValue = iRtnValue;
+
+            ds.Dispose();
+
+            return rtn;
+        }
+
         public rtnInt GetPartIntAttribute(String sPartNo, String sAttributeName, int iWebAppId)
         {
             RecordSet rst = new RecordSet();
@@ -10479,6 +10615,35 @@ namespace WcfWCService
             if (rst.m_RecordCount > 0)
             {
                 sRtnValue = rst.Get_NVarchar(ds, "value", 0);
+                rtnCls.bReturnValue = true;
+                rtnCls.sReturnValue = sRtnValue;
+                ds.Dispose();
+            }
+            else
+            {
+                rtnCls.bReturnValue = false;
+                rtnCls.sReturnValue = sRtnValue;
+            }
+
+            return rtnCls;
+        }
+
+        public rtnString GetPartUsageDateAttribute(String sParentPartNo, String sChildPartNo, long lLineNumber, string sAttributeName, bool bDateOnly, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            string sRtnValue = "";
+            rtnString rtnCls = new rtnString();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select value from vwWindchillPartUsageDateAttributes where PMAPartNumber = '" + sParentPartNo + "' and PMBPartNumber = '" + sChildPartNo + "' and LineNumber = " + lLineNumber + " and name = '" + sAttributeName + "'";
+
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+
+            if (rst.m_RecordCount > 0)
+            {
+                if (bDateOnly)
+                    sRtnValue = rst.Get_Date(ds, "value", 0).Value.ToString("dd/MM/yyyy");
+                else
+                    sRtnValue = rst.Get_Date(ds, "value", 0).Value.ToString("dd/MM/yyyy hh:mm:ss tt");
                 rtnCls.bReturnValue = true;
                 rtnCls.sReturnValue = sRtnValue;
                 ds.Dispose();
@@ -11689,12 +11854,12 @@ namespace WcfWCService
 
                         rowCount = iRowCount;
 
-                        rtnString rtnDest = GetParentPartOfType(sBookingNo, "local.rs.vsrs05.Regain.Mass_Balance_Destination", iWebAppId);
+                        //rtnString rtnDest = GetParentPartOfType(sBookingNo, "local.rs.vsrs05.Regain.Mass_Balance_Destination", iWebAppId);
 
-                        if(rtnDest.bReturnValue)
-                        {
-                            sDestinationCode = rtnDest.sReturnValue;
-                        }
+                        //if(rtnDest.bReturnValue)
+                        //{
+                        //    sDestinationCode = rtnDest.sReturnValue;
+                        //}
 
                         arrBookingItem[] arrItems = new arrBookingItem[rowCount - 4];
                         for (i = 5; i <= rowCount; i++)
@@ -11762,14 +11927,16 @@ namespace WcfWCService
                             {
                                 arrItems[i - 5].sLoadNo = rtnLoad.sReturnValue;
 
-                                rtnInt rtnBatch = PartPartLinkWithQtyExists(arrItems[i - 5].sLoadNo, arrItems[i - 5].sBatchNo, arrItems[i - 5].dNetWeight, iWebAppId);
+                                //rtnInt rtnBatch = PartPartLinkWithQtyExists(arrItems[i - 5].sLoadNo, arrItems[i - 5].sBatchNo, arrItems[i - 5].dNetWeight, iWebAppId);
+                                rtnInt rtnBatch = PartPartLinkExists(arrItems[i - 5].sLoadNo, arrItems[i - 5].sBatchNo, iWebAppId);
                                 if (rtnBatch.bReturnValue)
                                 {
-                                    //The laod to batch transaction may exist but not the dispatch docket
-                                    arrItems[i - 5].iLineNumber = rtnBatch.iReturnValue;
+                                    //The load to batch transaction may exist but not the dispatch docket
+                                    //arrItems[i - 5].iLineNumber = rtnBatch.iReturnValue;
 
                                     //Also the dispatch docket stuff has to exist
-                                    rtnInt rtnDD = DispatchDocketTransactionExists(arrItems[i - 5].sDispatchDocketNo, arrItems[i - 5].sBatchNo, arrItems[i - 5].sDestinationCode, iWebAppId);
+                                    rtnInt rtnDD = DispatchDocketTransactionExists(arrItems[i - 5].sDispatchDocketNo, arrItems[i - 5].sBatchNo, arrItems[i - 5].sLoadNo, iWebAppId);
+//                                    rtnInt rtnDD = DestinationTransactionExists(arrItems[i - 5].sLoadNo + "-" + arrItems[i - 5].iLineNumber, arrItems[i - 5].sBatchNo, arrItems[i - 5].sDestinationCode, iWebAppId);
                                     if(rtnDD.bReturnValue)
                                         arrItems[i - 5].bAlreadyExists = true;
                                 }
