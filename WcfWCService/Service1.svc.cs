@@ -2793,6 +2793,7 @@ namespace WcfWCService
                 string sRtn2 = "", sCrossRef = "";
                 long lLineNumber = Convert.ToInt64(sBatchLineNumber);
                 double dContainerTare = Convert.ToDouble(sContainerTare);
+                string sExistingSealNo = sSealNo;
 
                 rtnJobCode = GetPartStringAttribute(sBookingNo, "JobCode", iWebAppId);
                 if(rtnJobCode.bReturnValue)
@@ -2808,6 +2809,17 @@ namespace WcfWCService
                 }
 
                 bContainerExists = PartExists(sContainerNo, iWebAppId);
+
+                if(!sLoadNo.Equals(""))
+                {
+                    rtnString rtnSeal = GetPartStringAttribute(sLoadNo, "ContainerSealNo", iWebAppId);
+
+                    if(rtnSeal.bReturnValue)
+                    {
+                        sExistingSealNo = rtnSeal.sReturnValue;
+                    }
+
+                }
 
                 if (bContainerExists)
                 {
@@ -2837,13 +2849,13 @@ namespace WcfWCService
                         }
                     }
 
-                    rtnLoad = GetShippingLoadExists(sBookingNo, sContainerNo, sSealNo, iWebAppId);
+                    rtnLoad = GetShippingLoadExists(sBookingNo, sContainerNo, sExistingSealNo, iWebAppId);
 
                     //The load doesn't exist so create it
                     if (!rtnLoad.bReturnValue)
                     {
                         //It is possible that the booking and load only are connected and you would thus not have to create the load, just link to the container
-                        rtnLoad2 = GetShippingLoadExists(sBookingNo, "", sSealNo, iWebAppId);
+                        rtnLoad2 = GetShippingLoadExists(sBookingNo, "", sExistingSealNo, iWebAppId);
 
                         if (!rtnLoad2.bReturnValue)
                         {
@@ -2861,7 +2873,7 @@ namespace WcfWCService
                         if(!sLoadNo.Equals(rtnLoad.sReturnValue))
                         {
                             //It is possible that the booking and load only are connected and you would thus not have to create the load, just link to the container
-                            rtnLoad2 = GetShippingLoadExists(sBookingNo, "", sSealNo, iWebAppId);
+                            rtnLoad2 = GetShippingLoadExists(sBookingNo, "", sExistingSealNo, iWebAppId);
 
                             if (!rtnLoad2.bReturnValue)
                             {
@@ -2915,7 +2927,7 @@ namespace WcfWCService
                     else
                     {
                         //Get the load connected directly to the booking
-                        rtnLoad = GetShippingLoadExists(sBookingNo, "", sSealNo, iWebAppId);
+                        rtnLoad = GetShippingLoadExists(sBookingNo, "", sExistingSealNo, iWebAppId);
 
                         //The load doesn't exist so create it
                         if (!rtnLoad.bReturnValue)
@@ -3001,12 +3013,12 @@ namespace WcfWCService
 
                     //Also the seal number could have changed
                     rtnString rtnSealNo = GetPartStringAttribute(sLoadNo, "ContainerSealNo", iWebAppId);
-                    string sExistingSealNo = sSealNo;
+                    string sExistingSealNo2 = sSealNo;
 
                     if (rtnSealNo.bReturnValue)
-                        sExistingSealNo = rtnSealNo.sReturnValue;
+                        sExistingSealNo2 = rtnSealNo.sReturnValue;
 
-                    if(!sExistingSealNo.Equals(sSealNo))
+                    if(!sExistingSealNo2.Equals(sSealNo))
                     {
                         string sPartName = "Load " + sLoadNo;
                         string[] sAttributeNames5 = new string[1];
@@ -3015,7 +3027,7 @@ namespace WcfWCService
 
                         sAttributeNames5[0] = "ContainerSealNo";
                         sAttributeValues5[0] = sSealNo;
-                        sAttributeTypes5[0] = "double";
+                        sAttributeTypes5[0] = "string";
 
                         sCheckinComments = "Updating seal no on load " + sLoadNo + " to " + sSealNo;
                         sRtn = client2.setpartattributes(sLoadNo, sPartName, sFullName, sAttributeNames5, sAttributeValues5, sAttributeTypes5, sCheckinComments, iWebAppId);
