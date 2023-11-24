@@ -286,6 +286,16 @@ namespace WcfWCService
         string SetPartUsageLinkQty(string sSessionId, string sUserId, string sParentPartNo, string sChildPartNo, string dQty, string sWebAppId);
 
         [OperationContract]
+        [WebGet(UriTemplate = "setmbatransaction/{sSessionId}/{sUserId}/{sFullName}/{sParentPartNo}/{sChildPartNumber}/{dQty}/{sLineNumber}/{sDDno}/{sDDDate}/{sComments}/{sMoisture}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string SetMBATransaction(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNumber, string dQty,
+                                 string sLineNumber, string sDDno, string sDDDate, string sComments, string sMoisture, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "setmbatransactionwithcrossref/{sSessionId}/{sUserId}/{sFullName}/{sParentPartNo}/{sChildPartNumber}/{dQty}/{sLineNumber}/{sDDno}/{sDDDate}/{sComments}/{sMoisture}/{sCrossRef}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string SetMBATransactionWithCrossRef(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNumber, string dQty,
+                                            string sLineNumber, string sDDno, string sDDDate, string sComments, string sMoisture, string sCrossRef, string sWebAppId);
+
+        [OperationContract]
         [WebGet(UriTemplate = "deleteparttopartlink/{sSessionId}/{sUserId}/{sFullname}/{sParentPartNo}/{sChildPartNumber}/{sCheckInComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string DeletePartToPartLink(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNumber, string sCheckInComments, string sWebAppId);
 
@@ -443,6 +453,19 @@ namespace WcfWCService
                                                string sBatchNo, string sWebAppId);
 
         [OperationContract]
+        [WebGet(UriTemplate = "updatembapartusagelinkfromlinenumber/{sSessionId}/{sUserId}/{sFullname}/{sParentPartNo}/{sChildPartNo}/{dQty}/{lLineNumber}/{sCheckInComments}/{sDispatchDocketNo}/{sTransactionDate}/{sComments}/{sMoisturePercentage}/{sInvoiceStatus}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string UpdateMBAPartUsageLinkFromLineNumber(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNo,
+                                               string dQty, string lLineNumber, string sCheckInComments, string sDispatchDocketNo,
+                                               string sTransactionDate, string sComments, string sMoisturePercentage, string sInvoiceStatus,
+                                               string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "updatembatransactionwithcrossref/{sSessionId}/{sUserId}/{sFullname}/{sParentPartNo}/{sChildPartNumber}/{sQty}/{sLineNumber}/{sDDno}/{sDDDate}/" +
+                              "{sComments}/{sCrossRef}/{sMoisturePercentage}/{sInvoiceStatus}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string UpdateMBATransactionWithCrossRef(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNumber,
+                                                string sQty, string sLineNumber, string sDDno, string sDDDate, string sComments, string sCrossRef,
+                                                string sMoisturePercentage, string sInvoiceStatus, string sWebAppId);
+        [OperationContract]
         [WebGet(UriTemplate = "updatembadispatchdocket/{sSessionId}/{sUserId}/{sFullname}/{sParentPartNo}/{sChildPartNo}/{sLineNumber}/{sDDno}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string UpdateMBADispatchDocketNo(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNo,
                                          string sLineNumber, string sDDno, string sWebAppId);
@@ -456,6 +479,11 @@ namespace WcfWCService
         [WebGet(UriTemplate = "updatembamultipletransactioninvoicestatus/{sSessionId}/{sUserId}/{sFullname}/{sParentPartNo}/{sChildPartNo}/{sLineNumber}/{sInvoiceStatus}/{sQtyInvoiced}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string UpdateMBAMultipleTransactionInvoiceStatus(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNo, string sLineNumber,
                                                          string sInvoiceStatus, string sQtyInvoiced, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "updatembamultipletransactioncrossrefs/{sSessionId}/{sUserId}/{sFullname}/{sParentPartNo}/{sChildPartNo}/{sLineNumber}/{sCrossRef}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string UpdateMBAMultipleTransactionCrossRefs(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNo,
+                                                     string sLineNumber, string sCrossRef, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "deleteparttoopartlinkbydispatchdocket/{sSessionId}/{sUserId}/{sFullname}/{sDispatchDocketNo}/{lLineNumber}/{sParentPartNo}/{sChildPartNo}/{sCheckInComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
@@ -497,11 +525,11 @@ namespace WcfWCService
 
         [OperationContract]
         [WebGet(UriTemplate = "setshippingloaditem/{sSessionId}/{sUserId}/{sFullname}/{sBookingNo}/{sContainerNo}/{sContainerTare}/{sLoadNo}/{sLoadLineNumber}/{sSealNo}/" +
-                              "{sBatchNo}/{sBatchLineNumber}/{sBatchQty}/{sItemComments}/" +
+                              "{sBatchNo}/{sBatchLineNumber}/{sBatchQty}/{sMoisturePercentage}/{sItemComments}/" +
                               "{sDispatchDocketNo}/{sDestinationCode}/{sDDDate}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string SetShippingLoadItem(string sSessionId, string sUserId, string sFullName, string sBookingNo, string sContainerNo, string sContainerTare, 
                                    string sLoadNo, string sLoadLineNumber, string sSealNo,
-                                   string sBatchNo, string sBatchLineNumber, string sBatchQty, string sItemComments, 
+                                   string sBatchNo, string sBatchLineNumber, string sBatchQty, string sMoisturePercentage, string sItemComments, 
                                    string sDispatchDocketNo, string sDestinationCode, string sDDDate, string sWebAppId);
 
         [OperationContract]
@@ -537,14 +565,15 @@ namespace WcfWCService
                               "{dTargetAl2O3}/{dActualAl2O3}/{dTargetCaO}/{dActualCaO}/{dTargetF}/{dActualF}/" +
                               "{dTargetFe2O3}/{dActualFe2O3}/{dTargetK2O}/{dActualK2O}/{dTargetMgO}/{dActualMgO}/" +
                               "{dTargetMnO}/{dActualMnO}/{dTargetNa2O3}/{dActualNa2O3}/{dTargetSiO2}/{dActualSiO2}/" +
-                              "{dTargetC}/{dActualC}/{dTargetSO3}/{dActualSO3}/{dTargetCN}/{dActualCN}/{sProductCode}/{sBatchDate}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+                              "{dTargetC}/{dActualC}/{dTargetSO3}/{dActualSO3}/{dTargetCN}/{dActualCN}/{sProductCode}/" +
+                              "{sBatchDate}/{sVerifiedBy}/{sVerifiedDate}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string UpdateBatch(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sCheckinComments,
                                   string dTargetQty, string dActualQty, string dMoisturePercentage, string sQualityStatus,
                                   string dTargetAl2O3, string dActualAl2O3, string dTargetCaO, string dActualCaO, string dTargetF, string dActualF,
                                   string dTargetFe2O3, string dActualFe2O3, string dTargetK2O, string dActualK2O, string dTargetMgO, string dActualMgO,
                                   string dTargetMnO, string dActualMnO, string dTargetNa2O3, string dActualNa2O3, string dTargetSiO2, string dActualSiO2,
                                   string dTargetC, string dActualC, string dTargetSO3, string dActualSO3, string dTargetCN, string dActualCN, string sProductCode, 
-                                  string sBatchDate, string sWebAppId);
+                                  string sBatchDate, string sVerifiedBy, string sVerifiedDate, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "updatebatchqty/{sSessionId}/{sUserId}/{sFullname}/{sBatchNo}/{sBatchName}/{sCheckinComments}/{dActualQty}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
@@ -553,8 +582,11 @@ namespace WcfWCService
 
 
         [OperationContract]
-        [WebGet(UriTemplate = "updatemba/{sSessionId}/{sUserId}/{sFullname}/{sBatchNo}/{sBatchName}/{sCheckinComments}/{dMoisturePercentage}/{sBatchDate}/{sComments}/{sProductCode}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
-        string UpdateMBA(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sCheckinComments, string dMoisturePercentage, string sBatchDate, string sComments, string sProductCode, string sWebAppId);
+        [WebGet(UriTemplate = "updatemba/{sSessionId}/{sUserId}/{sFullname}/{sBatchNo}/{sBatchName}/{sCheckinComments}/{dMoisturePercentage}/" +
+                              "{sBatchDate}/{sComments}/{sProductCode}/{sVerifiedBy}/{sVerifiedDate}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string UpdateMBA(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sCheckinComments, 
+                         string dMoisturePercentage, string sBatchDate, string sComments, string sProductCode, string sVerifiedBy, 
+                         string sVerifiedDate, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "updateshippingload/{sSessionId}/{sUserId}/{sFullname}/{sBatchNo}/{sBatchName}/{sCheckinComments}/{dMoisturePercentage}/{sBatchDate}/{sComments}/{sContainerSealNo}/{sProductCode}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
@@ -814,6 +846,22 @@ namespace WcfWCService
         [OperationContract]
         [WebGet(UriTemplate = "processshippingbookingspreadsheet/{sSessionId}/{sUserId}/{sPassedBookingNo}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string ProcessShippingBookingSpreadsheet(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "processbulkshippingbookingspreadsheet/{sSessionId}/{sUserId}/{sPassedBookingNo}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string ProcessBulkShippingBookingSpreadsheet(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "processdeletelinksspreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string ProcessDeleteLinksSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "processdispatchdocketdatespreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string ProcessDispatchDocketDateSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "processdocumentusagelinkspreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string ProcessDocumentUsageLinkSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "emailmessage/{sSessionId}/{sUserId}/{sSubject}/{sBody}/{sAttachments}/{sRecipients}/{sCCRecipients}/{sBCCRecipients}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
