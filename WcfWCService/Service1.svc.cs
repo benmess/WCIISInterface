@@ -12510,7 +12510,7 @@ namespace WcfWCService
                     if (!sBookingNo.Equals(sPassedBookingNo))
                     {
                         sBody += "The booking number submitted against this file " + sFile + " is " + sPassedBookingNo.Replace("LB-","") + " but the number in cell C3 of the first sheet is " + sBookingNo.Replace("LB-", "") +
-                                 ". These do not match so the file will not be processed.\r\n";
+                                 ". These do not match so the file will not be processed\r\n";
                     }
                     else
                     {
