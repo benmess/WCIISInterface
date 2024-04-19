@@ -9,6 +9,11 @@ using System.Text;
 namespace WcfWCService
 {
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the interface name "IService1" in both code and config file together.
+    //You can call these things like this development http://localhost:17902/Service1.svc/rest/cookielogin/benmess/mogana/2
+    //You can call these things like this testing http://vsrs24:9088/Service1.svc/rest/cookielogin/benmess/mogana/2
+    //You can call these things like this production http://vsrs29:9088/Service1.svc/rest/cookielogin/benmess/mogana/2
+    //Not that production is not exposed externally though
+
     [ServiceContract(Namespace = "http://regain.com/rest")]
     public interface IService1
     {
@@ -291,6 +296,11 @@ namespace WcfWCService
                                  string sLineNumber, string sDDno, string sDDDate, string sComments, string sMoisture, string sWebAppId);
 
         [OperationContract]
+        [WebGet(UriTemplate = "setloadcontainerlink/{sSessionId}/{sUserId}/{sFullName}/{sContainerNo}/{sLoadNo}/{dQty}/{sLineNumber}/{sOutFlag}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string SetLoadContainerLink(string sSessionId, string sUserId, string sFullName, string sContainerNo, string sLoadNo, string dQty,
+                                                        string sLineNumber, string sOutFlag, string sWebAppId);
+
+        [OperationContract]
         [WebGet(UriTemplate = "setmbatransactionwithcrossref/{sSessionId}/{sUserId}/{sFullName}/{sParentPartNo}/{sChildPartNumber}/{dQty}/{sLineNumber}/{sDDno}/{sDDDate}/{sComments}/{sMoisture}/{sCrossRef}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string SetMBATransactionWithCrossRef(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNumber, string dQty,
                                             string sLineNumber, string sDDno, string sDDDate, string sComments, string sMoisture, string sCrossRef, string sWebAppId);
@@ -525,12 +535,28 @@ namespace WcfWCService
 
         [OperationContract]
         [WebGet(UriTemplate = "setshippingloaditem/{sSessionId}/{sUserId}/{sFullname}/{sBookingNo}/{sContainerNo}/{sContainerTare}/{sLoadNo}/{sLoadLineNumber}/{sSealNo}/" +
+                              "{sSeqNo}/{sWBDocketNo}/{sWBDocketDateIn}/{sWBInGrossWeight}/{sPackagingIn}/" +
+                              "{sWBDocketDateOut}/{sWBOutGrossWeight}/{sPackagingOut}/{sTruckRego}/" +
                               "{sBatchNo}/{sBatchLineNumber}/{sBatchQty}/{sMoisturePercentage}/{sItemComments}/" +
-                              "{sDispatchDocketNo}/{sDestinationCode}/{sDDDate}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+                              "{sDispatchDocketNo}/{sDestinationCode}/{sDDDate}/{sSkipDDCheck}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string SetShippingLoadItem(string sSessionId, string sUserId, string sFullName, string sBookingNo, string sContainerNo, string sContainerTare, 
-                                   string sLoadNo, string sLoadLineNumber, string sSealNo,
+                                   string sLoadNo, string sLoadLineNumber, string sSealNo, string sSeqNo,
+                                   string sWBDocketNo, string sWBDocketDateIn, string sWBInGrossWeight, string sPackagingIn,
+                                   string sWBDocketDateOut, string sWBOutGrossWeight, string sPackagingOut, string sTruckRego,
                                    string sBatchNo, string sBatchLineNumber, string sBatchQty, string sMoisturePercentage, string sItemComments, 
-                                   string sDispatchDocketNo, string sDestinationCode, string sDDDate, string sWebAppId);
+                                   string sDispatchDocketNo, string sDestinationCode, string sDDDate, string sSkipDDCheck, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "setloadattributes/{sSessionId}/{sUserId}/{sFullname}/{sLoadNo}/{sSealNo}/" +
+                              "{sSeqNo}/{sWBDocketNo}/{sWBDocketDateIn}/{sWBInGrossWeight}/{sPackagingIn}/" +
+                              "{sWBDocketDateOut}/{sWBOutGrossWeight}/{sPackagingOut}/{sTruckRego}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string SetLoadAttributes(string sSessionId, string sUserId, string sFullName, string sLoadNo, string sSealNo, string sSeqNo,
+                                          string sWBDocketNo, string sWBDocketDateIn, string sWBInGrossWeight, string sPackagingIn,
+                                          string sWBDocketDateOut, string sWBOutGrossWeight, string sPackagingOut, string sTruckRego, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "setloadattributesblank/{sSessionId}/{sUserId}/{sFullname}/{sLoadNo}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string SetLoadAttributesBlank(string sSessionId, string sUserId, string sFullName, string sLoadNo, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "createshippingload/{sSessionId}/{sUserId}/{sFullname}/{sBatchNo}/{sBatchName}/{sProductName}/{sFolder}/" +
@@ -848,6 +874,22 @@ namespace WcfWCService
         string ProcessShippingBookingSpreadsheet(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sWebAppId);
 
         [OperationContract]
+        [WebGet(UriTemplate = "processshippingbookingspreadsheettomagocontainer/{sSessionId}/{sUserId}/{sPassedBookingNo}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string ProcessShippingBookingSpreadsheetTomagoContainer(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "processshippingbookingspreadsheetalbacontainer/{sSessionId}/{sUserId}/{sPassedBookingNo}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string ProcessShippingBookingSpreadsheetAlbaContainer(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "processshippingbookingspreadsheetnzascontainer/{sSessionId}/{sUserId}/{sPassedBookingNo}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string ProcessShippingBookingSpreadsheetNZASContainer(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "processshippingbookingnzastransportzipfile/{sSessionId}/{sUserId}/{sPassedBookingNo}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string ProcessShippingBookingNZASTransportZipfile(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sWebAppId);
+
+        [OperationContract]
         [WebGet(UriTemplate = "processbulkshippingbookingspreadsheet/{sSessionId}/{sUserId}/{sPassedBookingNo}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string ProcessBulkShippingBookingSpreadsheet(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sWebAppId);
 
@@ -862,6 +904,10 @@ namespace WcfWCService
         [OperationContract]
         [WebGet(UriTemplate = "processdocumentusagelinkspreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string ProcessDocumentUsageLinkSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "processweighbridgecsvfile/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string ProcessWeighbridgeCSVFile(string sSessionId, string sUserId, string sFile, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "emailmessage/{sSessionId}/{sUserId}/{sSubject}/{sBody}/{sAttachments}/{sRecipients}/{sCCRecipients}/{sBCCRecipients}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
@@ -901,6 +947,10 @@ namespace WcfWCService
         [OperationContract]
         [WebGet(UriTemplate = "removeownaccreditationitem/{sSessionId}/{sUserId}/{sFullName}/{sOrgOrPersonNo}/{sOwnAccreditationNo}/{sWorkflowId}/{sCheckinComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string RemoveOwnAccreditationItem(string sSessionId, string sUserId, string sFullName,  string sOrgOrPersonNo, string sOwnAccreditationNo, string sWorkflowId, string sCheckinComments, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "terminateworkflow/{sSessionId}/{sUserId}/{sWorkflowId}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string TerminateWorkflow(string sSessionId, string sUserId, string sWorkflowId, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "reassignpartlifecycle/{sSessionId}/{sUserId}/{sPartNo}/{sLifecycleName}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]

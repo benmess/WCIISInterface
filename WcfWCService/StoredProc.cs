@@ -207,6 +207,36 @@ namespace WcfWCService
             }
         }
 
+        public Int64 Get_BigInt(DataSet ds, string sColumnName, int iRow)
+        {
+            int iColumnNo = 0;
+
+            if (ds.Tables.Count > 0)
+            {
+                iColumnNo = ds.Tables[0].Columns.IndexOf(sColumnName);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    if (Convert.IsDBNull(ds.Tables[0].Rows[iRow].ItemArray.GetValue(iColumnNo)))
+                    {
+                        return -1;
+                    }
+                    else
+                    {
+                        return Convert.ToInt64(ds.Tables[0].Rows[iRow].ItemArray.GetValue(iColumnNo));
+                    }
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
         public double Get_Float(DataSet ds, string sColumnName, int iRow)
         {
             int iColumnNo = 0;

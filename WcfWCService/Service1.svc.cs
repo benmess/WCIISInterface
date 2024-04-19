@@ -20,6 +20,14 @@ using System.Net.Http;
 using word = Microsoft.Office.Interop.Word;
 using Excel = Microsoft.Office.Interop.Excel;
 using DocumentFormat.OpenXml.Packaging;
+using System.Net.Sockets;
+using System.Configuration;
+using System.IO.Compression;
+using DocumentFormat.OpenXml.Wordprocessing;
+using DocumentFormat.OpenXml.Presentation;
+using DocumentFormat.OpenXml.Spreadsheet;
+using System.Diagnostics.Contracts;
+using System.Data.Odbc;
 
 namespace WcfWCService
 {
@@ -34,6 +42,13 @@ namespace WcfWCService
             public bool bReturnValue;
             public string sErrMessage;
         }
+        public class rtnBigInt
+        {
+            public Int64 iReturnValue;
+            public bool bReturnValue;
+            public string sErrMessage;
+        }
+
         public class rtnBool
         {
             public bool bReturnValid;
@@ -45,6 +60,14 @@ namespace WcfWCService
         {
             public double dReturnValue;
             public bool bReturnValue;
+        }
+
+
+        public class rtnDate
+        {
+            public bool bReturnValue;
+            public DateTime? dtReturnValue;
+            public string sErrMessage;
         }
 
         public class rtnString
@@ -99,7 +122,59 @@ namespace WcfWCService
             public double dNetWeight;
             public int iFileRowNo;
             public int iLineNumber;
+
+            public int iSeqNo;
+            public string sWBDocketNo;
+            public string sWBDocketDateIn;
+            public double dWBInGrossWeight;
+            public double dPackagingIn;
+            public string sWBDocketDateOut;
+            public double dWBOutGrossWeight;
+            public double dPackagingOut;
+            public string sTruckRego;
         }
+
+        public class arrBookingItemIncoming
+        {
+            public string sBookingNo;
+            public string sContainerNo;
+            public string sLoadNo;
+            public string sSealNo;
+            public string sBatchFromNo;
+            public string sBatchToNo;
+            public string sDispatchDocketNo;
+            public string sDestinationCode;
+            public string sDDDate;
+            public double dBatchQty;
+            public bool bAlreadyExists = false;
+            public bool bInsert = false;
+            public double dTareWeight;
+            public double dNetWeight;
+            public int iFileRowNo;
+            public int iLineNumber;
+            public int iSequenceNo;
+
+        }
+
+        public class arrBookingLoad
+        {
+            public string sBookingNo;
+            public string sContainerNo;
+            public string sLoadNo;
+            public string sBookingNo2;
+            public string sContainerNo2;
+            public long iContainerId;
+            public int iSequenceNo;
+
+        }
+
+        public class rtnBookingLoad
+        {
+            public bool bReturnValue;
+            public string sReturnValue;
+            public arrBookingLoad[] arrBookLoad;
+        }
+
 
         public class rtnRestObj
         {
@@ -2126,7 +2201,8 @@ namespace WcfWCService
             }
         }
 
-        //THis uses the special part reference type that takes attributes. Attributes for relationships cannot be updated in native Windchill with the exception of the Part to Part link.
+
+        //This uses the special part reference type that takes attributes. Attributes for relationships cannot be updated in native Windchill with the exception of the Part to Part link.
         public string UpdateSupplierToPartRef(string sSessionId, string sUserId, string sFullName, string sSupplierNo, string sPartNo, string sSupplierPartNo, string sCheckinComments, string sWebAppId, string sManufacturerFlag)
         {
             string[] sAttributeNames = new string[2];
@@ -2451,6 +2527,33 @@ namespace WcfWCService
             }
         }
 
+        public string SetLoadContainerLink(string sSessionId, string sUserId, string sFullName, string sContainerNo, string sLoadNo, string dQty, 
+                                           string sLineNumber, string sOutFlag, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                double ddQty = Convert.ToDouble(dQty);
+                long lLineNumber = Convert.ToInt64(sLineNumber);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string sCheckInComments = "Created usage link between container " + sContainerNo + " and load " + sLoadNo;
+                string[] sAttributeNames = new string[1];
+                string[] sAttributeValues = new string[1];
+                string[] sAttributeTypes = new string[1];
+
+                sAttributeNames[0] = "ContainerOutFlag";
+                sAttributeValues[0] = sOutFlag;
+                sAttributeTypes[0] = "long";
+
+                return client2.setpartpartlinkwithattributes(sFullName, sContainerNo, sLoadNo, ddQty, sCheckInComments, "local.rs.vsrs05.Regain.ContainerLoadLink", "ea",
+                                                             lLineNumber, sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
+            }
+        }
+
         public string SetMBATransactionWithCrossRef(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNumber, string dQty,
                                                    string sLineNumber, string sDDno, string sDDDate, string sComments, string sMoisture, string sCrossRef, string sWebAppId)
         {
@@ -2536,7 +2639,7 @@ namespace WcfWCService
         }
 
         public string UpdateMBATransactionWithCrossRef(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNumber,
-                                                       string sQty, string sLineNumber, string sDDno, string sDDDate, string sComments, string sCrossRef, 
+                                                       string sQty, string sLineNumber, string sDDno, string sDDDate, string sComments, string sCrossRef,
                                                        string sMoisturePercentage, string sInvoiceStatus, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -2561,7 +2664,7 @@ namespace WcfWCService
                 sAttributeNames[4] = "CrossRef";
                 sAttributeNames[5] = "InvoiceStatus";
                 sAttributeNames[6] = "MoistureContent";
-                
+
 
                 sAttributeValues[0] = sFullName;
                 sAttributeValues[1] = sDDno;
@@ -3011,12 +3114,14 @@ namespace WcfWCService
 
                 return client2.createpart(sBatchNo, sBatchName, sProductName, sBatchType, sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
             }
-        }
+        }   
 
         public string SetShippingLoadItem(string sSessionId, string sUserId, string sFullName, string sBookingNo, string sContainerNo,
-                                          string sContainerTare, string sLoadNo, string sLoadLineNumber, string sSealNo,
+                                          string sContainerTare, string sLoadNo, string sLoadLineNumber, string sSealNo, string sSeqNo,
+                                          string sWBDocketNo, string sWBDocketDateIn, string sWBInGrossWeight, string sPackagingIn,
+                                          string sWBDocketDateOut, string sWBOutGrossWeight, string sPackagingOut, string sTruckRego,
                                           string sBatchNo, string sBatchLineNumber, string sBatchQty, string sMoisturePercentage, string sItemComments,
-                                          string sDispatchDocketNo, string sDestinationCode, string sDDDate, string sWebAppId)
+                                          string sDispatchDocketNo, string sDestinationCode, string sDDDate, string sSkipDDCheck, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -3045,6 +3150,9 @@ namespace WcfWCService
                 long lLineNumber = Convert.ToInt64(sBatchLineNumber);
                 double dContainerTare = Convert.ToDouble(sContainerTare);
                 string sExistingSealNo = sSealNo;
+                int iSeqNo = Convert.ToInt16(sSeqNo);
+                int iExistingSeqNo = iSeqNo;
+                bool bSkipDDCheck = Convert.ToBoolean(sSkipDDCheck);
 
                 rtnJobCode = GetPartStringAttribute(sBookingNo, "JobCode", iWebAppId);
                 if (rtnJobCode.bReturnValue)
@@ -3070,6 +3178,12 @@ namespace WcfWCService
                         sExistingSealNo = rtnSeal.sReturnValue;
                     }
 
+                    rtnInt rtnSeqNo = GetPartIntAttribute(sLoadNo, "ContainerSeqNo", iWebAppId);
+
+                    if (rtnSeqNo.bReturnValue)
+                    {
+                        iExistingSeqNo = rtnSeqNo.iReturnValue;
+                    }
                 }
 
                 if (bContainerExists)
@@ -3208,6 +3322,105 @@ namespace WcfWCService
                         sAttributeNames[0] = "ContainerSealNo";
                         sAttributeValues[0] = sSealNo;
                         sAttributeTypes[0] = "string";
+
+                        if(iSeqNo != 0)
+                        {
+                            Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                            sAttributeNames[sAttributeNames.Length - 1] = "SequenceNo"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues[sAttributeValues.Length - 1] = iSeqNo.ToString();
+                            sAttributeTypes[sAttributeTypes.Length - 1] = "long";
+                        }
+
+                        if (!sWBDocketNo.Equals(""))
+                        {
+                            Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                            sAttributeNames[sAttributeNames.Length - 1] = "WBDocket"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues[sAttributeValues.Length - 1] = sWBDocketNo;
+                            sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                        }
+
+                        if (!sWBDocketDateIn.Equals(""))
+                        {
+                            Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                            sAttributeNames[sAttributeNames.Length - 1] = "WBInDate"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues[sAttributeValues.Length - 1] = sWBDocketDateIn;
+                            sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                        }
+
+                        if (!sWBInGrossWeight.Equals(""))
+                        {
+                            Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                            sAttributeNames[sAttributeNames.Length - 1] = "WBInGrossWeight"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues[sAttributeValues.Length - 1] = sWBInGrossWeight;
+                            sAttributeTypes[sAttributeTypes.Length - 1] = "double";
+                        }
+
+                        if (!sPackagingIn.Equals(""))
+                        {
+                            Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                            sAttributeNames[sAttributeNames.Length - 1] = "PackagingIn"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues[sAttributeValues.Length - 1] = sPackagingIn;
+                            sAttributeTypes[sAttributeTypes.Length - 1] = "double";
+                        }
+
+                        if (!sWBDocketDateOut.Equals(""))
+                        {
+                            Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                            sAttributeNames[sAttributeNames.Length - 1] = "WBOutDate"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues[sAttributeValues.Length - 1] = sWBDocketDateOut;
+                            sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                        }
+
+                        if (!sWBOutGrossWeight.Equals(""))
+                        {
+                            Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                            sAttributeNames[sAttributeNames.Length - 1] = "WBOutGrossWeight"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues[sAttributeValues.Length - 1] = sWBOutGrossWeight;
+                            sAttributeTypes[sAttributeTypes.Length - 1] = "double";
+                        }
+
+                        if (!sPackagingOut.Equals(""))
+                        {
+                            Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                            sAttributeNames[sAttributeNames.Length - 1] = "PackagingOut"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues[sAttributeValues.Length - 1] = sPackagingOut;
+                            sAttributeTypes[sAttributeTypes.Length - 1] = "double";
+                        }
+
+                        if (!sTruckRego.Equals(""))
+                        {
+                            Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                            sAttributeNames[sAttributeNames.Length - 1] = "TruckRego"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues[sAttributeValues.Length - 1] = sTruckRego;
+                            sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                        }
                         sRtn = client2.createpart("", sPartName, sProduct, "local.rs.vsrs05.Regain.Mass_Balance_Load", sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, 0, iWebAppId);
 
                         if (sRtn.StartsWith("Success"))
@@ -3231,12 +3444,38 @@ namespace WcfWCService
                                 //Link to the container
                                 if (!sContainerNo.Equals("LC-"))
                                 {
+                                    //Set some attribute arrays
+                                    string[] sAttributeNamesCLL = new string[1];
+                                    string[] sAttributeValuesCLL = new string[1];
+                                    string[] sAttributeTypesCLL = new string[1];
+
+                                    sAttributeNamesCLL[0] = "ContainerOutFlag";
+                                    sAttributeValuesCLL[0] = "0";
+                                    sAttributeTypesCLL[0] = "long";
+
+                                    lNewLineNumber = GetNewLineNumber(sContainerNo, iWebAppId);
 
                                     sCheckinComments = "Creating the link between container " + sContainerNo + " and load " + sLoadNo;
-                                    sRtn = client2.setpartpartlink(sFullName, sContainerNo, sLoadNo, 1.0, sCheckinComments, "wt.part.WTPartUsageLink", "ea", iWebAppId);
+                                    sRtn = client2.setpartpartlinkwithattributes(sFullName, sContainerNo, sLoadNo, 1.0, sCheckinComments, "local.rs.vsrs05.Regain.ContainerLoadLink", 
+                                                                                 "ea", lNewLineNumber, sAttributeNamesCLL, sAttributeValuesCLL, sAttributeTypesCLL, iWebAppId);
                                 }
                                 else
                                     sRtn = "Success";
+
+                                sCheckinComments = "Creating load document to hold attachments";
+                                sRtn = CreateWCDoc(sSessionId, sUserId, sLoadNo, "Load Document " + sLoadNo,
+                                                   sProduct, "local.rs.vsrs05.Regain.LoadDocument", sFolder,
+                                                   "", sFullName, "", sJobCode, "A", sCheckinComments, "0", sWebAppId);
+
+                                if (sRtn.StartsWith("Success"))
+                                {
+                                    //Link to the booking
+                                    sCheckinComments = "Creating the link between load part " + sLoadNo + " and load document " + sLoadNo;
+
+                                    sRtn =  SetDocToPartRef(sSessionId, sUserId, sFullName, sLoadNo, sLoadNo, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
+                                }
+                                else
+                                    sRtn = "Could not create shipping load document object for booking number " + sBookingNo + " and container no " + sContainerNo;
                             }
                             else
                                 sRtn = "Could not create link between booking number " + sBookingNo + " and load no " + sLoadNo;
@@ -3247,6 +3486,7 @@ namespace WcfWCService
                 }
                 else
                 {
+                    sFolder = sJobCode + " Production Material/" + sJobCode + " Production Material Shipping/";
                     //The load could exist and the container could exist but there might not be a link
                     rtnInt rtnContainerLoadLink = PartPartLinkExists(sContainerNo, sLoadNo, iWebAppId);
 
@@ -3256,10 +3496,55 @@ namespace WcfWCService
                         {
 
                             sCheckinComments = "Creating the link between container " + sContainerNo + " and load " + sLoadNo;
-                            sRtn = client2.setpartpartlink(sFullName, sContainerNo, sLoadNo, 1.0, sCheckinComments, "wt.part.WTPartUsageLink", "ea", iWebAppId);
+                            //Set some attribute arrays
+                            string[] sAttributeNamesCLL = new string[1];
+                            string[] sAttributeValuesCLL = new string[1];
+                            string[] sAttributeTypesCLL = new string[1];
+
+                            sAttributeNamesCLL[0] = "ContainerOutFlag";
+                            sAttributeValuesCLL[0] = "0";
+                            sAttributeTypesCLL[0] = "long";
+
+                            lNewLineNumber = GetNewLineNumber(sContainerNo, iWebAppId);
+
+                            sCheckinComments = "Creating the link between container " + sContainerNo + " and load " + sLoadNo;
+                            sRtn = client2.setpartpartlinkwithattributes(sFullName, sContainerNo, sLoadNo, 1.0, sCheckinComments, "local.rs.vsrs05.Regain.ContainerLoadLink",
+                                                                         "ea", lNewLineNumber, sAttributeNamesCLL, sAttributeValuesCLL, sAttributeTypesCLL, iWebAppId);
+
+//                            sRtn = client2.setpartpartlink(sFullName, sContainerNo, sLoadNo, 1.0, sCheckinComments, "wt.part.WTPartUsageLink", "ea", iWebAppId);
                         }
                         else
                             sRtn = "Success";
+                    }
+
+                    //The load could exist and the load document may not exist or the link may not exist
+                    bool bLoadDoc = DocExists(sLoadNo, iWebAppId);
+
+                    if(bLoadDoc)
+                    {
+                        rtnBigInt rtnLoadDocLink = PartDocRefLinkExists(sLoadNo, sLoadNo, iWebAppId);
+
+                        if (!rtnLoadDocLink.bReturnValue)
+                        {
+                            sCheckinComments = "Creating the link between load " + sLoadNo + " and load document " + sLoadNo;
+                            sRtn = SetDocToPartRef(sSessionId, sUserId, sFullName, sLoadNo, sLoadNo, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
+                        }
+                        else
+                            sRtn = "Success";
+
+                    }
+                    else
+                    {
+                        sCheckinComments = "Creating load document " + sLoadNo;
+                        sRtn = CreateWCDoc(sSessionId, sUserId, sLoadNo, "Load Document " + sLoadNo, 
+                                           sProduct, "local.rs.vsrs05.Regain.LoadDocument", sFolder, 
+                                           "", sFullName, "", sJobCode, "A", sCheckinComments, "0", sWebAppId);
+
+                        if(sRtn.StartsWith("Success"))
+                        {
+                            sCheckinComments = "Creating the link between load " + sLoadNo + " and load document " + sLoadNo;
+                            sRtn = SetDocToPartRef(sSessionId, sUserId, sFullName, sLoadNo, sLoadNo, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
+                        }
                     }
 
                     //Also the seal number could have changed
@@ -3291,6 +3576,115 @@ namespace WcfWCService
                     }
                     else
                         sRtn = "Success";
+
+                    if ((iSeqNo != 0 || !sWBDocketNo.Equals("") || !sWBDocketDateIn.Equals("") || !sWBInGrossWeight.Equals("") || !sPackagingIn.Equals("") ||
+                                        !sWBDocketDateOut.Equals("") || !sWBOutGrossWeight.Equals("") || !sPackagingOut.Equals("")) && sRtn.StartsWith("Success"))
+                    {
+
+                        string[] sAttributeNames5_2 = new string[0];
+                        string[] sAttributeValues5_2 = new string[0];
+                        string[] sAttributeTypes5_2 = new string[0];
+
+
+                        if (iSeqNo != 0)
+                        {
+                            Array.Resize<string>(ref sAttributeNames5_2, sAttributeNames5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues5_2, sAttributeValues5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes5_2, sAttributeTypes5_2.Length + 1);
+
+                            sAttributeNames5_2[sAttributeNames5_2.Length - 1] = "SequenceNo"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues5_2[sAttributeValues5_2.Length - 1] = iSeqNo.ToString();
+                            sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "long";
+                        }
+
+                        if (!sWBDocketNo.Equals(""))
+                        {
+                            Array.Resize<string>(ref sAttributeNames5_2, sAttributeNames5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues5_2, sAttributeValues5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes5_2, sAttributeTypes5_2.Length + 1);
+
+                            sAttributeNames5_2[sAttributeNames5_2.Length - 1] = "WBDocket"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues5_2[sAttributeValues5_2.Length - 1] = sWBDocketNo;
+                            sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "string";
+                        }
+
+                        if (!sWBDocketDateIn.Equals(""))
+                        {
+                            Array.Resize<string>(ref sAttributeNames5_2, sAttributeNames5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues5_2, sAttributeValues5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes5_2, sAttributeTypes5_2.Length + 1);
+
+                            sAttributeNames5_2[sAttributeNames5_2.Length - 1] = "WBInDate"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues5_2[sAttributeValues5_2.Length - 1] = sWBDocketDateIn;
+                            sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "date";
+                        }
+
+                        if (!sWBInGrossWeight.Equals(""))
+                        {
+                            Array.Resize<string>(ref sAttributeNames5_2, sAttributeNames5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues5_2, sAttributeValues5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes5_2, sAttributeTypes5_2.Length + 1);
+
+                            sAttributeNames5_2[sAttributeNames5_2.Length - 1] = "WBInGrossWeight"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues5_2[sAttributeValues5_2.Length - 1] = sWBInGrossWeight;
+                            sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "double";
+                        }
+
+                        if (!sPackagingIn.Equals(""))
+                        {
+                            Array.Resize<string>(ref sAttributeNames5_2, sAttributeNames5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues5_2, sAttributeValues5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes5_2, sAttributeTypes5_2.Length + 1);
+
+                            sAttributeNames5_2[sAttributeNames5_2.Length - 1] = "PackagingIn"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues5_2[sAttributeValues5_2.Length - 1] = sPackagingIn;
+                            sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "double";
+                        }
+
+                        if (!sWBDocketDateOut.Equals(""))
+                        {
+                            Array.Resize<string>(ref sAttributeNames5_2, sAttributeNames5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues5_2, sAttributeValues5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes5_2, sAttributeTypes5_2.Length + 1);
+
+                            sAttributeNames5_2[sAttributeNames5_2.Length - 1] = "WBOutDate"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues5_2[sAttributeValues5_2.Length - 1] = sWBDocketDateOut;
+                            sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "date";
+                        }
+
+                        if (!sWBOutGrossWeight.Equals(""))
+                        {
+                            Array.Resize<string>(ref sAttributeNames5_2, sAttributeNames5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues5_2, sAttributeValues5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes5_2, sAttributeTypes5_2.Length + 1);
+
+                            sAttributeNames5_2[sAttributeNames5_2.Length - 1] = "WBOutGrossWeight"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues5_2[sAttributeValues5_2.Length - 1] = sWBOutGrossWeight;
+                            sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "double";
+                        }
+
+                        if (!sPackagingOut.Equals(""))
+                        {
+                            Array.Resize<string>(ref sAttributeNames5_2, sAttributeNames5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues5_2, sAttributeValues5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes5_2, sAttributeTypes5_2.Length + 1);
+
+                            sAttributeNames5_2[sAttributeNames5_2.Length - 1] = "PackagingOut"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues5_2[sAttributeValues5_2.Length - 1] = sPackagingOut;
+                            sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "double";
+                        }
+
+
+                        sCheckinComments = "Updating attributes on load " + sLoadNo + " to " + iSeqNo;
+                        //If the part name is empty it will not be changed
+                        sRtn = client2.setpartattributes(sLoadNo, "", sFullName, sAttributeNames5_2, sAttributeValues5_2, sAttributeTypes5_2, sCheckinComments, iWebAppId);
+
+                        if (!sRtn.StartsWith("Success"))
+                        {
+                            sRtn = "Could not update load " + sLoadNo + " with new seal no " + sSealNo;
+                        }
+
+                    }
                 }
 
                 string sLoadDDNo = sDispatchDocketNo; //Initialise to the new dispatch docket no. If this is brand new then it will always be the same. If it exists it could have chnaged.
@@ -3356,7 +3750,7 @@ namespace WcfWCService
                         string sTransDateOld = sDDDate;
                         sTransDateOld = rtnTransDate.sReturnValue; //Do this regardless, in case the date has never been set or is set to blank
 
-                        if (!sCommentsOld.Equals(sItemComments) || dQty != dQtyOld || !sTransDateOld.Equals(sDDDate) || dMoisture != dMoistureOld)
+                        if (!sCommentsOld.Equals(sItemComments) || dQty != dQtyOld || !sTransDateOld.Equals(sDDDate) || dMoisture != dMoistureOld || !sDispatchDocketNo.Equals(sLoadDDNo))
                         {
                             sRtn = client2.updatepartpartlinkwithattributes(sFullName, sLoadNo, sBatchNo, dQty, lLineNumber, sCheckinComments,
                                                                             "local.rs.vsrs05.Regain.MBAUsageLink", "tonne",
@@ -3396,17 +3790,19 @@ namespace WcfWCService
                     //Check to see that this transaction for the dispatch docket doesn't already exist
                     rtnInt DDTrans = DestinationTransactionExists(sCrossRef, sLoadNo, sDestinationCode, iWebAppId);
 
-                    if (!sDispatchDocketNo.Equals(""))
+                    if (!sDispatchDocketNo.Equals("") || bSkipDDCheck)
                     {
                         bool bDDChanged = false;
 
                         //Firstly check that the dispatch docket exists
-                        bool bDispatchDocket = DocExists(sDispatchDocketNo, iWebAppId);
+                        bool bDispatchDocket = bSkipDDCheck;
+                        if (!bSkipDDCheck)
+                            bDispatchDocket = DocExists(sDispatchDocketNo, iWebAppId);
 
                         if (bDispatchDocket)
                         {
                             //This measn the dispatch docket number has changed from sLoadDDNo to sDispatchDocketNo
-                            if (!sLoadDDNo.Equals(sDispatchDocketNo))
+                            if (!sLoadDDNo.Equals(sDispatchDocketNo) && !bSkipDDCheck)
                             {
                                 bDDChanged = true;
 
@@ -3475,7 +3871,7 @@ namespace WcfWCService
                                 //                               sDispatchDocketNo, sDDDate + " 12:00:00 AM", "", "", "", sContainerNo, "0", "", sWebAppId);
                                 if (sRtn2.StartsWith("Success"))
                                 {
-                                    if (!sDestinationCode.Equals(""))
+                                    if (!sDestinationCode.Equals("") && !sDispatchDocketNo.Equals(""))
                                     {
                                         //Set the link between the destination and the dispatch docket WTDocument
                                         sCheckinComments = "Creating link from destination " + sDestinationCode + " and dispatch docket document " + sDispatchDocketNo;
@@ -3488,12 +3884,20 @@ namespace WcfWCService
                                     {
                                         //Set the link between the batch and the dispatch docket WTDocument
                                         sCheckinComments = "Creating link from batch " + sBatchNo + " and dispatch docket document " + sDispatchDocketNo;
-                                        sRtn2 = SetDocToPartRef(sSessionId, sUserId, sFullName, sDispatchDocketNo, sBatchNo, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
+                                        if (!sDispatchDocketNo.Equals(""))
+                                            sRtn2 = SetDocToPartRef(sSessionId, sUserId, sFullName, sDispatchDocketNo, sBatchNo, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
+                                        else
+                                            sRtn2 = "Success";
+
                                         if (sRtn2.StartsWith("Success"))
                                         {
                                             //Set the link between the load and the dispatch docket WTDocument
                                             sCheckinComments = "Creating link from load " + sLoadNo + " and dispatch docket document " + sDispatchDocketNo;
-                                            sRtn2 = SetDocToPartRef(sSessionId, sUserId, sFullName, sDispatchDocketNo, sLoadNo, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
+                                            if (!sDispatchDocketNo.Equals(""))
+                                                sRtn2 = SetDocToPartRef(sSessionId, sUserId, sFullName, sDispatchDocketNo, sLoadNo, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
+                                            else
+                                                sRtn2 = "Success";
+
                                             if (!sRtn2.StartsWith("Success"))
                                             {
                                                 sRtn2 = "Dispatch docket " + sDispatchDocketNo + " could not be linked to the load " + sLoadNo + ".^" + sRtn;
@@ -3590,13 +3994,21 @@ namespace WcfWCService
                                 {
                                     //Set the link between the destination and the dispatch docket WTDocument
                                     sCheckinComments = "Creating link from destination " + sDestinationCode + " and dispatch docket document " + sDispatchDocketNo;
-                                    sRtn2 = SetDocToPartRef(sSessionId, sUserId, sFullName, sDispatchDocketNo, sDestinationCode, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
+
+                                    if (!sDispatchDocketNo.Equals(""))
+                                        sRtn2 = SetDocToPartRef(sSessionId, sUserId, sFullName, sDispatchDocketNo, sDestinationCode, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
+                                    else
+                                        sRtn2 = "Success";
 
                                     if (sRtn2.StartsWith("Success"))
                                     {
                                         //Set the link between the destination and the dispatch docket WTDocument
                                         sCheckinComments = "Creating link from batch " + sBatchNo + " and dispatch docket document " + sDispatchDocketNo;
-                                        sRtn2 = SetDocToPartRef(sSessionId, sUserId, sFullName, sDispatchDocketNo, sBatchNo, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
+                                        if (!sDispatchDocketNo.Equals(""))
+                                            sRtn2 = SetDocToPartRef(sSessionId, sUserId, sFullName, sDispatchDocketNo, sBatchNo, sCheckinComments, "wt.part.WTPartReferenceLink", sWebAppId);
+                                        else
+                                            sRtn2 = "Success";
+
                                         if (!sRtn2.StartsWith("Success"))
                                         {
                                             sRtn2 = "Dispatch docket " + sDispatchDocketNo + " could not be linked to the batch " + sBatchNo + ".^" + sRtn;
@@ -3605,11 +4017,15 @@ namespace WcfWCService
                                         else
                                         {
                                             //Set the dispatch docket date
-                                            sRtn2 = UpdateDocAttributes(sSessionId, sUserId, sDispatchDocketNo, "Dispatch Docket " + sDispatchDocketNo,
+                                            if (!sDispatchDocketNo.Equals(""))
+                                                sRtn2 = UpdateDocAttributes(sSessionId, sUserId, sDispatchDocketNo, "Dispatch Docket " + sDispatchDocketNo,
                                                                         "DispatchDocketDate", sDDDate + " 12:00:00 AM", "date",
                                                                         null, null, null, null, null, null,
                                                                         null, null, null, null, null, null,
                                                                         "Updating date to " + sDDDate + " 12:00:00 AM for docket " + sDispatchDocketNo, sWebAppId);
+                                            else
+                                                sRtn2 = "Success";
+
                                             if (!sRtn2.StartsWith("Success"))
                                             {
                                                 sRtn2 = "Dispatch docket " + sDispatchDocketNo + " could not be updated to date " + sDDDate + " 12:00:00 AM.^" + sRtn;
@@ -3728,8 +4144,209 @@ namespace WcfWCService
             }
         }
 
+        public string SetLoadAttributes(string sSessionId, string sUserId, string sFullName, string sLoadNo, string sSealNo, string sSeqNo,
+                                          string sWBDocketNo, string sWBDocketDateIn, string sWBInGrossWeight, string sPackagingIn,
+                                          string sWBDocketDateOut, string sWBOutGrossWeight, string sPackagingOut, string sTruckRego, string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                string sCheckinComments;
+                int iWebAppId = Convert.ToInt16(sWebAppId);
+                rtnString rtnLoad = new rtnString();
+                rtnString rtnLoad2 = new rtnString();
+                rtnString rtnJobCode = new rtnString();
+                rtnString rtnProduct = new rtnString();
+                string sRtn = "";
+                int iSeqNo = Convert.ToInt16(sSeqNo);
+                string[] sAttributeNames5_2 = new string[0];
+                string[] sAttributeValues5_2 = new string[0];
+                string[] sAttributeTypes5_2 = new string[0];
+
+
+                if (iSeqNo != 0)
+                {
+                    Array.Resize<string>(ref sAttributeNames5_2, sAttributeNames5_2.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues5_2, sAttributeValues5_2.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes5_2, sAttributeTypes5_2.Length + 1);
+
+                    sAttributeNames5_2[sAttributeNames5_2.Length - 1] = "SequenceNo"; //Use the global attribute name NOT the object attribute name
+                    sAttributeValues5_2[sAttributeValues5_2.Length - 1] = iSeqNo.ToString();
+                    sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "long";
+                }
+
+                if (!sWBDocketNo.Equals(""))
+                {
+                    Array.Resize<string>(ref sAttributeNames5_2, sAttributeNames5_2.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues5_2, sAttributeValues5_2.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes5_2, sAttributeTypes5_2.Length + 1);
+
+                    sAttributeNames5_2[sAttributeNames5_2.Length - 1] = "WBDocket"; //Use the global attribute name NOT the object attribute name
+                    sAttributeValues5_2[sAttributeValues5_2.Length - 1] = sWBDocketNo;
+                    sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "string";
+                }
+
+                if (!sWBDocketDateIn.Equals(""))
+                {
+                    Array.Resize<string>(ref sAttributeNames5_2, sAttributeNames5_2.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues5_2, sAttributeValues5_2.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes5_2, sAttributeTypes5_2.Length + 1);
+
+                    sAttributeNames5_2[sAttributeNames5_2.Length - 1] = "WBInDate"; //Use the global attribute name NOT the object attribute name
+                    sAttributeValues5_2[sAttributeValues5_2.Length - 1] = sWBDocketDateIn;
+                    sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "date";
+                }
+
+                if (!sWBInGrossWeight.Equals(""))
+                {
+                    Array.Resize<string>(ref sAttributeNames5_2, sAttributeNames5_2.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues5_2, sAttributeValues5_2.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes5_2, sAttributeTypes5_2.Length + 1);
+
+                    sAttributeNames5_2[sAttributeNames5_2.Length - 1] = "WBInGrossWeight"; //Use the global attribute name NOT the object attribute name
+                    sAttributeValues5_2[sAttributeValues5_2.Length - 1] = sWBInGrossWeight;
+                    sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "double";
+                }
+
+                if (!sPackagingIn.Equals(""))
+                {
+                    Array.Resize<string>(ref sAttributeNames5_2, sAttributeNames5_2.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues5_2, sAttributeValues5_2.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes5_2, sAttributeTypes5_2.Length + 1);
+
+                    sAttributeNames5_2[sAttributeNames5_2.Length - 1] = "PackagingIn"; //Use the global attribute name NOT the object attribute name
+                    sAttributeValues5_2[sAttributeValues5_2.Length - 1] = sPackagingIn;
+                    sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "double";
+                }
+
+                if (!sWBDocketDateOut.Equals(""))
+                {
+                    Array.Resize<string>(ref sAttributeNames5_2, sAttributeNames5_2.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues5_2, sAttributeValues5_2.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes5_2, sAttributeTypes5_2.Length + 1);
+
+                    sAttributeNames5_2[sAttributeNames5_2.Length - 1] = "WBOutDate"; //Use the global attribute name NOT the object attribute name
+                    sAttributeValues5_2[sAttributeValues5_2.Length - 1] = sWBDocketDateOut;
+                    sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "date";
+                }
+
+                if (!sWBOutGrossWeight.Equals(""))
+                {
+                    Array.Resize<string>(ref sAttributeNames5_2, sAttributeNames5_2.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues5_2, sAttributeValues5_2.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes5_2, sAttributeTypes5_2.Length + 1);
+
+                    sAttributeNames5_2[sAttributeNames5_2.Length - 1] = "WBOutGrossWeight"; //Use the global attribute name NOT the object attribute name
+                    sAttributeValues5_2[sAttributeValues5_2.Length - 1] = sWBOutGrossWeight;
+                    sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "double";
+                }
+
+                if (!sPackagingOut.Equals(""))
+                {
+                    Array.Resize<string>(ref sAttributeNames5_2, sAttributeNames5_2.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues5_2, sAttributeValues5_2.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes5_2, sAttributeTypes5_2.Length + 1);
+
+                    sAttributeNames5_2[sAttributeNames5_2.Length - 1] = "PackagingOut"; //Use the global attribute name NOT the object attribute name
+                    sAttributeValues5_2[sAttributeValues5_2.Length - 1] = sPackagingOut;
+                    sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "double";
+                }
+
+                if (!sTruckRego.Equals(""))
+                {
+                    Array.Resize<string>(ref sAttributeNames5_2, sAttributeNames5_2.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues5_2, sAttributeValues5_2.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes5_2, sAttributeTypes5_2.Length + 1);
+
+                    sAttributeNames5_2[sAttributeNames5_2.Length - 1] = "TruckRego"; //Use the global attribute name NOT the object attribute name
+                    sAttributeValues5_2[sAttributeValues5_2.Length - 1] = sTruckRego;
+                    sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "string";
+                }
+
+                sCheckinComments = "Updating attributes on load " + sLoadNo + " to " + iSeqNo;
+                //If the part name is empty it will not be changed
+                sRtn = client2.setpartattributes(sLoadNo, "", sFullName, sAttributeNames5_2, sAttributeValues5_2, sAttributeTypes5_2, sCheckinComments, iWebAppId);
+                return sRtn;
+            }
+
+        }
+
+        public string SetLoadAttributesBlank(string sSessionId, string sUserId, string sFullName, string sLoadNo, string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                string sCheckinComments;
+                int iWebAppId = Convert.ToInt16(sWebAppId);
+                rtnString rtnLoad = new rtnString();
+                rtnString rtnLoad2 = new rtnString();
+                rtnString rtnJobCode = new rtnString();
+                rtnString rtnProduct = new rtnString();
+                string sRtn = "";
+                string[] sAttributeNames5_2 = new string[8];
+                string[] sAttributeValues5_2 = new string[8];
+                string[] sAttributeTypes5_2 = new string[8];
+
+
+
+                sAttributeNames5_2[0] = "WBDocket"; //Use the global attribute name NOT the object attribute name
+                sAttributeValues5_2[0] = "Nothing";
+                sAttributeTypes5_2[0] = "string";
+
+
+                sAttributeNames5_2[1] = "WBInDate"; //Use the global attribute name NOT the object attribute name
+                sAttributeValues5_2[1] = "01/01/1970 00:00:00 AM";
+                sAttributeTypes5_2[1] = "date";
+
+                sAttributeNames5_2[2] = "WBInGrossWeight"; //Use the global attribute name NOT the object attribute name
+                sAttributeValues5_2[2] = "0.0";
+                sAttributeTypes5_2[2] = "double";
+
+                sAttributeNames5_2[3] = "PackagingIn"; //Use the global attribute name NOT the object attribute name
+                sAttributeValues5_2[3] = "0.0";
+                sAttributeTypes5_2[3] = "double";
+
+                sAttributeNames5_2[4] = "WBOutDate"; //Use the global attribute name NOT the object attribute name
+                sAttributeValues5_2[4] = "01/01/1970 00:00:00 AM";
+                sAttributeTypes5_2[4] = "date";
+
+                sAttributeNames5_2[5] = "WBOutGrossWeight"; //Use the global attribute name NOT the object attribute name
+                sAttributeValues5_2[5] = "0.0";
+                sAttributeTypes5_2[5] = "double";
+
+                sAttributeNames5_2[6] = "PackagingOut"; //Use the global attribute name NOT the object attribute name
+                sAttributeValues5_2[6] = "0.0";
+                sAttributeTypes5_2[6] = "double";
+
+
+                sAttributeNames5_2[7] = "TruckRego"; //Use the global attribute name NOT the object attribute name
+                sAttributeValues5_2[7] = "NoRego";
+                sAttributeTypes5_2[7] = "string";
+
+                sCheckinComments = "Blanking attributes on load " + sLoadNo;
+                //If the part name is empty it will not be changed
+                sRtn = client2.setpartattributes(sLoadNo, "", sFullName, sAttributeNames5_2, sAttributeValues5_2, sAttributeTypes5_2, sCheckinComments, iWebAppId);
+                return sRtn;
+            }
+
+        }
+
         public string CreateShippingLoad(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sProductName, string sFolder, string sBatchType,
-                                         string sCheckInComments, string iProdOrLibrary, string dMoisturePercentage, string sContainerSealNo, string sProductCode, string sBatchDate, string sWebAppId)
+                                        string sCheckInComments, string iProdOrLibrary, string dMoisturePercentage, string sContainerSealNo, string sProductCode, string sBatchDate, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -3947,7 +4564,7 @@ namespace WcfWCService
                                   string dTargetAl2O3, string dActualAl2O3, string dTargetCaO, string dActualCaO, string dTargetF, string dActualF,
                                   string dTargetFe2O3, string dActualFe2O3, string dTargetK2O, string dActualK2O, string dTargetMgO, string dActualMgO,
                                   string dTargetMnO, string dActualMnO, string dTargetNa2O3, string dActualNa2O3, string dTargetSiO2, string dActualSiO2,
-                                  string dTargetC, string dActualC, string dTargetSO3, string dActualSO3, string dTargetCN, string dActualCN, 
+                                  string dTargetC, string dActualC, string dTargetSO3, string dActualSO3, string dTargetCN, string dActualCN,
                                   string sProductCode, string sBatchDate, string sVerifiedBy, string sVerifiedDate, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -4091,9 +4708,9 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "date";
                 }
 
-                sRtn =  client2.setpartattributes(sBatchNo, sBatchName, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, Convert.ToInt16(sWebAppId));
+                sRtn = client2.setpartattributes(sBatchNo, sBatchName, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, Convert.ToInt16(sWebAppId));
 
-                if(bVerify)
+                if (bVerify)
                 {
                     sRtn = SetPartState(sSessionId, sUserId, sBatchNo, "REVIEWED", sWebAppId);
                 }
@@ -4218,11 +4835,11 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "date";
                 }
 
-                sRtn =  client2.setpartattributes(sBatchNo, sBatchName, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, Convert.ToInt16(sWebAppId));
+                sRtn = client2.setpartattributes(sBatchNo, sBatchName, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, Convert.ToInt16(sWebAppId));
 
                 if (bVerify)
                 {
-                    sRtn = SetPartState(sSessionId, sUserId, sBatchNo, "REVIEWED", sWebAppId);                    
+                    sRtn = SetPartState(sSessionId, sUserId, sBatchNo, "REVIEWED", sWebAppId);
                 }
                 return sRtn;
             }
@@ -8579,6 +9196,36 @@ namespace WcfWCService
             }
         }
 
+        public string TerminateWorkflow(string sSessionId, string sUserId, string sWorkflowId, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                try
+                {
+                    Update_User_Time(sUserId, sSessionId);
+                    ExampleService.MyJavaService3Client client2 = GetWCService();
+                    long lWorkflowId = Convert.ToInt32(sWorkflowId);
+                    string sReturn = "";
+
+
+                    sReturn = client2.terminateworkflow(lWorkflowId, Convert.ToInt16(sWebAppId));
+
+                    if (sReturn != "Success")
+                        return sReturn;
+
+                    return sReturn;
+                }
+                catch (Exception ex)
+                {
+                    return "Failure^" + ex.Message + "^";
+                }
+            }
+        }
+
         public string ReassignPartLifecycle(string sSessionId, string sUserId, string sPartNo, string sLifecycleName, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -10515,7 +11162,6 @@ namespace WcfWCService
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
 
             if (rst.m_RecordCount > 0)
             {
@@ -10556,7 +11202,6 @@ namespace WcfWCService
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
 
             if (rst.m_RecordCount > 0)
             {
@@ -10663,7 +11308,6 @@ namespace WcfWCService
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
 
             if (rst.m_RecordCount > 0)
             {
@@ -10694,7 +11338,6 @@ namespace WcfWCService
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
 
             if (rst.m_RecordCount > 0)
             {
@@ -10726,7 +11369,6 @@ namespace WcfWCService
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
 
             if (rst.m_RecordCount > 0)
             {
@@ -10758,7 +11400,6 @@ namespace WcfWCService
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
 
             if (rst.m_RecordCount > 0)
             {
@@ -10793,6 +11434,35 @@ namespace WcfWCService
             ds.Dispose();
 
             return bRtn;
+        }
+
+        public rtnBigInt PartDocRefLinkExists(String sPartNo, String sDocNo, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            Int64 iRtnValue = -1;
+            rtnBigInt rtnCls = new rtnBigInt();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select PDRLId " +
+                          "from vwWindchillPartRefDocInfo PD " +
+                          "where PD.PMAPartNumber = '" + sPartNo + "' " +
+                          "and PD.DMBDocNumber = '" + sDocNo + "'";
+
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+
+            if (rst.m_RecordCount > 0)
+            {
+                iRtnValue = rst.Get_BigInt(ds, "PDRLId", 0);
+                rtnCls.bReturnValue = true;
+                rtnCls.iReturnValue = iRtnValue;
+                ds.Dispose();
+            }
+            else
+            {
+                rtnCls.bReturnValue = false;
+                rtnCls.iReturnValue = iRtnValue;
+            }
+
+            return rtnCls;
         }
 
         public string GetDocName(String sDocNo, int iWebAppId)
@@ -10908,7 +11578,6 @@ namespace WcfWCService
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
 
             if (rst.m_RecordCount > 0)
             {
@@ -10987,7 +11656,6 @@ namespace WcfWCService
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
 
             if (rst.m_RecordCount > 0)
             {
@@ -11015,7 +11683,6 @@ namespace WcfWCService
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
 
             if (rst.m_RecordCount > 0)
             {
@@ -11033,6 +11700,33 @@ namespace WcfWCService
             return rtnCls;
         }
 
+        public rtnDate GetPartDateAttribute(String sPartNo, String sAttributeName, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            DateTime? dtRtnValue;
+            rtnDate rtnCls = new rtnDate();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select value from vwWindchillPartDateAttributes where WTPartNumber = '" + sPartNo + "' and name = '" + sAttributeName + "'";
+
+            //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+
+            if (rst.m_RecordCount > 0)
+            {
+                dtRtnValue = rst.Get_Date(ds, "value", 0);
+                rtnCls.bReturnValue = true;
+                rtnCls.dtReturnValue = dtRtnValue;
+                ds.Dispose();
+            }
+            else
+            {
+                rtnCls.bReturnValue = false;
+                rtnCls.dtReturnValue = null;
+            }
+
+            return rtnCls;
+        }
+
         public rtnString GetPartStringAttribute(String sPartNo, String sAttributeName, int iWebAppId)
         {
             RecordSet rst = new RecordSet();
@@ -11043,7 +11737,6 @@ namespace WcfWCService
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
 
             if (rst.m_RecordCount > 0)
             {
@@ -11071,7 +11764,6 @@ namespace WcfWCService
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
 
             if (rst.m_RecordCount > 0)
             {
@@ -11099,7 +11791,6 @@ namespace WcfWCService
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
 
             if (rst.m_RecordCount > 0)
             {
@@ -11127,7 +11818,6 @@ namespace WcfWCService
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
 
             if (rst.m_RecordCount > 0)
             {
@@ -11189,7 +11879,6 @@ namespace WcfWCService
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
 
             if (rst.m_RecordCount > 0)
             {
@@ -11217,7 +11906,6 @@ namespace WcfWCService
         {
             RecordSet rst = new RecordSet();
             string sRtnValue = "";
-            string sMaterialName = "";
             rtnInt rtnCls = new rtnInt();
             int iNoOfCores = 0;
             rst.SetWebApp(iWebAppId);
@@ -11230,7 +11918,6 @@ namespace WcfWCService
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
 
             if (rst.m_RecordCount > 0)
             {
@@ -11319,7 +12006,6 @@ namespace WcfWCService
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
 
             if (rst.m_RecordCount > 0)
             {
@@ -11350,7 +12036,6 @@ namespace WcfWCService
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
 
             if (rst.m_RecordCount > 0)
             {
@@ -11395,15 +12080,13 @@ namespace WcfWCService
         {
             RecordSet rst = new RecordSet();
             string sRtnValue = "";
-            string sName = "";
             rtnString rtnCls = new rtnString();
             rst.SetWebApp(iWebAppId);
             string sSQL = "exec SP_JobPlantFolder " + iJob;
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
-
+            
             if (rst.m_RecordCount > 0)
             {
                 sRtnValue = rst.Get_NVarchar(ds, "FolderPath", 0);
@@ -11475,11 +12158,10 @@ namespace WcfWCService
 
         }
 
-        public rtnBool GetDocumentPrimaryAttachmentExists(String sDocumentNumber, int iWebAppId)
+        public rtnBool GetDocumentPrimaryAttachmentExists(string sDocumentNumber, string sFilename, int iWebAppId)
         {
             String[] sParamNames = new String[1];
             Object[] objParamValues = new Object[1];
-            int i;
             rtnBool rtnClass = new rtnBool();
 
             StoredProc SP = new StoredProc();
@@ -11487,6 +12169,7 @@ namespace WcfWCService
 
             SP.SetProcName("SP_GetWindchillDocumentAttachmentPrimary");
             SP.SetParam("@pvchDocumentNumber", sDocumentNumber);
+            SP.SetParam("@pvchFileName", sFilename);
             int iRecordCount = SP.RunStoredProcDataSet();
 
 
@@ -11515,8 +12198,6 @@ namespace WcfWCService
                         rtnClass.bReturnValid = true;
                         rtnClass.sErrMessage = "";
                     }
-
-                    rtnClass.bReturnValue = true;
                     return rtnClass;
                 }
                 catch (Exception e)
@@ -11534,14 +12215,12 @@ namespace WcfWCService
         {
             RecordSet rst = new RecordSet();
             string sRtnValue = "";
-            string sName = "";
             rtnString rtnCls = new rtnString();
             rst.SetWebApp(iWebAppId);
             string sSQL = "exec SP_GetWindchillDocumentProduct '" + sJob + "', " + iProdOrLib;
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
 
             if (rst.m_RecordCount > 0)
             {
@@ -11679,7 +12358,6 @@ namespace WcfWCService
 
             //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
-            bool bRtn = false;
 
             if (rst.m_RecordCount > 0)
             {
@@ -11786,7 +12464,6 @@ namespace WcfWCService
         {
             String[] sParamNames = new String[0];
             Object[] objParamValues = new Object[0];
-            int i;
             rtnInt rtnClass = new rtnInt();
 
             StoredProc SP = new StoredProc();
@@ -11812,9 +12489,9 @@ namespace WcfWCService
 
                     if (iRecordCount > 0)
                     {
-                            int iRowCounter = rs.Get_Int(ds, "RowCounter", 0);
-                            rtnClass.iReturnValue = iRowCounter;
-                            rtnClass.bReturnValue=true;
+                        int iRowCounter = rs.Get_Int(ds, "RowCounter", 0);
+                        rtnClass.iReturnValue = iRowCounter;
+                        rtnClass.bReturnValue = true;
                     }
                     else
                     {
@@ -11836,7 +12513,6 @@ namespace WcfWCService
         {
             String[] sParamNames = new String[1];
             Object[] objParamValues = new Object[1];
-            int i;
             rtnInt rtnClass = new rtnInt();
 
             StoredProc SP = new StoredProc();
@@ -12509,7 +13185,7 @@ namespace WcfWCService
 
                     if (!sBookingNo.Equals(sPassedBookingNo))
                     {
-                        sBody += "The booking number submitted against this file " + sFile + " is " + sPassedBookingNo.Replace("LB-","") + " but the number in cell C3 of the first sheet is " + sBookingNo.Replace("LB-", "") +
+                        sBody += "The booking number submitted against this file " + sFile + " is " + sPassedBookingNo.Replace("LB-", "") + " but the number in cell C3 of the first sheet is " + sBookingNo.Replace("LB-", "") +
                                  ". These do not match so the file will not be processed\r\n";
                     }
                     else
@@ -12756,9 +13432,10 @@ namespace WcfWCService
                             {
                                 //The sreadsheet does not have moisture percentages so set to 0
                                 sRtn = SetShippingLoadItem(sSessionId, sUserId, sFullName, arrItems[i].sBookingNo, arrItems[i].sContainerNo, arrItems[i].dTareWeight.ToString(),
-                                                           arrItems[i].sLoadNo, "-1", arrItems[i].sSealNo, arrItems[i].sBatchNo, arrItems[i].iLineNumber.ToString(), 
+                                                           arrItems[i].sLoadNo, "-1", arrItems[i].sSealNo, "0", "", "", "", "", "", "", "" , "",
+                                                           arrItems[i].sBatchNo, arrItems[i].iLineNumber.ToString(),
                                                            arrItems[i].dNetWeight.ToString(), "0", "",
-                                                           arrItems[i].sDispatchDocketNo, arrItems[i].sDestinationCode, arrItems[i].sDDDate, sWebAppId);
+                                                           arrItems[i].sDispatchDocketNo, arrItems[i].sDestinationCode, arrItems[i].sDDDate, "false", sWebAppId);
 
                                 if (!sRtn.StartsWith("Success"))
                                 {
@@ -12771,7 +13448,7 @@ namespace WcfWCService
 
                         if (bAttachFile)
                         {
-                            rtnBool rtnSecondary = GetDocumentPrimaryAttachmentExists(sBookingNo, iWebAppId);
+                            rtnBool rtnSecondary = GetDocumentPrimaryAttachmentExists(sBookingNo, sNewFileName, iWebAppId);
 
                             if (rtnSecondary.bReturnValid)
                             {
@@ -12827,7 +13504,7 @@ namespace WcfWCService
                     string sSubject = "Processing of File " + sFile + " for Shipping Booking Items Import";
                     if (sBody.Length == 0)
                         sBody = "No issues.";
-                    sBody = "File " + sFile + " for Shipping Booking Items Import was processed with the following issues.\r\n" + sBody;
+                    sBody = "File " + sFile + " for Shipping Booking Items Import (Tomago container format) was processed with the following issues.\r\n" + sBody;
                     //                    emailmessage(sSessionId, sUserId, sSubject, sBody, " ", sRecipeints, "", "", sWebAppId);
 
                     return "Success^" + sBody;
@@ -12849,6 +13526,1470 @@ namespace WcfWCService
                 }
             }
         }
+
+        public string ProcessShippingBookingSpreadsheetTomagoContainer(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sWebAppId)
+        {
+            Excel.Application xlApp = null;
+            Excel.Workbooks xlWbks = null;
+            bool bAttachFile = false;
+            string sDateTimeStamp = DateTime.Now.ToString("yyyyMMdd_hhmmss");
+            string sNewFileName = sFile;
+
+            try
+            {
+                int iWebAppId = Convert.ToInt32(sWebAppId);
+
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    Update_User_Time(sUserId, sSessionId);
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+                    string sRecipeints = arrUser[3].ToString();
+                    string sRtn = "";
+                    double d, d2;
+
+                    xlApp = new Excel.Application();
+                    xlWbks = xlApp.Workbooks;
+
+                    //Copy the file to a name with user and date and time
+                    if (sFile.EndsWith(".xlsx"))
+                    {
+                        sNewFileName = sFile.Replace(".xlsx", "_Import_" + sUserId + "_" + sDateTimeStamp + ".xlsx");
+                        File.Copy(@"C:\Webroot\Regain\Uploads\" + sFile, @"C:\Webroot\Regain\Uploads\" + sNewFileName);
+                    }
+
+                    Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
+                    Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+                    Excel.Range xlRange = xlWorksheet.UsedRange;
+
+                    int rowCount = xlRange.Rows.Count;
+                    int colCount = xlRange.Columns.Count;
+                    int i = 0, j = 0, iRowCount;
+                    string sBody = "";
+                    string sBookingNo = "", sDestinationCode = "";
+
+                    if (xlRange.Cells[1, 3].Value2 != null)
+                        sBookingNo = "LB-" + xlRange.Cells[1, 3].Value2.ToString();
+
+                    if (!sBookingNo.Equals(sPassedBookingNo))
+                    {
+                        sBody += "The booking number submitted against this file " + sFile + " is " + sPassedBookingNo.Replace("LB-", "") + " but the number in cell C3 of the first sheet is " + sBookingNo.Replace("LB-", "") +
+                                 ". These do not match so the file will not be processed\r\n";
+                    }
+                    else
+                    {
+
+                        //Get the proper row count because sometimes the range rowcount is wrong
+                        iRowCount = rowCount;
+                        for (i = 4; i <= rowCount; i++)
+                        {
+                            if (xlRange.Cells[i, 1].Value2 == null)
+                            {
+                                iRowCount = i - 1;
+                                break;
+                            }
+                            else
+                            {
+                                string sACell = xlRange.Cells[i, 1].Value2.ToString();
+                                if (!Double.TryParse(sACell, out d2))
+                                {
+                                    iRowCount = i - 1;
+                                    break;
+                                }
+                            }
+                        }
+
+                        rowCount = iRowCount;
+
+                        //rtnString rtnDest = GetParentPartOfType(sBookingNo, "local.rs.vsrs05.Regain.Mass_Balance_Destination", iWebAppId);
+
+                        //if(rtnDest.bReturnValue)
+                        //{
+                        //    sDestinationCode = rtnDest.sReturnValue;
+                        //}
+
+                        arrBookingItem[] arrItems = new arrBookingItem[rowCount - 3];
+                        for (i = 4; i <= rowCount; i++)
+                        {
+                            string sContainerNo = "";
+                            if (xlRange.Cells[i, 13].Value2 != null)
+                                sContainerNo = xlRange.Cells[i, 13].Value2.ToString();
+
+                            string sSealNo = "";
+                            if (xlRange.Cells[i, 14].Value2 != null)
+                                sSealNo = xlRange.Cells[i, 14].Value2.ToString();
+
+                            double dTareWeight = 0.0;
+                            if (xlRange.Cells[i, 15].Value2 != null)
+                                dTareWeight = Convert.ToDouble(xlRange.Cells[i, 15].Value2.ToString());
+
+                            double dNetWeight = 0.0;
+                            if (xlRange.Cells[i, 20].Value2 != null)
+                                dNetWeight = Convert.ToDouble(xlRange.Cells[i, 20].Value2.ToString());
+
+                            string sBatchNo = "";
+                            if (xlRange.Cells[i, 22].Value2 != null)
+                                sBatchNo = xlRange.Cells[i, 22].Value2.ToString();
+
+                            string sDispatchDocketNo = "";
+                            if (xlRange.Cells[i, 21].Value2 != null)
+                                sDispatchDocketNo = "D" + xlRange.Cells[i, 21].Value2.ToString("000000"); //This makes the dispatch docket start with a D and have 6 digits with leading zeros if necessary
+
+                            string sDDDate = "";
+                            if (xlRange.Cells[i, 3].Value2 != null)
+                                sDDDate = xlRange.Cells[i, 3].Value2.ToString();
+
+                            string sDisDocDate = "";
+                            if (!sDDDate.Equals(""))
+                            {
+                                if (Double.TryParse(sDDDate, out d2))
+                                {
+                                    d = Double.Parse(sDDDate);
+                                    DateTime dtDDDate = DateTime.FromOADate(d);
+                                    if (dtDDDate.Hour == 0 && dtDDDate.Minute == 0 && dtDDDate.Second == 0)
+                                        sDisDocDate = dtDDDate.ToString("dd/MM/yyyy");
+                                    else
+                                        sDisDocDate = dtDDDate.ToString("dd/MM/yyyy hh:mm:ss tt");
+                                }
+
+                            }
+
+                            int iSeqNo = 0;
+                            if (xlRange.Cells[i, 1].Value2 != null)
+                                iSeqNo = Convert.ToInt32(xlRange.Cells[i, 1].Value2.ToString());
+
+                            string sWBDocketNo = "";
+                            if (xlRange.Cells[i, 2].Value2 != null)
+                                sWBDocketNo = xlRange.Cells[i, 2].Value2.ToString();
+
+                            string sTruckRego = "";
+                            if (xlRange.Cells[i, 10].Value2 != null)
+                                sTruckRego = xlRange.Cells[i, 10].Value2.ToString();
+
+                            string sWBDDateIn = "";
+                            if (xlRange.Cells[i, 3].Value2 != null)
+                                sWBDDateIn = xlRange.Cells[i, 3].Value2.ToString();
+
+                            string sWBTimeIn = "";
+                            if (xlRange.Cells[i, 4].Value2 != null)
+                                sWBTimeIn = xlRange.Cells[i, 4].Value2.ToString();
+
+//                            double dWBDDateTimeIn = Convert.ToDouble(sWBDDateIn) + Convert.ToDouble(sWBTimeIn);
+
+                            string sWBDocketDateIn = "";
+                            if (!sWBDDateIn.Equals("")) //We must have a date at least
+                            {
+                                if (Double.TryParse(sWBDDateIn, out d2))
+                                {
+                                    d = Double.Parse(sWBDDateIn);
+                                    DateTime dtWBDDateIn = DateTime.FromOADate(d);
+                                    if (dtWBDDateIn.Hour == 0 && dtWBDDateIn.Minute == 0 && dtWBDDateIn.Second == 0)
+                                        sWBDocketDateIn = dtWBDDateIn.ToString("dd/MM/yyyy");
+                                    else
+                                        sWBDocketDateIn = dtWBDDateIn.ToString("dd/MM/yyyy hh:mm:ss tt");
+                                }
+
+                            }
+
+                            string sWBDocketTimeIn = "";
+                            if (!sWBTimeIn.Equals("")) //We must have a date at least
+                            {
+                                if (Double.TryParse(sWBTimeIn, out d2))
+                                {
+                                    d = Double.Parse(sWBTimeIn);
+                                    DateTime dtWBTimeIn = DateTime.FromOADate(d);
+                                    if (dtWBTimeIn.Hour == 0 && dtWBTimeIn.Minute == 0 && dtWBTimeIn.Second == 0)
+                                        sWBDocketTimeIn = "";
+                                    else
+                                        sWBDocketTimeIn = dtWBTimeIn.ToString("hh:mm tt");
+                                }
+
+                            }
+
+                            string sWBDocketDateTimeIn = sWBDocketDateIn;
+
+                            if(!sWBDocketTimeIn.Equals(""))
+                            {
+                                sWBDocketDateTimeIn += " " + sWBDocketTimeIn;
+                            }
+
+                            double dGrossWeightIn = 0.0;
+                            if (xlRange.Cells[i, 6].Value2 != null)
+                                dGrossWeightIn = Convert.ToDouble(xlRange.Cells[i, 6].Value2.ToString());
+
+                            double dPackagingIn = 0.0;
+
+/*                            string sWBDDateOut = "";
+                            if (xlRange.Cells[i, 7].Value2 != null)
+                                sWBDDateOut = xlRange.Cells[i, 7].Value2.ToString();
+*/
+                            string sWBTimeOut = "";
+                            if (xlRange.Cells[i, 7].Value2 != null)
+                                sWBTimeOut = xlRange.Cells[i, 7].Value2.ToString();
+
+                            //                            double dWBDDateTimeOut = Convert.ToDouble(sWBDDateOut) + Convert.ToDouble(sWBTimeOut);
+
+/*                            string sWBDocketDateOut = "";
+                            if (!sWBDDateOut.Equals("")) //We must have a date at least
+                            {
+                                if (Double.TryParse(sWBDDateOut, out d2))
+                                {
+                                    d = Double.Parse(sWBDDateOut);
+                                    DateTime dtWBDDateOut = DateTime.FromOADate(d);
+                                    if (dtWBDDateOut.Hour == 0 && dtWBDDateOut.Minute == 0 && dtWBDDateOut.Second == 0)
+                                        sWBDocketDateOut = dtWBDDateOut.ToString("dd/MM/yyyy");
+                                    else
+                                        sWBDocketDateOut = dtWBDDateOut.ToString("dd/MM/yyyy hh:mm:ss tt");
+                                }
+
+                            }
+*/
+                            string sWBDocketTimeOut = "";
+                            if (!sWBTimeOut.Equals("")) //We must have a date at least
+                            {
+                                if (Double.TryParse(sWBTimeOut, out d2))
+                                {
+                                    d = Double.Parse(sWBTimeOut);
+                                    DateTime dtWBTimeOut = DateTime.FromOADate(d);
+                                    if (dtWBTimeOut.Hour == 0 && dtWBTimeOut.Minute == 0 && dtWBTimeOut.Second == 0)
+                                        sWBDocketTimeOut = "";
+                                    else
+                                        sWBDocketTimeOut = dtWBTimeOut.ToString("hh:mm tt");
+                                }
+
+                            }
+
+                            string sWBDocketDateTimeOut = sWBDocketDateIn; //We only have one column for the date and 2 columns for the time
+
+                            if (!sWBDocketTimeOut.Equals(""))
+                            {
+                                sWBDocketDateTimeOut += " " + sWBDocketTimeOut;
+                            }
+
+
+                            double dGrossWeightOut = 0.0;
+                            if (xlRange.Cells[i, 9].Value2 != null)
+                                dGrossWeightOut = Convert.ToDouble(xlRange.Cells[i, 9].Value2.ToString());
+
+                            double dPackagingOut = 0.0;
+                            
+
+                            arrItems[i - 4] = new arrBookingItem();
+
+                            arrItems[i - 4].sBookingNo = sBookingNo;
+                            arrItems[i - 4].sContainerNo = "LC-" + sContainerNo.ToUpper();
+                            arrItems[i - 4].sSealNo = sSealNo;
+                            arrItems[i - 4].dTareWeight = dTareWeight;
+                            arrItems[i - 4].dNetWeight = dNetWeight;
+                            arrItems[i - 4].sBatchNo = sBatchNo;
+                            arrItems[i - 4].sDispatchDocketNo = sDispatchDocketNo;
+                            arrItems[i - 4].sDestinationCode = sDestinationCode;
+                            arrItems[i - 4].sDDDate = sDisDocDate;
+                            arrItems[i - 4].iFileRowNo = i;
+                            arrItems[i - 4].iLineNumber = -1;
+
+                            arrItems[i - 4].iSeqNo = iSeqNo;
+                            arrItems[i - 4].sWBDocketNo = sWBDocketNo;
+                            arrItems[i - 4].sWBDocketDateIn = sWBDocketDateTimeIn;
+                            arrItems[i - 4].dWBInGrossWeight = dGrossWeightIn;
+                            arrItems[i - 4].dPackagingIn = dPackagingIn;
+                            arrItems[i - 4].sWBDocketDateOut = sWBDocketDateTimeOut;
+                            arrItems[i - 4].dWBOutGrossWeight = dGrossWeightOut;
+                            arrItems[i - 4].dPackagingOut = dPackagingOut;
+                            arrItems[i - 4].sTruckRego = sTruckRego;
+
+                            rtnString rtnLoad = GetShippingLoadExists(sBookingNo, "LC-" + sContainerNo, sSealNo, iWebAppId);
+
+                            if (rtnLoad.bReturnValue)
+                            {
+                                arrItems[i - 4].sLoadNo = rtnLoad.sReturnValue;
+
+                                //rtnInt rtnBatch = PartPartLinkWithQtyExists(arrItems[i - 4].sLoadNo, arrItems[i - 4].sBatchNo, arrItems[i - 4].dNetWeight, iWebAppId);
+                                rtnInt rtnBatch = PartPartLinkExists(arrItems[i - 4].sLoadNo, arrItems[i - 4].sBatchNo, iWebAppId);
+                                if (rtnBatch.bReturnValue)
+                                {
+                                    //The load to batch transaction may exist but not the dispatch docket
+                                    //arrItems[i - 4].iLineNumber = rtnBatch.iReturnValue;
+
+                                    //Also the dispatch docket stuff has to exist
+                                    rtnInt rtnDD = DispatchDocketTransactionExists(arrItems[i - 4].sDispatchDocketNo, arrItems[i - 4].sBatchNo, arrItems[i - 4].sLoadNo, iWebAppId);
+                                    //                                    rtnInt rtnDD = DestinationTransactionExists(arrItems[i - 4].sLoadNo + "-" + arrItems[i - 4].iLineNumber, arrItems[i - 4].sBatchNo, arrItems[i - 4].sDestinationCode, iWebAppId);
+                                    if (rtnDD.bReturnValue)
+                                        arrItems[i - 4].bAlreadyExists = true;
+                                }
+                            }
+
+
+                            //                            sBody += sRowMsg;
+
+                        }
+
+                        //Now we have everything in an array and we know what is already exists and is in the system
+                        //We need to check if anything that does not exist is inconsistent with any other line
+                        for (i = 0; i < rowCount - 3; i++)
+                        {
+                            bool bToBeInserted = true;
+                            if (arrItems[i].bAlreadyExists)
+                            {
+                                sBody += "Item on row " + arrItems[i].iFileRowNo + " is already in the system. The row will be ignored.\r\n";
+                            }
+                            else
+                            {
+                                //If the batch number doesn't exist
+                                if (!PartExists(arrItems[i].sBatchNo, iWebAppId))
+                                {
+                                    sBody += "The batch number " + arrItems[i].sBatchNo + " on row " + arrItems[i].iFileRowNo + " does not exist. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+
+                                }
+
+                                //If the dispatch docket doesn't exist
+                                if (!arrItems[i].sDispatchDocketNo.Equals(""))
+                                {
+                                    if (!DocExists(arrItems[i].sDispatchDocketNo, iWebAppId))
+                                    {
+                                        sBody += "The dispatch docket " + arrItems[i].sDispatchDocketNo + " on row " + arrItems[i].iFileRowNo + " does not exist. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                        arrItems[i].bInsert = false;
+                                        bToBeInserted = false;
+
+                                    }
+                                }
+                                //If the seal number is there but no container
+                                if (arrItems[i].sContainerNo.Equals("") && !arrItems[i].sSealNo.Equals(""))
+                                {
+                                    sBody += "The container number on row " + arrItems[i].iFileRowNo + " is empty but the seal number isn't. The seal number will be ignored.\r\n";
+                                    arrItems[i].sSealNo = "";
+                                }
+
+                                //If tare weight is there but no container
+                                if (arrItems[i].sContainerNo.Equals("") && arrItems[i].dTareWeight != 0.0)
+                                {
+                                    sBody += "The container number on row " + arrItems[i].iFileRowNo + " is empty but the tare weight isn't. The tare weight will be ignored.\r\n";
+                                    arrItems[i].dTareWeight = 0.0;
+                                }
+
+                                //If the container is there but no seal number
+                                if (!arrItems[i].sContainerNo.Equals("") && arrItems[i].sSealNo.Equals(""))
+                                {
+                                    sBody += "The seal number on row " + arrItems[i].iFileRowNo + " is empty but the container number isn't. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If the container is there but no tare weight
+                                if (!arrItems[i].sContainerNo.Equals("") && arrItems[i].dTareWeight == 0.0)
+                                {
+                                    sBody += "The tare weight on row " + arrItems[i].iFileRowNo + " is empty but the container number isn't. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If there is no batch number
+                                if (arrItems[i].sBatchNo.Equals(""))
+                                {
+                                    sBody += "The batch number on row " + arrItems[i].iFileRowNo + " is empty. You must provide at least a batch number and a net weight. Row " + arrItems[i].iFileRowNo +
+                                             " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If no net weight
+                                if (arrItems[i].dNetWeight == 0.0)
+                                {
+                                    sBody += "The net weight on row " + arrItems[i].iFileRowNo + " is empty. You must provide at least a batch number and a net weight. Row " + arrItems[i].iFileRowNo +
+                                             " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If there is a container is the system with a different seal number
+                                rtnString rtnContainer = GetShippingContainerExists(arrItems[i].sBookingNo, arrItems[i].sContainerNo, iWebAppId);
+
+                                if (rtnContainer.bReturnValue)
+                                {
+                                    if (!rtnContainer.sReturnValue.Equals(arrItems[i].sSealNo))
+                                    {
+                                        sBody += "The container number on row " + arrItems[i].iFileRowNo + " already exists with seal number " + rtnContainer.sReturnValue +
+                                                 " but the seal number " + arrItems[i].sSealNo + " is different on row number " + arrItems[i].iFileRowNo + ". Row " + arrItems[i].iFileRowNo +
+                                                 " has not been processed.\r\n";
+                                        arrItems[i].bInsert = false;
+                                        bToBeInserted = false;
+                                    }
+                                }
+
+                                //Look at any earlier rows
+                                for (j = rowCount - 4; j >= 0; j--)
+                                {
+                                    if (j != i)
+                                    {
+                                        if (arrItems[i].sContainerNo.Equals(arrItems[j].sContainerNo) && !arrItems[i].sSealNo.Equals(arrItems[j].sSealNo))
+                                        {
+                                            sBody += "The container number on rows " + arrItems[i].iFileRowNo + " and " + arrItems[j].iFileRowNo + " match but the respective seal numbers " +
+                                                     arrItems[i].sSealNo + " and " + arrItems[j].sSealNo + " do not match. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                            arrItems[i].bInsert = false;
+                                            bToBeInserted = false;
+                                            break;
+                                        }
+                                    }
+
+                                }
+
+                                if (bToBeInserted)
+                                {
+                                    arrItems[i].bInsert = true;
+                                    arrItems[i].sLoadNo = "";
+                                }
+                            }
+                        }
+
+                        //Now just process all the rows that are valid. bInsert = true
+                        for (i = 0; i < rowCount - 3; i++)
+                        {
+                            if (arrItems[i].bInsert)
+                            {
+
+                                //Times need to be in UTC.
+                                DateTime dtTimeIn1 = GetDateFromString(arrItems[i].sWBDocketDateIn, "dd/MM/yyyy hh:mm tt");
+                                DateTime dtTimeIn2 = ConvertFromAESTToGMT(dtTimeIn1);
+                                string sTimeIn = dtTimeIn2.ToString("dd/MM/yyy hh:mm:ss tt");
+                                DateTime dtTimeOut1 = GetDateFromString(arrItems[i].sWBDocketDateOut, "dd/MM/yyyy hh:mm tt");
+                                DateTime dtTimeOut2 = ConvertFromAESTToGMT(dtTimeOut1);
+                                string sTimeOut = dtTimeOut2.ToString("dd/MM/yyy hh:mm:ss tt");
+
+                                //The spreadsheet does not have moisture percentages so set to 0;
+                                sRtn = SetShippingLoadItem(sSessionId, sUserId, sFullName, arrItems[i].sBookingNo, arrItems[i].sContainerNo, arrItems[i].dTareWeight.ToString(),
+                                                           arrItems[i].sLoadNo, "-1", arrItems[i].sSealNo, arrItems[i].iSeqNo.ToString(), arrItems[i].sWBDocketNo,
+                                                           sTimeIn, arrItems[i].dWBInGrossWeight.ToString(), arrItems[i].dPackagingIn.ToString(),
+                                                           sTimeOut, arrItems[i].dWBOutGrossWeight.ToString(), arrItems[i].dPackagingOut.ToString(),
+                                                           arrItems[i].sTruckRego, arrItems[i].sBatchNo, arrItems[i].iLineNumber.ToString(),
+                                                           arrItems[i].dNetWeight.ToString(), "0", "",
+                                                           arrItems[i].sDispatchDocketNo, arrItems[i].sDestinationCode, arrItems[i].sDDDate, "false", sWebAppId);
+
+                                if (!sRtn.StartsWith("Success"))
+                                {
+                                    sBody += "Failed inserting row " + arrItems[i].iFileRowNo + " due to : " + sRtn;
+                                }
+
+                                if(!arrItems[i].sWBDocketNo.Equals(""))
+                                {
+                                    rtnInt rtnWBProc = SetWeighbridgeRecordProcessed(arrItems[i].sWBDocketNo, sUserId);
+                                    if (!rtnWBProc.bReturnValue)
+                                    {
+                                        sBody += "Failed setting weighbridge item " + arrItems[i].sWBDocketNo + "to processed";
+                                    }
+
+
+                                }
+
+                                bAttachFile = true;
+                            }
+                        }
+
+                        if (bAttachFile)
+                        {
+                            rtnBool rtnSecondary = GetDocumentPrimaryAttachmentExists(sBookingNo, sNewFileName, iWebAppId);
+
+                            if (rtnSecondary.bReturnValid)
+                            {
+                                string sNewFileName2 = @"C:\Webroot\Regain\Uploads\" + sNewFileName;
+                                bool bSecondary = rtnSecondary.bReturnValue;
+                                AttachWCDoc(sSessionId, sUserId, sFullName, sBookingNo, "Import file " + sNewFileName, sNewFileName2, bSecondary.ToString().ToLower(), "Import file for shipping " + sBookingNo, sWebAppId);
+
+                            }
+                            else
+                            {
+                                sBody += rtnSecondary.sErrMessage + "\r\n";
+                            }
+
+                        }
+
+
+                        //if(bUpdateFlatTables)
+                        //{
+                        //    rtnInt rtn2 = SetTransactionFlatTable();
+
+                        //    if(!rtn2.bReturnValue)
+                        //    {
+                        //        sBody += rtn2.sErrMessage + "\r\n";
+                        //    }
+
+                        //    rtnInt rtn3 = SetShippingFlatTableForBooking(sBookingNo);
+
+                        //    if (!rtn3.bReturnValue)
+                        //    {
+                        //        sBody += rtn3.sErrMessage + "\r\n";
+                        //    }
+
+
+                        //}
+                    }
+
+                    xlWorkbook.Close(true);
+                    xlWbks.Close();
+                    xlApp.Quit();
+
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWbks) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorksheet) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlRange) != 0) ;
+                    xlApp = null;
+                    xlWbks = null;
+                    xlWorkbook = null;
+                    xlWorksheet = null;
+                    xlRange = null;
+
+                    //Now email the user
+                    string sSubject = "Processing of File " + sFile + " for Shipping Booking Items Import";
+                    if (sBody.Length == 0)
+                        sBody = "No issues.";
+                    sBody = "File " + sFile + " for Shipping Booking Items Import (Tomago container format) was processed with the following issues.\r\n" + sBody;
+                    //                    emailmessage(sSessionId, sUserId, sSubject, sBody, " ", sRecipeints, "", "", sWebAppId);
+
+                    return "Success^" + sBody;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Failure:" + ex.Message + "^";
+            }
+            finally
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
+                {
+                    proc.Kill();
+                }
+            }
+        }
+
+        public string ProcessShippingBookingSpreadsheetAlbaContainer(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sWebAppId)
+        {
+            Excel.Application xlApp = null;
+            Excel.Workbooks xlWbks = null;
+            bool bAttachFile = false;
+            string sDateTimeStamp = DateTime.Now.ToString("yyyyMMdd_hhmmss");
+            string sNewFileName = sFile;
+
+            try
+            {
+                int iWebAppId = Convert.ToInt32(sWebAppId);
+
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    Update_User_Time(sUserId, sSessionId);
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+                    string sRecipeints = arrUser[3].ToString();
+                    string sRtn = "";
+
+                    xlApp = new Excel.Application();
+                    xlWbks = xlApp.Workbooks;
+
+                    //Copy the file to a name with user and date and time
+                    if (sFile.EndsWith(".xlsx"))
+                    {
+                        sNewFileName = sFile.Replace(".xlsx", "_Import_" + sUserId + "_" + sDateTimeStamp + ".xlsx");
+                        File.Copy(@"C:\Webroot\Regain\Uploads\" + sFile, @"C:\Webroot\Regain\Uploads\" + sNewFileName);
+                    }
+
+                    Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
+                    Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+                    Excel.Range xlRange = xlWorksheet.UsedRange;
+
+                    int rowCount = xlRange.Rows.Count;
+                    int colCount = xlRange.Columns.Count;
+                    int i = 0, j = 0, iRowCount;
+                    string sBody = "";
+                    string sBookingNo = "", sDestinationCode = "";
+
+                    if (xlRange.Cells[1, 3].Value2 != null)
+                        sBookingNo = "LB-" + xlRange.Cells[1, 3].Value2.ToString();
+
+                    if (!sBookingNo.Equals(sPassedBookingNo))
+                    {
+                        sBody += "The booking number submitted against this file " + sFile + " is " + sPassedBookingNo.Replace("LB-", "") + " but the number in cell C1 of the first sheet is " + sBookingNo.Replace("LB-", "") +
+                                 ". These do not match so the file will not be processed\r\n";
+                    }
+                    else
+                    {
+
+                        //Get the proper row count because sometimes the range rowcount is wrong
+                        iRowCount = rowCount;
+
+                        for (i = 4; i <= rowCount; i++)
+                        {
+                            if (xlRange.Cells[i, 1].Value2 == null)
+                            {
+                                iRowCount = i - 1;
+                                break;
+                            }
+                            else
+                            {
+                                string sACell = xlRange.Cells[i, 1].Value2.ToString();
+                                if (sACell.Equals(""))
+                                {
+                                    iRowCount = i - 1;
+                                    break;
+                                }
+                            }
+                        }
+
+                        rowCount = iRowCount;
+
+                        //rtnString rtnDest = GetParentPartOfType(sBookingNo, "local.rs.vsrs05.Regain.Mass_Balance_Destination", iWebAppId);
+
+                        //if(rtnDest.bReturnValue)
+                        //{
+                        //    sDestinationCode = rtnDest.sReturnValue;
+                        //}
+
+                        arrBookingItem[] arrItems = new arrBookingItem[rowCount - 3];
+                        for (i = 4; i <= rowCount; i++)
+                        {
+                            string sContainerNo = "";
+                            if (xlRange.Cells[i, 1].Value2 != null)
+                                sContainerNo = xlRange.Cells[i, 1].Value2.ToString();
+
+                            string sSealNo = "";
+                            if (xlRange.Cells[i, 2].Value2 != null)
+                                sSealNo = xlRange.Cells[i, 2].Value2.ToString();
+
+                            double dTareWeight = 0.0;
+                            if (xlRange.Cells[i, 8].Value2 != null)
+                                dTareWeight = Convert.ToDouble(xlRange.Cells[i, 8].Value2.ToString());
+
+                            if (dTareWeight > 1000.0)
+                                dTareWeight = dTareWeight / 1000.0;
+
+                            double dNetWeight = 0.0;
+                            if (xlRange.Cells[i, 7].Value2 != null)
+                                dNetWeight = Convert.ToDouble(xlRange.Cells[i, 7].Value2.ToString());
+
+                            if (dNetWeight > 1000.0)
+                                dNetWeight = dNetWeight / 1000.0;
+
+
+                            string sBatchNo = "";
+                            if (xlRange.Cells[i, 13].Value2 != null)
+                                sBatchNo = xlRange.Cells[i, 13].Value2.ToString();
+
+                            string sDispatchDocketNo = "";
+                            /*                            if (xlRange.Cells[i, 15].Value2 != null)
+                                                            sDispatchDocketNo = "D" + xlRange.Cells[i, 15].Value2.ToString("000000"); //This makes the dispatch docket start with a D and have 6 digits with leading zeros if necessary
+                            */
+
+                            rtnDate clsBatchDate = GetPartDateAttribute(sBookingNo, "BatchDate", iWebAppId);
+
+                            string sDDDate = "";
+
+                            if (clsBatchDate.bReturnValue)
+                            {
+                                sDDDate = ((DateTime)clsBatchDate.dtReturnValue).ToString("dd/MM/yyyy");
+                            }
+
+                            string sDisDocDate = sDDDate;
+                            /*                            if (!sDDDate.Equals(""))
+                                                        {
+                                                            if (Double.TryParse(sDDDate, out d2))
+                                                            {
+                                                                d = Double.Parse(sDDDate);
+                                                                DateTime dtDDDate = DateTime.FromOADate(d);
+                                                                if (dtDDDate.Hour == 0 && dtDDDate.Minute == 0 && dtDDDate.Second == 0)
+                                                                    sDisDocDate = dtDDDate.ToString("dd/MM/yyyy");
+                                                                else
+                                                                    sDisDocDate = dtDDDate.ToString("dd/MM/yyyy hh:mm:ss tt");
+                                                            }
+
+                                                        }
+                            */
+                            arrItems[i - 4] = new arrBookingItem();
+
+                            arrItems[i - 4].sBookingNo = sBookingNo;
+                            arrItems[i - 4].sContainerNo = "LC-" + sContainerNo.ToUpper();
+                            arrItems[i - 4].sSealNo = sSealNo;
+                            arrItems[i - 4].dTareWeight = dTareWeight;
+                            arrItems[i - 4].dNetWeight = dNetWeight;
+                            arrItems[i - 4].sBatchNo = sBatchNo;
+                            arrItems[i - 4].sDispatchDocketNo = sDispatchDocketNo;
+                            arrItems[i - 4].sDestinationCode = sDestinationCode;
+                            arrItems[i - 4].sDDDate = sDisDocDate;
+                            arrItems[i - 4].iFileRowNo = i;
+                            arrItems[i - 4].iLineNumber = -1;
+
+                            rtnString rtnLoad = GetShippingLoadExists(sBookingNo, "LC-" + sContainerNo, sSealNo, iWebAppId);
+
+                            if (rtnLoad.bReturnValue)
+                            {
+                                arrItems[i - 4].sLoadNo = rtnLoad.sReturnValue;
+
+                                rtnInt rtnBatch = PartPartLinkExists(arrItems[i - 4].sLoadNo, arrItems[i - 4].sBatchNo, iWebAppId);
+                                if (rtnBatch.bReturnValue)
+                                {
+
+                                    //Also the dispatch docket stuff has to exist
+                                    rtnInt rtnDD = DispatchDocketTransactionExists(arrItems[i - 4].sDispatchDocketNo, arrItems[i - 4].sBatchNo, arrItems[i - 4].sLoadNo, iWebAppId);
+                                    if (rtnDD.bReturnValue)
+                                        arrItems[i - 4].bAlreadyExists = true;
+                                }
+                            }
+
+
+                            //                            sBody += sRowMsg;
+
+                        }
+
+                        //Now we have everything in an array and we know what is already exists and is in the system
+                        //We need to check if anything that does not exist is inconsistent with any other line
+                        for (i = 0; i < rowCount - 3; i++)
+                        {
+                            bool bToBeInserted = true;
+                            if (arrItems[i].bAlreadyExists)
+                            {
+                                sBody += "Item on row " + arrItems[i].iFileRowNo + " is already in the system. The row will be ignored.\r\n";
+                            }
+                            else
+                            {
+                                //If the batch number doesn't exist
+                                if (!PartExists(arrItems[i].sBatchNo, iWebAppId))
+                                {
+                                    sBody += "The batch number " + arrItems[i].sBatchNo + " on row " + arrItems[i].iFileRowNo + " does not exist. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+
+                                }
+
+                                //If the dispatch docket doesn't exist
+                                if (!arrItems[i].sDispatchDocketNo.Equals(""))
+                                {
+                                    if (!DocExists(arrItems[i].sDispatchDocketNo, iWebAppId))
+                                    {
+                                        sBody += "The dispatch docket " + arrItems[i].sDispatchDocketNo + " on row " + arrItems[i].iFileRowNo + " does not exist. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                        arrItems[i].bInsert = false;
+                                        bToBeInserted = false;
+
+                                    }
+                                }
+                                //If the seal number is there but no container
+                                if (arrItems[i].sContainerNo.Equals("") && !arrItems[i].sSealNo.Equals(""))
+                                {
+                                    sBody += "The container number on row " + arrItems[i].iFileRowNo + " is empty but the seal number isn't. The seal number will be ignored.\r\n";
+                                    arrItems[i].sSealNo = "";
+                                }
+
+                                //If tare weight is there but no container
+                                if (arrItems[i].sContainerNo.Equals("") && arrItems[i].dTareWeight != 0.0)
+                                {
+                                    sBody += "The container number on row " + arrItems[i].iFileRowNo + " is empty but the tare weight isn't. The tare weight will be ignored.\r\n";
+                                    arrItems[i].dTareWeight = 0.0;
+                                }
+
+                                //If the container is there but no seal number
+                                if (!arrItems[i].sContainerNo.Equals("") && arrItems[i].sSealNo.Equals(""))
+                                {
+                                    sBody += "The seal number on row " + arrItems[i].iFileRowNo + " is empty but the container number isn't. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If the container is there but no tare weight
+                                if (!arrItems[i].sContainerNo.Equals("") && arrItems[i].dTareWeight == 0.0)
+                                {
+                                    sBody += "The tare weight on row " + arrItems[i].iFileRowNo + " is empty but the container number isn't. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If there is no batch number
+                                if (arrItems[i].sBatchNo.Equals(""))
+                                {
+                                    sBody += "The batch number on row " + arrItems[i].iFileRowNo + " is empty. You must provide at least a batch number and a net weight. Row " + arrItems[i].iFileRowNo +
+                                             " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If no net weight
+                                if (arrItems[i].dNetWeight == 0.0)
+                                {
+                                    sBody += "The net weight on row " + arrItems[i].iFileRowNo + " is empty. You must provide at least a batch number and a net weight. Row " + arrItems[i].iFileRowNo +
+                                             " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If there is a container is the system with a different seal number
+                                rtnString rtnContainer = GetShippingContainerExists(arrItems[i].sBookingNo, arrItems[i].sContainerNo, iWebAppId);
+
+                                if (rtnContainer.bReturnValue)
+                                {
+                                    if (!rtnContainer.sReturnValue.Equals(arrItems[i].sSealNo))
+                                    {
+                                        sBody += "The container number on row " + arrItems[i].iFileRowNo + " already exists with seal number " + rtnContainer.sReturnValue +
+                                                 " but the seal number " + arrItems[i].sSealNo + " is different on row number " + arrItems[i].iFileRowNo + ". Row " + arrItems[i].iFileRowNo +
+                                                 " has not been processed.\r\n";
+                                        arrItems[i].bInsert = false;
+                                        bToBeInserted = false;
+                                    }
+                                }
+
+                                //Look at any earlier rows
+                                for (j = rowCount - 4; j >= 0; j--)
+                                {
+                                    if (j != i)
+                                    {
+                                        if (arrItems[i].sContainerNo.Equals(arrItems[j].sContainerNo) && !arrItems[i].sSealNo.Equals(arrItems[j].sSealNo))
+                                        {
+                                            sBody += "The container number on rows " + arrItems[i].iFileRowNo + " and " + arrItems[j].iFileRowNo + " match but the respective seal numbers " +
+                                                     arrItems[i].sSealNo + " and " + arrItems[j].sSealNo + " do not match. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                            arrItems[i].bInsert = false;
+                                            bToBeInserted = false;
+                                            break;
+                                        }
+                                    }
+
+                                }
+
+                                if (bToBeInserted)
+                                {
+                                    arrItems[i].bInsert = true;
+                                    arrItems[i].sLoadNo = "";
+                                }
+                            }
+                        }
+
+                        //Now just process all the rows that are valid. bInsert = true
+                        for (i = 0; i < rowCount - 3; i++)
+                        {
+                            if (arrItems[i].bInsert)
+                            {
+                                //The sreadsheet does not have moisture percentages so set to 0
+                                sRtn = SetShippingLoadItem(sSessionId, sUserId, sFullName, arrItems[i].sBookingNo, arrItems[i].sContainerNo, arrItems[i].dTareWeight.ToString(),
+                                                           arrItems[i].sLoadNo, "-1", arrItems[i].sSealNo, "0", "", "", "", "", "", "", "", "",
+                                                           arrItems[i].sBatchNo, arrItems[i].iLineNumber.ToString(),
+                                                           arrItems[i].dNetWeight.ToString(), "0", "",
+                                                           arrItems[i].sDispatchDocketNo, arrItems[i].sDestinationCode, arrItems[i].sDDDate, "false", sWebAppId);
+
+                                if (!sRtn.StartsWith("Success"))
+                                {
+                                    sBody += "Failed inserting row " + arrItems[i].iFileRowNo + " due to : " + sRtn;
+                                }
+
+                                bAttachFile = true;
+                            }
+                        }
+
+                        if (bAttachFile)
+                        {
+                            rtnBool rtnSecondary = GetDocumentPrimaryAttachmentExists(sBookingNo, sNewFileName, iWebAppId);
+
+                            if (rtnSecondary.bReturnValid)
+                            {
+                                string sNewFileName2 = @"C:\Webroot\Regain\Uploads\" + sNewFileName;
+                                bool bSecondary = rtnSecondary.bReturnValue;
+                                AttachWCDoc(sSessionId, sUserId, sFullName, sBookingNo, "Import file " + sNewFileName, sNewFileName2, bSecondary.ToString().ToLower(), "Import file for shipping " + sBookingNo, sWebAppId);
+
+                            }
+                            else
+                            {
+                                sBody += rtnSecondary.sErrMessage + "\r\n";
+                            }
+
+                        }
+                    }
+
+                    xlWorkbook.Close(true);
+                    xlWbks.Close();
+                    xlApp.Quit();
+
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWbks) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorksheet) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlRange) != 0) ;
+                    xlApp = null;
+                    xlWbks = null;
+                    xlWorkbook = null;
+                    xlWorksheet = null;
+                    xlRange = null;
+
+                    //Now email the user
+                    string sSubject = "Processing of File " + sFile + " for Shipping Booking Items Import";
+                    if (sBody.Length == 0)
+                        sBody = "No issues.";
+                    sBody = "File " + sFile + " for Shipping Booking Items Import (Alba container format) was processed with the following issues.\r\n" + sBody;
+                    //                    emailmessage(sSessionId, sUserId, sSubject, sBody, " ", sRecipeints, "", "", sWebAppId);
+
+                    return "Success^" + sBody;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Failure:" + ex.Message + "^";
+            }
+            finally
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
+                {
+                    proc.Kill();
+                }
+            }
+        }
+
+        public string ProcessShippingBookingSpreadsheetNZASContainer(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sWebAppId)
+        {
+            Excel.Application xlApp = null;
+            Excel.Workbooks xlWbks = null;
+            bool bAttachFile = false;
+            string sDateTimeStamp = DateTime.Now.ToString("yyyyMMdd_hhmmss");
+            string sNewFileName = sFile;
+
+            try
+            {
+                int iWebAppId = Convert.ToInt32(sWebAppId);
+
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    Update_User_Time(sUserId, sSessionId);
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+                    string sRecipeints = arrUser[3].ToString();
+                    string sRtn = "";
+                    double dPackageWeight = 0.24;
+                    string sBatchFromNumber = "", sBatchToNumber = "";
+                    ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                    xlApp = new Excel.Application();
+                    xlWbks = xlApp.Workbooks;
+
+                    //Copy the file to a name with user and date and time
+                    if (sFile.EndsWith(".xlsx"))
+                    {
+                        sNewFileName = sFile.Replace(".xlsx", "_Import_" + sUserId + "_" + sDateTimeStamp + ".xlsx");
+                        File.Copy(@"C:\Webroot\Regain\Uploads\" + sFile, @"C:\Webroot\Regain\Uploads\" + sNewFileName);
+                    }
+
+                    Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
+                    Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+                    Excel.Range xlRange = xlWorksheet.UsedRange;
+
+                    int rowCount = xlRange.Rows.Count;
+                    int colCount = xlRange.Columns.Count;
+                    int i = 0, j = 0, iRowCount;
+                    string sBody = "";
+                    string sBookingNo = "", sDestinationCode = "";
+
+                    if (xlRange.Cells[1, 3].Value2 != null)
+                        sBookingNo = "LB-" + xlRange.Cells[1, 3].Value2.ToString();
+
+                    if (!sBookingNo.Equals(sPassedBookingNo))
+                    {
+                        sBody += "The booking number submitted against this file " + sFile + " is " + sPassedBookingNo.Replace("LB-", "") + " but the number in cell C1 of the first sheet is " + sBookingNo.Replace("LB-", "") +
+                                 ". These do not match so the file will not be processed\r\n";
+                    }
+                    else
+                    {
+                        string[] sAttributeNames = new string[1];
+                        string[] sAttributeValues = new string[1];
+                        string[] sAttributeTypes = new string[1];
+                        string sCheckinComments = "Making ulitmate source NZAS";
+
+                        sAttributeNames[0] = "ShippingSource";
+                        sAttributeValues[0] = "301";
+                        sAttributeTypes[0] = "string";
+
+
+                        //Set the ultimate source to NZAS. If you set the name to blank it will leave it unchanged
+                        sRtn = client2.setpartattributes(sPassedBookingNo, "", sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, Convert.ToInt16(sWebAppId));
+
+                        if(!sRtn.StartsWith("Success"))
+                        {
+                            sBody += "Cannot set source of SPL to NZAS for booking " + sPassedBookingNo.Replace("LB-", "") + ".\r\n";
+                        }
+
+                        sBatchFromNumber = GetConstantValue("NZASOriginMBA", iWebAppId);
+                        sBatchToNumber = GetConstantValue("NZASTomagoStockMBA", iWebAppId);
+
+                        //Get the proper row count because sometimes the range rowcount is wrong
+                        iRowCount = rowCount;
+                        for (i = 3; i <= rowCount; i++)
+                        {
+                            if (xlRange.Cells[i, 1].Value2 == null)
+                            {
+                                iRowCount = i - 1;
+                                break;
+                            }
+                            else
+                            {
+                                string sACell = xlRange.Cells[i, 1].Value2.ToString();
+                                if (sACell.Equals(""))
+                                {
+                                    iRowCount = i - 1;
+                                    break;
+                                }
+                            }
+                        }
+
+                        rowCount = iRowCount;
+
+                        //rtnString rtnDest = GetParentPartOfType(sBookingNo, "local.rs.vsrs05.Regain.Mass_Balance_Destination", iWebAppId);
+
+                        //if(rtnDest.bReturnValue)
+                        //{
+                        //    sDestinationCode = rtnDest.sReturnValue;
+                        //}
+
+                        arrBookingItemIncoming[] arrItems = new arrBookingItemIncoming[rowCount - 2];
+                        for (i = 3; i <= rowCount; i++)
+                        {
+                            int iSeqNo = 0;
+                            if (xlRange.Cells[i, 1].Value2 != null)
+                                iSeqNo = Convert.ToInt32(xlRange.Cells[i, 1].Value2.ToString());
+
+                            string sContainerNo = "";
+                            if (xlRange.Cells[i, 2].Value2 != null)
+                                sContainerNo = xlRange.Cells[i, 2].Value2.ToString();
+
+                            string sSealNo = "";
+                            if (xlRange.Cells[i, 6].Value2 != null)
+                                sSealNo = xlRange.Cells[i, 6].Value2.ToString();
+
+                            double dTareWeight = 0.0;
+                            if (xlRange.Cells[i, 4].Value2 != null)
+                                dTareWeight = Convert.ToDouble(xlRange.Cells[i, 4].Value2.ToString());
+
+                            if (dTareWeight > 1000.0)
+                                dTareWeight = dTareWeight / 1000.0;
+
+                            double dNetWeight = 0.0;
+                            if (xlRange.Cells[i, 5].Value2 != null)
+                                dNetWeight = Convert.ToDouble(xlRange.Cells[i, 5].Value2.ToString());
+
+                            if (dNetWeight > 1000.0)
+                                dNetWeight = dNetWeight / 1000.0;
+
+                            dNetWeight -= dPackageWeight; //Take off thew packaging weight
+
+                            //Zero out as per Bernie's request
+                            dNetWeight = 0.0;
+
+                            string sBatchNo = sBatchFromNumber;
+                            sDestinationCode = sBatchToNumber;
+
+                            string sDispatchDocketNo = "";
+                            /*                            if (xlRange.Cells[i, 15].Value2 != null)
+                                                            sDispatchDocketNo = "D" + xlRange.Cells[i, 15].Value2.ToString("000000"); //This makes the dispatch docket start with a D and have 6 digits with leading zeros if necessary
+                            */
+
+                            rtnDate clsBatchDate = GetPartDateAttribute(sBookingNo, "BatchDate", iWebAppId);
+
+                            string sDDDate = "";
+
+                            if (clsBatchDate.bReturnValue)
+                            {
+                                sDDDate = ((DateTime)clsBatchDate.dtReturnValue).ToString("dd/MM/yyyy");
+                            }
+
+                            string sDisDocDate = sDDDate;
+                            /*                            if (!sDDDate.Equals(""))
+                                                        {
+                                                            if (Double.TryParse(sDDDate, out d2))
+                                                            {
+                                                                d = Double.Parse(sDDDate);
+                                                                DateTime dtDDDate = DateTime.FromOADate(d);
+                                                                if (dtDDDate.Hour == 0 && dtDDDate.Minute == 0 && dtDDDate.Second == 0)
+                                                                    sDisDocDate = dtDDDate.ToString("dd/MM/yyyy");
+                                                                else
+                                                                    sDisDocDate = dtDDDate.ToString("dd/MM/yyyy hh:mm:ss tt");
+                                                            }
+
+                                                        }
+                            */
+                            arrItems[i - 3] = new arrBookingItemIncoming();
+
+                            arrItems[i - 3].sBookingNo = sBookingNo;
+                            arrItems[i - 3].sContainerNo = "LC-" + sContainerNo.ToUpper();
+                            arrItems[i - 3].sSealNo = sSealNo;
+                            arrItems[i - 3].dTareWeight = dTareWeight;
+                            arrItems[i - 3].dNetWeight = dNetWeight;
+                            arrItems[i - 3].sBatchFromNo = sBatchNo;
+                            arrItems[i - 3].sDispatchDocketNo = sDispatchDocketNo;
+                            arrItems[i - 3].sDestinationCode = sDestinationCode;
+                            arrItems[i - 3].sDDDate = sDisDocDate;
+                            arrItems[i - 3].iFileRowNo = i;
+                            arrItems[i - 3].iLineNumber = -1;
+                            arrItems[i - 3].iSequenceNo = iSeqNo;
+
+                            rtnString rtnLoad = GetShippingLoadExists(sBookingNo, "LC-" + sContainerNo, sSealNo, iWebAppId);
+
+                            if (rtnLoad.bReturnValue)
+                            {
+                                arrItems[i - 3].sLoadNo = rtnLoad.sReturnValue;
+
+                                rtnInt rtnBatch = PartPartLinkExists(arrItems[i - 3].sLoadNo, arrItems[i - 3].sBatchFromNo, iWebAppId);
+                                if (rtnBatch.bReturnValue)
+                                {
+
+                                    //Also the dispatch docket stuff has to exist
+                                    rtnInt rtnDD = DispatchDocketTransactionExists(arrItems[i - 3].sDispatchDocketNo, arrItems[i - 3].sBatchFromNo, arrItems[i - 3].sLoadNo, iWebAppId);
+                                    if (rtnDD.bReturnValue)
+                                        arrItems[i - 3].bAlreadyExists = true;
+                                }
+                            }
+
+
+                            //                            sBody += sRowMsg;
+
+                        }
+
+                        //Now we have everything in an array and we know what is already exists and is in the system
+                        //We need to check if anything that does not exist is inconsistent with any other line
+                        for (i = 0; i < rowCount - 2; i++)
+                        {
+                            bool bToBeInserted = true;
+                            if (arrItems[i].bAlreadyExists)
+                            {
+                                sBody += "Item on row " + arrItems[i].iFileRowNo + " is already in the system. The row will be ignored.\r\n";
+                            }
+                            else
+                            {
+                                //If the batch number doesn't exist
+                                if (!PartExists(arrItems[i].sBatchFromNo, iWebAppId))
+                                {
+                                    sBody += "The batch number " + arrItems[i].sBatchFromNo + " on row " + arrItems[i].iFileRowNo + " does not exist. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+
+                                }
+
+                                //If the dispatch docket doesn't exist
+                                if (!arrItems[i].sDispatchDocketNo.Equals(""))
+                                {
+                                    if (!DocExists(arrItems[i].sDispatchDocketNo, iWebAppId))
+                                    {
+                                        sBody += "The dispatch docket " + arrItems[i].sDispatchDocketNo + " on row " + arrItems[i].iFileRowNo + " does not exist. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                        arrItems[i].bInsert = false;
+                                        bToBeInserted = false;
+
+                                    }
+                                }
+                                //If the seal number is there but no container
+                                if (arrItems[i].sContainerNo.Equals("") && !arrItems[i].sSealNo.Equals(""))
+                                {
+                                    sBody += "The container number on row " + arrItems[i].iFileRowNo + " is empty but the seal number isn't. The seal number will be ignored.\r\n";
+                                    arrItems[i].sSealNo = "";
+                                }
+
+                                //If tare weight is there but no container
+                                if (arrItems[i].sContainerNo.Equals("") && arrItems[i].dTareWeight != 0.0)
+                                {
+                                    sBody += "The container number on row " + arrItems[i].iFileRowNo + " is empty but the tare weight isn't. The tare weight will be ignored.\r\n";
+                                    arrItems[i].dTareWeight = 0.0;
+                                }
+
+                                //If the container is there but no seal number
+                                if (!arrItems[i].sContainerNo.Equals("") && arrItems[i].sSealNo.Equals(""))
+                                {
+                                    sBody += "The seal number on row " + arrItems[i].iFileRowNo + " is empty but the container number isn't. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If the container is there but no tare weight
+                                if (!arrItems[i].sContainerNo.Equals("") && arrItems[i].dTareWeight == 0.0)
+                                {
+                                    sBody += "The tare weight on row " + arrItems[i].iFileRowNo + " is empty but the container number isn't. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If there is no batch number
+                                if (arrItems[i].sBatchFromNo.Equals(""))
+                                {
+                                    sBody += "The batch number on row " + arrItems[i].iFileRowNo + " is empty. You must provide at least a batch number and a net weight. Row " + arrItems[i].iFileRowNo +
+                                             " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If no net weight
+                                //if (arrItems[i].dNetWeight == 0.0)
+                                //{
+                                //    sBody += "The net weight on row " + arrItems[i].iFileRowNo + " is empty. You must provide at least a batch number and a net weight. Row " + arrItems[i].iFileRowNo +
+                                //             " has not been processed.\r\n";
+                                //    arrItems[i].bInsert = false;
+                                //    bToBeInserted = false;
+                                //}
+
+                                //If there is a container is the system with a different seal number
+                                rtnString rtnContainer = GetShippingContainerExists(arrItems[i].sBookingNo, arrItems[i].sContainerNo, iWebAppId);
+
+                                if (rtnContainer.bReturnValue)
+                                {
+                                    if (!rtnContainer.sReturnValue.Equals(arrItems[i].sSealNo))
+                                    {
+                                        sBody += "The container number on row " + arrItems[i].iFileRowNo + " already exists with seal number " + rtnContainer.sReturnValue +
+                                                 " but the seal number " + arrItems[i].sSealNo + " is different on row number " + arrItems[i].iFileRowNo + ". Row " + arrItems[i].iFileRowNo +
+                                                 " has not been processed.\r\n";
+                                        arrItems[i].bInsert = false;
+                                        bToBeInserted = false;
+                                    }
+                                }
+
+                                //Look at any earlier rows
+                                for (j = rowCount - 3; j >= 0; j--)
+                                {
+                                    if (j != i)
+                                    {
+                                        if (arrItems[i].sContainerNo.Equals(arrItems[j].sContainerNo) && !arrItems[i].sSealNo.Equals(arrItems[j].sSealNo))
+                                        {
+                                            sBody += "The container number on rows " + arrItems[i].iFileRowNo + " and " + arrItems[j].iFileRowNo + " match but the respective seal numbers " +
+                                                     arrItems[i].sSealNo + " and " + arrItems[j].sSealNo + " do not match. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                            arrItems[i].bInsert = false;
+                                            bToBeInserted = false;
+                                            break;
+                                        }
+                                    }
+
+                                }
+
+                                if (bToBeInserted)
+                                {
+                                    arrItems[i].bInsert = true;
+                                    arrItems[i].sLoadNo = "";
+                                }
+                            }
+                        }
+
+                        //Now just process all the rows that are valid. bInsert = true
+                        for (i = 0; i < rowCount - 2; i++)
+                        {
+                            if (arrItems[i].bInsert)
+                            {
+                                //The sreadsheet does not have moisture percentages so set to 0
+                                sRtn = SetShippingLoadItem(sSessionId, sUserId, sFullName, arrItems[i].sBookingNo, arrItems[i].sContainerNo, arrItems[i].dTareWeight.ToString(),
+                                                           arrItems[i].sLoadNo, "-1", arrItems[i].sSealNo, arrItems[i].iSequenceNo.ToString(), "", "", "", "", "", "", "", "",
+                                                           arrItems[i].sBatchFromNo, arrItems[i].iLineNumber.ToString(),
+                                                           arrItems[i].dNetWeight.ToString(), "0", "",
+                                                           arrItems[i].sDispatchDocketNo, arrItems[i].sDestinationCode, arrItems[i].sDDDate, "true", sWebAppId);
+
+                                if (!sRtn.StartsWith("Success"))
+                                {
+                                    sBody += "Failed inserting row " + arrItems[i].iFileRowNo + " due to : " + sRtn;
+                                }
+                                else
+                                {
+                                    rtnInt rtnContainer = SetContainerWeighbridgeRecord(arrItems[i].sBookingNo, arrItems[i].sContainerNo, sUserId);
+                                    if(!rtnContainer.bReturnValue)
+                                    {
+                                        sBody += "Failed inserting container record " + arrItems[i].sContainerNo + " for booking " + arrItems[i].sBookingNo + " on row " + arrItems[i].iFileRowNo + " due to : " + sRtn;
+                                    }
+                                }
+
+                                bAttachFile = true;
+                            }
+                        }
+
+                        if (bAttachFile)
+                        {
+                            rtnBool rtnSecondary = GetDocumentPrimaryAttachmentExists(sBookingNo, sNewFileName, iWebAppId);
+
+                            if (rtnSecondary.bReturnValid)
+                            {
+                                string sNewFileName2 = @"C:\Webroot\Regain\Uploads\" + sNewFileName;
+                                bool bSecondary = rtnSecondary.bReturnValue;
+                                AttachWCDoc(sSessionId, sUserId, sFullName, sBookingNo, "Import file " + sNewFileName, sNewFileName2, bSecondary.ToString().ToLower(), "Import file for shipping " + sBookingNo, sWebAppId);
+
+                            }
+                            else
+                            {
+                                sBody += rtnSecondary.sErrMessage + "\r\n";
+                            }
+
+                        }
+                    }
+
+                    xlWorkbook.Close(true);
+                    xlWbks.Close();
+                    xlApp.Quit();
+
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWbks) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorksheet) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlRange) != 0) ;
+                    xlApp = null;
+                    xlWbks = null;
+                    xlWorkbook = null;
+                    xlWorksheet = null;
+                    xlRange = null;
+
+                    //Now email the user
+                    string sSubject = "Processing of File " + sFile + " for Shipping Booking Items Import";
+                    if (sBody.Length == 0)
+                        sBody = "No issues.";
+                    sBody = "File " + sFile + " for Shipping Booking Items Import (NXAS container format) was processed with the following issues.\r\n" + sBody;
+                    //                    emailmessage(sSessionId, sUserId, sSubject, sBody, " ", sRecipeints, "", "", sWebAppId);
+
+                    return "Success^" + sBody;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Failure:" + ex.Message + "^";
+            }
+            finally
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
+                {
+                    proc.Kill();
+                }
+            }
+        }
+
+        public string ProcessShippingBookingNZASTransportZipfile(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sWebAppId)
+        {
+
+            bool bAttachFile = true;
+            string sDateTimeStamp = DateTime.Now.ToString("yyyyMMdd_hhmmss");
+            string sNewFileName = sFile, sSearchSeq = "";
+            string sOutputFolder = @"C:\Webroot\Regain\Uploads\Extracted";
+            int iWebAppId = Convert.ToInt16(sWebAppId);
+            int i;
+            string sBody = "", sRtn = "";
+            rtnBookingLoad rtnBookingInfo = new rtnBookingLoad();
+            ArrayList arrUser = GetUserDetails(sUserId);
+            string sFullName = arrUser[2].ToString();
+            string sRecipeints = arrUser[3].ToString();
+
+            try
+            {
+                //Copy the file to a name with user and date and time
+                if (sFile.EndsWith(".zip"))
+                {
+                    sNewFileName = sFile.Replace(".zip", "_Import_" + sUserId + "_" + sDateTimeStamp + ".zip");
+                    File.Copy(@"C:\Webroot\Regain\Uploads\" + sFile, @"C:\Webroot\Regain\Uploads\" + sNewFileName);
+                }
+
+
+                //                sOutputFolder = System.IO.Path.Combine(@"C:\Webroot\Regain\Uploads\", "Extracted");
+                if (DeleteFolderContents(sOutputFolder))
+                    ZipFile.ExtractToDirectory(@"C:\Webroot\Regain\Uploads\" + sFile, sOutputFolder);
+                else
+                    return "Failure. Could not delete files in the extracted folder";
+
+                //Now get all the loads and associated sequence for the booking
+                rtnBookingInfo = GetBookingLoadsInfo(sPassedBookingNo, iWebAppId);
+
+                if (rtnBookingInfo.bReturnValue)
+                {
+                    for (i = 0; i < rtnBookingInfo.arrBookLoad.Length; i++)
+                    {
+                        sSearchSeq = " " + rtnBookingInfo.arrBookLoad[i].iSequenceNo.ToString() + " of 999";
+                        string sLoad = rtnBookingInfo.arrBookLoad[i].sLoadNo;
+
+                        FileInfo[] files = GetFilesInFolder(sOutputFolder, sSearchSeq);
+
+                        if (files.Length > 0)
+                        {
+                            rtnBool rtnSecondary2 = GetDocumentPrimaryAttachmentExists(sLoad, files[0].Name, iWebAppId);
+
+                            if (rtnSecondary2.bReturnValid)
+                            {
+                                string sNewFileName3 = files[0].FullName;
+                                string sContainer2 = rtnBookingInfo.arrBookLoad[i].sContainerNo2.ToString();
+                                bool bSecondary2 = rtnSecondary2.bReturnValue;
+                                string sTransportFileDesc = "NZAS transboundary movement document sections 1 to 15 for sequence " + rtnBookingInfo.arrBookLoad[i].iSequenceNo.ToString() + " and container " + sContainer2;
+                                sRtn = AttachWCDoc(sSessionId, sUserId, sFullName, sLoad, sTransportFileDesc, sNewFileName3, bSecondary2.ToString().ToLower(), sTransportFileDesc + " for booking " + sPassedBookingNo, sWebAppId);
+
+                                if (!sRtn.StartsWith("Success"))
+                                {
+                                    sBody += "Error attaching file " + files[0].Name + " due to error " + sRtn + "\r\n";
+                                    bAttachFile = false;
+                                }
+
+                            }
+                            else
+                            {
+                                sBody += rtnSecondary2.sErrMessage + "\r\n";
+                                bAttachFile = false;
+                            }
+                        }
+                        else
+                        {
+                            sBody += "Cannot find any transboundary movement document for sequence " + rtnBookingInfo.arrBookLoad[i].iSequenceNo.ToString() + " for booking " + sPassedBookingNo.Replace("LB-", "") + "\r\n";
+                            bAttachFile = false;
+                        }
+                    }
+                }
+                else
+                {
+                    sBody += "Cannot find any container loads with sequence numbers for booking " + sPassedBookingNo.Replace("LB-", "") + "\r\n";
+                    bAttachFile = false;
+                }
+
+
+                if (bAttachFile)
+                {
+                    rtnBool rtnSecondary = GetDocumentPrimaryAttachmentExists(sPassedBookingNo, sNewFileName, iWebAppId);
+
+                    if (rtnSecondary.bReturnValid)
+                    {
+                        string sNewFileName2 = @"C:\Webroot\Regain\Uploads\" + sNewFileName;
+                        bool bSecondary = rtnSecondary.bReturnValue;
+                        sRtn = AttachWCDoc(sSessionId, sUserId, sFullName, sPassedBookingNo, "Import file " + sNewFileName, sNewFileName2, bSecondary.ToString().ToLower(), "Transboundary Import file for shipping " + sPassedBookingNo.Replace("LB-", ""), sWebAppId);
+
+                        if (!sRtn.StartsWith("Success"))
+                        {
+                            sBody += "Error attaching file " + sNewFileName  + " to booking " + sPassedBookingNo.Replace("LB-","") + " due to error " + sRtn + "\r\n";
+                        }
+
+                    }
+                    else
+                    {
+                        sBody += rtnSecondary.sErrMessage + "\r\n";
+                    }
+
+                }
+
+
+                if (sBody.Length == 0)
+                    sBody = "No issues.";
+                sBody = "File " + sFile + " for Shipping Transboundary Import was processed with the following issues.\r\n" + sBody;
+
+                return "Success^" + sBody;
+
+            }
+            catch (Exception ex)
+            {
+                return "Failure:" + ex.Message + "^";
+            }
+        }
+
 
         public string ProcessBulkShippingBookingSpreadsheet(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sWebAppId)
         {
@@ -12891,7 +15032,7 @@ namespace WcfWCService
 
                     int rowCount = xlRange.Rows.Count;
                     int colCount = xlRange.Columns.Count;
-                    int i = 0, j = 0, iRowCount;
+                    int i = 0, iRowCount;
                     string sBody = "";
                     string sBookingNo = "", sDestinationCode = "";
 
@@ -13141,9 +15282,10 @@ namespace WcfWCService
                             {
                                 //The sreadsheet does not have moisture percentages so set to 0
                                 sRtn = SetShippingLoadItem(sSessionId, sUserId, sFullName, arrItems[i].sBookingNo, arrItems[i].sContainerNo, arrItems[i].dTareWeight.ToString(),
-                                                           arrItems[i].sLoadNo, "-1", arrItems[i].sSealNo, arrItems[i].sBatchNo, arrItems[i].iLineNumber.ToString(),
+                                                           arrItems[i].sLoadNo, "-1", arrItems[i].sSealNo, "0", "", "", "", "", "", "", "", "",
+                                                           arrItems[i].sBatchNo, arrItems[i].iLineNumber.ToString(),
                                                            arrItems[i].dNetWeight.ToString(), "0", "",
-                                                           arrItems[i].sDispatchDocketNo, arrItems[i].sDestinationCode, arrItems[i].sDDDate, sWebAppId);
+                                                           arrItems[i].sDispatchDocketNo, arrItems[i].sDestinationCode, arrItems[i].sDDDate, "false", sWebAppId);
 
                                 if (!sRtn.StartsWith("Success"))
                                 {
@@ -13156,9 +15298,9 @@ namespace WcfWCService
 
                         if (bAttachFile)
                         {
-                            rtnBool rtnSecondary = GetDocumentPrimaryAttachmentExists(sBookingNo, iWebAppId);
+                            rtnBool rtnSecondary = GetDocumentPrimaryAttachmentExists(sBookingNo, sNewFileName, iWebAppId);
 
-                            if(rtnSecondary.bReturnValid)
+                            if (rtnSecondary.bReturnValid)
                             {
                                 string sNewFileName2 = @"C:\Webroot\Regain\Uploads\" + sNewFileName;
                                 bool bSecondary = rtnSecondary.bReturnValue;
@@ -13212,7 +15354,7 @@ namespace WcfWCService
                     string sSubject = "Processing of File " + sFile + " for Shipping Booking Items Import";
                     if (sBody.Length == 0)
                         sBody = "No issues.";
-                    sBody = "File " + sFile + " for Shipping Booking Items Import was processed with the following issues.\r\n" + sBody;
+                    sBody = "File " + sFile + " for Shipping Booking Items Import (bulk format) was processed with the following issues.\r\n" + sBody;
                     //                    emailmessage(sSessionId, sUserId, sSubject, sBody, " ", sRecipeints, "", "", sWebAppId);
 
                     return "Success^" + sBody;
@@ -13280,8 +15422,8 @@ namespace WcfWCService
 
                     rowCount = iRowCount;
 
-                    string[] arrParentNo = new string[rowCount-1];
-                    string[] arrChildNo = new string[rowCount-1];
+                    string[] arrParentNo = new string[rowCount - 1];
+                    string[] arrChildNo = new string[rowCount - 1];
                     string[] arrLineNo = new string[rowCount - 1];
                     int[] arrRowNo = new int[rowCount - 1];
 
@@ -13411,7 +15553,7 @@ namespace WcfWCService
 
                     int rowCount = xlRange.Rows.Count;
                     int colCount = xlRange.Columns.Count;
-                    int i = 0, j = 0, iRowCount;
+                    int i = 0, iRowCount;
                     string sBody = "";
 
 
@@ -13536,8 +15678,6 @@ namespace WcfWCService
                     ArrayList arrUser = GetUserDetails(sUserId);
                     string sFullName = arrUser[2].ToString();
                     string sRecipeints = arrUser[3].ToString();
-                    string sDisDocDate;
-                    double d, d2;
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
@@ -13548,7 +15688,7 @@ namespace WcfWCService
 
                     int rowCount = xlRange.Rows.Count;
                     int colCount = xlRange.Columns.Count;
-                    int i = 0, j = 0, iRowCount;
+                    int i = 0, iRowCount;
                     string sBody = "";
 
 
@@ -13580,7 +15720,7 @@ namespace WcfWCService
                             sUsageType = xlRange.Cells[i, 5].Value2.ToString();
 
 
-                        if (!sParentNo.Equals("")  && !sChildNo.Equals("") && !sUsageType.Equals(""))
+                        if (!sParentNo.Equals("") && !sChildNo.Equals("") && !sUsageType.Equals(""))
                         {
 
                             bool bLinkTypeExists = WindchillObjectTypeExists(sUsageType, iWebAppId);
@@ -13670,6 +15810,316 @@ namespace WcfWCService
             }
         }
 
+        public string ProcessWeighbridgeCSVFile(string sSessionId, string sUserId, string sFile, string sWebAppId)
+        {
+            StreamReader reader = null;
+            string sFileAndPath = @"C:\Webroot\Regain\Uploads\" + sFile;
+            int iWebAppId = Int32.Parse(sWebAppId);
+
+            try
+            {
+
+
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    Update_User_Time(sUserId, sSessionId);
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+                    string sRecipeints = arrUser[3].ToString();
+
+                    int i = 0, j = 0, iWeighbridgeIn = 0, iWeighbridgeOut = 0, iMaterialTypeCode = 0;
+                    long lWeightIn = 0, lWeightOut = 0, lNettWeight = 0;
+                    string sBody = "", sDocket = "", sDate = "", sTimeIn = "", sTimeOut = "", sRego = "", sRegainMaterialCode = "";
+                    DateTime dtDocketDateIn = new DateTime(), dtDocketDateOut = new DateTime();
+
+                    if (File.Exists(sFileAndPath))
+                    {
+                        using (reader = new StreamReader(File.OpenRead(sFileAndPath)))
+                        {
+                            //                        List<string> listA = new List<string>();
+                            j = 0;
+                            while (!reader.EndOfStream)
+                            {
+                                string line = reader.ReadLine();
+
+                                if (line.Equals("No Records Meeting Selection Criteria Found"))
+                                {
+                                    sBody += "There are no records in the file to process" + "\r\n";
+                                    break;
+                                }
+                                else
+                                {
+                                    var values = line.Split(',');
+                                    i = 0;
+                                    j++;
+
+                                    //The first line holds the incoming material code
+                                    if (j == 1)
+                                    {
+                                        iMaterialTypeCode = Int32.Parse(values[1]);
+                                        rtnString rtnRegainMat = GetWeighbridgeRegainCode(iMaterialTypeCode, iWebAppId);
+                                        if (rtnRegainMat.bReturnValue)
+                                        {
+                                            sRegainMaterialCode += rtnRegainMat.sReturnValue;
+                                        }
+                                        else
+                                        {
+                                            sBody += "There is no Regain origin MBA for Tomago material code " + iMaterialTypeCode.ToString() + "\r\n";
+                                            break;
+                                        }
+                                    }
+
+                                    //The second line is the header
+                                    if (j > 2)
+                                    {
+                                        foreach (var item in values)
+                                        {
+                                            //For the last line the docket is empty
+                                            if (item.Equals("") && i == 0)
+                                            {
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                switch (i)
+                                                {
+                                                    case 0:
+                                                        sDocket = item;
+                                                        break;
+                                                    case 1:
+                                                        sDate = item;
+                                                        break;
+                                                    case 2:
+                                                        sTimeIn = item;
+                                                        dtDocketDateIn = DateTime.ParseExact(sDate + " " + sTimeIn, "dd/MM/yy HH:mm", null);
+                                                        break;
+                                                    case 3:
+                                                        iWeighbridgeIn = Int32.Parse(item);
+                                                        break;
+                                                    case 4:
+                                                        lWeightIn = Int64.Parse(item);
+                                                        break;
+                                                    case 5:
+                                                        sTimeOut = item;
+                                                        dtDocketDateOut = DateTime.ParseExact(sDate + " " + sTimeOut, "dd/MM/yy HH:mm", null);
+                                                        break;
+                                                    case 6:
+                                                        iWeighbridgeOut = Int32.Parse(item);
+                                                        break;
+                                                    case 7:
+                                                        lWeightOut = Int64.Parse(item);
+                                                        break;
+                                                    case 8:
+                                                        sRego = item;
+                                                        break;
+                                                    case 9:
+                                                        lNettWeight = Int64.Parse(item);
+                                                        break;
+                                                }
+
+                                                i++;
+                                            }
+                                        }
+
+                                        //Now we have all the values and put it into the database or update
+                                        rtnInt rtnDB = SetWeighbridgeRecord(sDocket, dtDocketDateIn.ToString("yyyyMMdd HH:mm:ss"), iWeighbridgeIn, lWeightIn, sRegainMaterialCode,
+                                                                            dtDocketDateOut.ToString("yyyyMMdd HH:mm:ss"), iWeighbridgeOut, lWeightOut, sRego, lNettWeight, 
+                                                                            iMaterialTypeCode, sUserId);
+
+                                        if (!rtnDB.bReturnValue)
+                                            sBody += rtnDB.sErrMessage + "\r\n";
+                                        else
+                                        {
+                                            if (rtnDB.iReturnValue == 0)
+                                            {
+                                                sBody += "Weighbridge docket number " + sDocket + " has already been processed and was skipped on this import" + "\r\n";
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+                    if (sBody.Length == 0)
+                        sBody = "No issues.";
+
+                    sBody = "File " + sFile + " for Importing Weighbridge dockets was processed with the following issues.\r\n" + sBody;
+
+
+                    return "Success^" + sBody;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Failure:" + ex.Message + "^";
+            }
+        }
+
+        public rtnInt SetWeighbridgeRecord(string sDocketNo, string sDocketDateIn, int iWeighbridgeInId, long lWeightIn, string sMaterialCode,
+                                           string sDocketDateOut, int iWeighbridgeOutId, long lWeightOut, string sRego, long lNettWeight, 
+                                           int iMaterialTypeCode, string sUserId)
+        {
+            rtnInt rtn = new rtnInt();
+            StoredProc SP = new StoredProc();
+            RecordSet rs = new RecordSet();
+
+            SP.SetProcName("SP_SetWeighbridgeRecord");
+            SP.SetParam("@pvchDocketNo", sDocketNo);
+            SP.SetParam("@pdtDocketDateIn", sDocketDateIn);
+            SP.SetParam("@piWeighbridgeInId", iWeighbridgeInId);
+            SP.SetParam("@piWeightIn", lWeightIn);
+            SP.SetParam("@pvchMaterialCode", sMaterialCode);
+            SP.SetParam("@pdtDocketDateOut", sDocketDateOut);
+            SP.SetParam("@piWeighbridgeOutId", iWeighbridgeOutId);
+            SP.SetParam("@piWeightOut", lWeightOut);
+            SP.SetParam("@pvchTruckRego", sRego);
+            SP.SetParam("@piNettWeight", lNettWeight);
+            SP.SetParam("@piMaterialTypeCode", iMaterialTypeCode);
+            SP.SetParam("@pvchUserId", sUserId);
+
+            int iRecordsAffected = SP.RunStoredProcDataSet();
+
+            if (iRecordsAffected < 0)
+            {
+                rtn.bReturnValue = false;
+                rtn.sErrMessage = SP.GetErrorMsg();
+                return rtn;
+            }
+            else
+            {
+                DataSet ds = SP.GetDataSet();
+                int iReturn = rs.Get_Int(ds, "ReturnOutput", 0);
+                rtn.bReturnValue = true;
+                rtn.iReturnValue = iReturn;
+                return rtn;
+            }
+        }
+
+        public rtnInt SetWeighbridgeRecordProcessed(string sDocketNo, string sUserId)
+        {
+            rtnInt rtn = new rtnInt();
+            StoredProc SP = new StoredProc();
+            RecordSet rs = new RecordSet();
+
+            SP.SetProcName("SP_SetWeighbridgeRecordProcessed");
+            SP.SetParam("@pvchWeighbridgeDocketNo", sDocketNo);
+            SP.SetParam("@pvchUser", sUserId);
+
+            int iRecordsAffected = SP.RunStoredProcDataSet();
+
+            if (iRecordsAffected < 0)
+            {
+                rtn.bReturnValue = false;
+                rtn.sErrMessage = SP.GetErrorMsg();
+                return rtn;
+            }
+            else
+            {
+                DataSet ds = SP.GetDataSet();
+                int iReturn = rs.Get_Int(ds, "Records", 0);
+                rtn.bReturnValue = true;
+                rtn.iReturnValue = iReturn;
+                return rtn;
+            }
+        }
+
+        public rtnInt SetContainerWeighbridgeRecord(string sBookingNo, string sContainerNo, string sUserId)
+        {
+            rtnInt rtn = new rtnInt();
+            StoredProc SP = new StoredProc();
+            RecordSet rs = new RecordSet();
+
+            SP.SetProcName("SP_SetContainerWeighbridgeRecord");
+            SP.SetParam("@pvchBookingNo", sBookingNo);
+            SP.SetParam("@pvchContainerNo", sContainerNo);
+            SP.SetParam("@pvchUserId", sUserId);
+            SP.SetParam("@piOutOnly", 0); //When using the stored proc from here it will always be an incoming container
+
+            
+
+            int iRecordsAffected = SP.RunStoredProcDataSet();
+
+            if (iRecordsAffected < 0)
+            {
+                rtn.bReturnValue = false;
+                rtn.sErrMessage = SP.GetErrorMsg();
+                return rtn;
+            }
+            else
+            {
+                DataSet ds = SP.GetDataSet();
+                int iReturn = rs.Get_Int(ds, "ReturnOutput", 0);
+                rtn.bReturnValue = true;
+                rtn.iReturnValue = iReturn;
+                return rtn;
+            }
+        }
+
+        public rtnString GetWeighbridgeRegainCode(int iTomagoWeighbridgeCode, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            string sRtnValue = "";
+            rtnString rtnCls = new rtnString();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select RegainCode from tblTomagoMaterialCodeMapping " +
+                          "where TomagoMaterialId = " + iTomagoWeighbridgeCode.ToString();
+
+            //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+
+            if (rst.m_RecordCount > 0)
+            {
+                sRtnValue = rst.Get_NVarchar(ds, "RegainCode", 0);
+                rtnCls.bReturnValue = true;
+                rtnCls.sReturnValue = sRtnValue;
+                rtnCls.iLineNumber = 0;
+                rtnCls.sReturnValueExtra1 = "";
+            }
+            else
+            {
+                rtnCls.bReturnValue = false;
+                rtnCls.sReturnValue = sRtnValue;
+                rtnCls.iLineNumber = 0;
+                rtnCls.sReturnValueExtra1 = "";
+            }
+
+            ds.Dispose();
+            return rtnCls;
+        }
+
+
+        public rtnBool IsWeighbridgeRecordProcessed(string sWBDocketNo, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            string sRtnValue = "";
+            rtnBool rtnCls = new rtnBool();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select * from tblWeighbridge " +
+                          "where DocketNo = '" + sWBDocketNo + "' " +
+                          "and Processed = 1";
+
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+
+            if (rst.m_RecordCount > 0)
+            {
+                sRtnValue = rst.Get_NVarchar(ds, "DocketNo", 0);
+                rtnCls.bReturnValue = true;
+            }
+            else
+            {
+                rtnCls.bReturnValue = false;
+            }
+
+            ds.Dispose();
+            return rtnCls;
+        }
+
         bool ValidDate(string sDate, string sFormat)
         {
             DateTime dateValue;
@@ -13689,6 +16139,112 @@ namespace WcfWCService
                 return dateValue;
             else
                 return dateValue;
+        }
+
+        public rtnBookingLoad GetBookingLoadsInfo(String sBookingNo, int iWebAppId)
+        {
+            String[] sParamNames = new String[2];
+            Object[] objParamValues = new Object[2];
+            int i;
+            rtnBookingLoad rtnClass = new rtnBookingLoad();
+
+            StoredProc SP = new StoredProc();
+            RecordSet rs = new RecordSet();
+
+            SP.SetProcName("SP_GetWindchillLoadsForBooking");
+            SP.SetParam("@pvchBookingNo", sBookingNo);
+            int iRecordCount = SP.RunStoredProcDataSet();
+
+
+            if (iRecordCount < 0)
+            {
+                rtnClass.bReturnValue = false;
+                rtnClass.sReturnValue = "No loads set for booking no " + sBookingNo;
+                return rtnClass;
+            }
+            else
+            {
+                try
+                {
+                    DataSet ds = SP.GetDataSet();
+
+                    if (iRecordCount > 0)
+                    {
+                        Array.Resize<arrBookingLoad>(ref rtnClass.arrBookLoad, iRecordCount);
+
+                        for (i = 0; i < iRecordCount; i++)
+                        {
+                            string sBookingNoRtn = rs.Get_NVarchar(ds, "BookingNo", i);
+                            string sContainerNo = rs.Get_NVarchar(ds, "ContainerNo", i);
+                            string sContainerNo2 = rs.Get_NVarchar(ds, "ContainerNo2", i);
+                            string sLoadNo = rs.Get_NVarchar(ds, "LoadNo", i);
+                            int iSeqNo = rs.Get_Int(ds, "SeqNo", i);
+                            rtnClass.arrBookLoad[i] = new arrBookingLoad();
+                            rtnClass.arrBookLoad[i].sBookingNo = sBookingNoRtn;
+                            rtnClass.arrBookLoad[i].sContainerNo = sContainerNo;
+                            rtnClass.arrBookLoad[i].sContainerNo2 = sContainerNo2;
+                            rtnClass.arrBookLoad[i].sLoadNo = sLoadNo;
+                            rtnClass.arrBookLoad[i].iSequenceNo = iSeqNo;
+
+                            
+                        }
+                    }
+                    else
+                    {
+                        Array.Resize<arrBookingLoad>(ref rtnClass.arrBookLoad, 0);
+                    }
+
+                    rtnClass.bReturnValue = true;
+                    return rtnClass;
+                }
+                catch (Exception e)
+                {
+                    rtnClass.bReturnValue = false;
+                    rtnClass.sReturnValue = e.Message;
+                    return rtnClass;
+                }
+            }
+
+        }
+
+        FileInfo[] GetFilesInFolder(string sFolder, string sSearchString)
+        {
+            DirectoryInfo hdDirectoryInWhichToSearch = new DirectoryInfo(sFolder);
+            FileInfo[] filesInDir = hdDirectoryInWhichToSearch.GetFiles("*" + sSearchString + "*.*");
+
+            return filesInDir;
+        }
+
+        bool DeleteFolderContents(string sFolder)
+        { 
+            System.IO.DirectoryInfo di = new DirectoryInfo(sFolder);
+
+            try
+            {
+                foreach (FileInfo file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+                foreach (DirectoryInfo dir in di.GetDirectories())
+                {
+                    dir.Delete(true);
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public DateTime ConvertFromAESTToGMT(DateTime dtInputDateTime)
+        {
+//            TimeZoneInfo tz2 = TimeZoneInfo.Local;
+            int iOffset = TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow).Hours;
+
+            DateTime startDate2 = dtInputDateTime.AddHours(iOffset * -1);
+            return startDate2;
         }
     }
 }
