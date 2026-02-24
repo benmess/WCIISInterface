@@ -28,6 +28,10 @@ using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System.Diagnostics.Contracts;
 using System.Data.Odbc;
+using Microsoft.SqlServer.Server;
+using Microsoft.Office.Interop.Excel;
+using Microsoft.Office.Interop.Word;
+using DocumentFormat.OpenXml.EMMA;
 
 namespace WcfWCService
 {
@@ -116,8 +120,10 @@ namespace WcfWCService
             public string sDestinationCode;
             public string sDDDate;
             public double dBatchQty;
+            public double dMoisturePercentage;
             public bool bAlreadyExists = false;
             public bool bInsert = false;
+            public bool bWBExists = false;
             public double dTareWeight;
             public double dNetWeight;
             public int iFileRowNo;
@@ -148,11 +154,14 @@ namespace WcfWCService
             public double dBatchQty;
             public bool bAlreadyExists = false;
             public bool bInsert = false;
+            public double dGrossWeight;
             public double dTareWeight;
             public double dNetWeight;
+            public double dSPLTonnes;
             public int iFileRowNo;
             public int iLineNumber;
             public int iSequenceNo;
+            public string sComments;
 
         }
 
@@ -175,12 +184,79 @@ namespace WcfWCService
             public arrBookingLoad[] arrBookLoad;
         }
 
+        public class rtnWBInfo
+        {
+            public bool bReturnValue;
+            public string sWBDocketNo;
+            public string sDocketDateIn;
+            public string sDocketTimeIn;
+            public int iWeighbridgeIn;
+            public double dWeightIn;
+            public string sDocketDateOut;
+            public string sDocketTimeOut;
+            public int iWeighbridgeOut;
+            public double dWeightOut;
+            public string sTruckRego;
+            public double dNettWeight;
+            public string sErrorMsg;
+        }
 
         public class rtnRestObj
         {
             public string odatacontext { get; set; }
             public string value { get; set; }
         }
+
+        public class rtnRunSheetHeader
+        {
+            public bool bReturnValue;
+            public string sMBACode;
+            public string sMBAName;
+            public string sMaterialCode;
+            public string sMaterialSiteName;
+            public int iSequenceNo;
+            public double dRatio;
+            public double dRatioRaw;
+            public string sMaterialName;
+            public string sDocketTimeOut;
+            public int iCrushingBatch;
+            public double dTargetQty;
+            public string sErrorMsg;
+        }
+
+        public class rtnRunSheetDetails
+        {
+            public bool bReturnValue;
+            public string sMBACode;
+            public string sMaterialCode;
+            public double dJobAmount;
+            public string sJobUUID;
+            public string sDate;
+            public string sTime;
+            public string sInitials;
+            public string sErrorMsg;
+        }
+
+        public class rtnRunSheetNotes
+        {
+            public bool bReturnValue;
+            public string sMBACode;
+            public string sNotes;
+            public string sErrorMsg;
+        }
+
+        public class rtnRunSheetMetalDetails
+        {
+            public bool bReturnValue;
+            public string sMBACode;
+            public string sMetalCode;
+            public double dQuantity;
+            public string sDate;
+            public string sTime;
+            public string sInitials;
+            public string sErrorMsg;
+        }
+
 
         string[] garrReviewTypes = new string[] { "Prepare", "Check", "Review", "Approve" };
 
@@ -907,8 +983,10 @@ namespace WcfWCService
             }
         }
 
-        public string CreateWorkExecutionPackage(string sSessionId, string sUserId, string sWorkItemId, string sAssignedActivityId, string sRoute, string sPlannedWorkPackageNo, string sWEDName, string sProductName, string sDocType, string sFolderNameAndPath,
-                                                 string sOriginator, string sJobCode, string sNew, string sExistingWEDNo, string sWebAppId, string sSkipCompleteTask)
+        public string CreateWorkExecutionPackage(string sSessionId, string sUserId, string sWorkItemId, string sAssignedActivityId, string sRoute, string sPlannedWorkPackageNo, 
+                                                 string sWEDName, string sProductName, string sDocType, string sFolderNameAndPath,
+                                                 string sOriginator, string sJobCode, string sNew, string sExistingWEDNo, string sWebAppId, string sSkipCompleteTask,
+                                                 string sProforma)
         {
 
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -924,10 +1002,13 @@ namespace WcfWCService
                 string[] sAttributeNames = new string[2];
                 string[] sAttributeValues = new string[2];
                 string[] sAttributeTypes = new string[2];
+                string[] sAttributeNames2 = new string[1];
+                string[] sAttributeValues2 = new string[1];
+                string[] sAttributeTypes2 = new string[1];
                 string sDocName;
                 string sDocNo;
                 string sCheckInComments;
-                string sRtn2 = "";
+                string sRtn2 = "", sRtn3 = "";
                 string[] sVariableNames = new string[0];
                 string[] sVariableValues = new string[0];
                 string[] sVariableTypes = new string[0];
@@ -973,6 +1054,19 @@ namespace WcfWCService
                             sSuccess = "Success";
                         }
 
+                        if (sProforma.Equals("true"))
+                        {
+                            sAttributeNames2[0] = "Proforma";
+                            sAttributeValues2[0] = sProforma;
+                            sAttributeTypes2[0] = "bool";
+                            sRtn3 = client2.setdocattributes(sDocNo, sWEDName, sAttributeNames2, sAttributeValues2, sAttributeTypes2, "Adding proforma flag", 2);
+
+                            if (!sRtn3.StartsWith("Success"))
+                            {
+                                return sRtn3;
+                            }
+                        }
+
                         if (sSuccess == "Success")
                         {
                             sCheckInComments = "Creating link between " + sDocNo + " and " + sPlannedWorkPackageNo;
@@ -1000,6 +1094,100 @@ namespace WcfWCService
                 }
 
                 return "";
+
+            }
+        }
+
+        public string CreateSafeWorkChecklist(string sSessionId, string sUserId, string sPlannedWorkPackageNo,
+                                                 string sSWCLName, string sProductName, string sDocType, string sFolderNameAndPath,
+                                                 string sOriginator, string sJobCode, string sNew, string sExistingSWCLNo, string sWebAppId,
+                                                 string sProforma)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                int iiProdOrLibrary = 0;
+                bool bNew = Convert.ToBoolean(sNew);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
+                string[] sAttributeNames2 = new string[1];
+                string[] sAttributeValues2 = new string[1];
+                string[] sAttributeTypes2 = new string[1];
+                string sDocName;
+                string sDocNo;
+                string sCheckInComments;
+                string sRtn2 = "", sRtn3 = "";
+                string[] sVariableNames = new string[0];
+                string[] sVariableValues = new string[0];
+                string[] sVariableTypes = new string[0];
+
+
+                string sRtn1 = "Success";
+                if (bNew)
+                {
+                    sAttributeNames[0] = "Originator";
+                    sAttributeValues[0] = sOriginator;
+                    sAttributeNames[1] = "JobCode";
+                    sAttributeValues[1] = sJobCode;
+
+                    sDocName = sSWCLName;
+                    sCheckInComments = "Auto creation of safe work checklist related to planned work package " + sPlannedWorkPackageNo;
+
+                    sRtn1 = client2.doccreate2("", sDocName, sProductName, sDocType, sFolderNameAndPath, "A", sAttributeNames, sAttributeValues, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
+                }
+
+                if (sRtn1.StartsWith("Success"))
+                {
+                    string sSuccess = "";
+                    if (bNew)
+                    {
+                        //Get the new document number
+                        string[] sarrSuccess = Extract_Values(sRtn1);
+                        sDocNo = sarrSuccess[1];
+                        sSuccess = sarrSuccess[0];
+
+                    }
+                    else
+                    {
+                        sDocNo = sExistingSWCLNo;
+                        sSuccess = "Success";
+                    }
+
+                    if (sProforma.Equals("true"))
+                    {
+                        sAttributeNames2[0] = "Proforma";
+                        sAttributeValues2[0] = sProforma;
+                        sAttributeTypes2[0] = "bool";
+                        sRtn3 = client2.setdocattributes(sDocNo, sSWCLName, sAttributeNames2, sAttributeValues2, sAttributeTypes2, "Adding proforma flag", 2);
+
+                        if (!sRtn3.StartsWith("Success"))
+                        {
+                            return sRtn3;
+                        }
+                    }
+
+                    if (sSuccess == "Success")
+                    {
+                        sCheckInComments = "Creating link between " + sDocNo + " and " + sPlannedWorkPackageNo;
+                        sRtn2 = client2.setdoctopartdescribedby(sUserId, sDocNo, sPlannedWorkPackageNo, sCheckInComments, Convert.ToInt16(sWebAppId));
+
+                        if (sRtn2 != "Success")
+                            return sRtn2;
+                        else
+                        {
+                            sRtn1 = "Success^" + sDocNo + "^";
+                        }
+                    }
+                }
+
+                return sRtn1;
 
             }
         }
@@ -1140,6 +1328,97 @@ namespace WcfWCService
             }
         }
 
+        public string SetPartAttribute(string sSessionId, string sUserId, string sFullName, string sPartNo, string sAttributeName,
+                                       string sAttributeValue, string sAttributeType, string sCheckInComments,
+                                       string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
+                string sReturn = "";
+
+                sAttributeNames[0] = "RegainPortalUser";
+                sAttributeNames[1] = sAttributeName;
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = sAttributeValue;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = sAttributeType;
+
+
+                sReturn = client2.setpartattributes(sPartNo, "", sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, Convert.ToInt16(sWebAppId));
+
+                return sReturn;
+            }
+        }
+
+        public string SetPartToDocDescribedByLink(string sSessionId, string sUserId, string sFullName, string sDocNo, string sPartNo,
+                                                       string sCheckInComments, string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string sReturn = "";
+
+
+                sReturn = client2.setdoctopartdescribedby(sFullName, sDocNo, sPartNo, sCheckInComments, Convert.ToInt16(sWebAppId));
+
+                return sReturn;
+            }
+        }
+
+        //For some reason this sometimes creates a brand new link and you end up with 2 links sometimes even with the same attribute value
+        //In the java code I will delete the link first, create a new one and then add the attribute using this code
+        public string SetPartToDocDescribedByAttribute(string sSessionId, string sUserId, string sFullName, string sDocNo, string sPartNo, string sAttributeName,
+                                                       string sAttributeValue, string sAttributeType, string sCheckInComments,
+                                                       string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
+                string sReturn = "";
+
+                sAttributeNames[0] = "RegainPortalUser";
+                sAttributeNames[1] = sAttributeName;
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = sAttributeValue;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = sAttributeType;
+
+
+                sReturn = client2.updatepartdescribedbydoclinkwithattributes(sFullName, sDocNo, sPartNo, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, Convert.ToInt16(sWebAppId));
+
+                return sReturn;
+            }
+        }
+
         public string CreateProjectWorkItem(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sPartNo, string sPartName,
                                             string sProductName, string sPartType, string sPartUsageType, string sPartUsageUnit, string sFolderNameAndPath,
                                             string sCheckInComments, string sLineNumber, string sPartDescription,
@@ -1212,6 +1491,166 @@ namespace WcfWCService
                     if (sReturn2 != "Success")
                         sReturn = sReturn2;
                 }
+
+                return sReturn;
+            }
+        }
+
+        public string CreateProjectWorkItemNoParent(string sSessionId, string sUserId, string sFullName, string sPartNo, string sPartName,
+                                                    string sProductName, string sPartType, string sFolderNameAndPath,
+                                                    string sCheckInComments, string sPartDescription, string sProjectStatus, 
+                                                    string sReqirementsInfo, string sPreparationInfo, string sReviewInfo, 
+                                                    string iProdOrLibrary, string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[1];
+                string[] sAttributeValues = new string[1];
+                string[] sAttributeTypes = new string[1];
+                string sReturn = "";
+
+                sAttributeNames[0] = "Originator";
+                sAttributeValues[0] = sFullName;
+                sAttributeTypes[0] = "string";
+
+                if (sPartDescription != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "PartDesc";
+                    sAttributeValues[sAttributeValues.Length - 1] = sPartDescription;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sReqirementsInfo != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "RequirementsInfo";
+                    sAttributeValues[sAttributeValues.Length - 1] = sReqirementsInfo;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sPreparationInfo != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "PreparationInfo";
+                    sAttributeValues[sAttributeValues.Length - 1] = sPreparationInfo;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sReviewInfo != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "ReviewInfo";
+                    sAttributeValues[sAttributeValues.Length - 1] = sReviewInfo;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sProjectStatus != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "ProjectStatus";
+                    sAttributeValues[sAttributeValues.Length - 1] = sProjectStatus;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                sReturn = client2.createpart(sPartNo, sPartName, sProductName, sPartType, sFolderNameAndPath, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
+
+                return sReturn;
+            }
+        }
+        public string UpdateProjectWorkItem(string sSessionId, string sUserId, string sFullName, string sPartNo, string sPartName,
+                                            string sCheckInComments, string sPartDescription, string sProjectStatus,
+                                            string sReqirementsInfo, string sPreparationInfo, string sReviewInfo,
+                                            string sWebAppId)
+        {
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[1];
+                string[] sAttributeValues = new string[1];
+                string[] sAttributeTypes = new string[1];
+                string sReturn = "";
+
+                sAttributeNames[0] = "Originator";
+                sAttributeValues[0] = sFullName;
+                sAttributeTypes[0] = "string";
+
+                if (sPartDescription != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "PartDesc";
+                    sAttributeValues[sAttributeValues.Length - 1] = sPartDescription;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sReqirementsInfo != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "RequirementsInfo";
+                    sAttributeValues[sAttributeValues.Length - 1] = sReqirementsInfo;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sPreparationInfo != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "PreparationInfo";
+                    sAttributeValues[sAttributeValues.Length - 1] = sPreparationInfo;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sReviewInfo != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "ReviewInfo";
+                    sAttributeValues[sAttributeValues.Length - 1] = sReviewInfo;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sProjectStatus != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "ProjectStatus";
+                    sAttributeValues[sAttributeValues.Length - 1] = sProjectStatus;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                sReturn = client2.setpartattributes(sPartNo, sPartName, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, 
+                                                    sCheckInComments, Convert.ToInt16(sWebAppId));
 
                 return sReturn;
             }
@@ -2173,6 +2612,60 @@ namespace WcfWCService
             }
         }
 
+        public string SetLossEventDocToPartRef(string sSessionId, string sUserId, string sFullName, string sLossEventNo, string sPartNo, string sSequenceNo,  string sPartDocRefLinkType, string sCheckinComments, string sWebAppId)
+        {
+            string[] sAttributeNames = new string[1];
+            string[] sAttributeValues = new string[1];
+            string[] sAttributeTypes = new string[1];
+
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                sAttributeNames[0] = "SequenceNo";
+
+                sAttributeValues[0] = sSequenceNo;
+
+                sAttributeTypes[0] = "long";
+
+                return client2.setpartreferencedbydoclinkwithattributes(sFullName, sLossEventNo, sPartNo, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, sPartDocRefLinkType, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        //THis uses the special part reference type that takes attributes. Attributes for relationships cannot be updated in native Windchill with the exception of the Part to Part link.
+        public string UpdateLossEventDocToPartRef(string sSessionId, string sUserId, string sFullName, string sLossEventNo, string sPartNo, string sSequenceNo, string sCheckinComments, string sWebAppId)
+        {
+            string[] sAttributeNames = new string[1];
+            string[] sAttributeValues = new string[1];
+            string[] sAttributeTypes = new string[1];
+
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                sAttributeNames[0] = "SequenceNo";
+
+                sAttributeValues[0] = sSequenceNo;
+
+
+                sAttributeTypes[0] = "long";
+
+                return client2.updatepartreferencedbydoclinkwithattributes(sFullName, sLossEventNo, sPartNo, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, Convert.ToInt16(sWebAppId));
+            }
+        }
+
         public string SetSupplierToPartRef(string sSessionId, string sUserId, string sFullName, string sSupplierNo, string sPartNo, string sSupplierPartNo, string sPartDocRefLinkType, string sCheckinComments, string sWebAppId, string sManufacturerFlag)
         {
             string[] sAttributeNames = new string[2];
@@ -2248,6 +2741,25 @@ namespace WcfWCService
             }
         }
 
+        public string DeleteDocToPartDescribes(string sSessionId, string sUserId, string sFullName, string sDocNo, string sPartNo, string sCheckinComments, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                //Check that the document part link still exist
+                rtnBigInt rtnPartDocLink = PartDocRefLinkExists(sPartNo, sDocNo, Convert.ToInt16(sWebAppId));
+
+                if (!rtnPartDocLink.bReturnValue)
+                    return "Success";
+                return client2.deletedoctopartref(sFullName, sDocNo, sPartNo, sCheckinComments, Convert.ToInt16(sWebAppId));
+            }
+        }
+
         public string DeleteDocToPartRef(string sSessionId, string sUserId, string sFullName, string sDocNo, string sPartNo, string sCheckinComments, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -2258,6 +2770,11 @@ namespace WcfWCService
             {
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
+                //Check that the document part link still exist
+                rtnBigInt rtnPartDocLink = PartDocRefLinkExists(sPartNo, sDocNo, Convert.ToInt16(sWebAppId));
+
+                if (!rtnPartDocLink.bReturnValue)
+                    return "Success";
                 return client2.deletedoctopartref(sFullName, sDocNo, sPartNo, sCheckinComments, Convert.ToInt16(sWebAppId));
             }
         }
@@ -2303,6 +2820,11 @@ namespace WcfWCService
             {
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
+                //Check that the document part link still exist
+                rtnBigInt rtnPartDocLink = PartDocDescribesLinkExists(sPartNo, sDocNo, Convert.ToInt16(sWebAppId));
+
+                if (!rtnPartDocLink.bReturnValue)
+                    return "Success";
                 return client2.deletedoctopartdescribeby(sFullName, sDocNo, sPartNo, sCheckinComments, Convert.ToInt16(sWebAppId));
             }
         }
@@ -2462,6 +2984,62 @@ namespace WcfWCService
             }
         }
 
+        public string SetPartToPartLinkWithSequenceNumber(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNumber, string dQty, 
+                                                          string sLineNumber, string sSequenceNumber, string sCheckInComments, string sPartUsageType, string sUnit, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                double ddQty = Convert.ToDouble(dQty);
+                long lLineNumber = Convert.ToInt64(sLineNumber);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[1];
+                string[] sAttributeValues = new string[1];
+                string[] sAttributeTypes = new string[1];
+
+                sAttributeNames[0] = "SequenceNo";
+                sAttributeValues[0] = sSequenceNumber;
+                sAttributeTypes[0] = "long";
+
+
+                return client2.setpartpartlinkwithattributes(sFullName, sParentPartNo, sChildPartNumber, ddQty, sCheckInComments, sPartUsageType, sUnit, lLineNumber,
+                                                             sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string SetMaterialOrToolLink(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNumber, string dQty,
+                                            string sLineNumber, string sSequenceNumber, string sMatOrTool, string sCheckInComments, string sPartUsageType, string sUnit, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                double ddQty = Convert.ToDouble(dQty);
+                long lLineNumber = Convert.ToInt64(sLineNumber);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
+
+                sAttributeNames[0] = "SequenceNo";
+                sAttributeValues[0] = sSequenceNumber;
+                sAttributeTypes[0] = "long";
+
+                sAttributeNames[1] = "ToolOrMaterial";
+                sAttributeValues[1] = sMatOrTool;
+                sAttributeTypes[1] = "long";
+
+                return client2.setpartpartlinkwithattributes(sFullName, sParentPartNo, sChildPartNumber, ddQty, sCheckInComments, sPartUsageType, sUnit, lLineNumber,
+                                                             sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
+            }
+        }
 
         public string SetPartUsageLinkQty(string sSessionId, string sUserId, string sParentPartNo, string sChildPartNo, string dQty, string sWebAppId)
         {
@@ -2528,7 +3106,7 @@ namespace WcfWCService
         }
 
         public string SetLoadContainerLink(string sSessionId, string sUserId, string sFullName, string sContainerNo, string sLoadNo, string dQty, 
-                                           string sLineNumber, string sOutFlag, string sWebAppId)
+                                           string sLineNumber, string sOutFlag, string sSealNo, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -2549,13 +3127,44 @@ namespace WcfWCService
                 sAttributeValues[0] = sOutFlag;
                 sAttributeTypes[0] = "long";
 
-                return client2.setpartpartlinkwithattributes(sFullName, sContainerNo, sLoadNo, ddQty, sCheckInComments, "local.rs.vsrs05.Regain.ContainerLoadLink", "ea",
+/*                sAttributeNames[1] = "ContainerSealNo";
+                sAttributeValues[1] = sSealNo;
+                sAttributeTypes[1] = "string";
+*/
+                return client2.setpartpartlinkwithattributes(sFullName, sContainerNo, sLoadNo, ddQty, sCheckInComments, "local.rs.vsrs05.Regain.ContainerLoadLink", "tonne",
+                                                             lLineNumber, sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string SetCableTrayLink(string sSessionId, string sUserId, string sFullName, string sCableNo, string sCableTrayNo, 
+                                       string sLineNumber, string sSeq, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                long lLineNumber = Convert.ToInt64(sLineNumber);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string sCheckInComments = "Created usage link between container " + sCableNo + " and load " + sCableTrayNo;
+                string[] sAttributeNames = new string[1];
+                string[] sAttributeValues = new string[1];
+                string[] sAttributeTypes = new string[1];
+
+                sAttributeNames[0] = "SequenceNo";
+                sAttributeValues[0] = sSeq;
+                sAttributeTypes[0] = "long";
+
+                return client2.setpartpartlinkwithattributes(sFullName, sCableNo, sCableTrayNo, 1, sCheckInComments, "local.rs.vsrs05.Regain.CableTrayUsage", "ea",
                                                              lLineNumber, sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
             }
         }
 
         public string SetMBATransactionWithCrossRef(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNumber, string dQty,
-                                                   string sLineNumber, string sDDno, string sDDDate, string sComments, string sMoisture, string sCrossRef, string sWebAppId)
+                                                   string sLineNumber, string sDDno, string sDDDate, string sComments, string sMoisture, string sCrossRef, 
+                                                   string sWBDocket, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -2595,6 +3204,16 @@ namespace WcfWCService
                 sAttributeTypes[4] = "long";
                 sAttributeTypes[5] = "double";
                 sAttributeTypes[6] = "string";
+
+                if (!sWBDocket.Equals(""))
+                {
+                    Array.Resize<string>(ref sAttributeNames, 8);
+                    Array.Resize<string>(ref sAttributeValues, 8);
+                    Array.Resize<string>(ref sAttributeTypes, 8);
+                    sAttributeNames[7] = "WBDocket";
+                    sAttributeValues[7] = sWBDocket;
+                    sAttributeTypes[7] = "string";
+                }
 
                 return client2.setpartpartlinkwithattributes(sFullName, sParentPartNo, sChildPartNumber, ddQty, sCheckInComments, "local.rs.vsrs05.Regain.MBAUsageLink", "tonne",
                                                              lLineNumber, sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
@@ -2640,7 +3259,7 @@ namespace WcfWCService
 
         public string UpdateMBATransactionWithCrossRef(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNumber,
                                                        string sQty, string sLineNumber, string sDDno, string sDDDate, string sComments, string sCrossRef,
-                                                       string sMoisturePercentage, string sInvoiceStatus, string sWebAppId)
+                                                       string sMoisturePercentage, string sInvoiceStatus, string sWBDocket, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -2682,6 +3301,16 @@ namespace WcfWCService
                 sAttributeTypes[5] = "long";
                 sAttributeTypes[6] = "double";
 
+                if (!sWBDocket.Equals(""))
+                {
+                    Array.Resize<string>(ref sAttributeNames, 8);
+                    Array.Resize<string>(ref sAttributeValues, 8);
+                    Array.Resize<string>(ref sAttributeTypes, 8);
+                    sAttributeNames[7] = "WBDocket";
+                    sAttributeValues[7] = sWBDocket;
+                    sAttributeTypes[7] = "string";
+                }
+
                 return client2.updatepartpartlinkwithattributes(sFullName, sParentPartNo, sChildPartNumber, ddQty, lLineNumber, sCheckInComments, "local.rs.vsrs05.Regain.MBAUsageLink",
                                                                 "tonne", sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
             }
@@ -2714,6 +3343,33 @@ namespace WcfWCService
                 sAttributeTypes[1] = "string";
 
                 return client2.setpartusageattributesfromlinenumber(sParentPartNo, sChildPartNumber, sFullName, lLineNumber, sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string UpdateCableTrayLink(string sSessionId, string sUserId, string sFullName, string sCableNo, string sCableTrayNo,
+                                                string sLineNumber, string sSeqNo, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                long lLineNumber = Convert.ToInt32(sLineNumber);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string sCheckInComments = "Created usage link between parent " + sCableNo + " and child " + sCableTrayNo;
+                string[] sAttributeNames = new string[1];
+                string[] sAttributeValues = new string[1];
+                string[] sAttributeTypes = new string[1];
+
+                sAttributeNames[0] = "SequenceNo";
+
+                sAttributeValues[0] = sSeqNo;
+
+                sAttributeTypes[0] = "long";
+
+                return client2.setpartusageattributesfromlinenumber(sCableNo, sCableTrayNo, sFullName, lLineNumber, sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
             }
         }
 
@@ -2782,6 +3438,7 @@ namespace WcfWCService
                                                                 string sLineNumber, string sInvoiceStatus, string sQtyInvoiced, string sWebAppId)
         {
             int i;
+            string sLineNumberCheckIn;
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
                 return "User " + sUserId + " is not logged in";
@@ -2800,7 +3457,13 @@ namespace WcfWCService
                 string[] sInvoiceStatuses = sInvoiceStatus.Split(',');
                 string[] sQtysInvoiced = sQtyInvoiced.Split(',');
                 ExampleService.MyJavaService3Client client2 = GetWCService();
-                string sCheckInComments = "Changed invoice status between parent " + sParentPartNo + " and child " + sChildPartNo + " on line number " + sLineNumber;
+
+                if (sLineNumber.Length < 3000)
+                    sLineNumberCheckIn = sLineNumber;
+                else
+                    sLineNumberCheckIn = sLineNumber.Substring(0, 2998) + "...";
+
+                string sCheckInComments = "Changed invoice status between parent " + sParentPartNo + " and multiple children " + " on multiple line numbers ";
                 string[] sAttributeNames = new string[sChildParts.Length * 3];
                 string[] sAttributeValues = new string[sChildParts.Length * 3];
                 string[] sAttributeTypes = new string[sChildParts.Length * 3];
@@ -2826,7 +3489,7 @@ namespace WcfWCService
         }
 
         public string UpdateMBAMultipleTransactionCrossRefs(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNo,
-                                                            string sLineNumber, string sCrossRef, string sWebAppId)
+                                                            string sLineNumber, string sCrossRef, string sWBDocket, string sWebAppId)
         {
             int i;
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -2836,7 +3499,7 @@ namespace WcfWCService
             else
             {
                 Update_User_Time(sUserId, sSessionId);
-                int iNoOfAttributes = 2;
+                int iNoOfAttributes = 3;
                 //long[] lLineNumber = Array.ConvertAll(sLineNumber.Split(','), long.Parse);
 
                 //long?[] lLineNumbers = new long?[lLineNumber.Length];
@@ -2846,6 +3509,7 @@ namespace WcfWCService
 
                 string[] sChildParts = sChildPartNo.Split(',');
                 string[] sCrossRefs = sCrossRef.Split(',');
+                string[] sWBDockets = sWBDocket.Split(',');
 
                 ExampleService.MyJavaService3Client client2 = GetWCService();
                 string sCheckInComments = "Changed cross ref between parent " + sParentPartNo + " and child " + sChildPartNo + " on line number " + sLineNumber;
@@ -2857,12 +3521,15 @@ namespace WcfWCService
                 {
                     sAttributeNames[i * iNoOfAttributes] = "Originator";
                     sAttributeNames[i * iNoOfAttributes + 1] = "CrossRef";
+                    sAttributeNames[i * iNoOfAttributes + 2] = "WBDocket";
 
                     sAttributeValues[i * iNoOfAttributes] = sFullName;
                     sAttributeValues[i * iNoOfAttributes + 1] = sCrossRefs[i];
+                    sAttributeValues[i * iNoOfAttributes + 2] = sWBDockets[i];
 
                     sAttributeTypes[i * iNoOfAttributes] = "string";
                     sAttributeTypes[i * iNoOfAttributes + 1] = "string";
+                    sAttributeTypes[i * iNoOfAttributes + 2] = "string";
                 }
 
                 //Set it up to split at the Windchill end because for some reason sending through nullable long arrays does not work. Everything in java is nullable
@@ -2942,7 +3609,7 @@ namespace WcfWCService
                                   string dTargetFe2O3, string dActualFe2O3, string dTargetK2O, string dActualK2O, string dTargetMgO, string dActualMgO,
                                   string dTargetMnO, string dActualMnO, string dTargetNa2O3, string dActualNa2O3, string dTargetSiO2, string dActualSiO2,
                                   string dTargetC, string dActualC, string dTargetSO3, string dActualSO3, string dTargetCN, string dActualCN, string sProductCode,
-                                  string sBatchDate, string sWebAppId)
+                                  string sBatchDate, string sSiteDesc, string sCrushingBatch, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -2953,9 +3620,9 @@ namespace WcfWCService
                 Update_User_Time(sUserId, sSessionId);
                 int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
-                string[] sAttributeNames = new string[30];
-                string[] sAttributeValues = new string[30];
-                string[] sAttributeTypes = new string[30];
+                string[] sAttributeNames = new string[32];
+                string[] sAttributeValues = new string[32];
+                string[] sAttributeTypes = new string[32];
 
                 sAttributeNames[0] = "Originator";
                 sAttributeNames[1] = "QtyTarget";
@@ -2987,6 +3654,8 @@ namespace WcfWCService
                 sAttributeNames[27] = "CNTarget";
                 sAttributeNames[28] = "CNActual";
                 sAttributeNames[29] = "JobCode";
+                sAttributeNames[30] = "SiteName";
+                sAttributeNames[31] = "CrushingBatch";
 
                 sAttributeValues[0] = sFullName;
                 sAttributeValues[1] = dTargetQty;
@@ -3018,6 +3687,8 @@ namespace WcfWCService
                 sAttributeValues[27] = dTargetCN;
                 sAttributeValues[28] = dActualCN;
                 sAttributeValues[29] = sProductCode;
+                sAttributeValues[30] = sSiteDesc;
+                sAttributeValues[31] = sCrushingBatch;
 
                 sAttributeTypes[0] = "string";
                 sAttributeTypes[1] = "double";
@@ -3049,6 +3720,8 @@ namespace WcfWCService
                 sAttributeTypes[27] = "double";
                 sAttributeTypes[28] = "double";
                 sAttributeTypes[29] = "string";
+                sAttributeTypes[30] = "string";
+                sAttributeTypes[31] = "bool";
 
                 if (sBatchDate != "")
                 {
@@ -3066,7 +3739,8 @@ namespace WcfWCService
         }
 
         public string CreateMBA(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sProductName, string sFolder, string sBatchType,
-                                  string sCheckInComments, string iProdOrLibrary, string dMoisturePercentage, string sProductCode, string sBatchDate, string sWebAppId)
+                                string sCheckInComments, string iProdOrLibrary, string dMoisturePercentage, string sProductCode, string sBatchDate, string sSiteDesc, 
+                                string sCrushingBatch, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -3112,6 +3786,28 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "date";
                 }
 
+                if (sSiteDesc != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "SiteName";
+                    sAttributeValues[sAttributeValues.Length - 1] = sSiteDesc;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sCrushingBatch != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "CrushingBatch";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCrushingBatch;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "bool";
+                }
+
                 return client2.createpart(sBatchNo, sBatchName, sProductName, sBatchType, sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
             }
         }   
@@ -3121,7 +3817,8 @@ namespace WcfWCService
                                           string sWBDocketNo, string sWBDocketDateIn, string sWBInGrossWeight, string sPackagingIn,
                                           string sWBDocketDateOut, string sWBOutGrossWeight, string sPackagingOut, string sTruckRego,
                                           string sBatchNo, string sBatchLineNumber, string sBatchQty, string sMoisturePercentage, string sItemComments,
-                                          string sDispatchDocketNo, string sDestinationCode, string sDDDate, string sSkipDDCheck, string sWebAppId)
+                                          string sDispatchDocketNo, string sDestinationCode, string sDDDate, string sArrivalDate, string sSkipDDCheck, string sBulkWBDocketNo, 
+                                          string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -3421,6 +4118,18 @@ namespace WcfWCService
                             sAttributeValues[sAttributeValues.Length - 1] = sTruckRego;
                             sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                         }
+
+                        if (!sArrivalDate.Equals(""))
+                        {
+                            Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                            sAttributeNames[sAttributeNames.Length - 1] = "ArrivalDate"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues[sAttributeValues.Length - 1] = sArrivalDate + " 12:00:00 AM";
+                            sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                        }
+                        
                         sRtn = client2.createpart("", sPartName, sProduct, "local.rs.vsrs05.Regain.Mass_Balance_Load", sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, 0, iWebAppId);
 
                         if (sRtn.StartsWith("Success"))
@@ -3577,8 +4286,15 @@ namespace WcfWCService
                     else
                         sRtn = "Success";
 
+                    //Also the arrival could have changed
+                    rtnDate rtnArrival = GetPartDateAttribute(sLoadNo, "ArrivalDate", iWebAppId);
+                    string sExistingArrival2 = sArrivalDate;
+
+                    if (rtnArrival.bReturnValue)
+                        sExistingArrival2 = rtnArrival.dtReturnValue?.ToString("dd/MM/yyyy");
+
                     if ((iSeqNo != 0 || !sWBDocketNo.Equals("") || !sWBDocketDateIn.Equals("") || !sWBInGrossWeight.Equals("") || !sPackagingIn.Equals("") ||
-                                        !sWBDocketDateOut.Equals("") || !sWBOutGrossWeight.Equals("") || !sPackagingOut.Equals("")) && sRtn.StartsWith("Success"))
+                                        !sWBDocketDateOut.Equals("") || !sWBOutGrossWeight.Equals("") || !sPackagingOut.Equals("") || !sExistingArrival2.Equals(sArrivalDate)) && sRtn.StartsWith("Success"))
                     {
 
                         string[] sAttributeNames5_2 = new string[0];
@@ -3674,6 +4390,27 @@ namespace WcfWCService
                             sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "double";
                         }
 
+                        if (!sPackagingOut.Equals(""))
+                        {
+                            Array.Resize<string>(ref sAttributeNames5_2, sAttributeNames5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues5_2, sAttributeValues5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes5_2, sAttributeTypes5_2.Length + 1);
+
+                            sAttributeNames5_2[sAttributeNames5_2.Length - 1] = "PackagingOut"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues5_2[sAttributeValues5_2.Length - 1] = sPackagingOut;
+                            sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "double";
+                        }
+
+                        if (!sArrivalDate.Equals(""))
+                        {
+                            Array.Resize<string>(ref sAttributeNames5_2, sAttributeNames5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeValues5_2, sAttributeValues5_2.Length + 1);
+                            Array.Resize<string>(ref sAttributeTypes5_2, sAttributeTypes5_2.Length + 1);
+
+                            sAttributeNames5_2[sAttributeNames5_2.Length - 1] = "ArrivalDate"; //Use the global attribute name NOT the object attribute name
+                            sAttributeValues5_2[sAttributeValues5_2.Length - 1] = sArrivalDate + " 12:00:00 AM"; ;
+                            sAttributeTypes5_2[sAttributeTypes5_2.Length - 1] = "date";
+                        }
 
                         sCheckinComments = "Updating attributes on load " + sLoadNo + " to " + iSeqNo;
                         //If the part name is empty it will not be changed
@@ -3710,6 +4447,18 @@ namespace WcfWCService
                     sAttributeNames2[3] = "MoistureContent";
                     sAttributeValues2[3] = sMoisturePercentage;
                     sAttributeTypes2[3] = "double";
+
+                    if (!sBulkWBDocketNo.Equals(""))
+                    {
+                        Array.Resize<string>(ref sAttributeNames2, sAttributeNames2.Length + 1);
+                        Array.Resize<string>(ref sAttributeValues2, sAttributeValues2.Length + 1);
+                        Array.Resize<string>(ref sAttributeTypes2, sAttributeTypes2.Length + 1);
+
+                        sAttributeNames2[sAttributeNames2.Length - 1] = "WBDocket"; //Use the global attribute name NOT the object attribute name
+                        sAttributeValues2[sAttributeValues2.Length - 1] = sBulkWBDocketNo;
+                        sAttributeTypes2[sAttributeTypes2.Length - 1] = "string";
+                    }
+
 
                     dQty = Convert.ToDouble(sBatchQty);
                     dMoisture = Convert.ToDouble(sMoisturePercentage);
@@ -3750,7 +4499,16 @@ namespace WcfWCService
                         string sTransDateOld = sDDDate;
                         sTransDateOld = rtnTransDate.sReturnValue; //Do this regardless, in case the date has never been set or is set to blank
 
-                        if (!sCommentsOld.Equals(sItemComments) || dQty != dQtyOld || !sTransDateOld.Equals(sDDDate) || dMoisture != dMoistureOld || !sDispatchDocketNo.Equals(sLoadDDNo))
+                        rtnString rtnWB = GetPartUsageStringAttribute(sLoadNo, sBatchNo, lLineNumber, "WBDocket", iWebAppId);
+                        string sWBDocketOld = "";
+
+                        if (rtnWB.bReturnValue)
+                            sWBDocketOld = rtnWB.sReturnValue;
+                        else
+                            sWBDocketOld = sBulkWBDocketNo;
+
+                        if (!sCommentsOld.Equals(sItemComments) || dQty != dQtyOld || !sTransDateOld.Equals(sDDDate) || dMoisture != dMoistureOld || 
+                            !sDispatchDocketNo.Equals(sLoadDDNo) || !sWBDocketOld.Equals(sBulkWBDocketNo))
                         {
                             sRtn = client2.updatepartpartlinkwithattributes(sFullName, sLoadNo, sBatchNo, dQty, lLineNumber, sCheckinComments,
                                                                             "local.rs.vsrs05.Regain.MBAUsageLink", "tonne",
@@ -3980,6 +4738,17 @@ namespace WcfWCService
                                 sAttributeNames3[4] = "UsageComments";
                                 sAttributeValues3[4] = sItemComments;
                                 sAttributeTypes3[4] = "string";
+
+                                //if (!sArrivalDate.Equals(""))
+                                //{
+                                //    Array.Resize<string>(ref sAttributeNames3, sAttributeNames3.Length + 1);
+                                //    Array.Resize<string>(ref sAttributeValues3, sAttributeValues3.Length + 1);
+                                //    Array.Resize<string>(ref sAttributeTypes3, sAttributeTypes3.Length + 1);
+
+                                //    sAttributeNames3[sAttributeNames3.Length - 1] = "ArrivalDate"; //Use the global attribute name NOT the object attribute name
+                                //    sAttributeValues3[sAttributeValues3.Length - 1] = sArrivalDate + " 12:00:00 AM";
+                                //    sAttributeTypes3[sAttributeTypes3.Length - 1] = "date";
+                                //}
 
                                 sRtn2 = client2.updatepartpartlinkwithattributes(sFullName, sDestinationCode, sLoadNo, Convert.ToDouble(sBatchQty), lOldDestLineNumber,
                                                                                  sCheckinComments, "local.rs.vsrs05.Regain.MBAUsageLink", "tonne",
@@ -4470,7 +5239,7 @@ namespace WcfWCService
         }
 
         public string CreateShippingBooking(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sProductName, string sFolder, string sBatchType,
-                                            string sCheckInComments, string iProdOrLibrary, string sProductCode, string sComments, string sBatchDate, string sBookingType, string sWebAppId)
+                                            string sCheckInComments, string iProdOrLibrary, string sProductCode, string sComments, string sBatchDate, string sShippingArrivalDate,  string sBookingType, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -4525,6 +5294,17 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "date";
                 }
 
+                if (sShippingArrivalDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "ArrivalDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sShippingArrivalDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
+
                 if (sBookingType != "")
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
@@ -4565,7 +5345,7 @@ namespace WcfWCService
                                   string dTargetFe2O3, string dActualFe2O3, string dTargetK2O, string dActualK2O, string dTargetMgO, string dActualMgO,
                                   string dTargetMnO, string dActualMnO, string dTargetNa2O3, string dActualNa2O3, string dTargetSiO2, string dActualSiO2,
                                   string dTargetC, string dActualC, string dTargetSO3, string dActualSO3, string dTargetCN, string dActualCN,
-                                  string sProductCode, string sBatchDate, string sVerifiedBy, string sVerifiedDate, string sWebAppId)
+                                  string sProductCode, string sBatchDate, string sVerifiedBy, string sVerifiedDate, string sSiteDesc, string sCrushingBatch, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -4577,9 +5357,9 @@ namespace WcfWCService
                 ExampleService.MyJavaService3Client client2 = GetWCService();
                 bool bVerify = false;
                 string sRtn;
-                string[] sAttributeNames = new string[30];
-                string[] sAttributeValues = new string[30];
-                string[] sAttributeTypes = new string[30];
+                string[] sAttributeNames = new string[32];
+                string[] sAttributeValues = new string[32];
+                string[] sAttributeTypes = new string[32];
 
                 sAttributeNames[0] = "Originator";
                 sAttributeNames[1] = "QtyTarget";
@@ -4611,6 +5391,8 @@ namespace WcfWCService
                 sAttributeNames[27] = "CNTarget";
                 sAttributeNames[28] = "CNActual";
                 sAttributeNames[29] = "JobCode";
+                sAttributeNames[30] = "SiteName";
+                sAttributeNames[31] = "CrushingBatch";
 
                 sAttributeValues[0] = sFullName;
                 sAttributeValues[1] = dTargetQty;
@@ -4642,6 +5424,8 @@ namespace WcfWCService
                 sAttributeValues[27] = dTargetCN;
                 sAttributeValues[28] = dActualCN;
                 sAttributeValues[29] = sProductCode;
+                sAttributeValues[30] = sSiteDesc;
+                sAttributeValues[31] = sCrushingBatch;
 
                 sAttributeTypes[0] = "string";
                 sAttributeTypes[1] = "double";
@@ -4673,6 +5457,8 @@ namespace WcfWCService
                 sAttributeTypes[27] = "double";
                 sAttributeTypes[28] = "double";
                 sAttributeTypes[29] = "string";
+                sAttributeTypes[30] = "string";
+                sAttributeTypes[31] = "bool";
 
                 if (sBatchDate != "")
                 {
@@ -4746,7 +5532,7 @@ namespace WcfWCService
             }
         }
         public string UpdateMBA(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sCheckinComments, string dMoisturePercentage, string sBatchDate,
-                                string sComments, string sProductCode, string sVerifiedBy, string sVerifiedDate, string sWebAppId)
+                                string sComments, string sProductCode, string sVerifiedBy, string sVerifiedDate, string sSiteDesc, string sCrushingBatch, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -4833,6 +5619,28 @@ namespace WcfWCService
                     sAttributeNames[sAttributeNames.Length - 1] = "ActionedDate";
                     sAttributeValues[sAttributeValues.Length - 1] = sVerifiedDate;
                     sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
+
+                if (sSiteDesc != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "SiteName";
+                    sAttributeValues[sAttributeValues.Length - 1] = sSiteDesc;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sCrushingBatch != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "CrushingBatch";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCrushingBatch;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "bool";
                 }
 
                 sRtn = client2.setpartattributes(sBatchNo, sBatchName, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, Convert.ToInt16(sWebAppId));
@@ -5006,7 +5814,7 @@ namespace WcfWCService
         }
 
         public string UpdateShippingBooking(string sSessionId, string sUserId, string sFullName, string sBatchNo, string sBatchName, string sCheckinComments,
-                                            string sBatchDate, string sBookingType, string sComments, string sProductCode, string sWebAppId)
+                                            string sBatchDate, string sShippingArrivalDate, string sBookingType, string sComments, string sProductCode, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -5048,6 +5856,17 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "date";
                 }
 
+                if (sShippingArrivalDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "ArrivalDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sShippingArrivalDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
+                
                 if (sProductCode != "")
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
@@ -5241,7 +6060,8 @@ namespace WcfWCService
         }
 
         public string CreateIssueReport(string sSessionId, string sUserId, string sFullName, string sIssueRptNo, string sIssueRptName, string sPlant, string sProductName,
-                                        string sPRType, string sFolderNameAndPath, string sComments, string iProdOrLibrary, string sNeedDate, string sWebAppId)
+                                        string sPRType, string sFolderNameAndPath, string sComments, string iProdOrLibrary, string sNeedDate, 
+                                        string sEquipment, string sReason, string sPreparedBy, string sCategory, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -5252,23 +6072,44 @@ namespace WcfWCService
                 Update_User_Time(sUserId, sSessionId);
                 int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
-                string[] sAttributeNames = new string[3];
-                string[] sAttributeValues = new string[3];
-                string[] sAttributeTypes = new string[3];
+                string[] sAttributeNames = new string[6];
+                string[] sAttributeValues = new string[6];
+                string[] sAttributeTypes = new string[6];
 
                 sAttributeNames[0] = "Originator";
                 sAttributeNames[1] = "PlantCode";
                 sAttributeNames[2] = "Comments";
+                sAttributeNames[3] = "Equipment";
+                sAttributeNames[4] = "Response";
+                sAttributeNames[5] = "RegainPortalUser";
 
-                sAttributeValues[0] = sFullName;
+                sAttributeValues[0] = sPreparedBy;
                 sAttributeValues[1] = sPlant;
                 sAttributeValues[2] = sComments;
+                sAttributeValues[3] = sEquipment;
+                sAttributeValues[4] = sReason;
+                sAttributeValues[5] = sFullName;
 
                 sAttributeTypes[0] = "string";
                 sAttributeTypes[1] = "string";
                 sAttributeTypes[2] = "string";
+                sAttributeTypes[3] = "string";
+                sAttributeTypes[4] = "string";
+                sAttributeTypes[5] = "string";
 
-                return client2.createproblemreport(sIssueRptNo, sIssueRptName, sProductName, sPRType, sFolderNameAndPath, sAttributeNames, sAttributeValues, sAttributeTypes, iiProdOrLibrary, sNeedDate, Convert.ToInt16(sWebAppId));
+                if (sCategory != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "ReportCategory";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCategory;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                return client2.createproblemreport(sIssueRptNo, sIssueRptName, sProductName, sPRType, sFolderNameAndPath, 
+                                                   sAttributeNames, sAttributeValues, sAttributeTypes, iiProdOrLibrary, 
+                                                   sNeedDate, Convert.ToInt16(sWebAppId));
             }
         }
 
@@ -5338,7 +6179,8 @@ namespace WcfWCService
             }
         }
 
-        public string UpdateIssueReport(string sSessionId, string sUserId, string sFullName, string sIssueRptNo, string sIssueRptName, string sPlant, string sComments, string sNeedDate, string sWebAppId)
+        public string UpdateIssueReport(string sSessionId, string sUserId, string sFullName, string sIssueRptNo, string sIssueRptName, string sPlant, 
+                                        string sComments, string sNeedDate, string sEquipment, string sReason, string sPreparedBy, string sCategory, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -5348,22 +6190,41 @@ namespace WcfWCService
             {
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
-                string[] sAttributeNames = new string[3];
-                string[] sAttributeValues = new string[3];
-                string[] sAttributeTypes = new string[3];
+                string[] sAttributeNames = new string[6];
+                string[] sAttributeValues = new string[6];
+                string[] sAttributeTypes = new string[6];
 
                 sAttributeNames[0] = "Originator";
                 sAttributeNames[1] = "PlantCode";
                 sAttributeNames[2] = "Comments";
+                sAttributeNames[3] = "Equipment";
+                sAttributeNames[4] = "Response";
+                sAttributeNames[5] = "RegainPortalUser";
 
-                sAttributeValues[0] = sFullName;
+                sAttributeValues[0] = sPreparedBy;
                 sAttributeValues[1] = sPlant;
                 sAttributeValues[2] = sComments;
+                sAttributeValues[3] = sEquipment;
+                sAttributeValues[4] = sReason;
+                sAttributeValues[5] = sFullName;
 
                 sAttributeTypes[0] = "string";
                 sAttributeTypes[1] = "string";
                 sAttributeTypes[2] = "string";
+                sAttributeTypes[3] = "string";
+                sAttributeTypes[4] = "string";
+                sAttributeTypes[5] = "string";
 
+
+                if (sCategory != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "ReportCategory";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCategory;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
 
                 return client2.setproblemreportattributes(sIssueRptNo, sIssueRptName, sAttributeNames, sAttributeValues, sAttributeTypes, sNeedDate, Convert.ToInt16(sWebAppId));
             }
@@ -5490,6 +6351,7 @@ namespace WcfWCService
                 string[] sVariableTypes = new string[1];
 
                 sVariableNames[0] = "dtCompletedDate";
+//                sVariableNames[0] = "gdtElapsedNextDateLocal";
                 sVariableValues[0] = sDateOnCompletion;
                 sVariableTypes[0] = "date";
 
@@ -5605,6 +6467,23 @@ namespace WcfWCService
             }
         }
 
+        public string SetProbRptStateBasic(string sSessionId, string sUserId, string sProbRptNo, string sLifecycleState, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                string sRtn = client2.setproblemreportstate(sProbRptNo, sLifecycleState, Convert.ToInt16(sWebAppId));
+
+                return sRtn;
+
+            }
+        }
 
         public string DeleteProbRptAffectedObjects(string sSessionId, string sUserId, string sProdLossNo, string sAffectdPartsString, string sAffectdObjectTypesString, string sWebAppId)
         {
@@ -5980,7 +6859,7 @@ namespace WcfWCService
         public string CreateMBAPartUsageLink(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNo, string dQty,
                                              string lLineNumber, string sCheckInComments, string sDispatchDocketNo,
                                              string sTransactionDate, string sComments, string sProdOrderNo, string sMoisturePercentage,
-                                             string sContainerId, string sInvoiceStatus, string sBatchNo, string sWebAppId)
+                                             string sContainerId, string sInvoiceStatus, string sBatchNo, string sTTBatch, string sTTBatchLink, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -6023,6 +6902,138 @@ namespace WcfWCService
                 sAttributeTypes[5] = "string";
                 sAttributeTypes[6] = "long";
                 sAttributeTypes[7] = "string";
+
+
+                if (sTTBatch != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "TTBatch"; //For some reason this has to be the underlying global attribute name
+                    sAttributeValues[sAttributeValues.Length - 1] = sTTBatch;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
+                }
+
+                if (sTTBatchLink != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "TTBatchLink"; //For some reason this has to be the underlying global attribute name
+                    sAttributeValues[sAttributeValues.Length - 1] = sTTBatchLink;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                return client2.setpartpartlinkwithattributes(sFullName, sParentPartNo, sChildPartNo, ddQty, sCheckInComments, "local.rs.vsrs05.Regain.MBAUsageLink", "tonne", llLineNumber, sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string CreateMBAPartUsageLinkWithCrossRef(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNo, string dQty,
+                                                         string lLineNumber, string sCheckInComments, string sDispatchDocketNo,
+                                                         string sTransactionDate, string sComments, string sProdOrderNo, string sMoisturePercentage,
+                                                         string sContainerId, string sInvoiceStatus, string sBatchNo, string sCrossRef, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                long llLineNumber = Convert.ToInt64(lLineNumber);
+                double ddQty = Convert.ToDouble(dQty);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[9];
+                string[] sAttributeValues = new string[9];
+                string[] sAttributeTypes = new string[9];
+
+                sAttributeNames[0] = "DispatchDocketNo";
+                sAttributeNames[1] = "DispatchDocketDate"; //For some reason this has to be the underlying global attribute name
+                sAttributeNames[2] = "UsageComments";
+                sAttributeNames[3] = "ProdOrderNo";
+                sAttributeNames[4] = "MoistureContent";
+                sAttributeNames[5] = "ContainerId";
+                sAttributeNames[6] = "InvoiceStatus";
+                sAttributeNames[7] = "BatchNo";
+                sAttributeNames[8] = "CrossRef";
+
+
+                sAttributeValues[0] = sDispatchDocketNo;
+                sAttributeValues[1] = sTransactionDate;
+                sAttributeValues[2] = sComments;
+                sAttributeValues[3] = sProdOrderNo;
+                sAttributeValues[4] = sMoisturePercentage;
+                sAttributeValues[5] = sContainerId;
+                sAttributeValues[6] = sInvoiceStatus;
+                sAttributeValues[7] = sBatchNo;
+                sAttributeValues[8] = sCrossRef;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "date";
+                sAttributeTypes[2] = "string";
+                sAttributeTypes[3] = "string";
+                sAttributeTypes[4] = "double";
+                sAttributeTypes[5] = "string";
+                sAttributeTypes[6] = "long";
+                sAttributeTypes[7] = "string";
+                sAttributeTypes[8] = "string";
+
+
+                return client2.setpartpartlinkwithattributes(sFullName, sParentPartNo, sChildPartNo, ddQty, sCheckInComments, "local.rs.vsrs05.Regain.MBAUsageLink", "tonne", llLineNumber, sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string CreateMBAPartUsageLinkWithWBDocket(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNo, string dQty,
+                                                         string lLineNumber, string sCheckInComments, string sDispatchDocketNo,
+                                                         string sTransactionDate, string sComments, string sProdOrderNo, string sMoisturePercentage,
+                                                         string sWBDocketNo, string sInvoiceStatus, string sBatchNo, string sCrossRef, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                long llLineNumber = Convert.ToInt64(lLineNumber);
+                double ddQty = Convert.ToDouble(dQty);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[9];
+                string[] sAttributeValues = new string[9];
+                string[] sAttributeTypes = new string[9];
+
+                sAttributeNames[0] = "DispatchDocketNo";
+                sAttributeNames[1] = "DispatchDocketDate"; //For some reason this has to be the underlying global attribute name
+                sAttributeNames[2] = "UsageComments";
+                sAttributeNames[3] = "ProdOrderNo";
+                sAttributeNames[4] = "MoistureContent";
+                sAttributeNames[5] = "WBDocket";
+                sAttributeNames[6] = "InvoiceStatus";
+                sAttributeNames[7] = "BatchNo";
+                sAttributeNames[8] = "CrossRef";
+
+
+                sAttributeValues[0] = sDispatchDocketNo;
+                sAttributeValues[1] = sTransactionDate;
+                sAttributeValues[2] = sComments;
+                sAttributeValues[3] = sProdOrderNo;
+                sAttributeValues[4] = sMoisturePercentage;
+                sAttributeValues[5] = sWBDocketNo;
+                sAttributeValues[6] = sInvoiceStatus;
+                sAttributeValues[7] = sBatchNo;
+                sAttributeValues[8] = sCrossRef;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "date";
+                sAttributeTypes[2] = "string";
+                sAttributeTypes[3] = "string";
+                sAttributeTypes[4] = "double";
+                sAttributeTypes[5] = "string";
+                sAttributeTypes[6] = "long";
+                sAttributeTypes[7] = "string";
+                sAttributeTypes[8] = "string";
 
 
                 return client2.setpartpartlinkwithattributes(sFullName, sParentPartNo, sChildPartNo, ddQty, sCheckInComments, "local.rs.vsrs05.Regain.MBAUsageLink", "tonne", llLineNumber, sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
@@ -6132,7 +7143,7 @@ namespace WcfWCService
         public string UpdateMBAPartUsageLinkFromBatch(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNo,
                                                       string dQty, string lLineNumber, string sCheckInComments, string sDispatchDocketNo,
                                                       string sTransactionDate, string sComments, string sMoisturePercentage, string sInvoiceStatus,
-                                                      string sBatchNo, string sWebAppId)
+                                                      string sBatchNo, string sTTBatch, string sTTBatchLink, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -6170,6 +7181,27 @@ namespace WcfWCService
                 sAttributeTypes[4] = "long";
                 sAttributeTypes[5] = "string";
 
+                if (sTTBatch != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "TTBatch"; //For some reason this has to be the underlying global attribute name
+                    sAttributeValues[sAttributeValues.Length - 1] = sTTBatch;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
+                }
+
+                if (sTTBatchLink != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "TTBatchLink"; //For some reason this has to be the underlying global attribute name
+                    sAttributeValues[sAttributeValues.Length - 1] = sTTBatchLink;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
 
                 return client2.updatepartpartlinkwithattributes(sFullName, sParentPartNo, sChildPartNo, ddQty, llLineNumber, sCheckInComments, "local.rs.vsrs05.Regain.MBAUsageLink", "tonne",
                                                                 sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
@@ -6191,15 +7223,67 @@ namespace WcfWCService
                 long llLineNumber = Convert.ToInt64(lLineNumber);
                 double ddQty = Convert.ToDouble(dQty);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
-                string[] sAttributeNames = new string[5];
-                string[] sAttributeValues = new string[5];
-                string[] sAttributeTypes = new string[5];
+                string[] sAttributeNames = new string[4];
+                string[] sAttributeValues = new string[4];
+                string[] sAttributeTypes = new string[4];
+
+                sAttributeNames[0] = "DispatchDocketNo";
+                sAttributeNames[1] = "UsageComments";
+                sAttributeNames[2] = "MoistureContent";
+                sAttributeNames[3] = "InvoiceStatus";
+
+
+                sAttributeValues[0] = sDispatchDocketNo;
+                sAttributeValues[1] = sComments;
+                sAttributeValues[2] = sMoisturePercentage;
+                sAttributeValues[3] = sInvoiceStatus;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+                sAttributeTypes[2] = "double";
+                sAttributeTypes[3] = "long";
+
+                if (sTransactionDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, 5);
+                    Array.Resize<string>(ref sAttributeValues, 5);
+                    Array.Resize<string>(ref sAttributeTypes, 5);
+
+                    sAttributeNames[4] = "DispatchDocketDate"; //For some reason this has to be the underlying global attribute name
+                    sAttributeValues[4] = sTransactionDate;
+                    sAttributeTypes[4] = "date";
+                }
+
+                return client2.updatepartpartlinkwithattributes(sFullName, sParentPartNo, sChildPartNo, ddQty, llLineNumber, sCheckInComments, "local.rs.vsrs05.Regain.MBAUsageLink", "tonne",
+                                                                sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string UpdateMBAPartUsageLinkFromLineNumberWithCrossRef(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNo,
+                                                                       string dQty, string lLineNumber, string sCheckInComments, string sDispatchDocketNo,
+                                                                       string sTransactionDate, string sComments, string sMoisturePercentage, string sInvoiceStatus,
+                                                                       string sCrossRef, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                long llLineNumber = Convert.ToInt64(lLineNumber);
+                double ddQty = Convert.ToDouble(dQty);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[6];
+                string[] sAttributeValues = new string[6];
+                string[] sAttributeTypes = new string[6];
 
                 sAttributeNames[0] = "DispatchDocketNo";
                 sAttributeNames[1] = "DispatchDocketDate"; //For some reason this has to be the underlying global attribute name
                 sAttributeNames[2] = "UsageComments";
                 sAttributeNames[3] = "MoistureContent";
                 sAttributeNames[4] = "InvoiceStatus";
+                sAttributeNames[5] = "CrossRef";
 
 
                 sAttributeValues[0] = sDispatchDocketNo;
@@ -6207,12 +7291,14 @@ namespace WcfWCService
                 sAttributeValues[2] = sComments;
                 sAttributeValues[3] = sMoisturePercentage;
                 sAttributeValues[4] = sInvoiceStatus;
+                sAttributeValues[5] = sCrossRef;
 
                 sAttributeTypes[0] = "string";
                 sAttributeTypes[1] = "date";
                 sAttributeTypes[2] = "string";
                 sAttributeTypes[3] = "double";
                 sAttributeTypes[4] = "long";
+                sAttributeTypes[5] = "string";
 
 
                 return client2.updatepartpartlinkwithattributes(sFullName, sParentPartNo, sChildPartNo, ddQty, llLineNumber, sCheckInComments, "local.rs.vsrs05.Regain.MBAUsageLink", "tonne",
@@ -7836,7 +8922,10 @@ namespace WcfWCService
         }
 
         public string CreateMaterialCatalogItem(string sSessionId, string sUserId, string sFullName, string sMatCatNo, string sMatCatType, string sName, string sDesc, string sLongDesc,
-                                                string sDrivekW, string sFullLoadCurrent, string sUnitWeight, string sLeadTime, string sRepairable, string sSpareRqd, string sCheckInComments, string sWebAppId)
+                                                string sDrivekW, string sFullLoadCurrent, string sUnitWeight, string sPrimaryDimension, string sLeadTime, 
+                                                string sRepairable, string sCompType, string sSpareRqd, string sConsumable,
+                                                string sUnitOfMeasure, string sBaseCost, string sOtherCost, string sUseCost, string sCostCurrency, string sCostIndex, string sCostBaseDate, 
+                                                string sCheckInComments, string sWebAppId)
         {
             string sReturn = "";
             string sReturn3 = "";
@@ -7897,6 +8986,16 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "double";
                 }
 
+                if (sPrimaryDimension != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "PrimaryDimension";
+                    sAttributeValues[sAttributeValues.Length - 1] = sPrimaryDimension;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "double";
+                }
+
                 if (sLeadTime != "")
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
@@ -7917,6 +9016,16 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
                 }
 
+                if (sCompType != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "CompositionType";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCompType;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
+                }
+
                 if (sSpareRqd != "")
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
@@ -7925,6 +9034,89 @@ namespace WcfWCService
                     sAttributeNames[sAttributeNames.Length - 1] = "SpareRequired";
                     sAttributeValues[sAttributeValues.Length - 1] = sSpareRqd;
                     sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
+                }
+
+                if (sConsumable != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "Consumable";
+                    sAttributeValues[sAttributeValues.Length - 1] = sConsumable;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
+                }
+
+                if (sUnitOfMeasure != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "UnitOfMeasure";
+                    sAttributeValues[sAttributeValues.Length - 1] = sUnitOfMeasure;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+
+                if (sBaseCost != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "BaseCost";
+                    sAttributeValues[sAttributeValues.Length - 1] = sBaseCost;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "double";
+                }
+
+
+                if (sOtherCost != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "OtherCost";
+                    sAttributeValues[sAttributeValues.Length - 1] = sOtherCost;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "double";
+                }
+
+
+                if (sUseCost != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "UseCost";
+                    sAttributeValues[sAttributeValues.Length - 1] = sUseCost;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "double";
+                }
+
+                if (sCostCurrency != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "CostCurrency";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCostCurrency;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sCostIndex != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "CostIndex";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCostIndex;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sCostBaseDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "CostBaseDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCostBaseDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
                 }
 
                 sReturn = client2.createpart("", sName, "Regain Material Catalogue", "local.rs.vsrs05.Regain.AutoNumberedPart", sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, 1, Convert.ToInt16(sWebAppId));
@@ -7942,7 +9134,10 @@ namespace WcfWCService
 
         public string UpdateMaterialCatalogItem(string sSessionId, string sUserId, string sFullName, string sMatCatNo, string sMatCatNewType, string sMatCatOldType,
                                                 string sName, string sDesc, string sLongDesc, string sDrivekW, string sFullLoadCurrent,
-                                                string sUnitWeight, string sLeadTime, string sRepairable, string sSpareRqd, string sCheckInComments, string sWebAppId, string sNewLink)
+                                                string sUnitWeight, string sPrimaryDimension, string sLeadTime, 
+                                                string sRepairable, string sCompType, string sSpareRqd, string sConsumable,
+                                                string sUnitOfMeasure, string sBaseCost, string sOtherCost, string sUseCost, string sCostCurrency, string sCostIndex, string sCostBaseDate, 
+                                                string sCheckInComments, string sWebAppId, string sNewLink)
         {
             string sReturn = "";
             string sReturn2 = "";
@@ -7998,6 +9193,13 @@ namespace WcfWCService
                 Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                 Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
                 Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                sAttributeNames[sAttributeNames.Length - 1] = "PrimaryDimension";
+                sAttributeValues[sAttributeValues.Length - 1] = sPrimaryDimension;
+                sAttributeTypes[sAttributeTypes.Length - 1] = "double";
+
+                Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
                 sAttributeNames[sAttributeNames.Length - 1] = "LeadTime";
                 sAttributeValues[sAttributeValues.Length - 1] = sLeadTime;
                 sAttributeTypes[sAttributeTypes.Length - 1] = "double";
@@ -8015,6 +9217,99 @@ namespace WcfWCService
                 sAttributeNames[sAttributeNames.Length - 1] = "SpareRequired";
                 sAttributeValues[sAttributeValues.Length - 1] = sSpareRqd;
                 sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
+
+                if (sCompType != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "CompositionType";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCompType;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
+                }
+
+                if (sConsumable != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "Consumable";
+                    sAttributeValues[sAttributeValues.Length - 1] = sConsumable;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
+                }
+
+                if (sUnitOfMeasure != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "UnitOfMeasure";
+                    sAttributeValues[sAttributeValues.Length - 1] = sUnitOfMeasure;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+
+                if (sBaseCost != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "BaseCost";
+                    sAttributeValues[sAttributeValues.Length - 1] = sBaseCost;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "double";
+                }
+
+
+                if (sOtherCost != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "OtherCost";
+                    sAttributeValues[sAttributeValues.Length - 1] = sOtherCost;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "double";
+                }
+
+
+                if (sUseCost != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "UseCost";
+                    sAttributeValues[sAttributeValues.Length - 1] = sUseCost;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "double";
+                }
+
+                if (sCostCurrency != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "CostCurrency";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCostCurrency;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sCostIndex != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "CostIndex";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCostIndex;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sCostBaseDate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "CostBaseDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCostBaseDate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "date";
+                }
 
                 sReturn = client2.setpartattributes(sMatCatNo, sName, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, Convert.ToInt16(sWebAppId));
                 if (sReturn == "Success")
@@ -8083,7 +9378,7 @@ namespace WcfWCService
                                            string sPowerCable, string sControlCable, string sInstrumentationCable,
                                            string sDataCable, string sEarthCable,
                                            string sInstRegFlag, string sFullLoadCurrent, string sConstructionDate, string sFLGrouping,
-                                           string sCheckInComments, string sWebAppId)
+                                           string sDriveType, string sCheckInComments, string sWebAppId)
         {
             string sReturn = "";
 
@@ -8220,6 +9515,16 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "long";
                 }
 
+                if (sDriveType != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "DriveType";
+                    sAttributeValues[sAttributeValues.Length - 1] = sDriveType;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
 
@@ -8239,7 +9544,8 @@ namespace WcfWCService
                                            string sIPRegFlag, string sIPAddress, string sComments, string sOpZone,
                                            string sPowerCable, string sControlCable, string sInstrumentationCable,
                                            string sDataCable, string sEarthCable,
-                                           string sInstRegFlag, string sFullLoadCurrent, string sConstructionDate, string sFLGrouping,
+                                           string sInstRegFlag, string sFullLoadCurrent, string sConstructionDate, 
+                                           string sFLGrouping, string sDriveType,
                                            string sCheckInComments, string sWebAppId)
         {
             string sReturn = "";
@@ -8369,6 +9675,16 @@ namespace WcfWCService
                 sAttributeValues[sAttributeValues.Length - 1] = sFLGrouping;
                 sAttributeTypes[sAttributeTypes.Length - 1] = "long";
 
+                if (sDriveType != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "DriveType";
+                    sAttributeValues[sAttributeValues.Length - 1] = sDriveType;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
 
@@ -8379,9 +9695,10 @@ namespace WcfWCService
         }
 
         public string CreateWorkPackageItem(string sSessionId, string sUserId, string sFullName, string sWPNo,
-                                            string sPartType, string sName, string sDesc, string sMaintenanceType, string sTrigThreshold, string sElapsedNextDate,
-                                            string sMonitoredPart, string sAccumThreshold, string sWarningAlert,
-                                            string sProduct, string sFolder, string sCheckInComments, string sWebAppId)
+                                            string sPartType, string sName, string sDesc, string sType, string sMaintenanceType, string sTrigThreshold, string sElapsedNextDate,
+                                            string sMonitoredPart, string sAccumThreshold, string sWarningAlert, string sSuppressMMUpdate, string sSingleTaskForWO,
+                                            string sProduct, string sFolder, string sCMAInPdfDisplayed, string sWONameAndDateDisplayed, string sFieldUserNameDisplayed,   
+                                            string sCheckInComments, string sWebAppId)
         {
             string sReturn = "";
 
@@ -8450,6 +9767,66 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "long";
                 }
 
+                if (sType != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "PWPType";
+                    sAttributeValues[sAttributeValues.Length - 1] = sType;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sSuppressMMUpdate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "MonitoredMeasurementUpdate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sSuppressMMUpdate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
+                }
+
+                if (sSingleTaskForWO != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "WOSingleTask";
+                    sAttributeValues[sAttributeValues.Length - 1] = sSingleTaskForWO;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
+                }
+
+                if (sCMAInPdfDisplayed != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "TaskShowCMAInPdf";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCMAInPdfDisplayed;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
+                }
+
+                if (sWONameAndDateDisplayed != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "WONameAndDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sWONameAndDateDisplayed;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
+                }
+
+                if (sFieldUserNameDisplayed != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "FieldUserName";
+                    sAttributeValues[sAttributeValues.Length - 1] = sFieldUserNameDisplayed;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
+                }
+
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
 
@@ -8464,8 +9841,9 @@ namespace WcfWCService
         }
 
         public string UpdateWorkPackageItem(string sSessionId, string sUserId, string sFullName, string sWPNo,
-                                            string sName, string sDesc, string sMaintenanceType, string sTrigThreshold, string sElapsedNextDate,
-                                            string sMonitoredPart, string sAccumThreshold, string sWarningAlert,
+                                            string sName, string sDesc, string sType, string sMaintenanceType, string sTrigThreshold, string sElapsedNextDate,
+                                            string sMonitoredPart, string sAccumThreshold, string sWarningAlert, string sSuppressMMUpdate,
+                                            string sCMAInPdfDisplayed, string sWONameAndDateDisplayed, string sFieldUserNameDisplayed,
                                             string sCheckInComments, string sWebAppId)
         {
             string sReturn = "";
@@ -8536,10 +9914,205 @@ namespace WcfWCService
                 }
 
 
+                //if (sType != "")
+                //{
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "PWPType";
+                    sAttributeValues[sAttributeValues.Length - 1] = sType;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                //}
+
+                if (sSuppressMMUpdate != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "MonitoredMeasurementUpdate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sSuppressMMUpdate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
+                }
+
+                if (sCMAInPdfDisplayed != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "TaskShowCMAInPdf";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCMAInPdfDisplayed;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
+                }
+
+                if (sWONameAndDateDisplayed != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "WONameAndDate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sWONameAndDateDisplayed;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
+                }
+
+                if (sFieldUserNameDisplayed != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "FieldUserName";
+                    sAttributeValues[sAttributeValues.Length - 1] = sFieldUserNameDisplayed;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "long";
+                }
+
+
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
 
                 sReturn = client2.setpartattributes(sWPNo, sName, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, Convert.ToInt16(sWebAppId));
+
+                return sReturn;
+            }
+        }
+
+        public string CreatePlannedMaintenanceActionItem(string sSessionId, string sUserId, string sFullName, string sPMANo,
+                                                        string sPartType, string sName, string sDesc, 
+                                                        string sProduct, string sFolder, string sCheckInComments, string sWebAppId)
+        {
+            string sReturn = "";
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
+
+                sAttributeNames[0] = "Originator";
+                sAttributeNames[1] = "PartDesc";
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = sDesc;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+
+
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                sReturn = client2.createpart(sPMANo, sName, sProduct, sPartType, sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, 0, Convert.ToInt16(sWebAppId));
+                if (sReturn.StartsWith("Success"))
+                {
+                    sReturn = "Success";
+                }
+
+                return sReturn;
+            }
+        }
+
+        public string UpdatePlannedMaintenanceActionItem(string sSessionId, string sUserId, string sFullName, string sPMANo,
+                                                        string sName, string sDesc, string sCheckInComments, string sWebAppId)
+        {
+            string sReturn = "";
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
+
+                sAttributeNames[0] = "Originator";
+                sAttributeNames[1] = "PartDesc";
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = sDesc;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                sReturn = client2.setpartattributes(sPMANo, sName, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, Convert.ToInt16(sWebAppId));
+
+                return sReturn;
+            }
+        }
+
+        public string CreateCommonMaintenanceActionItem(string sSessionId, string sUserId, string sFullName, string sCMANo,
+                                                        string sPartType, string sName, string sDesc,
+                                                        string sProduct, string sFolder, string sCheckInComments, string sWebAppId)
+        {
+            string sReturn = "";
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
+
+                sAttributeNames[0] = "Originator";
+                sAttributeNames[1] = "LongDescription";
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = sDesc;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+
+
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                sReturn = client2.createpart(sCMANo, sName, sProduct, sPartType, sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, 1, Convert.ToInt16(sWebAppId));
+                if (sReturn.StartsWith("Success"))
+                {
+                    sReturn = "Success";
+                }
+
+                return sReturn;
+            }
+        }
+
+        public string UpdateCommonMaintenanceActionItem(string sSessionId, string sUserId, string sFullName, string sCMANo,
+                                                        string sName, string sDesc, string sCheckInComments, string sWebAppId)
+        {
+            string sReturn = "";
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                string[] sAttributeNames = new string[2];
+                string[] sAttributeValues = new string[2];
+                string[] sAttributeTypes = new string[2];
+
+                sAttributeNames[0] = "Originator";
+                sAttributeNames[1] = "LongDescription";
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = sDesc;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                sReturn = client2.setpartattributes(sCMANo, sName, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, Convert.ToInt16(sWebAppId));
 
                 return sReturn;
             }
@@ -9154,6 +10727,60 @@ namespace WcfWCService
                 sAttributeTypes[1] = "string";
 
                 return client2.updatepartpartlinkwithattributes(sFullName, sParentPartNo, sChildPartNo, 1, lLineNumber, sCheckinComments, "wt.part.WTPartUsageLink", "ea", sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string SetCableToCableTrayPartToPartLink(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNo, string sLineNumber, string sSequenceNo, string sCheckinComments, string sWebAppId)
+        {
+            string[] sAttributeNames = new string[1];
+            string[] sAttributeValues = new string[1];
+            string[] sAttributeTypes = new string[1];
+
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                long lLineNumber = Convert.ToInt32(sLineNumber);
+
+                sAttributeNames[0] = "SequenceNo";
+
+                sAttributeValues[0] = sSequenceNo;
+
+                sAttributeTypes[0] = "int";
+
+                return client2.setpartpartlinkwithattributes(sFullName, sParentPartNo, sChildPartNo, 1, sCheckinComments, "local.rs.vsrs05.Regain.CableTrayUsage", "ea", lLineNumber, sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string UpdateCableToCableTrayPartToPartLink(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNo, string sLineNumber, string sSequenceNo, string sCheckinComments, string sWebAppId)
+        {
+            string[] sAttributeNames = new string[1];
+            string[] sAttributeValues = new string[1];
+            string[] sAttributeTypes = new string[1];
+
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                long lLineNumber = Convert.ToInt32(sLineNumber);
+
+                sAttributeNames[0] = "SequenceNo";
+
+                sAttributeValues[0] = sSequenceNo;
+
+                sAttributeTypes[0] = "int";
+
+                return client2.updatepartpartlinkwithattributes(sFullName, sParentPartNo, sChildPartNo, 1, lLineNumber, sCheckinComments, "local.rs.vsrs05.Regain.CableTrayUsage", "ea", sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
             }
         }
 
@@ -11436,6 +13063,25 @@ namespace WcfWCService
             return bRtn;
         }
 
+        public bool WBDocketExists(String sWBDocketNo, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select * from tblWeighbridge where DocketNo = '" + sWBDocketNo + "' COLLATE SQL_Latin1_General_CP1_CI_AS";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+            bool bRtn = false;
+
+            if (rst.m_RecordCount > 0)
+            {
+                bRtn = true;
+            }
+
+
+            ds.Dispose();
+
+            return bRtn;
+        }
+
         public rtnBigInt PartDocRefLinkExists(String sPartNo, String sDocNo, int iWebAppId)
         {
             RecordSet rst = new RecordSet();
@@ -11444,6 +13090,35 @@ namespace WcfWCService
             rst.SetWebApp(iWebAppId);
             string sSQL = "select PDRLId " +
                           "from vwWindchillPartRefDocInfo PD " +
+                          "where PD.PMAPartNumber = '" + sPartNo + "' " +
+                          "and PD.DMBDocNumber = '" + sDocNo + "'";
+
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+
+            if (rst.m_RecordCount > 0)
+            {
+                iRtnValue = rst.Get_BigInt(ds, "PDRLId", 0);
+                rtnCls.bReturnValue = true;
+                rtnCls.iReturnValue = iRtnValue;
+                ds.Dispose();
+            }
+            else
+            {
+                rtnCls.bReturnValue = false;
+                rtnCls.iReturnValue = iRtnValue;
+            }
+
+            return rtnCls;
+        }
+
+        public rtnBigInt PartDocDescribesLinkExists(String sPartNo, String sDocNo, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            Int64 iRtnValue = -1;
+            rtnBigInt rtnCls = new rtnBigInt();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select PDRLId " +
+                          "from vwWindchillPartDescribeDocInfo PD " +
                           "where PD.PMAPartNumber = '" + sPartNo + "' " +
                           "and PD.DMBDocNumber = '" + sDocNo + "'";
 
@@ -12314,6 +13989,37 @@ namespace WcfWCService
             return rtnCls;
         }
 
+        public rtnString GetShippingRecordExists(String sBookingNo, string sContainerNo, string sSealNo, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            string sRtnValue = "";
+            int iSeq = 0;
+            rtnString rtnCls = new rtnString();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "Select * from tblShippingContainerBooking where BookingNo = '" + sBookingNo + "'and ContainerNo = '" + sContainerNo + "' and SealNo = '" + sSealNo + "'";
+
+            //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+
+            if (rst.m_RecordCount > 0)
+            {
+                sRtnValue = rst.Get_NVarchar(ds, "ContainerNo", 0);
+                iSeq = rst.Get_Int(ds, "Sequenace", 0);
+                rtnCls.bReturnValue = true;
+                rtnCls.sReturnValue = sRtnValue;
+                rtnCls.iLineNumber = iSeq; //Make th line number hold the sequence although it is not used
+                ds.Dispose();
+            }
+            else
+            {
+                rtnCls.bReturnValue = false;
+                rtnCls.sReturnValue = sRtnValue;
+                rtnCls.iLineNumber = -1; 
+            }
+
+            return rtnCls;
+        }
+
         public rtnString GetShippingContainerExists(String sBookingNo, string sContainerNo, int iWebAppId)
         {
             RecordSet rst = new RecordSet();
@@ -12539,6 +14245,63 @@ namespace WcfWCService
                     if (iRecordCount > 0)
                     {
                         int iRowCounter = rs.Get_Int(ds, "RowCounter", 0);
+                        rtnClass.iReturnValue = iRowCounter;
+                        rtnClass.bReturnValue = true;
+                    }
+                    else
+                    {
+                        rtnClass.bReturnValue = false;
+                    }
+
+                    return rtnClass;
+                }
+                catch (Exception e)
+                {
+                    rtnClass.bReturnValue = false;
+                    rtnClass.sErrMessage = e.Message;
+                    return rtnClass;
+                }
+            }
+        }
+
+        public rtnInt SetShippingContainerRecord(arrBookingItemIncoming arrBooking)
+        {
+            String[] sParamNames = new String[1];
+            Object[] objParamValues = new Object[1];
+            rtnInt rtnClass = new rtnInt();
+
+            StoredProc SP = new StoredProc();
+            RecordSet rs = new RecordSet();
+
+            SP.SetProcName("SP_SetShippingContainerBookingItem");
+            SP.SetParam("@pvchBookingNo", arrBooking.sBookingNo);
+            SP.SetParam("@pvchContainerNo", arrBooking.sContainerNo);
+            SP.SetParam("@piSequenceNo", arrBooking.iSequenceNo);
+            SP.SetParam("@pfGrossWeight", arrBooking.dGrossWeight);
+            SP.SetParam("@pfTareWeight", arrBooking.dTareWeight);
+            SP.SetParam("@pfNetWeight", arrBooking.dNetWeight);
+            SP.SetParam("@pvchSealNo", arrBooking.sSealNo);
+            SP.SetParam("@pfTonnesSPL", arrBooking.dBatchQty);
+            SP.SetParam("@pvchComments", arrBooking.sComments);
+
+            int iRecordCount = SP.RunStoredProcDataSet();
+
+
+            if (iRecordCount < 0)
+            {
+                rtnClass.bReturnValue = false;
+                rtnClass.sErrMessage = "Could not import container shipping item for booking " + arrBooking.sBookingNo;
+                return rtnClass;
+            }
+            else
+            {
+                try
+                {
+                    DataSet ds = SP.GetDataSet();
+
+                    if (iRecordCount > 0)
+                    {
+                        int iRowCounter = rs.Get_Int(ds, "Id", 0);
                         rtnClass.iReturnValue = iRowCounter;
                         rtnClass.bReturnValue = true;
                     }
@@ -13435,7 +15198,7 @@ namespace WcfWCService
                                                            arrItems[i].sLoadNo, "-1", arrItems[i].sSealNo, "0", "", "", "", "", "", "", "" , "",
                                                            arrItems[i].sBatchNo, arrItems[i].iLineNumber.ToString(),
                                                            arrItems[i].dNetWeight.ToString(), "0", "",
-                                                           arrItems[i].sDispatchDocketNo, arrItems[i].sDestinationCode, arrItems[i].sDDDate, "false", sWebAppId);
+                                                           arrItems[i].sDispatchDocketNo, arrItems[i].sDestinationCode, arrItems[i].sDDDate, "", "false", "", sWebAppId);
 
                                 if (!sRtn.StartsWith("Success"))
                                 {
@@ -13527,7 +15290,7 @@ namespace WcfWCService
             }
         }
 
-        public string ProcessShippingBookingSpreadsheetTomagoContainer(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sWebAppId)
+        public string ProcessShippingBookingSpreadsheetTomagoContainerLea(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sWebAppId)
         {
             Excel.Application xlApp = null;
             Excel.Workbooks xlWbks = null;
@@ -13624,8 +15387,8 @@ namespace WcfWCService
                                 sSealNo = xlRange.Cells[i, 14].Value2.ToString();
 
                             double dTareWeight = 0.0;
-                            if (xlRange.Cells[i, 15].Value2 != null)
-                                dTareWeight = Convert.ToDouble(xlRange.Cells[i, 15].Value2.ToString());
+                            if (xlRange.Cells[i, 17].Value2 != null)
+                                dTareWeight = Convert.ToDouble(xlRange.Cells[i, 17].Value2.ToString());
 
                             double dNetWeight = 0.0;
                             if (xlRange.Cells[i, 20].Value2 != null)
@@ -13859,6 +15622,19 @@ namespace WcfWCService
 
                                     }
                                 }
+
+                                //If the weighbridge docket doesn't exist
+                                if (!arrItems[i].sWBDocketNo.Equals(""))
+                                {
+                                    if (!WBDocketExists(arrItems[i].sWBDocketNo, iWebAppId))
+                                    {
+                                        sBody += "The weighbridge docket " + arrItems[i].sWBDocketNo + " on row " + arrItems[i].iFileRowNo + " does not exist. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                        arrItems[i].bInsert = false;
+                                        bToBeInserted = false;
+
+                                    }
+                                }
+
                                 //If the seal number is there but no container
                                 if (arrItems[i].sContainerNo.Equals("") && !arrItems[i].sSealNo.Equals(""))
                                 {
@@ -13968,7 +15744,7 @@ namespace WcfWCService
                                                            sTimeOut, arrItems[i].dWBOutGrossWeight.ToString(), arrItems[i].dPackagingOut.ToString(),
                                                            arrItems[i].sTruckRego, arrItems[i].sBatchNo, arrItems[i].iLineNumber.ToString(),
                                                            arrItems[i].dNetWeight.ToString(), "0", "",
-                                                           arrItems[i].sDispatchDocketNo, arrItems[i].sDestinationCode, arrItems[i].sDDDate, "false", sWebAppId);
+                                                           arrItems[i].sDispatchDocketNo, arrItems[i].sDestinationCode, arrItems[i].sDDDate, "",  "false", "", sWebAppId);
 
                                 if (!sRtn.StartsWith("Success"))
                                 {
@@ -13977,7 +15753,563 @@ namespace WcfWCService
 
                                 if(!arrItems[i].sWBDocketNo.Equals(""))
                                 {
-                                    rtnInt rtnWBProc = SetWeighbridgeRecordProcessed(arrItems[i].sWBDocketNo, sUserId);
+                                    rtnInt rtnWBProc = SetWeighbridgeRecordProcessed(arrItems[i].sWBDocketNo, sUserId, 1);
+                                    if (!rtnWBProc.bReturnValue)
+                                    {
+                                        sBody += "Failed setting weighbridge item " + arrItems[i].sWBDocketNo + "to processed";
+                                    }
+
+
+                                }
+
+                                bAttachFile = true;
+                            }
+                        }
+
+                        if (bAttachFile)
+                        {
+                            rtnBool rtnSecondary = GetDocumentPrimaryAttachmentExists(sBookingNo, sNewFileName, iWebAppId);
+
+                            if (rtnSecondary.bReturnValid)
+                            {
+                                string sNewFileName2 = @"C:\Webroot\Regain\Uploads\" + sNewFileName;
+                                bool bSecondary = rtnSecondary.bReturnValue;
+                                AttachWCDoc(sSessionId, sUserId, sFullName, sBookingNo, "Import file " + sNewFileName, sNewFileName2, bSecondary.ToString().ToLower(), "Import file for shipping " + sBookingNo, sWebAppId);
+
+                            }
+                            else
+                            {
+                                sBody += rtnSecondary.sErrMessage + "\r\n";
+                            }
+
+                        }
+
+
+                        //if(bUpdateFlatTables)
+                        //{
+                        //    rtnInt rtn2 = SetTransactionFlatTable();
+
+                        //    if(!rtn2.bReturnValue)
+                        //    {
+                        //        sBody += rtn2.sErrMessage + "\r\n";
+                        //    }
+
+                        //    rtnInt rtn3 = SetShippingFlatTableForBooking(sBookingNo);
+
+                        //    if (!rtn3.bReturnValue)
+                        //    {
+                        //        sBody += rtn3.sErrMessage + "\r\n";
+                        //    }
+
+
+                        //}
+                    }
+
+                    xlWorkbook.Close(true);
+                    xlWbks.Close();
+                    xlApp.Quit();
+
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWbks) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorksheet) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlRange) != 0) ;
+                    xlApp = null;
+                    xlWbks = null;
+                    xlWorkbook = null;
+                    xlWorksheet = null;
+                    xlRange = null;
+
+                    //Now email the user
+                    string sSubject = "Processing of File " + sFile + " for Shipping Booking Items Import";
+                    if (sBody.Length == 0)
+                        sBody = "No issues.";
+                    sBody = "File " + sFile + " for Shipping Booking Items Import (Tomago container format) was processed with the following issues.\r\n" + sBody;
+                    //                    emailmessage(sSessionId, sUserId, sSubject, sBody, " ", sRecipeints, "", "", sWebAppId);
+
+                    return "Success^" + sBody;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Failure:" + ex.Message + "^";
+            }
+            finally
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
+                {
+                    proc.Kill();
+                }
+            }
+        }
+
+        public string ProcessShippingBookingSpreadsheetTomagoContainer(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sWebAppId)
+        {
+            Excel.Application xlApp = null;
+            Excel.Workbooks xlWbks = null;
+            bool bAttachFile = false;
+            string sDateTimeStamp = DateTime.Now.ToString("yyyyMMdd_hhmmss");
+            string sNewFileName = sFile;
+
+            try
+            {
+                int iWebAppId = Convert.ToInt32(sWebAppId);
+
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    Update_User_Time(sUserId, sSessionId);
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+                    string sRecipeints = arrUser[3].ToString();
+                    string sRtn = "";
+                    double d, d2;
+
+                    xlApp = new Excel.Application();
+                    xlWbks = xlApp.Workbooks;
+
+                    //Copy the file to a name with user and date and time
+                    if (sFile.EndsWith(".xlsx"))
+                    {
+                        sNewFileName = sFile.Replace(".xlsx", "_Import_" + sUserId + "_" + sDateTimeStamp + ".xlsx");
+                        File.Copy(@"C:\Webroot\Regain\Uploads\" + sFile, @"C:\Webroot\Regain\Uploads\" + sNewFileName);
+                    }
+
+                    Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
+                    Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+                    Excel.Range xlRange = xlWorksheet.UsedRange;
+
+                    int rowCount = xlRange.Rows.Count;
+                    int colCount = xlRange.Columns.Count;
+                    int i = 0, j = 0, iRowCount;
+                    string sBody = "";
+                    string sBookingNo = "", sDestinationCode = "";
+
+                    if (xlRange.Cells[1, 3].Value2 != null)
+                        sBookingNo = "LB-" + xlRange.Cells[1, 3].Value2.ToString();
+
+                    if (!sBookingNo.Equals(sPassedBookingNo))
+                    {
+                        sBody += "The booking number submitted against this file " + sFile + " is " + sPassedBookingNo.Replace("LB-", "") + " but the number in cell C3 of the first sheet is " + sBookingNo.Replace("LB-", "") +
+                                 ". These do not match so the file will not be processed\r\n";
+                    }
+                    else
+                    {
+
+                        //Get the proper row count because sometimes the range rowcount is wrong
+                        iRowCount = rowCount;
+                        for (i = 4; i <= rowCount; i++)
+                        {
+                            if (xlRange.Cells[i, 1].Value2 == null)
+                            {
+                                iRowCount = i - 1;
+                                break;
+                            }
+                            else
+                            {
+                                string sACell = xlRange.Cells[i, 1].Value2.ToString();
+                                if (!Double.TryParse(sACell, out d2))
+                                {
+                                    iRowCount = i - 1;
+                                    break;
+                                }
+                            }
+                        }
+
+                        rowCount = iRowCount;
+
+                        //rtnString rtnDest = GetParentPartOfType(sBookingNo, "local.rs.vsrs05.Regain.Mass_Balance_Destination", iWebAppId);
+
+                        //if(rtnDest.bReturnValue)
+                        //{
+                        //    sDestinationCode = rtnDest.sReturnValue;
+                        //}
+
+                        arrBookingItem[] arrItems = new arrBookingItem[rowCount - 2];
+                        for (i = 3; i <= rowCount; i++)
+                        {
+                            string sContainerNo = "";
+                            if (xlRange.Cells[i, 8].Value2 != null)
+                                sContainerNo = xlRange.Cells[i, 8].Value2.ToString();
+
+                            string sSealNo = "";
+                            if (xlRange.Cells[i, 7].Value2 != null)
+                                sSealNo = xlRange.Cells[i, 7].Value2.ToString();
+
+                            double dTareWeight = 0.0;
+                            if (xlRange.Cells[i, 9].Value2 != null)
+                                dTareWeight = Convert.ToDouble(xlRange.Cells[i, 9].Value2.ToString());
+
+                            double dNettWeight = 0.0;
+                            if (xlRange.Cells[i, 4].Value2 != null)
+                                dNettWeight = Convert.ToDouble(xlRange.Cells[i, 4].Value2.ToString());
+
+                            double dMoisturePercentage = 0.0;
+                            if (xlRange.Cells[i, 6].Value2 != null)
+                                dMoisturePercentage = Convert.ToDouble(xlRange.Cells[i, 6].Value2.ToString()) * 100.0;
+
+                            string sBatchNo = "";
+                            if (xlRange.Cells[i, 5].Value2 != null)
+                                sBatchNo = xlRange.Cells[i, 5].Value2.ToString();
+
+                            string sDispatchDocketNo = "";
+                            if (xlRange.Cells[i, 2].Value2 != null)
+                                sDispatchDocketNo = "D" + xlRange.Cells[i, 2].Value2.ToString("000000"); //This makes the dispatch docket start with a D and have 6 digits with leading zeros if necessary
+
+                            string sDDDate = "";
+                            if (xlRange.Cells[i, 1].Value2 != null)
+                                sDDDate = xlRange.Cells[i, 1].Value2.ToString();
+
+                            string sDisDocDate = "";
+                            if (!sDDDate.Equals(""))
+                            {
+                                if (Double.TryParse(sDDDate, out d2))
+                                {
+                                    d = Double.Parse(sDDDate);
+                                    DateTime dtDDDate = DateTime.FromOADate(d);
+                                    if (dtDDDate.Hour == 0 && dtDDDate.Minute == 0 && dtDDDate.Second == 0)
+                                        sDisDocDate = dtDDDate.ToString("dd/MM/yyyy");
+                                    else
+                                        sDisDocDate = dtDDDate.ToString("dd/MM/yyyy hh:mm:ss tt");
+                                }
+
+                            }
+
+                            int iSeqNo = i-2;
+
+                            string sWBDocketNo = "";
+                            if (xlRange.Cells[i, 3].Value2 != null)
+                                sWBDocketNo = xlRange.Cells[i, 3].Value2.ToString();
+
+                            string sWBDocketDateIn = "";
+                            double dNetWeight = 0.0;
+                            string sTruckRego = "";
+                            string sWBDDateIn = "";
+                            string sWBTimeIn = "";
+                            string sWBDocketTimeIn = "";
+                            double dGrossWeightIn = 0.0;
+                            double dPackagingIn = 0.0;
+                            string sWBDDateOut = "";
+                            string sWBTimeOut = "";
+                            string sWBDocketTimeOut = "";
+                            double dGrossWeightOut = 0.0;
+                            double dPackagingOut = 0.0;
+                            bool bWBExists = false;
+                            string sWBDocketDateTimeIn = "";
+                            string sWBDocketDateTimeOut = "";
+
+                            if (!sWBDocketNo.Equals(""))
+                            {
+                                rtnWBInfo rtnWB = GetWeighbridgeRecord(sWBDocketNo);
+
+                                if(!rtnWB.bReturnValue)
+                                {
+                                    bWBExists = false;
+                                    dNetWeight = dNettWeight; // rtnWB.dNettWeight / 1000.0 - dTareWeight;
+                                }
+                                else 
+                                {
+                                    bWBExists = true;
+                                    dNetWeight = dNettWeight; // rtnWB.dNettWeight / 1000.0 - dTareWeight;
+                                    sTruckRego = rtnWB.sTruckRego;
+                                    sWBDocketDateTimeIn =  rtnWB.sDocketDateIn;
+                                    sWBTimeIn = rtnWB.sDocketTimeIn;
+                                    dGrossWeightIn = rtnWB.dWeightIn;
+                                    sWBDocketDateTimeOut = rtnWB.sDocketDateOut;
+                                    sWBTimeOut = rtnWB.sDocketTimeOut;
+                                    dGrossWeightOut = rtnWB.dWeightOut;
+
+                                }
+                            }
+
+                            //if (!sWBDDateIn.Equals("")) //We must have a date at least
+                            //{
+                            //    if (Double.TryParse(sWBDDateIn, out d2))
+                            //    {
+                            //        d = Double.Parse(sWBDDateIn);
+                            //        DateTime dtWBDDateIn = DateTime.FromOADate(d);
+                            //        if (dtWBDDateIn.Hour == 0 && dtWBDDateIn.Minute == 0 && dtWBDDateIn.Second == 0)
+                            //            sWBDocketDateIn = dtWBDDateIn.ToString("dd/MM/yyyy");
+                            //        else
+                            //            sWBDocketDateIn = dtWBDDateIn.ToString("dd/MM/yyyy hh:mm:ss tt");
+                            //    }
+
+                            //}
+
+                            //if (!sWBTimeIn.Equals("")) //We must have a date at least
+                            //{
+                            //    if (Double.TryParse(sWBTimeIn, out d2))
+                            //    {
+                            //        d = Double.Parse(sWBTimeIn);
+                            //        DateTime dtWBTimeIn = DateTime.FromOADate(d);
+                            //        if (dtWBTimeIn.Hour == 0 && dtWBTimeIn.Minute == 0 && dtWBTimeIn.Second == 0)
+                            //            sWBDocketTimeIn = "";
+                            //        else
+                            //            sWBDocketTimeIn = dtWBTimeIn.ToString("hh:mm tt");
+                            //    }
+
+                            //}
+
+                            //string sWBDocketDateTimeIn = sWBDocketDateIn;
+
+                            //if (!sWBDocketTimeIn.Equals(""))
+                            //{
+                            //    sWBDocketDateTimeIn += " " + sWBDocketTimeIn;
+                            //}
+
+                            //if (!sWBTimeOut.Equals("")) //We must have a date at least
+                            //{
+                            //    if (Double.TryParse(sWBTimeOut, out d2))
+                            //    {
+                            //        d = Double.Parse(sWBTimeOut);
+                            //        DateTime dtWBTimeOut = DateTime.FromOADate(d);
+                            //        if (dtWBTimeOut.Hour == 0 && dtWBTimeOut.Minute == 0 && dtWBTimeOut.Second == 0)
+                            //            sWBDocketTimeOut = "";
+                            //        else
+                            //            sWBDocketTimeOut = dtWBTimeOut.ToString("hh:mm tt");
+                            //    }
+
+                            //}
+
+                            //string sWBDocketDateTimeOut = sWBDocketDateIn; //We only have one column for the date and 2 columns for the time
+
+                            //if (!sWBDocketTimeOut.Equals(""))
+                            //{
+                            //    sWBDocketDateTimeOut += " " + sWBDocketTimeOut;
+                            //}
+
+
+
+                            arrItems[i - 3] = new arrBookingItem();
+
+                            arrItems[i - 3].sBookingNo = sBookingNo;
+                            arrItems[i - 3].sContainerNo = "LC-" + sContainerNo.ToUpper();
+                            arrItems[i - 3].sSealNo = sSealNo;
+                            arrItems[i - 3].dTareWeight = dTareWeight;
+                            arrItems[i - 3].dNetWeight = dNetWeight;
+                            arrItems[i - 3].dMoisturePercentage = dMoisturePercentage;
+                            arrItems[i - 3].sBatchNo = sBatchNo;
+                            arrItems[i - 3].sDispatchDocketNo = sDispatchDocketNo;
+                            arrItems[i - 3].sDestinationCode = sDestinationCode;
+                            arrItems[i - 3].sDDDate = sDisDocDate;
+                            arrItems[i - 3].iFileRowNo = i;
+                            arrItems[i - 3].iLineNumber = -1;
+
+                            arrItems[i - 3].iSeqNo = iSeqNo;
+                            arrItems[i - 3].sWBDocketNo = sWBDocketNo;
+                            arrItems[i - 3].sWBDocketDateIn = sWBDocketDateTimeIn;
+                            arrItems[i - 3].dWBInGrossWeight = dGrossWeightIn;
+                            arrItems[i - 3].dPackagingIn = dPackagingIn;
+                            arrItems[i - 3].sWBDocketDateOut = sWBDocketDateTimeOut;
+                            arrItems[i - 3].dWBOutGrossWeight = dGrossWeightOut;
+                            arrItems[i - 3].dPackagingOut = dPackagingOut;
+                            arrItems[i - 3].sTruckRego = sTruckRego;
+                            arrItems[i - 3].bWBExists = bWBExists;
+
+                            rtnString rtnLoad = GetShippingLoadExists(sBookingNo, "LC-" + sContainerNo, sSealNo, iWebAppId);
+
+                            if (rtnLoad.bReturnValue)
+                            {
+                                arrItems[i - 3].sLoadNo = rtnLoad.sReturnValue;
+
+                                //rtnInt rtnBatch = PartPartLinkWithQtyExists(arrItems[i - 3].sLoadNo, arrItems[i - 3].sBatchNo, arrItems[i - 3].dNetWeight, iWebAppId);
+                                rtnInt rtnBatch = PartPartLinkExists(arrItems[i - 3].sLoadNo, arrItems[i - 3].sBatchNo, iWebAppId);
+                                if (rtnBatch.bReturnValue)
+                                {
+                                    //The load to batch transaction may exist but not the dispatch docket
+                                    //arrItems[i - 3].iLineNumber = rtnBatch.iReturnValue;
+
+                                    //Also the dispatch docket stuff has to exist
+                                    rtnInt rtnDD = DispatchDocketTransactionExists(arrItems[i - 3].sDispatchDocketNo, arrItems[i - 3].sBatchNo, arrItems[i - 3].sLoadNo, iWebAppId);
+                                    //                                    rtnInt rtnDD = DestinationTransactionExists(arrItems[i - 3].sLoadNo + "-" + arrItems[i - 3].iLineNumber, arrItems[i - 3].sBatchNo, arrItems[i - 3].sDestinationCode, iWebAppId);
+                                    if (rtnDD.bReturnValue)
+                                        arrItems[i - 3].bAlreadyExists = true;
+                                }
+                            }
+
+
+                            //                            sBody += sRowMsg;
+
+                        }
+
+                        //Now we have everything in an array and we know what is already exists and is in the system
+                        //We need to check if anything that does not exist is inconsistent with any other line
+                        for (i = 0; i < rowCount - 2; i++)
+                        {
+                            bool bToBeInserted = true;
+                            if (arrItems[i].bAlreadyExists)
+                            {
+                                sBody += "Item on row " + arrItems[i].iFileRowNo + " is already in the system. The row will be ignored.\r\n";
+                            }
+                            else
+                            {
+                                //If the batch number doesn't exist
+                                if (!arrItems[i].bWBExists)
+                                {
+                                    sBody += "The weighbridge docket " + arrItems[i].sWBDocketNo + " on row " + arrItems[i].iFileRowNo + " does not exist. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If the batch number doesn't exist
+                                if (!PartExists(arrItems[i].sBatchNo, iWebAppId))
+                                {
+                                    sBody += "The batch number " + arrItems[i].sBatchNo + " on row " + arrItems[i].iFileRowNo + " does not exist. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+
+                                }
+
+                                //If the dispatch docket doesn't exist
+                                if (!arrItems[i].sDispatchDocketNo.Equals(""))
+                                {
+                                    if (!DocExists(arrItems[i].sDispatchDocketNo, iWebAppId))
+                                    {
+                                        sBody += "The dispatch docket " + arrItems[i].sDispatchDocketNo + " on row " + arrItems[i].iFileRowNo + " does not exist. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                        arrItems[i].bInsert = false;
+                                        bToBeInserted = false;
+
+                                    }
+                                }
+
+                                //If the weighbridge docket doesn't exist
+/*                                if (!arrItems[i].sWBDocketNo.Equals(""))
+                                {
+                                    if (!WBDocketExists(arrItems[i].sWBDocketNo, iWebAppId))
+                                    {
+                                        sBody += "The weighbridge docket " + arrItems[i].sWBDocketNo + " on row " + arrItems[i].iFileRowNo + " does not exist. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                        arrItems[i].bInsert = false;
+                                        bToBeInserted = false;
+
+                                    }
+                                }
+*/
+                                //If the seal number is there but no container
+                                if (arrItems[i].sContainerNo.Equals("") && !arrItems[i].sSealNo.Equals(""))
+                                {
+                                    sBody += "The container number on row " + arrItems[i].iFileRowNo + " is empty but the seal number isn't. The seal number will be ignored.\r\n";
+                                    arrItems[i].sSealNo = "";
+                                }
+
+                                //If tare weight is there but no container
+                                if (arrItems[i].sContainerNo.Equals("") && arrItems[i].dTareWeight != 0.0)
+                                {
+                                    sBody += "The container number on row " + arrItems[i].iFileRowNo + " is empty but the tare weight isn't. The tare weight will be ignored.\r\n";
+                                    arrItems[i].dTareWeight = 0.0;
+                                }
+
+                                //If the container is there but no seal number
+                                if (!arrItems[i].sContainerNo.Equals("") && arrItems[i].sSealNo.Equals(""))
+                                {
+                                    sBody += "The seal number on row " + arrItems[i].iFileRowNo + " is empty but the container number isn't. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If the container is there but no tare weight
+                                if (!arrItems[i].sContainerNo.Equals("") && arrItems[i].dTareWeight == 0.0)
+                                {
+                                    sBody += "The tare weight on row " + arrItems[i].iFileRowNo + " is empty but the container number isn't. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If there is no batch number
+                                if (arrItems[i].sBatchNo.Equals(""))
+                                {
+                                    sBody += "The batch number on row " + arrItems[i].iFileRowNo + " is empty. You must provide at least a batch number and a net weight. Row " + arrItems[i].iFileRowNo +
+                                             " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If no net weight
+                                if (arrItems[i].dNetWeight == 0.0)
+                                {
+                                    sBody += "The net weight on row " + arrItems[i].iFileRowNo + " is empty. You must provide at least a batch number and a net weight. Row " + arrItems[i].iFileRowNo +
+                                             " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If there is a container is the system with a different seal number
+                                rtnString rtnContainer = GetShippingContainerExists(arrItems[i].sBookingNo, arrItems[i].sContainerNo, iWebAppId);
+
+                                if (rtnContainer.bReturnValue)
+                                {
+                                    if (!rtnContainer.sReturnValue.Equals(arrItems[i].sSealNo))
+                                    {
+                                        sBody += "The container number on row " + arrItems[i].iFileRowNo + " already exists with seal number " + rtnContainer.sReturnValue +
+                                                 " but the seal number " + arrItems[i].sSealNo + " is different on row number " + arrItems[i].iFileRowNo + ". Row " + arrItems[i].iFileRowNo +
+                                                 " has not been processed.\r\n";
+                                        arrItems[i].bInsert = false;
+                                        bToBeInserted = false;
+                                    }
+                                }
+
+                                //Look at any earlier rows
+                                for (j = rowCount - 3; j >= 0; j--)
+                                {
+                                    if (j != i)
+                                    {
+                                        if (arrItems[i].sContainerNo.Equals(arrItems[j].sContainerNo) && !arrItems[i].sSealNo.Equals(arrItems[j].sSealNo))
+                                        {
+                                            sBody += "The container number on rows " + arrItems[i].iFileRowNo + " and " + arrItems[j].iFileRowNo + " match but the respective seal numbers " +
+                                                     arrItems[i].sSealNo + " and " + arrItems[j].sSealNo + " do not match. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                            arrItems[i].bInsert = false;
+                                            bToBeInserted = false;
+                                            break;
+                                        }
+                                    }
+
+                                }
+
+                                if (bToBeInserted)
+                                {
+                                    arrItems[i].bInsert = true;
+                                    arrItems[i].sLoadNo = "";
+                                }
+                            }
+                        }
+
+                        //Now just process all the rows that are valid. bInsert = true
+                        for (i = 0; i < rowCount - 2; i++)
+                        {
+                            if (arrItems[i].bInsert)
+                            {
+
+                                //Times need to be in UTC.
+                                DateTime dtTimeIn1 = GetDateFromString(arrItems[i].sWBDocketDateIn, "dd/MM/yyyy hh:mm tt");
+                                DateTime dtTimeIn2 = ConvertFromAESTToGMT(dtTimeIn1);
+                                string sTimeIn = dtTimeIn2.ToString("dd/MM/yyy hh:mm:ss tt");
+                                DateTime dtTimeOut1 = GetDateFromString(arrItems[i].sWBDocketDateOut, "dd/MM/yyyy hh:mm tt");
+                                DateTime dtTimeOut2 = ConvertFromAESTToGMT(dtTimeOut1);
+                                string sTimeOut = dtTimeOut2.ToString("dd/MM/yyy hh:mm:ss tt");
+
+                                //The spreadsheet does not have moisture percentages so set to 0;
+                                sRtn = SetShippingLoadItem(sSessionId, sUserId, sFullName, arrItems[i].sBookingNo, arrItems[i].sContainerNo, arrItems[i].dTareWeight.ToString(),
+                                                           arrItems[i].sLoadNo, "-1", arrItems[i].sSealNo, arrItems[i].iSeqNo.ToString(), arrItems[i].sWBDocketNo,
+                                                           sTimeIn, arrItems[i].dWBInGrossWeight.ToString(), arrItems[i].dPackagingIn.ToString(),
+                                                           sTimeOut, arrItems[i].dWBOutGrossWeight.ToString(), arrItems[i].dPackagingOut.ToString(),
+                                                           arrItems[i].sTruckRego, arrItems[i].sBatchNo, arrItems[i].iLineNumber.ToString(),
+                                                           arrItems[i].dNetWeight.ToString(), arrItems[i].dMoisturePercentage.ToString(), "",
+                                                           arrItems[i].sDispatchDocketNo, arrItems[i].sDestinationCode, arrItems[i].sDDDate, "", "false", "", sWebAppId);
+
+                                if (!sRtn.StartsWith("Success"))
+                                {
+                                    sBody += "Failed inserting row " + arrItems[i].iFileRowNo + " due to : " + sRtn;
+                                }
+
+                                if (!arrItems[i].sWBDocketNo.Equals(""))
+                                {
+                                    rtnInt rtnWBProc = SetWeighbridgeRecordProcessed(arrItems[i].sWBDocketNo, sUserId, 1);
                                     if (!rtnWBProc.bReturnValue)
                                     {
                                         sBody += "Failed setting weighbridge item " + arrItems[i].sWBDocketNo + "to processed";
@@ -14380,7 +16712,7 @@ namespace WcfWCService
                                                            arrItems[i].sLoadNo, "-1", arrItems[i].sSealNo, "0", "", "", "", "", "", "", "", "",
                                                            arrItems[i].sBatchNo, arrItems[i].iLineNumber.ToString(),
                                                            arrItems[i].dNetWeight.ToString(), "0", "",
-                                                           arrItems[i].sDispatchDocketNo, arrItems[i].sDestinationCode, arrItems[i].sDDDate, "false", sWebAppId);
+                                                           arrItems[i].sDispatchDocketNo, arrItems[i].sDestinationCode, arrItems[i].sDDDate, "", "false", "", sWebAppId);
 
                                 if (!sRtn.StartsWith("Success"))
                                 {
@@ -14452,13 +16784,14 @@ namespace WcfWCService
             }
         }
 
-        public string ProcessShippingBookingSpreadsheetNZASContainer(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sWebAppId)
+        public string ProcessShippingBookingSpreadsheetNZASContainerBasic(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sFormat, string sWebAppId)
         {
             Excel.Application xlApp = null;
             Excel.Workbooks xlWbks = null;
             bool bAttachFile = false;
             string sDateTimeStamp = DateTime.Now.ToString("yyyyMMdd_hhmmss");
             string sNewFileName = sFile;
+            rtnInt rtnItem = new rtnInt();
 
             try
             {
@@ -14476,7 +16809,10 @@ namespace WcfWCService
                     string sRecipeints = arrUser[3].ToString();
                     string sRtn = "";
                     double dPackageWeight = 0.24;
-                    string sBatchFromNumber = "", sBatchToNumber = "";
+                    string sBatchFromNumber = "", sBatchToNumber = "", sFolder = "";
+                    bool bContainerExists = false;
+                    int iFormat = Convert.ToInt32(sFormat);
+
                     ExampleService.MyJavaService3Client client2 = GetWCService();
 
                     xlApp = new Excel.Application();
@@ -14529,6 +16865,479 @@ namespace WcfWCService
 
                         sBatchFromNumber = GetConstantValue("NZASOriginMBA", iWebAppId);
                         sBatchToNumber = GetConstantValue("NZASTomagoStockMBA", iWebAppId);
+
+                        if(iFormat == 2)
+                        {
+                            sBatchFromNumber = GetConstantValue("BellBayOriginMBA", iWebAppId);
+                            sBatchToNumber = GetConstantValue("BellBayTomagoStockMBA", iWebAppId);
+                        }
+
+                        //Get the proper row count because sometimes the range rowcount is wrong
+                        iRowCount = rowCount;
+                        for (i = 3; i <= rowCount; i++)
+                        {
+                            if (xlRange.Cells[i, 1].Value2 == null)
+                            {
+                                iRowCount = i - 1;
+                                break;
+                            }
+                            else
+                            {
+                                string sACell = xlRange.Cells[i, 1].Value2.ToString();
+                                if (sACell.Equals(""))
+                                {
+                                    iRowCount = i - 1;
+                                    break;
+                                }
+                            }
+                        }
+
+                        rowCount = iRowCount;
+
+                        //rtnString rtnDest = GetParentPartOfType(sBookingNo, "local.rs.vsrs05.Regain.Mass_Balance_Destination", iWebAppId);
+
+                        //if(rtnDest.bReturnValue)
+                        //{
+                        //    sDestinationCode = rtnDest.sReturnValue;
+                        //}
+
+                        arrBookingItemIncoming[] arrItems = new arrBookingItemIncoming[rowCount - 2];
+                        for (i = 3; i <= rowCount; i++)
+                        {
+                            int iSeqNo = 0;
+                            if (xlRange.Cells[i, 1].Value2 != null)
+                                iSeqNo = Convert.ToInt32(xlRange.Cells[i, 1].Value2.ToString());
+
+                            string sContainerNo = "";
+                            if (xlRange.Cells[i, 2].Value2 != null)
+                                sContainerNo = xlRange.Cells[i, 2].Value2.ToString();
+
+                            string sSealNo = "";
+                            if (xlRange.Cells[i, 6].Value2 != null)
+                                sSealNo = xlRange.Cells[i, 6].Value2.ToString();
+
+                            double dTareWeight = 0.0;
+                            if (xlRange.Cells[i, 4].Value2 != null)
+                                dTareWeight = Convert.ToDouble(xlRange.Cells[i, 4].Value2.ToString());
+
+                            if (dTareWeight > 1000.0)
+                                dTareWeight = dTareWeight / 1000.0;
+
+                            double dNetWeight = 0.0;
+                            if (xlRange.Cells[i, 5].Value2 != null)
+                                dNetWeight = Convert.ToDouble(xlRange.Cells[i, 5].Value2.ToString());
+
+                            if (dNetWeight > 1000.0)
+                                dNetWeight = dNetWeight / 1000.0;
+
+                            dNetWeight -= dPackageWeight; //Take off thew packaging weight
+
+                            //Zero out as per Bernie's request
+                            //dNetWeight = 0.0;
+
+                            double dGrossWeight = 0.0;
+                            if (xlRange.Cells[i, 3].Value2 != null)
+                                dGrossWeight = Convert.ToDouble(xlRange.Cells[i, 3].Value2.ToString());
+
+                            if (dGrossWeight > 1000.0)
+                                dGrossWeight = dGrossWeight / 1000.0;
+
+                            double dSPLTonnes = 0.0;
+                            if (xlRange.Cells[i, 8].Value2 != null)
+                                dSPLTonnes = Convert.ToDouble(xlRange.Cells[i, 8].Value2.ToString());
+
+                            if (dSPLTonnes > 1000.0)
+                                dSPLTonnes = dSPLTonnes / 1000.0;
+
+                            string sComments = "";
+                            if (xlRange.Cells[i, 7].Value2 != null)
+                                sComments = xlRange.Cells[i, 7].Value2.ToString();
+
+                            string sBatchNo = sBatchFromNumber;
+                            sDestinationCode = sBatchToNumber;
+
+                            string sDispatchDocketNo = "";
+                            /*                            if (xlRange.Cells[i, 15].Value2 != null)
+                                                            sDispatchDocketNo = "D" + xlRange.Cells[i, 15].Value2.ToString("000000"); //This makes the dispatch docket start with a D and have 6 digits with leading zeros if necessary
+                            */
+
+                            rtnDate clsBatchDate = GetPartDateAttribute(sBookingNo, "BatchDate", iWebAppId);
+
+                            string sDDDate = "";
+
+                            if (clsBatchDate.bReturnValue)
+                            {
+                                sDDDate = ((DateTime)clsBatchDate.dtReturnValue).ToString("dd/MM/yyyy");
+                            }
+
+                            string sDisDocDate = sDDDate;
+                            /*                            if (!sDDDate.Equals(""))
+                                                        {
+                                                            if (Double.TryParse(sDDDate, out d2))
+                                                            {
+                                                                d = Double.Parse(sDDDate);
+                                                                DateTime dtDDDate = DateTime.FromOADate(d);
+                                                                if (dtDDDate.Hour == 0 && dtDDDate.Minute == 0 && dtDDDate.Second == 0)
+                                                                    sDisDocDate = dtDDDate.ToString("dd/MM/yyyy");
+                                                                else
+                                                                    sDisDocDate = dtDDDate.ToString("dd/MM/yyyy hh:mm:ss tt");
+                                                            }
+
+                                                        }
+                            */
+                            arrItems[i - 3] = new arrBookingItemIncoming();
+
+                            arrItems[i - 3].sBookingNo = sBookingNo;
+                            arrItems[i - 3].sContainerNo = "LC-" + sContainerNo.ToUpper();
+                            arrItems[i - 3].sSealNo = sSealNo;
+                            arrItems[i - 3].dTareWeight = dTareWeight;
+                            arrItems[i - 3].dNetWeight = dNetWeight;
+                            arrItems[i - 3].sBatchFromNo = sBatchNo;
+                            arrItems[i - 3].sDispatchDocketNo = sDispatchDocketNo;
+                            arrItems[i - 3].sDestinationCode = sDestinationCode;
+                            arrItems[i - 3].sDDDate = sDisDocDate;
+                            arrItems[i - 3].iFileRowNo = i;
+                            arrItems[i - 3].iLineNumber = -1;
+                            arrItems[i - 3].iSequenceNo = iSeqNo;
+                            arrItems[i - 3].sLoadNo = "";
+                            arrItems[i - 3].dGrossWeight = dGrossWeight;
+                            arrItems[i - 3].dSPLTonnes = dSPLTonnes;
+                            arrItems[i - 3].sComments = sComments;
+
+                            rtnString rtnLoad = GetShippingRecordExists(sBookingNo, sContainerNo, sSealNo, iWebAppId);
+
+                            if (rtnLoad.bReturnValue)
+                            {
+                                 arrItems[i - 3].bAlreadyExists = true;
+                            }
+
+
+                            //                            sBody += sRowMsg;
+
+                        }
+
+                        //Now we have everything in an array and we know what is already exists and is in the system
+                        //We need to check if anything that does not exist is inconsistent with any other line
+                        for (i = 0; i < rowCount - 2; i++)
+                        {
+                            bool bToBeInserted = true;
+                            if (arrItems[i].bAlreadyExists)
+                            {
+                                sBody += "Item on row " + arrItems[i].iFileRowNo + " is already in the system. The row will be ignored.\r\n";
+                            }
+                            else
+                            {
+                                //If the batch number doesn't exist
+                                if (!PartExists(arrItems[i].sBatchFromNo, iWebAppId))
+                                {
+                                    sBody += "The batch number " + arrItems[i].sBatchFromNo + " on row " + arrItems[i].iFileRowNo + " does not exist. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+
+                                }
+
+                                //If the dispatch docket doesn't exist
+                                if (!arrItems[i].sDispatchDocketNo.Equals(""))
+                                {
+                                    if (!DocExists(arrItems[i].sDispatchDocketNo, iWebAppId))
+                                    {
+                                        sBody += "The dispatch docket " + arrItems[i].sDispatchDocketNo + " on row " + arrItems[i].iFileRowNo + " does not exist. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                        arrItems[i].bInsert = false;
+                                        bToBeInserted = false;
+
+                                    }
+                                }
+                                //If the seal number is there but no container
+                                if (arrItems[i].sContainerNo.Equals("") && !arrItems[i].sSealNo.Equals(""))
+                                {
+                                    sBody += "The container number on row " + arrItems[i].iFileRowNo + " is empty but the seal number isn't. The seal number will be ignored.\r\n";
+                                    arrItems[i].sSealNo = "";
+                                }
+
+                                //If tare weight is there but no container
+                                if (arrItems[i].sContainerNo.Equals("") && arrItems[i].dTareWeight != 0.0)
+                                {
+                                    sBody += "The container number on row " + arrItems[i].iFileRowNo + " is empty but the tare weight isn't. The tare weight will be ignored.\r\n";
+                                    arrItems[i].dTareWeight = 0.0;
+                                }
+
+                                //If the container is there but no seal number
+                                if (!arrItems[i].sContainerNo.Equals("") && arrItems[i].sSealNo.Equals(""))
+                                {
+                                    sBody += "The seal number on row " + arrItems[i].iFileRowNo + " is empty but the container number isn't. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If the container is there but no tare weight
+                                if (!arrItems[i].sContainerNo.Equals("") && arrItems[i].dTareWeight == 0.0)
+                                {
+                                    sBody += "The tare weight on row " + arrItems[i].iFileRowNo + " is empty but the container number isn't. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If there is no batch number
+                                if (arrItems[i].sBatchFromNo.Equals(""))
+                                {
+                                    sBody += "The batch number on row " + arrItems[i].iFileRowNo + " is empty. You must provide at least a batch number and a net weight. Row " + arrItems[i].iFileRowNo +
+                                             " has not been processed.\r\n";
+                                    arrItems[i].bInsert = false;
+                                    bToBeInserted = false;
+                                }
+
+                                //If no net weight
+                                //if (arrItems[i].dNetWeight == 0.0)
+                                //{
+                                //    sBody += "The net weight on row " + arrItems[i].iFileRowNo + " is empty. You must provide at least a batch number and a net weight. Row " + arrItems[i].iFileRowNo +
+                                //             " has not been processed.\r\n";
+                                //    arrItems[i].bInsert = false;
+                                //    bToBeInserted = false;
+                                //}
+
+                                //If there is a container is the system with a different seal number
+                                rtnString rtnContainer = GetShippingContainerExists(arrItems[i].sBookingNo, arrItems[i].sContainerNo, iWebAppId);
+
+                                if (rtnContainer.bReturnValue)
+                                {
+                                    if (!rtnContainer.sReturnValue.Equals(arrItems[i].sSealNo))
+                                    {
+                                        sBody += "The container number on row " + arrItems[i].iFileRowNo + " already exists with seal number " + rtnContainer.sReturnValue +
+                                                 " but the seal number " + arrItems[i].sSealNo + " is different on row number " + arrItems[i].iFileRowNo + ". Row " + arrItems[i].iFileRowNo +
+                                                 " has not been processed.\r\n";
+                                        arrItems[i].bInsert = false;
+                                        bToBeInserted = false;
+                                    }
+                                }
+
+                                //Look at any earlier rows
+                                for (j = rowCount - 3; j >= 0; j--)
+                                {
+                                    if (j != i)
+                                    {
+                                        if (arrItems[i].sContainerNo.Equals(arrItems[j].sContainerNo) && !arrItems[i].sSealNo.Equals(arrItems[j].sSealNo))
+                                        {
+                                            sBody += "The container number on rows " + arrItems[i].iFileRowNo + " and " + arrItems[j].iFileRowNo + " match but the respective seal numbers " +
+                                                     arrItems[i].sSealNo + " and " + arrItems[j].sSealNo + " do not match. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                            arrItems[i].bInsert = false;
+                                            bToBeInserted = false;
+                                            break;
+                                        }
+                                    }
+
+                                }
+
+                                if (bToBeInserted)
+                                {
+                                    arrItems[i].bInsert = true;
+                                    arrItems[i].sLoadNo = "";
+                                }
+                            }
+                        }
+
+                        //Now just process all the rows that are valid. bInsert = true
+                        for (i = 0; i < rowCount - 2; i++)
+                        {
+                            if (arrItems[i].bInsert)
+                            {
+                                bContainerExists = PartExists(arrItems[i].sContainerNo, iWebAppId);
+
+                                if(!bContainerExists) 
+                                {
+                                    //Create a container object
+                                    sFolder = "Product Shipping/Containers/";
+                                    string sPartName = "Container " + arrItems[i].sContainerNo;
+                                    sCheckinComments = "Creating a container " + arrItems[i].sContainerNo;
+                                    string[] sAttributeNames3 = new string[1];
+                                    string[] sAttributeValues3 = new string[1];
+                                    string[] sAttributeTypes3 = new string[1];
+
+                                    sAttributeNames3[0] = "TareWeight";
+                                    sAttributeValues3[0] = arrItems[i].dTareWeight.ToString();
+                                    sAttributeTypes3[0] = "double";
+
+                                    if (!arrItems[i].sContainerNo.Equals("LC-"))
+                                    {
+                                        //The containers go into a library
+                                        sRtn = client2.createpart(arrItems[i].sContainerNo, sPartName, "Production Materials", "local.rs.vsrs05.Regain.Mass_Balance_Container", sFolder, sFullName, sAttributeNames3, sAttributeValues3, sAttributeTypes3, sCheckinComments, 1, iWebAppId);
+
+                                        if (!sRtn.StartsWith("Success"))
+                                        {
+                                            sBody += "Failed inserting row " + arrItems[i].iFileRowNo + " due to : " + "Could not create container " + arrItems[i].sContainerNo ;
+                                        }
+                                    }
+
+                                }
+
+                                //aaaa
+                                //The sreadsheet does not have moisture percentages so set to 0
+                                rtnItem = SetShippingContainerRecord(arrItems[i]);
+
+                                if (!rtnItem.bReturnValue)
+                                {
+                                    sBody += "Failed inserting row " + arrItems[i].iFileRowNo + " due to : " + sRtn;
+                                }
+                                else
+                                {
+                                    rtnInt rtnContainer = SetContainerWeighbridgeRecord(arrItems[i].sBookingNo, arrItems[i].sContainerNo, sUserId);
+                                    if(!rtnContainer.bReturnValue)
+                                    {
+                                        sBody += "Failed inserting container record " + arrItems[i].sContainerNo + " for booking " + arrItems[i].sBookingNo + " on row " + arrItems[i].iFileRowNo + " due to : " + sRtn;
+                                    }
+                                }
+
+                                bAttachFile = true;
+                            }
+                        }
+
+                        if (bAttachFile)
+                        {
+                            rtnBool rtnSecondary = GetDocumentPrimaryAttachmentExists(sBookingNo, sNewFileName, iWebAppId);
+
+                            if (rtnSecondary.bReturnValid)
+                            {
+                                string sNewFileName2 = @"C:\Webroot\Regain\Uploads\" + sNewFileName;
+                                bool bSecondary = rtnSecondary.bReturnValue;
+                                AttachWCDoc(sSessionId, sUserId, sFullName, sBookingNo, "Import file " + sNewFileName, sNewFileName2, bSecondary.ToString().ToLower(), "Import file for shipping " + sBookingNo, sWebAppId);
+
+                            }
+                            else
+                            {
+                                sBody += rtnSecondary.sErrMessage + "\r\n";
+                            }
+
+                        }
+                    }
+
+                    xlWorkbook.Close(true);
+                    xlWbks.Close();
+                    xlApp.Quit();
+
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWbks) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorksheet) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlRange) != 0) ;
+                    xlApp = null;
+                    xlWbks = null;
+                    xlWorkbook = null;
+                    xlWorksheet = null;
+                    xlRange = null;
+
+                    //Now email the user
+                    string sSubject = "Processing of File " + sFile + " for Shipping Booking Items Import";
+                    if (sBody.Length == 0)
+                        sBody = "No issues.";
+                    sBody = "File " + sFile + " for Shipping Booking Items Import (NXAS container format) was processed with the following issues.\r\n" + sBody;
+                    //                    emailmessage(sSessionId, sUserId, sSubject, sBody, " ", sRecipeints, "", "", sWebAppId);
+
+                    return "Success^" + sBody;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Failure:" + ex.Message + "^";
+            }
+            finally
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
+                {
+                    proc.Kill();
+                }
+            }
+        }
+
+        public string ProcessShippingBookingSpreadsheetNZASContainer(string sSessionId, string sUserId, string sPassedBookingNo, string sFile, string sFormat, string sWebAppId)
+        {
+            Excel.Application xlApp = null;
+            Excel.Workbooks xlWbks = null;
+            bool bAttachFile = false;
+            string sDateTimeStamp = DateTime.Now.ToString("yyyyMMdd_hhmmss");
+            string sNewFileName = sFile;
+            string sFormatMsg = "";
+
+            try
+            {
+                int iWebAppId = Convert.ToInt32(sWebAppId);
+
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    Update_User_Time(sUserId, sSessionId);
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+                    string sRecipeints = arrUser[3].ToString();
+                    string sRtn = "";
+                    double dPackageWeight = 0.24;
+                    string sBatchFromNumber = "", sBatchToNumber = "";
+                    int iFormat = Convert.ToInt32(sFormat);
+                    ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                    xlApp = new Excel.Application();
+                    xlWbks = xlApp.Workbooks;
+
+                    //Copy the file to a name with user and date and time
+                    if (sFile.EndsWith(".xlsx"))
+                    {
+                        sNewFileName = sFile.Replace(".xlsx", "_Import_" + sUserId + "_" + sDateTimeStamp + ".xlsx");
+                        File.Copy(@"C:\Webroot\Regain\Uploads\" + sFile, @"C:\Webroot\Regain\Uploads\" + sNewFileName);
+                    }
+
+                    Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
+                    Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+                    Excel.Range xlRange = xlWorksheet.UsedRange;
+
+                    int rowCount = xlRange.Rows.Count;
+                    int colCount = xlRange.Columns.Count;
+                    int i = 0, j = 0, iRowCount;
+                    string sBody = "";
+                    string sBookingNo = "", sDestinationCode = "";
+
+                    if (xlRange.Cells[1, 3].Value2 != null)
+                        sBookingNo = "LB-" + xlRange.Cells[1, 3].Value2.ToString();
+
+                    if (!sBookingNo.Equals(sPassedBookingNo))
+                    {
+                        sBody += "The booking number submitted against this file " + sFile + " is " + sPassedBookingNo.Replace("LB-", "") + " but the number in cell C1 of the first sheet is " + sBookingNo.Replace("LB-", "") +
+                                 ". These do not match so the file will not be processed\r\n";
+                    }
+                    else
+                    {
+                        string[] sAttributeNames = new string[1];
+                        string[] sAttributeValues = new string[1];
+                        string[] sAttributeTypes = new string[1];
+                        string sCheckinComments = "Making ulitmate source NZAS";
+
+                        sAttributeNames[0] = "ShippingSource";
+                        sAttributeValues[0] = "301";
+                        sAttributeTypes[0] = "string";
+
+
+                        //Set the ultimate source to NZAS. If you set the name to blank it will leave it unchanged
+                        sRtn = client2.setpartattributes(sPassedBookingNo, "", sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, Convert.ToInt16(sWebAppId));
+
+                        if (!sRtn.StartsWith("Success"))
+                        {
+                            sBody += "Cannot set source of SPL to NZAS for booking " + sPassedBookingNo.Replace("LB-", "") + ".\r\n";
+                        }
+
+                        sBatchFromNumber = GetConstantValue("NZASOriginMBA", iWebAppId);
+                        sBatchToNumber = GetConstantValue("NZASTomagoStockMBA", iWebAppId);
+                        sFormatMsg = "(NZAS container format)";
+
+                        if (iFormat == 2)
+                        {
+                            sBatchFromNumber = GetConstantValue("BellBayOriginMBA", iWebAppId);
+                            sBatchToNumber = GetConstantValue("BellBayTomagoStockMBA", iWebAppId);
+                            sFormatMsg = "(Bell Bay container format)";
+                        }
 
                         //Get the proper row count because sometimes the range rowcount is wrong
                         iRowCount = rowCount;
@@ -14791,7 +17600,7 @@ namespace WcfWCService
                                                            arrItems[i].sLoadNo, "-1", arrItems[i].sSealNo, arrItems[i].iSequenceNo.ToString(), "", "", "", "", "", "", "", "",
                                                            arrItems[i].sBatchFromNo, arrItems[i].iLineNumber.ToString(),
                                                            arrItems[i].dNetWeight.ToString(), "0", "",
-                                                           arrItems[i].sDispatchDocketNo, arrItems[i].sDestinationCode, arrItems[i].sDDDate, "true", sWebAppId);
+                                                           arrItems[i].sDispatchDocketNo, arrItems[i].sDestinationCode, arrItems[i].sDDDate, "", "true", "", sWebAppId);
 
                                 if (!sRtn.StartsWith("Success"))
                                 {
@@ -14800,7 +17609,7 @@ namespace WcfWCService
                                 else
                                 {
                                     rtnInt rtnContainer = SetContainerWeighbridgeRecord(arrItems[i].sBookingNo, arrItems[i].sContainerNo, sUserId);
-                                    if(!rtnContainer.bReturnValue)
+                                    if (!rtnContainer.bReturnValue)
                                     {
                                         sBody += "Failed inserting container record " + arrItems[i].sContainerNo + " for booking " + arrItems[i].sBookingNo + " on row " + arrItems[i].iFileRowNo + " due to : " + sRtn;
                                     }
@@ -14848,7 +17657,7 @@ namespace WcfWCService
                     string sSubject = "Processing of File " + sFile + " for Shipping Booking Items Import";
                     if (sBody.Length == 0)
                         sBody = "No issues.";
-                    sBody = "File " + sFile + " for Shipping Booking Items Import (NXAS container format) was processed with the following issues.\r\n" + sBody;
+                    sBody = "File " + sFile + " for Shipping Booking Items Import " + sFormatMsg + " was processed with the following issues.\r\n" + sBody;
                     //                    emailmessage(sSessionId, sUserId, sSubject, sBody, " ", sRecipeints, "", "", sWebAppId);
 
                     return "Success^" + sBody;
@@ -15053,7 +17862,7 @@ namespace WcfWCService
                         {
                             if (xlRange.Cells[i, 1].Value2 == null)
                             {
-                                iRowCount = i - 3;
+                                iRowCount = i - 1;
                                 break;
                             }
                             else
@@ -15085,6 +17894,10 @@ namespace WcfWCService
                             string sSealNo = "";
 
                             double dTareWeight = 0.0;
+
+                            string sWBDocketNo = "";
+                            if (xlRange.Cells[i, 3].Value2 != null)
+                                sWBDocketNo = xlRange.Cells[i, 3].Value2.ToString(); 
 
                             double dNetWeight = 0.0;
                             if (xlRange.Cells[i, 4].Value2 != null)
@@ -15121,6 +17934,7 @@ namespace WcfWCService
 
                             arrItems[i - 4] = new arrBookingItem();
 
+                            arrItems[i - 4].sWBDocketNo = sWBDocketNo;
                             arrItems[i - 4].sBookingNo = sBookingNo;
                             arrItems[i - 4].sContainerNo = sContainerNo;
                             arrItems[i - 4].sSealNo = sSealNo;
@@ -15285,13 +18099,20 @@ namespace WcfWCService
                                                            arrItems[i].sLoadNo, "-1", arrItems[i].sSealNo, "0", "", "", "", "", "", "", "", "",
                                                            arrItems[i].sBatchNo, arrItems[i].iLineNumber.ToString(),
                                                            arrItems[i].dNetWeight.ToString(), "0", "",
-                                                           arrItems[i].sDispatchDocketNo, arrItems[i].sDestinationCode, arrItems[i].sDDDate, "false", sWebAppId);
+                                                           arrItems[i].sDispatchDocketNo, arrItems[i].sDestinationCode, arrItems[i].sDDDate, "", "false", arrItems[i].sWBDocketNo, sWebAppId);
 
                                 if (!sRtn.StartsWith("Success"))
                                 {
                                     sBody += "Failed inserting row " + arrItems[i].iFileRowNo + " due to : " + sRtn;
                                 }
-
+                                else
+                                {
+                                    rtnInt rtnWBSet = SetWeighbridgeRecordProcessed(arrItems[i].sWBDocketNo, sUserId, 1);
+                                    if(!rtnWBSet.bReturnValue)
+                                    {
+                                        sBody += "Failed setting weighbridge record " + arrItems[i].sWBDocketNo + " to processed"; ;
+                                    }
+                                }
                                 bAttachFile = true;
                             }
                         }
@@ -15961,6 +18782,331 @@ namespace WcfWCService
             }
         }
 
+
+        public string GetBatchRunSheetReport(string sSessionId, string sUserId, string sBatchNo, string sWebAppId)
+        {
+            Excel.Application xlApp = null;
+            Excel.Workbooks xlWbks = null;
+            try
+            {
+                int iWebAppId = Convert.ToInt32(sWebAppId);
+
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    Update_User_Time(sUserId, sSessionId);
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+                    string sRecipeints = arrUser[3].ToString();
+                    string sDateTimeStamp = DateTime.Now.ToString("yyyyMMdd_hhmmss");
+                    string sFileNameOnly = "BatchRunSheet_" + sUserId.Replace(".", "") + "_" + sDateTimeStamp + ".xlsx";
+                    string sFile = @"C:\Webroot\Regain\temp\" + sFileNameOnly;
+                    int iJobTotalCol = 0, iDetailRows = 0;
+                    string[] arrCols = new string[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L" };
+                    int iThisRow = 4;
+
+
+                    xlApp = new Excel.Application();
+                    xlWbks = xlApp.Workbooks;
+
+                    Excel.Workbook xlWorkbook = xlWbks.Add(XlWBATemplate.xlWBATWorksheet);
+                    Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+                    
+
+                    xlWorksheet.Cells[1, 1] = "Batch " + sBatchNo;
+                    xlWorksheet.Cells[1, 1].Font.Bold = true;
+                    xlWorksheet.Cells[1, 1].Font.Size = 16;
+
+                    rtnRunSheetHeader[] arrHdr =  GetRunningSheetHeaderInfo(sBatchNo);
+
+                    if(arrHdr.Length >0)
+                    {
+                        xlWorksheet.Cells[1, 3] = arrHdr[0].sMBAName;
+                        xlWorksheet.Cells[1, 3].Font.Bold = true;
+                        xlWorksheet.Cells[1, 3].Font.Size = 16;
+                        xlWorksheet.Cells[2, 1] = "Target";
+                        xlWorksheet.Cells[2, 1].Font.Bold = true;
+                        xlWorksheet.Cells[2, 2] = Math.Round(arrHdr[0].dTargetQty, 1);
+                        xlWorksheet.Cells[2, 3] = "(t)";
+                        xlWorksheet.Cells[2, 3].Font.Bold = true;
+
+                        xlWorksheet.Cells[3, 2] = "Initials";
+                        xlWorksheet.Cells[3, 2].Font.Bold = true;
+                        xlWorksheet.Columns[2].ColumnWidth = 11;
+                        double dTotalRatio = 0.0;
+                        for (int i = 0; i < arrHdr.Length; i++)
+                        {
+                            xlWorksheet.Columns[i+2].ColumnWidth = 9;
+                            xlWorksheet.Cells[3, i + 3] = arrHdr[i].sMaterialSiteName;
+                            xlWorksheet.Cells[4, i + 3] = Math.Round(arrHdr[i].dRatioRaw,1);
+                            xlWorksheet.Cells[3, i + 3].Font.Bold = true;
+                            xlWorksheet.Cells[4, i + 3].Font.Bold = true;
+                            dTotalRatio += arrHdr[i].dRatioRaw;
+
+                        }
+
+                        iJobTotalCol = arrHdr.Length + 3;
+                        xlWorksheet.Cells[3, iJobTotalCol] = "Job Total (t)";
+                        xlWorksheet.Cells[3, iJobTotalCol + 1] = "Running Total (t)";
+                        xlWorksheet.Cells[3, iJobTotalCol + 2] = "Date";
+                        xlWorksheet.Cells[3, iJobTotalCol + 3] = "Time";
+                        xlWorksheet.Cells[3, iJobTotalCol].Font.Bold = true;
+                        xlWorksheet.Cells[3, iJobTotalCol + 1].Font.Bold = true;
+                        xlWorksheet.Cells[3, iJobTotalCol + 2].Font.Bold = true;
+                        xlWorksheet.Cells[3, iJobTotalCol + 3].Font.Bold = true;
+
+                        xlWorksheet.Columns[iJobTotalCol].ColumnWidth = 11;
+                        xlWorksheet.Columns[iJobTotalCol + 1].ColumnWidth = 15;
+                        xlWorksheet.Columns[iJobTotalCol + 2].ColumnWidth = 11;
+                        xlWorksheet.Columns[iJobTotalCol + 3].ColumnWidth = 11;
+
+                        xlWorksheet.Cells[4, 1] = Math.Round(dTotalRatio, 0).ToString() + "t Mix";
+                        xlWorksheet.Cells[4, 1].Font.Bold = true;
+
+                        rtnRunSheetDetails[] arrDetails = GetRunningSheetDetailsInfo(sBatchNo);
+
+                        iDetailRows = arrDetails.Length;
+
+                        if (iDetailRows > 0)
+                        {
+                            string sPrevJobUUID = "";
+                            string sThisJobUUID = "";
+                            int iSequence = 0;
+                            int iLiftColCount = arrHdr.Length;
+                            string sLastSumColumn = arrCols[iLiftColCount + 1];
+                            string sRowTotalCol = arrCols[iLiftColCount + 2];
+                            string sRunTotalCol = arrCols[iLiftColCount + 3];
+
+
+                            for (int i = 0;i<iDetailRows;i++)
+                            {
+                                sThisJobUUID = arrDetails[i].sJobUUID;
+                                if (!sPrevJobUUID.Equals(sThisJobUUID))
+                                {
+                                    //Put in the items that are the same for each material in the row
+                                    //These are initials, time, date and the row and running totals
+                                    iThisRow++;
+                                    iSequence++;
+                                    xlWorksheet.Cells[iThisRow, 1] = iSequence;
+                                    xlWorksheet.Cells[iThisRow, 2] = arrDetails[i].sInitials;
+                                    xlWorksheet.Cells[iThisRow, iLiftColCount + 5] = arrDetails[i].sDate;
+                                    xlWorksheet.Cells[iThisRow, iLiftColCount + 5].HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+                                    xlWorksheet.Cells[iThisRow, iLiftColCount + 6] = arrDetails[i].sTime;
+                                    xlWorksheet.Cells[iThisRow, iLiftColCount + 6].HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+                                    xlWorksheet.Range[sRowTotalCol + iThisRow].Formula = "=SUM(C" + iThisRow + ":" + sLastSumColumn + iThisRow + ")";
+                                    xlWorksheet.Range[sRowTotalCol + iThisRow].NumberFormat = "0.00";
+                                    xlWorksheet.Range[sRunTotalCol + iThisRow].Formula = "=" + sRunTotalCol + (iThisRow-1) + "+" + sRowTotalCol + iThisRow;
+                                    xlWorksheet.Range[sRunTotalCol + iThisRow].NumberFormat = "0.00";
+                                    sPrevJobUUID = sThisJobUUID;
+                                }
+
+                                //Now put in the details for this row
+                                for (int j=0; j<iLiftColCount;j++)
+                                {
+                                    string sHeaderCode = arrHdr[j].sMaterialCode;
+                                    if (sHeaderCode.Equals(arrDetails[i].sMaterialCode))
+                                    {
+                                        xlWorksheet.Cells[iThisRow, j + 3] = arrDetails[i].dJobAmount;
+                                        xlWorksheet.Cells[iThisRow, j + 3].NumberFormat = "0.00";
+                                    }
+                                }
+                            }
+
+                            //Now put in the column totals
+                            iThisRow++;
+                            xlWorksheet.Cells[iThisRow, 1] = "Totals";
+                            xlWorksheet.Cells[iThisRow, 1].Font.Bold = true;
+                            for (int j = 0; j < iLiftColCount; j++)
+                            {
+                                xlWorksheet.Range[arrCols[j+2] + iThisRow].Formula = "=SUM(" + arrCols[j + 2] + "5:" + arrCols[j + 2] + (iThisRow-1) + ")";
+                                xlWorksheet.Cells[iThisRow, j+3].Font.Bold = true;
+                                xlWorksheet.Cells[iThisRow, j+3].NumberFormat = "0.00";
+                            }
+
+                            xlWorksheet.Range[sRowTotalCol + iThisRow].Formula = "=SUM(" + sRowTotalCol + "5:" + sRowTotalCol + (iThisRow - 1) + ")";
+                            xlWorksheet.Cells[iThisRow, iLiftColCount + 3].Font.Bold = true;
+                            xlWorksheet.Cells[iThisRow, iLiftColCount + 3].NumberFormat = "0.00";
+
+                            xlWorksheet.Range[sRunTotalCol + iThisRow].Formula = "=" + sRowTotalCol + iThisRow;
+                            xlWorksheet.Cells[iThisRow, iLiftColCount + 4].Font.Bold = true;
+                            xlWorksheet.Cells[iThisRow, iLiftColCount + 4].NumberFormat = "0.00";
+                        }
+
+
+                        //Put in the notes
+                        iThisRow++;
+                        iThisRow++;
+                        rtnRunSheetNotes rtnNotes = GetRunningSheetNotes(sBatchNo);
+                        xlWorksheet.Cells[iThisRow, 1] = "Notes";
+                        xlWorksheet.Cells[iThisRow, 1].Font.Bold = true;
+
+                        if(rtnNotes.bReturnValue)
+                        {
+                            xlWorksheet.Cells[iThisRow, 2] = rtnNotes.sNotes;
+                            xlWorksheet.Cells[iThisRow, 2].Style.VerticalAlignment = Excel.XlVAlign.xlVAlignTop;
+                            //                            xlWorksheet.Cells.Merge(iThisRow - 1, 1, iThisRow + 2, 5);
+                            Excel.Range range = xlWorksheet.Range[xlWorksheet.Cells[iThisRow, 2], xlWorksheet.Cells[(iThisRow + 3), 6]];
+//                            range.Value = rtnNotes.sNotes.ToString();
+                            range.Merge(false);
+                            range.WrapText = true;
+                            //range.Style.VerticalAlignment = Excel.XlVAlign.xlVAlignTop;
+                            //range.Style.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+                        }
+
+                        iThisRow += 3;
+
+
+                    }
+
+                    rtnRunSheetMetalDetails[] arrAluminium = GetRunningSheetMetalInfo(sBatchNo, "Aluminium");
+
+                    if (arrAluminium.Length > 0)
+                    {
+                        if (arrAluminium[0].bReturnValue)
+                        {
+                            iThisRow++;
+
+                            //Put in the header
+                            xlWorksheet.Cells[iThisRow, 1] = "Aluminium";
+                            xlWorksheet.Cells[iThisRow, 1].Font.Bold = true;
+                            xlWorksheet.Cells[iThisRow, 1].Font.Size = 16;
+
+                            iThisRow++;
+
+                            xlWorksheet.Cells[iThisRow, 2] = "Initials";
+                            xlWorksheet.Cells[iThisRow, 2].Font.Bold = true;
+                            xlWorksheet.Cells[iThisRow, 3] = "Weight (kg)";
+                            xlWorksheet.Cells[iThisRow, 4] = "Date";
+                            xlWorksheet.Cells[iThisRow, 5] = "Time";
+                            xlWorksheet.Cells[iThisRow, 3].Font.Bold = true;
+                            xlWorksheet.Cells[iThisRow, 4].Font.Bold = true;
+                            xlWorksheet.Cells[iThisRow, 5].Font.Bold = true;
+                            xlWorksheet.Columns[3].ColumnWidth = 11; //Make the quantity column 11 to take in the header
+
+                            int iMetalRows = arrAluminium.Length;
+                            int iSequence = 0;
+                            int iStartRow = iThisRow + 1;
+                            for (int i = 0; i < iMetalRows; i++)
+                            {
+                                iThisRow++;
+                                iSequence++;
+                                xlWorksheet.Cells[iThisRow, 1] = iSequence;
+                                xlWorksheet.Cells[iThisRow, 2] = arrAluminium[i].sInitials;
+                                xlWorksheet.Cells[iThisRow, 3] = arrAluminium[i].dQuantity;
+                                xlWorksheet.Cells[iThisRow, 3].NumberFormat = "0.00";
+                                xlWorksheet.Cells[iThisRow, 4] = arrAluminium[i].sDate;
+                                xlWorksheet.Cells[iThisRow, 4].HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+                                xlWorksheet.Cells[iThisRow, 5] = arrAluminium[i].sTime;
+                                xlWorksheet.Cells[iThisRow, 5].HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+                            }
+
+                            iThisRow++;
+                            xlWorksheet.Cells[iThisRow, 1] = "Total";
+                            xlWorksheet.Cells[iThisRow, 1].Font.Bold = true;
+                            xlWorksheet.Range["C" + iThisRow].Formula = "=SUM(C" + iStartRow + ":C" + (iThisRow -1)  + ")";
+                            xlWorksheet.Range["C" + iThisRow].NumberFormat = "0.00";
+                            xlWorksheet.Cells[iThisRow, 3].Font.Bold = true;
+                        }
+                    }
+
+                    rtnRunSheetMetalDetails[] arrSteel = GetRunningSheetMetalInfo(sBatchNo, "Steel");
+
+                    if (arrSteel.Length > 0)
+                    {
+                        if (arrSteel[0].bReturnValue)
+                        {
+                            iThisRow += 2;
+
+                            //Put in the header
+                            xlWorksheet.Cells[iThisRow, 1] = "Steel";
+                            xlWorksheet.Cells[iThisRow, 1].Font.Bold = true;
+                            xlWorksheet.Cells[iThisRow, 1].Font.Size = 16;
+
+                            iThisRow++;
+
+                            xlWorksheet.Cells[iThisRow, 2] = "Initials";
+                            xlWorksheet.Cells[iThisRow, 2].Font.Bold = true;
+                            xlWorksheet.Cells[iThisRow, 3] = "Weight (kg)";
+                            xlWorksheet.Cells[iThisRow, 4] = "Date";
+                            xlWorksheet.Cells[iThisRow, 5] = "Time";
+                            xlWorksheet.Cells[iThisRow, 3].Font.Bold = true;
+                            xlWorksheet.Cells[iThisRow, 4].Font.Bold = true;
+                            xlWorksheet.Cells[iThisRow, 5].Font.Bold = true;
+                            xlWorksheet.Columns[3].ColumnWidth = 11; //Make the quantity column 11 to take in the header
+
+                            int iMetalRows = arrSteel.Length;
+                            int iSequence = 0;
+                            int iStartRow = iThisRow + 1;
+                            for (int i = 0; i < iMetalRows; i++)
+                            {
+                                iThisRow++;
+                                iSequence++;
+                                xlWorksheet.Cells[iThisRow, 1] = iSequence;
+                                xlWorksheet.Cells[iThisRow, 2] = arrSteel[i].sInitials;
+                                xlWorksheet.Cells[iThisRow, 3] = arrSteel[i].dQuantity;
+                                xlWorksheet.Cells[iThisRow, 3].NumberFormat = "0.00";
+                                xlWorksheet.Cells[iThisRow, 4] = arrSteel[i].sDate;
+                                xlWorksheet.Cells[iThisRow, 4].HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+                                xlWorksheet.Cells[iThisRow, 5] = arrSteel[i].sTime;
+                                xlWorksheet.Cells[iThisRow, 5].HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+                            }
+
+                            iThisRow++;
+                            xlWorksheet.Cells[iThisRow, 1] = "Total";
+                            xlWorksheet.Cells[iThisRow, 1].Font.Bold = true;
+                            xlWorksheet.Range["C" + iThisRow].Formula = "=SUM(C" + iStartRow + ":C" + (iThisRow - 1) + ")";
+                            xlWorksheet.Range["C" + iThisRow].NumberFormat = "0.00";
+                            xlWorksheet.Cells[iThisRow, 3].Font.Bold = true;
+                        }
+                    }
+
+                    xlWorkbook.SaveAs(sFile);
+                    xlWorkbook.Close(true);
+                    xlWbks.Close();
+                    xlApp.Quit();
+
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWbks) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorksheet) != 0) ;
+                    xlApp = null;
+                    xlWbks = null;
+                    xlWorkbook = null;
+                    xlWorksheet = null;
+
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+
+                    System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                    foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
+                    {
+                        proc.Kill();
+                    }
+
+                    return sFileNameOnly;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Failure:" + ex.Message + "^";
+            }
+/*            finally
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
+                {
+                    proc.Kill();
+                }
+            }
+*/
+        }
+
         public rtnInt SetWeighbridgeRecord(string sDocketNo, string sDocketDateIn, int iWeighbridgeInId, long lWeightIn, string sMaterialCode,
                                            string sDocketDateOut, int iWeighbridgeOutId, long lWeightOut, string sRego, long lNettWeight, 
                                            int iMaterialTypeCode, string sUserId)
@@ -16001,7 +19147,7 @@ namespace WcfWCService
             }
         }
 
-        public rtnInt SetWeighbridgeRecordProcessed(string sDocketNo, string sUserId)
+        public rtnInt SetWeighbridgeRecordProcessed(string sDocketNo, string sUserId, int iReceivingOrDispatch)
         {
             rtnInt rtn = new rtnInt();
             StoredProc SP = new StoredProc();
@@ -16010,6 +19156,7 @@ namespace WcfWCService
             SP.SetProcName("SP_SetWeighbridgeRecordProcessed");
             SP.SetParam("@pvchWeighbridgeDocketNo", sDocketNo);
             SP.SetParam("@pvchUser", sUserId);
+            SP.SetParam("@piReceivingOrDispatch", iReceivingOrDispatch);
 
             int iRecordsAffected = SP.RunStoredProcDataSet();
 
@@ -16118,6 +19265,250 @@ namespace WcfWCService
 
             ds.Dispose();
             return rtnCls;
+        }
+
+        public rtnWBInfo GetWeighbridgeRecord(string sWBDocketNo)
+        {
+            rtnWBInfo rtn = new rtnWBInfo();
+            StoredProc SP = new StoredProc();
+            RecordSet rs = new RecordSet();
+            int i;
+
+            SP.SetProcName("SP_GetWeighbridgeSingleItemDetails");
+            SP.SetParam("@pvchWeighbridgeDocketNo", sWBDocketNo);
+
+            int iRecordsAffected = SP.RunStoredProcDataSet();
+
+            if (iRecordsAffected <= 0)
+            {
+                rtn.bReturnValue = false;
+                rtn.sErrorMsg = SP.GetErrorMsg();
+                return rtn;
+            }
+            else
+            {
+                DataSet ds = SP.GetDataSet();
+                string sDateIn = rs.Get_NVarchar(ds, "DocketDateInString", 0);
+                string sTimeIn = rs.Get_NVarchar(ds, "DocketTimeInString", 0);
+                int iWeighbridgeIn = rs.Get_Int(ds, "WeighbridgeInId", 0);
+                double dWeightIn = rs.Get_Float(ds, "WeightIn", 0);
+                string sDateOut = rs.Get_NVarchar(ds, "DocketDateOutString", 0);
+                string sTimeOut = rs.Get_NVarchar(ds, "DocketTimeOutString", 0);
+                int iWeighbridgeOut = rs.Get_Int(ds, "WeighbridgeOutId", 0);
+                double dWeightOut = rs.Get_Float(ds, "WeightOut", 0);
+                string sTruckRego = rs.Get_NVarchar(ds, "TruckRego", 0);
+                double dNettWeight = rs.Get_Float(ds, "NettWeight", 0);
+
+
+                rtn.bReturnValue = true;
+                rtn.sWBDocketNo = sWBDocketNo;
+                rtn.sDocketDateIn = sDateIn;
+                rtn.sDocketTimeIn = sTimeIn;
+                rtn.iWeighbridgeIn = iWeighbridgeIn;
+                rtn.dWeightIn = dWeightIn;
+                rtn.sDocketDateOut = sDateOut;
+                rtn.sDocketTimeOut = sTimeOut;
+                rtn.iWeighbridgeOut = iWeighbridgeOut;
+                rtn.dWeightOut = dWeightOut;
+                rtn.sTruckRego = sTruckRego;
+                rtn.dNettWeight = dNettWeight;
+
+                return rtn;
+            }
+        }
+
+        public rtnRunSheetHeader[] GetRunningSheetHeaderInfo(string sBatchNo)
+        {
+            StoredProc SP = new StoredProc();
+            RecordSet rs = new RecordSet();
+            int i;
+
+            SP.SetProcName("SP_GetRunningSheetHeaderInfo");
+            SP.SetParam("@pvchMBANo", sBatchNo);
+
+            int iRecordsAffected = SP.RunStoredProcDataSet();
+
+            if (iRecordsAffected <= 0)
+            {
+                rtnRunSheetHeader[] arrRtn = new rtnRunSheetHeader[1];
+                rtnRunSheetHeader rtn = new rtnRunSheetHeader();
+                rtn.bReturnValue = false;
+                rtn.sErrorMsg = SP.GetErrorMsg();
+                arrRtn[0] = rtn;
+                return arrRtn;
+            }
+            else
+            {
+                DataSet ds = SP.GetDataSet();
+                int iRows = ds.Tables[0].Rows.Count;
+                rtnRunSheetHeader[] arrRtn = new rtnRunSheetHeader[iRows];
+                for (i = 0; i < iRows; i++)
+                {
+                    rtnRunSheetHeader rtn = new rtnRunSheetHeader();
+                    string sMBACode = rs.Get_NVarchar(ds, "MBACode", i);
+                    string sMBAName = rs.Get_NVarchar(ds, "MBAName", i);
+                    string sMaterialCode = rs.Get_NVarchar(ds, "MaterialCode", i);
+                    string sMaterialSiteName = rs.Get_NVarchar(ds, "MaterialSiteName", i);
+                    string sMaterialName = rs.Get_NVarchar(ds, "MaterialName", i);
+                    double dTargetQty = rs.Get_Float(ds, "TargetQty", i);
+                    double dRatio = rs.Get_Float(ds, "Ratio", i);
+                    double dRatioRaw = rs.Get_Float(ds, "RatioRaw", i);
+
+
+                    rtn.bReturnValue = true;
+                    rtn.sMBACode = sMBACode;
+                    rtn.sMBAName = sMBAName;
+                    rtn.sMaterialCode = sMaterialCode;
+                    rtn.sMaterialSiteName = sMaterialSiteName;
+                    rtn.sMaterialName = sMaterialName;
+                    rtn.dTargetQty = dTargetQty;
+                    rtn.dRatio = dRatio;
+                    rtn.dRatioRaw = dRatioRaw;
+                    arrRtn[i] = rtn;
+                }
+
+                return arrRtn;
+            }
+        }
+
+        public rtnRunSheetDetails[] GetRunningSheetDetailsInfo(string sBatchNo)
+        {
+            StoredProc SP = new StoredProc();
+            RecordSet rs = new RecordSet();
+            int i;
+
+            SP.SetProcName("SP_GetRunningSheetDetailsInfo");
+            SP.SetParam("@pvchMBANo", sBatchNo);
+
+            int iRecordsAffected = SP.RunStoredProcDataSet();
+
+            if (iRecordsAffected <= 0)
+            {
+                rtnRunSheetDetails[] arrRtn = new rtnRunSheetDetails[1];
+                rtnRunSheetDetails rtn = new rtnRunSheetDetails();
+                rtn.bReturnValue = false;
+                rtn.sErrorMsg = SP.GetErrorMsg();
+                arrRtn[0] = rtn;
+                return arrRtn;
+            }
+            else
+            {
+                DataSet ds = SP.GetDataSet();
+                int iRows = ds.Tables[0].Rows.Count;
+                rtnRunSheetDetails[] arrRtn = new rtnRunSheetDetails[iRows];
+                for (i = 0; i < iRows; i++)
+                {
+                    rtnRunSheetDetails rtn = new rtnRunSheetDetails();
+                    string sMBACode = rs.Get_NVarchar(ds, "MBACode", i);
+                    string sMaterialCode = rs.Get_NVarchar(ds, "MaterialCode", i);
+                    string sJobUUID = rs.Get_NVarchar(ds, "JobUUID", i);
+                    double dJobAmount = rs.Get_Float(ds, "JobAmount", i);
+                    string sJustDate = rs.Get_NVarchar(ds, "JustDate", i);
+                    string sMaxTime = rs.Get_NVarchar(ds, "MaxTime", i);
+                    string sInitials = rs.Get_NVarchar(ds, "Initials", i);
+
+
+                    rtn.bReturnValue = true;
+                    rtn.sMBACode = sMBACode;
+                    rtn.sMaterialCode = sMaterialCode;
+                    rtn.sJobUUID = sJobUUID;
+                    rtn.dJobAmount = dJobAmount;
+                    rtn.sDate = sJustDate;
+                    rtn.sTime = sMaxTime;
+                    rtn.sInitials = sInitials;
+                    arrRtn[i] = rtn;
+                }
+
+                return arrRtn;
+            }
+        }
+
+        public rtnRunSheetNotes GetRunningSheetNotes(string sBatchNo)
+        {
+            StoredProc SP = new StoredProc();
+            RecordSet rs = new RecordSet();
+            int i;
+
+            SP.SetProcName("SP_GetRunningSheetNotesInfo");
+            SP.SetParam("@pvchMBANo", sBatchNo);
+
+            int iRecordsAffected = SP.RunStoredProcDataSet();
+
+            if (iRecordsAffected <= 0)
+            {
+                rtnRunSheetNotes rtn = new rtnRunSheetNotes();
+                rtn.bReturnValue = false;
+                rtn.sErrorMsg = SP.GetErrorMsg();
+                return rtn;
+            }
+            else
+            {
+                DataSet ds = SP.GetDataSet();
+                int iRows = ds.Tables[0].Rows.Count;
+                rtnRunSheetNotes rtn = new rtnRunSheetNotes();
+                string sMBACode = rs.Get_NVarchar(ds, "WTPartNumber", 0);
+                string sNotes = rs.Get_NVarchar(ds, "RunningSheetNotes", 0);
+
+
+                rtn.bReturnValue = true;
+                rtn.sMBACode = sMBACode;
+                rtn.sNotes = sNotes;
+                    
+                return rtn;
+            }
+        }
+
+        //The metal code is either Steel or ALuminium
+        public rtnRunSheetMetalDetails[] GetRunningSheetMetalInfo(string sBatchNo, string sMetalCode)
+        {
+            StoredProc SP = new StoredProc();
+            RecordSet rs = new RecordSet();
+            int i;
+
+            SP.SetProcName("SP_GetRunningSheetMetalInfo");
+            SP.SetParam("@pvchMBANo", sBatchNo);
+            SP.SetParam("@pvchMetalCode", sMetalCode);
+
+            int iRecordsAffected = SP.RunStoredProcDataSet();
+
+            if (iRecordsAffected <= 0)
+            {
+                rtnRunSheetMetalDetails[] arrRtn = new rtnRunSheetMetalDetails[1];
+                rtnRunSheetMetalDetails rtn = new rtnRunSheetMetalDetails();
+                rtn.bReturnValue = false;
+                rtn.sErrorMsg = SP.GetErrorMsg();
+                arrRtn[0] = rtn;
+                return arrRtn;
+            }
+            else
+            {
+                DataSet ds = SP.GetDataSet();
+                int iRows = ds.Tables[0].Rows.Count;
+                rtnRunSheetMetalDetails[] arrRtn = new rtnRunSheetMetalDetails[iRows];
+                for (i = 0; i < iRows; i++)
+                {
+                    rtnRunSheetMetalDetails rtn = new rtnRunSheetMetalDetails();
+                    string sMBACode = rs.Get_NVarchar(ds, "MBACode", i);
+                    string sSQLMetalCode = rs.Get_NVarchar(ds, "MetalCode", i);
+                    double dQuantity = rs.Get_Float(ds, "Quantity", i);
+                    string sThisDate = rs.Get_NVarchar(ds, "ThisDate", i);
+                    string sThisTime = rs.Get_NVarchar(ds, "ThisTime", i);
+                    string sInitials = rs.Get_NVarchar(ds, "CompletedInitials", i);
+
+
+                    rtn.bReturnValue = true;
+                    rtn.sMBACode = sMBACode;
+                    rtn.sMetalCode = sSQLMetalCode;
+                    rtn.dQuantity = dQuantity;
+                    rtn.sDate = sThisDate;
+                    rtn.sTime = sThisTime;
+                    rtn.sInitials = sInitials;
+
+                    arrRtn[i] = rtn;
+                }
+
+                return arrRtn;
+            }
         }
 
         bool ValidDate(string sDate, string sFormat)
