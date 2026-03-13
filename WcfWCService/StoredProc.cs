@@ -63,8 +63,10 @@ namespace WcfWCService
         {
             Environment env = new Environment();
             string sEnvironment = env.Get_Environment_String_Value("Environment");
+            string sDBUser = env.Get_Environment_String_Value("DBUser");
+            string sDBPass = env.Get_Environment_String_Value("DBPass");
 
-            switch(m_iWebAppId)
+            switch (m_iWebAppId)
             {
                 case 1:
                     m_sCatalog = "pims";
@@ -76,15 +78,15 @@ namespace WcfWCService
             }
             if (sEnvironment == "DEVWCREGAIN")
             {
-                return @"Data Source=VSRS25;Initial Catalog=" + m_sCatalog + ";User ID=pimsadmin;Password=N33dt0kn0w";
+                return @"Data Source=VSRS25;Initial Catalog=" + m_sCatalog + ";User ID=" + sDBUser + ";Password=" + sDBPass;
             }
             else if (sEnvironment == "PRODUCTIONREGAIN")
             {
-                return @"Data Source=VSRS30;Initial Catalog=" + m_sCatalog + ";User ID=pimsadmin;Password=N33dt0kn0w";
+                return @"Data Source=VSRS30;Initial Catalog=" + m_sCatalog + ";User ID=" + sDBUser + ";Password=" + sDBPass;
             }
             else
             {
-                return @"Data Source=VSRS25;Initial Catalog=" + m_sCatalog + ";User ID=pimsadmin;Password=N33dt0kn0w";
+                return @"Data Source=VSRS25;Initial Catalog=" + m_sCatalog + ";User ID=" + sDBUser + ";Password=" + sDBPass;
             }
 
         }
