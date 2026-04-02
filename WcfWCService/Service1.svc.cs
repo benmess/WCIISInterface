@@ -1599,7 +1599,7 @@ namespace WcfWCService
                 sAttributeValues[0] = sFullName;
                 sAttributeTypes[0] = "string";
 
-                if (sPartDescription != "")
+                if (sPartDescription != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -1609,7 +1609,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
-                if (sReqirementsInfo != "")
+                if (sReqirementsInfo != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -1619,7 +1619,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
-                if (sPreparationInfo != "")
+                if (sPreparationInfo != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -1629,7 +1629,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
-                if (sReviewInfo != "")
+                if (sReviewInfo != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -1639,7 +1639,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
-                if (sProjectStatus != "")
+                if (sProjectStatus != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
