@@ -144,19 +144,20 @@ namespace WcfWCService
 
         [OperationContract]
         [WebGet(UriTemplate = "createprojectworkitemnoparent/{sSessionId}/{sUserId}/{sFullName}/{sPartNo}/{sPartName}/{sProductName}/{sPartType}/{sFolderNameAndPath}/" +
-                              "{sCheckInComments}/{sPartDescription}/{sProjectStatus}/{sReqirementsInfo}/{sPreparationInfo}/{sReviewInfo}/{iProdOrLibrary}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+                              "{sCheckInComments}/{sPartDescription}/{sProjectStatus}/{sReqirementsInfo}/{sPreparationInfo}/{sReviewInfo}/{sTemplate}/{iProdOrLibrary}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string CreateProjectWorkItemNoParent(string sSessionId, string sUserId, string sFullName, string sPartNo, string sPartName,
                                                     string sProductName, string sPartType, string sFolderNameAndPath,
                                                     string sCheckInComments, string sPartDescription, string sProjectStatus,
-                                                    string sReqirementsInfo, string sPreparationInfo, string sReviewInfo,
+                                                    string sReqirementsInfo, string sPreparationInfo, string sReviewInfo, string sTemplate,
                                                     string iProdOrLibrary, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "updateprojectworkitem/{sSessionId}/{sUserId}/{sFullName}/{sPartNo}/{sPartName}" +
-                              "/{sCheckInComments}/{sPartDescription}/{sProjectStatus}/{sReqirementsInfo}/{sPreparationInfo}/{sReviewInfo}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+                              "/{sCheckInComments}/{sPartDescription}/{sProjectStatus}/{sReqirementsInfo}/{sPreparationInfo}/{sReviewInfo}" +
+                              "/{sTemplate}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string UpdateProjectWorkItem(string sSessionId, string sUserId, string sFullName, string sPartNo, string sPartName,
                                             string sCheckInComments, string sPartDescription, string sProjectStatus,
-                                            string sReqirementsInfo, string sPreparationInfo, string sReviewInfo,
+                                            string sReqirementsInfo, string sPreparationInfo, string sReviewInfo, string sTemplate,
                                             string sWebAppId);
 
         [OperationContract]
