@@ -8941,7 +8941,7 @@ namespace WcfWCService
 
         public string CreateMaterialCatalogItem(string sSessionId, string sUserId, string sFullName, string sMatCatNo, string sMatCatType, string sName, string sDesc, string sLongDesc,
                                                 string sDrivekW, string sFullLoadCurrent, string sUnitWeight, string sPrimaryDimension, string sLeadTime, 
-                                                string sRepairable, string sCompType, string sSpareRqd, string sConsumable,
+                                                string sRepairable, string sCompType, string sCoatingType, string sSpareRqd, string sConsumable,
                                                 string sUnitOfMeasure, string sBaseCost, string sOtherCost, string sUseCost, string sCostCurrency, string sCostIndex, string sCostBaseDate, 
                                                 string sCheckInComments, string sWebAppId)
         {
@@ -8974,7 +8974,7 @@ namespace WcfWCService
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
 
-                if (sDrivekW != "")
+                if (sDrivekW != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -8984,7 +8984,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "double";
                 }
 
-                if (sFullLoadCurrent != "")
+                if (sFullLoadCurrent != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -8994,7 +8994,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "double";
                 }
 
-                if (sUnitWeight != "")
+                if (sUnitWeight != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9004,7 +9004,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "double";
                 }
 
-                if (sPrimaryDimension != "")
+                if (sPrimaryDimension != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9014,7 +9014,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "double";
                 }
 
-                if (sLeadTime != "")
+                if (sLeadTime != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9024,7 +9024,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "double";
                 }
 
-                if (sRepairable != "")
+                if (sRepairable != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9034,7 +9034,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
                 }
 
-                if (sCompType != "")
+                if (sCompType != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9044,7 +9044,17 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
                 }
 
-                if (sSpareRqd != "")
+                if (sCoatingType != null)
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "CompositionCoatingType";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCoatingType;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
+                }
+
+                if (sSpareRqd != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9054,7 +9064,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
                 }
 
-                if (sConsumable != "")
+                if (sConsumable != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9064,7 +9074,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
                 }
 
-                if (sUnitOfMeasure != "")
+                if (sUnitOfMeasure != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9075,7 +9085,7 @@ namespace WcfWCService
                 }
 
 
-                if (sBaseCost != "")
+                if (sBaseCost != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9086,7 +9096,7 @@ namespace WcfWCService
                 }
 
 
-                if (sOtherCost != "")
+                if (sOtherCost != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9097,7 +9107,7 @@ namespace WcfWCService
                 }
 
 
-                if (sUseCost != "")
+                if (sUseCost != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9107,7 +9117,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "double";
                 }
 
-                if (sCostCurrency != "")
+                if (sCostCurrency != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9117,7 +9127,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
-                if (sCostIndex != "")
+                if (sCostIndex != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9127,7 +9137,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
-                if (sCostBaseDate != "")
+                if (sCostBaseDate != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9153,7 +9163,7 @@ namespace WcfWCService
         public string UpdateMaterialCatalogItem(string sSessionId, string sUserId, string sFullName, string sMatCatNo, string sMatCatNewType, string sMatCatOldType,
                                                 string sName, string sDesc, string sLongDesc, string sDrivekW, string sFullLoadCurrent,
                                                 string sUnitWeight, string sPrimaryDimension, string sLeadTime, 
-                                                string sRepairable, string sCompType, string sSpareRqd, string sConsumable,
+                                                string sRepairable, string sCompType, string sCoatingType, string sSpareRqd, string sConsumable,
                                                 string sUnitOfMeasure, string sBaseCost, string sOtherCost, string sUseCost, string sCostCurrency, string sCostIndex, string sCostBaseDate, 
                                                 string sCheckInComments, string sWebAppId, string sNewLink)
         {
@@ -9236,7 +9246,7 @@ namespace WcfWCService
                 sAttributeValues[sAttributeValues.Length - 1] = sSpareRqd;
                 sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
 
-                if (sCompType != "")
+                if (sCompType != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9246,7 +9256,17 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
                 }
 
-                if (sConsumable != "")
+                if (sCoatingType != null)
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "CompositionCoatingType";
+                    sAttributeValues[sAttributeValues.Length - 1] = sCoatingType;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
+                }
+
+                if (sConsumable != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9256,7 +9276,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "boolean";
                 }
 
-                if (sUnitOfMeasure != "")
+                if (sUnitOfMeasure != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9267,7 +9287,7 @@ namespace WcfWCService
                 }
 
 
-                if (sBaseCost != "")
+                if (sBaseCost != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9278,7 +9298,7 @@ namespace WcfWCService
                 }
 
 
-                if (sOtherCost != "")
+                if (sOtherCost != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9289,7 +9309,7 @@ namespace WcfWCService
                 }
 
 
-                if (sUseCost != "")
+                if (sUseCost != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9299,7 +9319,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "double";
                 }
 
-                if (sCostCurrency != "")
+                if (sCostCurrency != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9309,7 +9329,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
-                if (sCostIndex != "")
+                if (sCostIndex != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -9319,7 +9339,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
-                if (sCostBaseDate != "")
+                if (sCostBaseDate != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -12679,12 +12699,14 @@ namespace WcfWCService
         {
             Environment env = new Environment();
             string sCertVal = env.Get_Environment_String_Value("CertificateValue");
+            string sCertUser = env.Get_Environment_String_Value("CertUser");
+            string sCertPass = env.Get_Environment_String_Value("CertPassword");
 
             ExampleService.MyJavaService3Client client2 = new ExampleService.MyJavaService3Client("MyJavaService3Port");
             //ExampleService.MyJavaService3Client client2 = new ExampleService.MyJavaService3Client("MyJavaService3"); //Tried this because was 2 endpoints in the web.config file. (Not the web.debug.config or web.release.config)
 
-            client2.ClientCredentials.UserName.UserName = "benmess";
-            client2.ClientCredentials.UserName.Password = "mo9anaapr!";
+            client2.ClientCredentials.UserName.UserName = sCertUser;
+            client2.ClientCredentials.UserName.Password = sCertPass;
             client2.ClientCredentials.ServiceCertificate.SetDefaultCertificate(StoreLocation.CurrentUser,
                                                                               StoreName.TrustedPeople, X509FindType.FindBySubjectName,
                                                                               sCertVal); //Make this read from an environment file so we can change between dev and production

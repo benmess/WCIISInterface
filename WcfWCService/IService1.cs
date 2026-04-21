@@ -825,22 +825,22 @@ namespace WcfWCService
 
         [OperationContract]
         [WebGet(UriTemplate = "creatematerialcatalogitem/{sSessionId}/{sUserId}/{sFullname}/{sMatCatNo}/{sMatCatType}/{sName}/{sDesc}/{sLongDesc}/{sDrivekW}/{sFullLoadCurrent}/{sUnitWeight}/{sPrimaryDimension}/" +
-                              "{sLeadTime}/{sRepairable}/{sCompType}/{sSpareRqd}/{sConsumable}/{sUnitOfMeasure}/{sBaseCost}/{sOtherCost}/{sUseCost}/{sCostCurrency}/{sCostIndex}/{sCostBaseDate}/" +
+                              "{sLeadTime}/{sRepairable}/{sCompType}/{sCoatingType}/{sSpareRqd}/{sConsumable}/{sUnitOfMeasure}/{sBaseCost}/{sOtherCost}/{sUseCost}/{sCostCurrency}/{sCostIndex}/{sCostBaseDate}/" +
                               "{sCheckInComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string CreateMaterialCatalogItem(string sSessionId, string sUserId, string sFullName, string sMatCatNo, string sMatCatType, string sName, string sDesc, string sLongDesc,
                                                 string sDrivekW, string sFullLoadCurrent, string sUnitWeight, string sPrimaryDimension, string sLeadTime, 
-                                                string sRepairable, string sCompType,string sSpareRqd, string sConsumable,
+                                                string sRepairable, string sCompType, string sCoatingType, string sSpareRqd, string sConsumable,
                                                 string sUnitOfMeasure, string sBaseCost, string sOtherCost, string sUseCost, string sCostCurrency, string sCostIndex, string sCostBaseDate,
                                                 string sCheckInComments, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "updatematerialcatalogitem/{sSessionId}/{sUserId}/{sFullname}/{sMatCatNo}/{sMatCatNewType}/{sMatCatOldType}/{sName}/{sDesc}/{sLongDesc}/{sDrivekW}/" +
-                              "{sFullLoadCurrent}/{sUnitWeight}/{sPrimaryDimension}/{sLeadTime}/{sRepairable}/{sCompType}/{sSpareRqd}/{sConsumable}/{sUnitOfMeasure}/{sBaseCost}/{sOtherCost}/{sUseCost}/" +
+                              "{sFullLoadCurrent}/{sUnitWeight}/{sPrimaryDimension}/{sLeadTime}/{sRepairable}/{sCompType}/{sCoatingType}/{sSpareRqd}/{sConsumable}/{sUnitOfMeasure}/{sBaseCost}/{sOtherCost}/{sUseCost}/" +
                               "{sCostCurrency}/{sCostIndex}/{sCostBaseDate}/{sCheckInComments}/{sWebAppId}/{sNewLink}", ResponseFormat = WebMessageFormat.Xml)]
         string UpdateMaterialCatalogItem(string sSessionId, string sUserId, string sFullName, string sMatCatNo, string sMatCatNewType, string sMatCatOldType, string sName, 
                                          string sDesc, string sLongDesc, string sDrivekW, string sFullLoadCurrent,
                                          string sUnitWeight, string sPrimaryDimension, string sLeadTime, 
-                                         string sRepairable, string sCompType,string sSpareRqd, string sConsumable,
+                                         string sRepairable, string sCompType, string sCoatingType, string sSpareRqd, string sConsumable,
                                          string sUnitOfMeasure, string sBaseCost, string sOtherCost, string sUseCost, string sCostCurrency, string sCostIndex, string sCostBaseDate,
                                          string sCheckInComments, string sWebAppId, string sNewLink);
 
