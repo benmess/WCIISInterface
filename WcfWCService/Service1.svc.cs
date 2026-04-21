@@ -1659,7 +1659,8 @@ namespace WcfWCService
         public string CreateProject(string sSessionId, string sUserId, string sFullName, string sPartNo, string sPartName,
                                             string sProductName, string sPartType, string sFolderNameAndPath,
                                             string sCheckInComments, string sPartDescription,
-                                            string sReqirementsInfo, string sPreparationInfo, string sReviewInfo, string iProdOrLibrary, string sWebAppId)
+                                            string sReqirementsInfo, string sPreparationInfo, string sReviewInfo, 
+                                            string sPWITemplate, string iProdOrLibrary, string sWebAppId)
         {
 
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -1671,21 +1672,27 @@ namespace WcfWCService
                 Update_User_Time(sUserId, sSessionId);
                 int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
-                string[] sAttributeNames = new string[2];
-                string[] sAttributeValues = new string[2];
-                string[] sAttributeTypes = new string[2];
+                string[] sAttributeNames = new string[1];
+                string[] sAttributeValues = new string[1];
+                string[] sAttributeTypes = new string[1];
                 string sReturn = "";
 
                 sAttributeNames[0] = "Originator";
-                sAttributeNames[1] = "PartDesc";
-
                 sAttributeValues[0] = sFullName;
-                sAttributeValues[1] = sPartDescription;
-
                 sAttributeTypes[0] = "string";
-                sAttributeTypes[1] = "string";
 
-                if (sReqirementsInfo != "")
+
+                if (sPartDescription != null)
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "PartDesc";
+                    sAttributeValues[sAttributeValues.Length - 1] = sPartDescription;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sReqirementsInfo != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -1695,7 +1702,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
-                if (sPreparationInfo != "")
+                if (sPreparationInfo != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -1705,13 +1712,23 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
-                if (sReviewInfo != "")
+                if (sReviewInfo != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
                     Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
                     sAttributeNames[sAttributeNames.Length - 1] = "ReviewInfo";
                     sAttributeValues[sAttributeValues.Length - 1] = sReviewInfo;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sPWITemplate != null)
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "PWITemplate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sPWITemplate;
                     sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
