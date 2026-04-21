@@ -1749,7 +1749,7 @@ namespace WcfWCService
                     Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
                     sAttributeNames[sAttributeNames.Length - 1] = "PWITemplate";
                     sAttributeValues[sAttributeValues.Length - 1] = sPWITemplate;
-                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "bool";
                 }
 
                 sReturn = client2.createpart(sPartNo, sPartName, sProductName, sPartType, sFolderNameAndPath, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
