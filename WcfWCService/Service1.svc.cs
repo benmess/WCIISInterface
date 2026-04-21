@@ -1499,7 +1499,7 @@ namespace WcfWCService
         public string CreateProjectWorkItemNoParent(string sSessionId, string sUserId, string sFullName, string sPartNo, string sPartName,
                                                     string sProductName, string sPartType, string sFolderNameAndPath,
                                                     string sCheckInComments, string sPartDescription, string sProjectStatus, 
-                                                    string sReqirementsInfo, string sPreparationInfo, string sReviewInfo, 
+                                                    string sReqirementsInfo, string sPreparationInfo, string sReviewInfo, string sTemplate,
                                                     string iProdOrLibrary, string sWebAppId)
         {
 
@@ -1521,7 +1521,7 @@ namespace WcfWCService
                 sAttributeValues[0] = sFullName;
                 sAttributeTypes[0] = "string";
 
-                if (sPartDescription != "")
+                if (sPartDescription != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -1531,7 +1531,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
-                if (sReqirementsInfo != "")
+                if (sReqirementsInfo != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -1541,7 +1541,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
-                if (sPreparationInfo != "")
+                if (sPreparationInfo != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -1551,7 +1551,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
-                if (sReviewInfo != "")
+                if (sReviewInfo != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -1561,7 +1561,7 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
-                if (sProjectStatus != "")
+                if (sProjectStatus != null)
                 {
                     Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
                     Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
@@ -1571,6 +1571,16 @@ namespace WcfWCService
                     sAttributeTypes[sAttributeTypes.Length - 1] = "string";
                 }
 
+                if (sTemplate != null)
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "PWITemplate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sTemplate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "bool";
+                }
+
                 sReturn = client2.createpart(sPartNo, sPartName, sProductName, sPartType, sFolderNameAndPath, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
 
                 return sReturn;
@@ -1578,7 +1588,7 @@ namespace WcfWCService
         }
         public string UpdateProjectWorkItem(string sSessionId, string sUserId, string sFullName, string sPartNo, string sPartName,
                                             string sCheckInComments, string sPartDescription, string sProjectStatus,
-                                            string sReqirementsInfo, string sPreparationInfo, string sReviewInfo,
+                                            string sReqirementsInfo, string sPreparationInfo, string sReviewInfo, string sTemplate,
                                             string sWebAppId)
         {
 
@@ -1647,6 +1657,16 @@ namespace WcfWCService
                     sAttributeNames[sAttributeNames.Length - 1] = "ProjectStatus";
                     sAttributeValues[sAttributeValues.Length - 1] = sProjectStatus;
                     sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sTemplate != null)
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "PWITemplate";
+                    sAttributeValues[sAttributeValues.Length - 1] = sTemplate;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "bool";
                 }
 
                 sReturn = client2.setpartattributes(sPartNo, sPartName, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, 
