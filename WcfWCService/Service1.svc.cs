@@ -18404,6 +18404,168 @@ namespace WcfWCService
             }
         }
 
+        public string ProcessDocumentAttributesSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
+        {
+            Excel.Application xlApp = null;
+            Excel.Workbooks xlWbks = null;
+            ExampleService.MyJavaService3Client client2 = GetWCService();
+
+            try
+            {
+                int iWebAppId = Convert.ToInt32(sWebAppId);
+
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    Update_User_Time(sUserId, sSessionId);
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+                    string sRecipeints = arrUser[3].ToString();
+
+                    xlApp = new Excel.Application();
+                    xlWbks = xlApp.Workbooks;
+
+                    Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
+                    Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+                    Excel.Range xlRange = xlWorksheet.UsedRange;
+
+                    int rowCount = xlRange.Rows.Count;
+                    int colCount = xlRange.Columns.Count;
+                    int i = 0, j = 0, iRowCount;
+                    string sBody = "";
+
+
+                    //Get the proper row count because sometimes the range rowcount is wrong
+                    iRowCount = rowCount;
+                    for (i = 2; i <= rowCount; i++)
+                    {
+                        if (xlRange.Cells[i, 1].Value2 == null)
+                        {
+                            iRowCount = i - 1;
+                            break;
+                        }
+                    }
+
+                    rowCount = iRowCount;
+
+                    string[] arrDocumentNo = new string[rowCount - 1];
+                    string[] arrAttribName = new string[rowCount - 1];
+                    string[] arrAttribType = new string[rowCount - 1];
+                    string[] arrAttribValue = new string[rowCount - 1];
+                    string[] arrAction = new string[rowCount - 1];
+                    int[] arrRowNo = new int[rowCount - 1];
+
+                    j = 0;
+                    for (i = 2; i <= rowCount; i++)
+                    {
+                        string sDocNo = "";
+                        if (xlRange.Cells[i, 1].Value2 != null)
+                            sDocNo = xlRange.Cells[i, 1].Value2.ToString();
+
+                        string sAttribName = "";
+                        if (xlRange.Cells[i, 2].Value2 != null)
+                            sAttribName = xlRange.Cells[i, 2].Value2.ToString();
+
+                        string sAttribType = "";
+                        if (xlRange.Cells[i, 3].Value2 != null)
+                            sAttribType = xlRange.Cells[i, 3].Value2.ToString();
+
+                        string sAttribValue = "";
+                        if (xlRange.Cells[i, 4].Value2 != null)
+                            sAttribValue = xlRange.Cells[i, 4].Value2.ToString();
+
+                        string sAction = "";
+                        if (xlRange.Cells[i, 5].Value2 != null)
+                            sAction = xlRange.Cells[i, 5].Value2.ToString();
+
+
+
+                        arrDocumentNo[j] = sDocNo;
+                        arrAttribName[j] = sAttribName;
+                        arrAttribType[j] = sAttribType;
+                        arrAttribValue[j] = sAttribValue;
+                        arrAction[j] = sAction;
+                        arrRowNo[j] = i;
+                        j++;
+                    }
+
+                    xlWorkbook.Close(true);
+                    xlWbks.Close();
+                    xlApp.Quit();
+
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWbks) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorksheet) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlRange) != 0) ;
+                    xlApp = null;
+                    xlWbks = null;
+                    xlWorkbook = null;
+                    xlWorksheet = null;
+                    xlRange = null;
+
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+
+                    System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                    foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
+                    {
+                        proc.Kill();
+                    }
+
+                    for (i = 0; i < j; i++)
+                    {
+
+                        string[] sAttributeNames = new string[1];
+                        string[] sAttributeValues = new string[1];
+                        string[] sAttributeTypes = new string[1];
+
+                        sAttributeNames[0] = arrAttribName[i];
+                        sAttributeValues[0] = arrAttribValue[i];
+                        sAttributeTypes[0] = arrAttribType[i];
+
+                        if (arrAction[i].Equals("Delete"))
+                        {
+                            sAttributeValues[0] = "null";
+                            sAttributeTypes[0] = "";
+                        }
+                        string sReturn = client2.setdocattributes(arrDocumentNo[i], "", sAttributeNames, sAttributeValues, sAttributeTypes, "updating attribute " + arrAttribName[i], Convert.ToInt16(sWebAppId));
+                        if (!sReturn.StartsWith("Success"))
+                        {
+                            sBody += "The attribute on row " + arrRowNo[i] + " returned error " + sReturn + "\r\n";
+                        }
+
+                    }
+                    //Now email the user
+                    string sSubject = "Processing of File " + sFile + " for Document Attributes Import";
+                    if (sBody.Length == 0)
+                        sBody = "No issues.";
+                    sBody = "File " + sFile + " for Document Attributes Import was processed with the following issues.\r\n" + sBody;
+                    //                    emailmessage(sSessionId, sUserId, sSubject, sBody, " ", sRecipeints, "", "", sWebAppId);
+
+                    return "Success^" + sBody;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Failure:" + ex.Message + "^";
+            }
+            finally
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
+                {
+                    proc.Kill();
+                }
+            }
+        }
+
         public string ProcessDispatchDocketDateSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
         {
             Excel.Application xlApp = null;
