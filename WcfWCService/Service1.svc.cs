@@ -5535,7 +5535,7 @@ namespace WcfWCService
 
                 if (bVerify)
                 {
-                    sRtn = SetPartState(sSessionId, sUserId, sBatchNo, "REVIEWED", sWebAppId);
+                    sRtn = SetPartState(sSessionId, sUserId, sBatchNo, "LOCKED", sWebAppId);
                 }
                 return sRtn;
             }
@@ -5684,7 +5684,7 @@ namespace WcfWCService
 
                 if (bVerify)
                 {
-                    sRtn = SetPartState(sSessionId, sUserId, sBatchNo, "REVIEWED", sWebAppId);
+                    sRtn = SetPartState(sSessionId, sUserId, sBatchNo, "LOCKED", sWebAppId);
                 }
                 return sRtn;
             }
