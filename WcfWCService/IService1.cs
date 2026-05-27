@@ -1030,6 +1030,10 @@ namespace WcfWCService
         string ProcessDeleteLinksSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
 
         [OperationContract]
+        [WebGet(UriTemplate = "processdocumentattributesspreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string ProcessDocumentAttributesSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
+
+        [OperationContract]
         [WebGet(UriTemplate = "processdispatchdocketdatespreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string ProcessDispatchDocketDateSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
 
