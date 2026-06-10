@@ -6689,7 +6689,7 @@ namespace WcfWCService
         // sAttributeType can have values
         //		Boolean - bool or boolean
         //		Date & Time - date or datetime
-        //		Integer Number - int or integer
+        //		Integer Number - long
         //		Real Number - real or doub or double or float
         //		String - string or the default
         public string UpdateDocAttributes(string sSessionId, string sUserId, string sDocNumber, string sDocName,
@@ -6770,7 +6770,7 @@ namespace WcfWCService
         // sAttributeType can have values
         //		Boolean - bool or boolean
         //		Date & Time - date or datetime
-        //		Integer Number - int or integer
+        //		Integer Number - long
         //		Real Number - real or doub or double or float
         //		String - string or the default
         public string UpdatePartAttributes(string sSessionId, string sUserId, string sPartNumber, string sPartName,
