@@ -32,6 +32,7 @@ using System.Text;
 using System.Web;
 using System.Web.Services;
 using System.Web.Services.Protocols;
+using WcfWCService.ExampleService;
 using Excel = Microsoft.Office.Interop.Excel;
 using word = Microsoft.Office.Interop.Word;
 
@@ -282,7 +283,7 @@ namespace WcfWCService
                     sSessionId = reader.ReadToEnd(); // do something fun...
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 sSessionId = ex.Message;
             }
@@ -10876,7 +10877,7 @@ namespace WcfWCService
 
                     return sReturn;
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     return "Failure^" + ex.Message + "^";
                 }
@@ -10906,7 +10907,7 @@ namespace WcfWCService
 
                     return sReturn;
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     return "Failure^" + ex.Message + "^";
                 }
@@ -10931,7 +10932,7 @@ namespace WcfWCService
 
                     return sReturn;
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     return "Failure^" + ex.Message + "^";
                 }
@@ -10956,7 +10957,7 @@ namespace WcfWCService
 
                     return sReturn;
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     return "Failure^" + ex.Message + "^";
                 }
@@ -11053,7 +11054,7 @@ namespace WcfWCService
                     return sReturn;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure^" + ex.Message + "^";
             }
@@ -11116,7 +11117,7 @@ namespace WcfWCService
                 }
 
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure^" + ex.Message + "^";
             }
@@ -11356,7 +11357,7 @@ namespace WcfWCService
                     return "Success^" + sBody;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -11531,7 +11532,7 @@ namespace WcfWCService
                     return "Success^" + sBody;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -12152,7 +12153,7 @@ namespace WcfWCService
                     return "Success^" + sBody;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -12214,7 +12215,7 @@ namespace WcfWCService
 
                 return sRtn;
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 return "Failure" + e.Message;
             }
@@ -12679,7 +12680,7 @@ namespace WcfWCService
                     return "Success^" + sBody;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -13723,7 +13724,7 @@ namespace WcfWCService
                     rtnClass.bReturnValue = true;
                     return rtnClass;
                 }
-                catch (Exception e)
+                catch (System.Exception e)
                 {
                     rtnClass.bReturnValue = false;
                     rtnClass.sReturnValue = e.Message;
@@ -13885,7 +13886,7 @@ namespace WcfWCService
                     rtnClass.bReturnValue = true;
                     return rtnClass;
                 }
-                catch (Exception e)
+                catch (System.Exception e)
                 {
                     rtnClass.bReturnValue = false;
                     rtnClass.sReturnValue = e.Message;
@@ -13937,7 +13938,7 @@ namespace WcfWCService
                     }
                     return rtnClass;
                 }
-                catch (Exception e)
+                catch (System.Exception e)
                 {
                     rtnClass.bReturnValue = false;
                     rtnClass.bReturnValid = false;
@@ -14268,7 +14269,7 @@ namespace WcfWCService
 
                     return rtnClass;
                 }
-                catch (Exception e)
+                catch (System.Exception e)
                 {
                     rtnClass.bReturnValue = false;
                     rtnClass.sErrMessage = e.Message;
@@ -14317,7 +14318,7 @@ namespace WcfWCService
 
                     return rtnClass;
                 }
-                catch (Exception e)
+                catch (System.Exception e)
                 {
                     rtnClass.bReturnValue = false;
                     rtnClass.sErrMessage = e.Message;
@@ -14374,7 +14375,7 @@ namespace WcfWCService
 
                     return rtnClass;
                 }
-                catch (Exception e)
+                catch (System.Exception e)
                 {
                     rtnClass.bReturnValue = false;
                     rtnClass.sErrMessage = e.Message;
@@ -14487,7 +14488,7 @@ namespace WcfWCService
                     return "Success^" + sBody;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -14915,7 +14916,7 @@ namespace WcfWCService
                     return "Success^" + sBody;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -15335,7 +15336,7 @@ namespace WcfWCService
                     return "Success^" + sBody;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -15892,7 +15893,7 @@ namespace WcfWCService
                     return "Success^" + sBody;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -16050,17 +16051,17 @@ namespace WcfWCService
                             if (xlRange.Cells[i, 3].Value2 != null)
                                 sWBDocketNo = xlRange.Cells[i, 3].Value2.ToString();
 
-                            string sWBDocketDateIn = "";
+                            //string sWBDocketDateIn = "";
                             double dNetWeight = 0.0;
                             string sTruckRego = "";
-                            string sWBDDateIn = "";
+                            //string sWBDDateIn = "";
                             string sWBTimeIn = "";
-                            string sWBDocketTimeIn = "";
+                            //string sWBDocketTimeIn = "";
                             double dGrossWeightIn = 0.0;
                             double dPackagingIn = 0.0;
-                            string sWBDDateOut = "";
+                            //string sWBDDateOut = "";
                             string sWBTimeOut = "";
-                            string sWBDocketTimeOut = "";
+                            //string sWBDocketTimeOut = "";
                             double dGrossWeightOut = 0.0;
                             double dPackagingOut = 0.0;
                             bool bWBExists = false;
@@ -16448,7 +16449,7 @@ namespace WcfWCService
                     return "Success^" + sBody;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -16829,7 +16830,7 @@ namespace WcfWCService
                     return "Success^" + sBody;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -17296,7 +17297,7 @@ namespace WcfWCService
                     return "Success^" + sBody;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -17725,7 +17726,7 @@ namespace WcfWCService
                     return "Success^" + sBody;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -17855,7 +17856,7 @@ namespace WcfWCService
                 return "Success^" + sBody;
 
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -18243,7 +18244,7 @@ namespace WcfWCService
                     return "Success^" + sBody;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -18389,7 +18390,7 @@ namespace WcfWCService
                     return "Success^" + sBody;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -18405,6 +18406,35 @@ namespace WcfWCService
                 }
             }
         }
+
+        /*
+        public string CreateMPartAllComponents()
+        {
+            //Call the code that creates a new M Part. Send an empty string for the sMatCatNo to create a new auto numbered M part.
+            //sNewDefaultMaterialTypeCode will be MC09102 or whatever was created for the type for CAD aot created M Parts
+            //sSpareRqd will be 0 or 1 or maybe true or false
+            //sCheckinComments will be someting like Auot created CAD M Part
+            //sWebAppId = "2" this is always 2 now but we used to have 1 when creating for Fronesis
+            sRtn = CreateMaterialCatalogItem(sSessionId,,,"",sNewDefaultMaterialTypeCode,sStructuredName,,,....,sSpareRqd,,sCheckinComments, sWebAppId)
+
+
+            //Extract the new M part no Mnnnnn from sRtn
+            sMPartNo = sRtn.substring();
+
+            //sProductName = "Regain Material Catalogue"
+            //sDocType = 'local.rs.vsrs05.Regain.TD'
+            //string sFolder = "Material Catalogue/";
+            //sJobCode = "M"
+            //sRevision = "A"
+            //sCheckinComments will be someting like Auot created CAD M Part
+            //sWebAppId = "2" this is always 2 now but we used to have 1 when creating for Fronesis
+            CreateWCDoc(sSessiondId, sUserId, sMPartNo, sStructeredName, sProductName, sDocType, sFolder, "", sFullName, "", sJobCode, sRevision, sCheckinComments, sWebAppId);
+
+            //sLinkType = "wt.part.WTPartReferenceLink"
+            SetDocToPartRef(sSessionId, sUserId, sFullName, sMPartNo, sMPartNo, sCheckinComments, sLinkType, sWebAppId)
+            
+        }
+        */
 
         public string ProcessDocumentAttributesSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
         {
@@ -18551,7 +18581,7 @@ namespace WcfWCService
                     return "Success^" + sBody;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -18688,7 +18718,7 @@ namespace WcfWCService
                     return "Success^" + sBody;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -18838,7 +18868,7 @@ namespace WcfWCService
                     return "Success^" + sBody;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -19000,7 +19030,7 @@ namespace WcfWCService
                     return "Success^" + sBody;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -19313,7 +19343,7 @@ namespace WcfWCService
                     return sFileNameOnly;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return "Failure:" + ex.Message + "^";
             }
@@ -19496,7 +19526,6 @@ namespace WcfWCService
             rtnWBInfo rtn = new rtnWBInfo();
             StoredProc SP = new StoredProc();
             RecordSet rs = new RecordSet();
-            int i;
 
             SP.SetProcName("SP_GetWeighbridgeSingleItemDetails");
             SP.SetParam("@pvchWeighbridgeDocketNo", sWBDocketNo);
@@ -19651,7 +19680,6 @@ namespace WcfWCService
         {
             StoredProc SP = new StoredProc();
             RecordSet rs = new RecordSet();
-            int i;
 
             SP.SetProcName("SP_GetRunningSheetNotesInfo");
             SP.SetParam("@pvchMBANo", sBatchNo);
@@ -19812,7 +19840,7 @@ namespace WcfWCService
                     rtnClass.bReturnValue = true;
                     return rtnClass;
                 }
-                catch (Exception e)
+                catch (System.Exception e)
                 {
                     rtnClass.bReturnValue = false;
                     rtnClass.sReturnValue = e.Message;
