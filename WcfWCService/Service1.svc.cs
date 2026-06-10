@@ -19930,7 +19930,7 @@ namespace WcfWCService
                     rtnClass.bReturnValue = true;
                     rtnClass.sReturnValue = sManufacturerCode;
                 }
-                catch (Exception e)
+                catch (System.Exception e)
                 {
                     rtnClass.bReturnValue = false;
                     rtnClass.sReturnValue = e.Message;
@@ -20000,7 +20000,7 @@ namespace WcfWCService
                 }
                 return rtnClass;
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 rtnClass.bReturnValue = false;
                 rtnClass.sReturnValue = e.Message;
@@ -20011,6 +20011,7 @@ namespace WcfWCService
         public string ProcessMaterialPartsSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
         {
             // ---------------------------- HELPER FUNCTIONS ----------------------------
+            // Creates a link between a given part and a manufacturer
             string AddManufacturerLink(string sFullname, string sManufacturerCode, string sManufacturerPartNo, string sMatCatNo)
             {
                 string sRtn = "";
@@ -20023,6 +20024,228 @@ namespace WcfWCService
 
                 return sRtn;
             }
+            // Performs logic when reporting an issue and returns back the line for the email body
+            string ReportSpreadsheetIssue(Dictionary<String, String> dicIssueTracker, string sIssueMessage, string sIssuePriority, int iRowNumber, int iColumnNumber)
+            {
+                string sReturnString = "";
+
+                if (int.Parse(sIssuePriority) < int.Parse(dicIssueTracker["priority"]))
+                {
+                    dicIssueTracker["priority"] = sIssuePriority;
+                    dicIssueTracker["message"] = sIssueMessage;
+                }
+                
+                sReturnString += "Row " + iRowNumber + ", Col " + iColumnNumber + " - " + sIssueMessage;
+                return sReturnString;
+            }
+            // Increments the issues tracker
+            string IncrementTracker(Dictionary<String, String> dicIssueTracker)
+            {
+                string sNewValue = "";
+                int iCurrValue = int.Parse(dicIssueTracker["issuesFound"]);
+                iCurrValue++;
+                sNewValue = iCurrValue.ToString();
+
+                return sNewValue;
+            }
+            // Validates the part description
+            rtnString IsValidPartDescription(string sDesc, Dictionary<String, String> dicIssueTracker, int iRowNumber, int iColumnNumber, int iWebAppId)
+            {
+                rtnString rtn = new rtnString();
+                rtn.bReturnValue = true;
+                rtn.sReturnValue = "";
+
+                string sMessage = "";
+
+                // Description length
+                if (sDesc.Length < 1 || sDesc.Length > 60)
+                {
+                    sMessage = "Failure: description name is outside character limit (1 - 60 characters)." + "\n";
+                    IncrementTracker(dicIssueTracker);
+
+                    rtn.bReturnValue = false;
+                    rtn.sReturnValue = ReportSpreadsheetIssue(dicIssueTracker, sMessage, "1", iRowNumber, iColumnNumber);
+                }
+
+                // Unique Part Description validation 
+                rtnString rtnNameExists = PartNameExists(sDesc, iWebAppId);
+                if (rtnNameExists.bReturnValue)
+                {
+                    sMessage = "Failure: the entered Description already exists in the database at Part No: " + rtnNameExists.sReturnValue + ".\n";
+                    IncrementTracker(dicIssueTracker);
+
+                    rtn.bReturnValue = false;
+                    rtn.sReturnValue = rtn.sReturnValue + ReportSpreadsheetIssue(dicIssueTracker, sMessage, "1", iRowNumber, iColumnNumber);
+                }
+
+                return rtn;
+            }
+            // Validates Existing field
+            rtnString IsValidExisting(string sExisting, Dictionary<String, String> dicIssueTracker, int iRowNumber, int iColumnNumber)
+            {
+                rtnString rtn = new rtnString();
+                rtn.bReturnValue = true;
+                rtn.sReturnValue = "";
+
+                string[] arrValidExistingValues = { "y", "yes", "", "n", "no" };
+
+                if (!arrValidExistingValues.Contains(sExisting.ToLower()))
+                {
+                    string sMessage = "Failure: Existing value is invalid. Must be blank, y, or n.\n";
+                    IncrementTracker(dicIssueTracker);
+                    rtn.bReturnValue = false;
+                    rtn.sReturnValue = ReportSpreadsheetIssue(dicIssueTracker, sMessage, "1", iRowNumber, iColumnNumber);
+                }
+
+                return rtn;
+            }
+            // Validates Ref field
+            rtnString IsValidRef(string sRef, string sPartType, bool bExisting, Dictionary<String, String> dicIssueTracker, 
+                int iRowNumber, int iColumnNumber)
+            {
+                rtnString rtn = new rtnString();
+                rtn.bReturnValue = true;
+                rtn.sReturnValue = "";
+                string sMessage = "";
+
+                string[] arrValidTypes = { "M", "T" };
+
+                if (bExisting && sRef == "")
+                {
+                    sMessage = "Warning: Ref missing from part listed as Existing.\n";
+                    IncrementTracker(dicIssueTracker);
+                    rtn.bReturnValue = false;
+                    rtn.sReturnValue += ReportSpreadsheetIssue(dicIssueTracker, sMessage, "2", iRowNumber, iColumnNumber);
+                }
+                else if (bExisting && sRef != "")
+                {
+                    var sSPPartType = sRef.Substring(0, 1);
+                    bool bValidRef = true;
+
+                    if (!arrValidTypes.Contains(sSPPartType))
+                    {
+                        bValidRef = false;
+                        sMessage = "Warning: unexpected character in Ref.\n";
+                        IncrementTracker(dicIssueTracker);
+                        rtn.bReturnValue = false;
+                        rtn.sReturnValue += ReportSpreadsheetIssue(dicIssueTracker, sMessage, "2", iRowNumber, iColumnNumber);
+                    }
+
+                    if (bValidRef)
+                    {
+                        try
+                        {
+                            bool bPartExists = PartExists(sRef, int.Parse(sWebAppId));
+                            if (!bPartExists)
+                            {
+                                sMessage = "Warning: No record of this part was found in the database.\n";
+                                IncrementTracker(dicIssueTracker);
+                                rtn.bReturnValue = false;
+                                rtn.sReturnValue += ReportSpreadsheetIssue(dicIssueTracker, sMessage, "2", iRowNumber, iColumnNumber);
+                            }
+                        }
+                        catch (System.Exception e)
+                        {
+                            sMessage = "Error: An exception occurred when checking if the part exists: " + e.Message + "\n";
+                            IncrementTracker(dicIssueTracker);
+                            rtn.bReturnValue = false;
+                            rtn.sReturnValue += ReportSpreadsheetIssue(dicIssueTracker, sMessage, "0", iRowNumber, iColumnNumber);
+                        }
+                    }
+                }
+                else if (sPartType == "M" && !bExisting && sRef != "")
+                {
+                    sMessage = "Failure: part listed as new, but is listed with an existing ref.\n";
+                    IncrementTracker(dicIssueTracker);
+                    rtn.bReturnValue = false;
+                    rtn.sReturnValue += ReportSpreadsheetIssue(dicIssueTracker, sMessage, "1", iRowNumber, iColumnNumber);
+                }
+                else if (sPartType == "T" && !bExisting && sRef == "")
+                {
+                    sMessage = "Failure: T item listed as new, but no Ref was provided.\n";
+                    IncrementTracker(dicIssueTracker);
+                    rtn.bReturnValue = false;
+                    rtn.sReturnValue += ReportSpreadsheetIssue(dicIssueTracker, sMessage, "1", iRowNumber, iColumnNumber);
+                }
+                else if (sPartType == "T" && !bExisting && sRef != "")
+                {
+                    bool bTExists = PartExists(sRef, int.Parse(sWebAppId));
+                    if (bTExists)
+                    {
+                        sMessage = "Failure: T item's Ref is not unique and already exists. Enter a new number.\n";
+                        IncrementTracker(dicIssueTracker);
+                        rtn.bReturnValue = false;
+                        rtn.sReturnValue += ReportSpreadsheetIssue(dicIssueTracker, sMessage, "1", iRowNumber, iColumnNumber);
+                    }
+                }
+
+                return rtn;
+            }
+            // Validates the Part Type column
+            rtnString IsPartTypeValid(string sPartType, Dictionary<String, String> dicIssueTracker, int iRowNumber, int iColumnNumber)
+            {
+                rtnString rtn = new rtnString();
+                rtn.bReturnValue = true;
+                rtn.sReturnValue = "";
+
+                string[] arrValidTypes = { "M", "T" };
+
+                if (!arrValidTypes.Contains(sPartType))
+                {
+                    string sMessage = "Failure: invalid part type entered.\n";
+                    IncrementTracker(dicIssueTracker);
+                    rtn.bReturnValue = false;
+                    rtn.sReturnValue = ReportSpreadsheetIssue(dicIssueTracker, sMessage, "1", iRowNumber, iColumnNumber);
+                }
+
+                return rtn;
+            }
+            // Validates the Manufacturer
+            rtnString IsManufacturerValid(string sManufacturer, Dictionary<String, String> dicIssueTracker, int iRowNumber, int iColumnNumber, int iWebAppId)
+            {
+                rtnString rtn = new rtnString();
+                rtn.bReturnValue = true;
+                rtn.sReturnValue = "";
+
+                if (sManufacturer != "")
+                {
+                    rtnString rtnManufacturer = GetManufacturerCode(sManufacturer, iWebAppId);
+                    if (!rtnManufacturer.bReturnValue)
+                    {
+                        string sMessage = "Failure: " + rtnManufacturer.sReturnValue + "\n";
+                        IncrementTracker(dicIssueTracker);
+                        rtn.bReturnValue = false;
+                        rtn.sReturnValue = ReportSpreadsheetIssue(dicIssueTracker, sMessage, "1", iRowNumber, iColumnNumber);
+                    }
+                    else
+                    {
+                        rtn.sReturnValue = rtnManufacturer.sReturnValue;
+                    }
+                }
+
+                return rtn;
+            }
+            // Validates the Spare column
+            rtnString IsSpareValid(string sSpareRequired, Dictionary<String, String> dicIssueTracker, int iRowNumber, int iColumnNumber)
+            {
+                rtnString rtn = new rtnString();
+                rtn.bReturnValue = true;
+                rtn.sReturnValue = "";
+
+                if (sSpareRequired != "" && sSpareRequired.ToLower() != "y" && sSpareRequired.ToLower() != "yes")
+                {
+                    string sMessage = "Failure: invalid input for spare field. Must be left blank or 'Y'.\n";
+                    IncrementTracker(dicIssueTracker);
+                    rtn.bReturnValue = false;
+                    rtn.sReturnValue = ReportSpreadsheetIssue(dicIssueTracker, sMessage, "1", iRowNumber, iColumnNumber);
+                }
+                else
+                {
+                    rtn.sReturnValue = (sSpareRequired.ToLower() == "y" || sSpareRequired.ToLower() == "yes") ? "true" : "false";
+                }
+
+                return rtn;
+            }
             // ---------------------------- END HELPER FUNCTIONS ----------------------------
 
             Excel.Application xlApp = null;
@@ -20030,7 +20253,6 @@ namespace WcfWCService
             ExampleService.MyJavaService3Client client2 = GetWCService();
 
             string sIssues = "Issues reported: \n";
-            int iIssuesFound = 0;
             bool failure = false;
 
             var dicColNums = new Dictionary<string, int>
@@ -20045,6 +20267,13 @@ namespace WcfWCService
                 {"part_number", 8 },
                 {"new_file_name", 9 },
                 {"comments", 10 }
+            };
+
+            var dicIssueTracker = new Dictionary<String, String>
+            {
+                { "priority", "4" },
+                { "message", "" },
+                { "issuesFound", "0" }
             };
 
             try
@@ -20172,231 +20401,66 @@ namespace WcfWCService
                         bool bValid = true;
                         string sMessage = "";
                         sWebAppId = "2";
-                        string[] arrValidTypes = { "M", "T"};
 
-                        var dicCurrentIssue = new Dictionary<String, String>
-                        {
-                            { "priority", "4" },
-                            { "message", "" }
-                        };
+                        rtnString rtn = new rtnString();
 
                         // Description validation
-                        if (sDescription.Length < 1 || sDescription.Length > 60)
+                        rtn = IsValidPartDescription(sDescription, dicIssueTracker, i + 2, dicColNums["description"], iWebAppId);
+                        if (!rtn.bReturnValue)
                         {
                             bValid = false;
-                            sMessage = "Failure: description name is outside character limit (1 - 60 characters)." + "\n";
-                            if (1 < int.Parse(dicCurrentIssue["priority"]))
-                            {
-                                dicCurrentIssue["priority"] = "1";
-                                dicCurrentIssue["message"] = sMessage;
-                            }
-                            sIssues += "Row " + (i + 2) + ", Col " + dicColNums["description"] + " - " + sMessage;
-                            iIssuesFound += 1;
-                        }
-
-                        // Unique Part Description validation 
-                        rtnString rtnNameExists = PartNameExists(sDescription, iWebAppId);
-                        if (rtnNameExists.bReturnValue)
-                        {
-                            bValid = false;
-                            sMessage = "Failure: the entered Description already exists in the database at Part No: " + rtnNameExists.sReturnValue + ".\n";
-                            if (1 < int.Parse(dicCurrentIssue["priority"]))
-                            {
-                                dicCurrentIssue["priority"] = "1";
-                                dicCurrentIssue["message"] = sMessage;
-                            }
-                            sIssues += "Row " + (i + 2) + ", Col " + dicColNums["description"] + " - " + sMessage;
-                            iIssuesFound += 1;
+                            sIssues += rtn.sReturnValue;
                         }
 
                         // Ref and Existing validation
-                        string[] arrValidExistingValues = { "y", "yes", "", "n", "no" };
-                        bool bExisting = false;
-                        if (!arrValidExistingValues.Contains(sExisting.ToLower())) 
+                        bool bExisting = sExisting.ToLower() == "y" || sExisting.ToLower() == "yes";
+
+                        rtn = IsValidExisting(sExisting, dicIssueTracker, i + 2, dicColNums["existing"]);
+                        if (!rtn.bReturnValue)
                         {
                             bValid = false;
-                            sMessage = "Failure: Existing value is invalid. Must be blank, y, or n." + "\n";
-                            if (1 < int.Parse(dicCurrentIssue["priority"]))
-                            {
-                                dicCurrentIssue["priority"] = "1";
-                                dicCurrentIssue["message"] = sMessage;
-                            }
-                            sIssues += "Row " + (i + 2) + ", Col " + dicColNums["existing"] + " - " + sMessage;
-                            iIssuesFound += 1;
-                        }
-                        else if (sExisting.ToLower() == "y" || sExisting.ToLower() == "yes")
-                        {
-                            bExisting = true;
+                            sIssues += rtn.sReturnValue;
                         }
 
                         // Warning if listed as existing without a ref
-                        if (bExisting && sRef == "")
-                        {
-                            sMessage = "Warning: Ref missing from part listed as Existing." + "\n";
-                            if (2 < int.Parse(dicCurrentIssue["priority"]))
-                            {
-                                dicCurrentIssue["priority"] = "1";
-                                dicCurrentIssue["message"] = sMessage;
-                            }
-                            sIssues += "Row " + (i + 2) + ", Col " + dicColNums["ref"] + " - " + sMessage;
-                            iIssuesFound += 1;
-                        }
-                        else if (bExisting && sRef != "") // Check for the Ref against Windchill if listed existing and Ref provided
-                        {
-                            // Check if there is a provided Ref and get if an M or T part
-                            var sSPPartType = sRef.Substring(0, 1);
-                            bool bValidRef = true;
-                            if (!arrValidTypes.Contains(sSPPartType))
-                            {
-                                sMessage = "Warning: unexpected character in Ref." + "\n";
-                                if (2 < int.Parse(dicCurrentIssue["priority"]))
-                                {
-                                    dicCurrentIssue["priority"] = "1";
-                                    dicCurrentIssue["message"] = sMessage;
-                                }
-                                sIssues += "Row " + (i + 2) + ", Col " + dicColNums["ref"] + " - " + sMessage;
-                                iIssuesFound += 1;
-                                bValidRef = false;
-                            }
-
-                            // If there's a valid ref to check, check if there's a record
-                            if (bValidRef)
-                            {
-                                try
-                                {
-                                    bool bPartExists = PartExists(sRef, int.Parse(sWebAppId));
-
-                                    if (bPartExists)
-                                    {
-                                        bValid = false;
-                                        sMessage = "Warning: No record of this part was found in the database." + "\n";
-                                        if (2 < int.Parse(dicCurrentIssue["priority"]))
-                                        {
-                                            dicCurrentIssue["priority"] = "1";
-                                            dicCurrentIssue["message"] = sMessage;
-                                        }
-                                        sIssues += "Row " + (i + 2) + ", Col " + dicColNums["part_type"] + " - " + sMessage;
-                                        iIssuesFound += 1;
-                                    }
-                                }
-                                catch (Exception e)
-                                {
-                                    bValid = false;
-                                    sMessage = "Error: An exception occurred when checking if the part exists: " + e.Message + "\n";
-                                    if (0 < int.Parse(dicCurrentIssue["priority"]))
-                                    {
-                                        dicCurrentIssue["priority"] = "1";
-                                        dicCurrentIssue["message"] = sMessage;
-                                    }
-                                    sIssues += "Error on Row " + (i + 2) + ", Col " + dicColNums["part_type"] + " when checking if the part exists." +
-                                        e.Message;
-                                    iIssuesFound += 1;
-                                }
-                            }
-                        }
-                        else if (sPartType == "M" && (!bExisting && sRef != "")) // Fails if an M-part is listed as new but has a ref
+                        rtn = IsValidRef(sRef, sPartType, bExisting, dicIssueTracker, i + 2, dicColNums["ref"]);
+                        if (!rtn.bReturnValue)
                         {
                             bValid = false;
-                            sMessage = "Failure: part listed as new, but is listed with an existing ref." + "\n";
-                            if (1 < int.Parse(dicCurrentIssue["priority"]))
-                            {
-                                dicCurrentIssue["priority"] = "1";
-                                dicCurrentIssue["message"] = sMessage;
-                            }
-                            sIssues += "Row " + (i + 2) + ", Col " + dicColNums["ref"] + " - " + sMessage;
-                            iIssuesFound += 1;
-                        }
-                        else if (sPartType == "T" && (!bExisting && sRef == "")) // Fails if a T-part is listed as new but has no ref
-                        {
-                            bValid = false;
-                            sMessage = "Failure: T item listed as new, but no Ref was provided." + "\n";
-                            if (1 < int.Parse(dicCurrentIssue["priority"]))
-                            {
-                                dicCurrentIssue["priority"] = "1";
-                                dicCurrentIssue["message"] = sMessage;
-                            }
-                            sIssues += "Row " + (i + 2) + ", Col " + dicColNums["ref"] + " - " + sMessage;
-                            iIssuesFound += 1;
-                        }
-                        else if (sPartType == "T" && (!bExisting && sRef != "")) // Check if T item is existing
-                        {
-                            bool bTExists = PartExists(sRef, int.Parse(sWebAppId));
-
-                            if (bTExists)
-                            {
-                                bValid = false;
-                                sMessage = "Failure: T item's Ref is not unique and already exists. Enter a new number." + "\n";
-                                if (1 < int.Parse(dicCurrentIssue["priority"]))
-                                {
-                                    dicCurrentIssue["priority"] = "1";
-                                    dicCurrentIssue["message"] = sMessage;
-                                }
-                                sIssues += "Row " + (i + 2) + ", Col " + dicColNums["ref"] + " - " + sMessage;
-                                iIssuesFound += 1;
-                            }
+                            sIssues += rtn.sReturnValue;
                         }
 
                         // Part Type validation
-                        if (!arrValidTypes.Contains(sPartType))
+                        rtn = IsPartTypeValid(sPartType, dicIssueTracker, i + 2, dicColNums["part_type"]);
+                        if (!rtn.bReturnValue)
                         {
                             bValid = false;
-                            sMessage = "Failure: invalid part type entered." + "\n";
-                            if (1 < int.Parse(dicCurrentIssue["priority"]))
-                            {
-                                dicCurrentIssue["priority"] = "1";
-                                dicCurrentIssue["message"] = sMessage;
-                            }
-                            sIssues += "Row " + (i + 2) + ", Col " + dicColNums["part_type"] + " - " + sMessage;
-                            iIssuesFound += 1;
+                            sIssues += rtn.sReturnValue;
                         }
 
                         // Manufacturer validation
                         string sManufacturerCode = "";
-                        if (sManufacturer != "")
-                        {
-                            rtnString rtnManufacturer = GetManufacturerCode(sManufacturer, iWebAppId);
-
-                            if (!rtnManufacturer.bReturnValue)
-                            {
-                                bValid = false;
-                                sMessage = "Failure: " + rtnManufacturer.sReturnValue + "\n";
-                                if (1 < int.Parse(dicCurrentIssue["priority"]))
-                                {
-                                    dicCurrentIssue["priority"] = "1";
-                                    dicCurrentIssue["message"] = sMessage;
-                                }
-                                sIssues += "Row " + (i + 2) + ", Col " + dicColNums["manufacturer"] + " - " + sMessage;
-                                iIssuesFound += 1;
-                            }
-                            else
-                            {
-                                sManufacturerCode = rtnManufacturer.sReturnValue;
-                            }
-                        }
-
-                        // Spare validation
-                        if (sSpareRequired != "" && sSpareRequired.ToLower() != "y" && sSpareRequired.ToLower() != "yes")
+                        rtn = IsManufacturerValid(sManufacturer, dicIssueTracker, i + 2, dicColNums["manufacturer"], iWebAppId);
+                        if (!rtn.bReturnValue)
                         {
                             bValid = false;
-                            sMessage = "Failure: invalid input for spare field. Must be left blank or 'Y'." + "\n";
-                            if (1 < int.Parse(dicCurrentIssue["priority"]))
-                            {
-                                dicCurrentIssue["priority"] = "1";
-                                dicCurrentIssue["message"] = sMessage;
-                            }
-                            sIssues += "Row " + (i + 2) + ", Col " + dicColNums["spare_required"] + " - " + sMessage;
-                            iIssuesFound += 1;
+                            sIssues += rtn.sReturnValue;
                         }
                         else
                         {
-                            if (sSpareRequired.ToLower() == "y" || sSpareRequired.ToLower() == "yes")
-                            {
-                                sSpareRequired = "true";
-                            }
-                            else
-                            {
-                                sSpareRequired = "false";
-                            }
+                            sManufacturerCode = rtn.sReturnValue;
+                        }
+
+                        // Spare validation
+                        rtn = IsSpareValid(sSpareRequired, dicIssueTracker, i + 2, dicColNums["spare_required"]);
+                        if (!rtn.bReturnValue)
+                        {
+                            bValid = false;
+                            sIssues += rtn.sReturnValue;
+                        }
+                        else
+                        {
+                            sSpareRequired = rtn.sReturnValue;
                         }
 
                         // ---------------------------- END VALIDATIONS ----------------------------
@@ -20408,8 +20472,9 @@ namespace WcfWCService
                         // Create the part if it doesn't exist yet and validations are passed
                         if (bValid && !bExisting)
                         {
-                            if (sPartType == "M") // Create an M-Part
+                            if (sPartType == "M") 
                             {
+                                // ===== M PART CREATION =====
                                 string sImportMaterialTypeCode = "MC9102";
                                 sCheckinComments = "Auto created CAD M-part from import.";
                                 
@@ -20428,9 +20493,10 @@ namespace WcfWCService
                                     sPartUpdateReturn = AddManufacturerLink(sFullName, sManufacturerCode, sPartNumber, sMatCatNo);
                                 }
                             }
-                            else if (sPartType == "T") // Create a T-Part
+                            else if (sPartType == "T")
                             {
-                                // Get the job
+                                // ===== T PART CREATION =====
+                                // ----- GET JOB DETAILS -----
                                 string sJobCode = sRef.Substring(1, 3);
 
                                 // Get the Windchill Product from the job code
@@ -20440,14 +20506,10 @@ namespace WcfWCService
                                 else // Fails if a product could not be found
                                 {
                                     bValid = false;
+                                    IncrementTracker(dicIssueTracker);
                                     sMessage = "Failure: could not find Windchill product for job code " + sJobCode + "\n";
-                                    if (1 < int.Parse(dicCurrentIssue["priority"]))
-                                    {
-                                        dicCurrentIssue["priority"] = "1";
-                                        dicCurrentIssue["message"] = sMessage;
-                                    }
-                                    sIssues += "Row " + (i + 2) + ", Col " + dicColNums["ref"] + " - " + sMessage;
-                                    iIssuesFound += 1;
+
+                                    sIssues += ReportSpreadsheetIssue(dicIssueTracker, sMessage, "1", i + 2, dicColNums["ref"]);
                                 }
 
                                 string sFolderRaw = "";
@@ -20456,14 +20518,10 @@ namespace WcfWCService
                                 else if (bValid && !rtnJobFolder.bReturnValue) // Fails if the job code could not be found
                                 {
                                     bValid = false;
+                                    IncrementTracker(dicIssueTracker);
                                     sMessage = "Failure: could not find Windchill folder for job code " + sJobCode + "\n";
-                                    if (1 < int.Parse(dicCurrentIssue["priority"]))
-                                    {
-                                        dicCurrentIssue["priority"] = "1";
-                                        dicCurrentIssue["message"] = sMessage;
-                                    }
-                                    sIssues += "Row " + (i + 2) + ", Col " + dicColNums["ref"] + " - " + sMessage;
-                                    iIssuesFound += 1;
+
+                                    sIssues += ReportSpreadsheetIssue(dicIssueTracker, sMessage, "1", i + 2, dicColNums["ref"]);
                                 }
 
                                 string sFolder = sFolderRaw;
@@ -20478,8 +20536,7 @@ namespace WcfWCService
                                         sFolder = sFolderRaw + "/" + folderRtn.sReturnValue;
                                     }
                                 }
-
-                                // Create the T Item
+                                // ----- CREATE T-ITEM -----
                                 if (bValid)
                                 {
                                     string sTItemPartType = "local.rs.vsrs05.Regain.ProjectMaterialItem";
@@ -20496,19 +20553,19 @@ namespace WcfWCService
                                 }
                             }
 
-                            xlRange.Cells[i + 2, dicColNums["comments"]] = dicCurrentIssue["message"];
+                            xlRange.Cells[i + 2, dicColNums["comments"]] = dicIssueTracker["message"];
                         } // Section is for future update logic
                         else if (bValid && bExisting)
                         {
-                            xlRange.Cells[i + 2, dicColNums["comments"]] = dicCurrentIssue["message"];
+                            xlRange.Cells[i + 2, dicColNums["comments"]] = dicIssueTracker["message"];
                         } // Add to the comments array for the spreadsheet if there was an invalid input
                         else
                         {
-                            xlRange.Cells[i + 2, dicColNums["comments"]] = dicCurrentIssue["message"];
+                            xlRange.Cells[i + 2, dicColNums["comments"]] = dicIssueTracker["message"];
                             continue;
                         }
 
-                        // Create the document container for M Items
+                        // ===== M PART DOCUMENT CONTAINER CREATION =====
                         if (sPartCreateReturn.StartsWith("Success"))
                         {
                             // New variables
@@ -20602,7 +20659,7 @@ namespace WcfWCService
                     }
 
                     // Body of email to user, and location of the results file
-                    if (iIssuesFound == 0)
+                    if (int.Parse(dicIssueTracker["iIssuesFound"]) == 0)
                     {
                         sIssues += "None to be reported.";
                     }
@@ -20617,7 +20674,7 @@ namespace WcfWCService
                     return "Success^" + sBody;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 failure = true;
                 return "Failure:" + ex.Message + "^";
