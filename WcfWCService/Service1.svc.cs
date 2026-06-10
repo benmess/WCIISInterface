@@ -1,37 +1,39 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
+using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Presentation;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.Office.Interop.Excel;
+using Microsoft.Office.Interop.Word;
+using Microsoft.SqlServer.Server;
+using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.Odbc;
+using System.Data.SqlClient;
+using System.Diagnostics.Contracts;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Sockets;
 using System.Runtime.Serialization;
+using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
-using System.ServiceModel.Web;
 using System.ServiceModel.Activation;
+using System.ServiceModel.Web;
 using System.Text;
 using System.Web;
 using System.Web.Services;
 using System.Web.Services.Protocols;
-using Newtonsoft.Json;
-using System.Security.Cryptography.X509Certificates;
-using System.IO;
-using System.Data.SqlClient;
-using System.Data;
-using System.Net;
-using System.Net.Http;
-using word = Microsoft.Office.Interop.Word;
 using Excel = Microsoft.Office.Interop.Excel;
-using DocumentFormat.OpenXml.Packaging;
-using System.Net.Sockets;
-using System.Configuration;
-using System.IO.Compression;
-using DocumentFormat.OpenXml.Wordprocessing;
-using DocumentFormat.OpenXml.Presentation;
-using DocumentFormat.OpenXml.Spreadsheet;
-using System.Diagnostics.Contracts;
-using System.Data.Odbc;
-using Microsoft.SqlServer.Server;
-using Microsoft.Office.Interop.Excel;
-using Microsoft.Office.Interop.Word;
-using DocumentFormat.OpenXml.EMMA;
+using word = Microsoft.Office.Interop.Word;
 
 namespace WcfWCService
 {
@@ -19858,6 +19860,754 @@ namespace WcfWCService
 
             DateTime startDate2 = dtInputDateTime.AddHours(iOffset * -1);
             return startDate2;
+        }
+
+        public rtnString GetManufacturerCode(string sManufacturerName, int iWebAppId)
+        {
+            string[] sParamNames = new string[1];
+            Object[] objParamValues = new Object[1];
+            rtnString rtnClass = new rtnString();
+
+            StoredProc SP = new StoredProc();
+            RecordSet rs = new RecordSet();
+
+            SP.SetProcName("SP_GetWindchillSuppliersFiltered");
+            SP.SetParam("@pvchFilterCriterion", sManufacturerName);
+
+            int iRecordCount = SP.RunStoredProcDataSet();
+
+            if (iRecordCount < 0)
+            {
+                rtnClass.bReturnValue = false;
+                rtnClass.sReturnValue = "Something went wrong retrieving manufacturing records.";
+            }
+            else if (iRecordCount == 0)
+            {
+                rtnClass.bReturnValue = false;
+                rtnClass.sReturnValue = "Could not match any manufacturers with the inputted name.";
+            }
+            else if (iRecordCount > 1)
+            {
+                rtnClass.bReturnValue = false;
+                rtnClass.sReturnValue = "The specified manufacturer returned multiple results.";
+            }
+            else
+            {
+                try
+                {
+                    DataSet ds = SP.GetDataSet();
+
+                    string sManufacturerCode = rs.Get_NVarchar(ds, "WTDocumentNumber", 0);
+
+                    rtnClass.bReturnValue = true;
+                    rtnClass.sReturnValue = sManufacturerCode;
+                }
+                catch (Exception e)
+                {
+                    rtnClass.bReturnValue = false;
+                    rtnClass.sReturnValue = e.Message;
+                }
+            }
+
+            return rtnClass;
+        }
+
+        public rtnString PartNameExists(string sPartName, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            rtnString rtnString = new rtnString();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select WTPartNumber from vwWindchillLatestPartWithType where PartName = '" + sPartName + "' COLLATE SQL_Latin1_General_CP1_CI_AS";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+            rtnString.bReturnValue = false;
+            rtnString.sReturnValue = "";
+
+            // If there's a value, it will return the part number that exists
+            if (rst.m_RecordCount > 0)
+            {
+                rtnString.bReturnValue = true;
+                rtnString.sReturnValue = rst.Get_NVarchar(ds, "WTPartNumber", 0);
+            }
+
+            ds.Dispose();
+
+            return rtnString;
+        }
+
+        public rtnString GetWindchillFolderExists(string sWebAppId, string sProductName, string sLastFolder, string sChildFolder, int iProdOrLib)
+        {
+            string[] sParamNames = new string[4];
+            Object[] objParamValues = new Object[4];
+            int i;
+            rtnString rtnClass = new rtnString();
+
+            StoredProc SP = new StoredProc();
+            RecordSet rs = new RecordSet();
+
+            SP.SetProcName("SP_GetWindchillFolderExists");
+            SP.SetParam("@pvchProductName", sProductName);
+            SP.SetParam("@pvchParentFolder", sLastFolder);
+            SP.SetParam("@pvchChildFolder", sChildFolder);
+            SP.SetParam("@piProdOrLib", iProdOrLib);
+
+            int iRecordCount = SP.RunStoredProcDataSet();
+
+            try
+            {
+                if (iRecordCount > 0)
+                {
+                    DataSet ds = SP.GetDataSet();
+
+                    for (i = 0; i < iRecordCount; i++)
+                    {
+                        string sName = rs.Get_NVarchar(ds, "name", i);
+
+                        rtnClass.bReturnValue = true;
+                        rtnClass.sReturnValue = sName;
+                    }
+                }
+                else
+                {
+                    rtnClass.bReturnValue = false;
+                }
+                return rtnClass;
+            }
+            catch (Exception e)
+            {
+                rtnClass.bReturnValue = false;
+                rtnClass.sReturnValue = e.Message;
+                return rtnClass;
+            }
+        }
+
+        public string ProcessMaterialPartsSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
+        {
+            // ---------------------------- HELPER FUNCTIONS ----------------------------
+            string AddManufacturerLink(string sFullname, string sManufacturerCode, string sManufacturerPartNo, string sMatCatNo)
+            {
+                string sRtn = "";
+                string sPartDocRefLinkType = "local.rs.vsrs05.Regain.MatCatDocReference";
+                string sCheckinComments = "Auto created link from CAD import.";
+                string sManufacturingFlag = "1";
+
+                sRtn = SetSupplierToPartRef(sSessionId, sUserId, sFullname, sManufacturerCode, sMatCatNo, sManufacturerPartNo,
+                    sPartDocRefLinkType, sCheckinComments, sWebAppId, sManufacturingFlag);
+
+                return sRtn;
+            }
+            // ---------------------------- END HELPER FUNCTIONS ----------------------------
+
+            Excel.Application xlApp = null;
+            Excel.Workbooks xlWbks = null;
+            ExampleService.MyJavaService3Client client2 = GetWCService();
+
+            string sIssues = "Issues reported: \n";
+            int iIssuesFound = 0;
+            bool failure = false;
+
+            var dicColNums = new Dictionary<string, int>
+            {
+                {"file_name", 1 },
+                {"part_type", 2 },
+                {"existing", 3 },
+                {"description", 4 },
+                {"ref", 5 },
+                {"manufacturer", 6 },
+                {"spare_required", 7 },
+                {"part_number", 8 },
+                {"new_file_name", 9 },
+                {"comments", 10 }
+            };
+
+            try
+            {
+                int iWebAppId = Convert.ToInt32(sWebAppId);
+
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    // ---------------------------- READING SPREADSHEET ----------------------------
+                    Update_User_Time(sUserId, sSessionId);
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+                    string sRecipeints = arrUser[3].ToString();
+
+                    xlApp = new Excel.Application();
+                    xlWbks = xlApp.Workbooks;
+
+                    Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
+                    Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+                    Excel.Range xlRange = xlWorksheet.UsedRange;
+
+                    int rowCount = xlRange.Rows.Count;
+                    int colCount = xlRange.Columns.Count;
+                    int i = 0, j = 0, iRowCount;
+                    string sBody = "";
+
+
+                    //Get the proper row count because sometimes the range rowcount is wrong
+                    iRowCount = rowCount;
+                    for (i = 2; i <= rowCount; i++)
+                    {
+                        if (xlRange.Cells[i, 1].Value2 == null)
+                        {
+                            iRowCount = i - 1;
+                            break;
+                        }
+                    }
+
+                    // Creating the arrays for the spreadsheet row data
+                    rowCount = iRowCount;
+
+                    string[] arrFileName = new string[rowCount - 1];
+                    string[] arrPartType = new string[rowCount - 1];
+                    string[] arrExisting = new string[rowCount - 1];
+                    string[] arrDescription = new string[rowCount - 1];
+                    string[] arrRef = new string[rowCount - 1];
+                    string[] arrManufacturer = new string[rowCount - 1];
+                    string[] arrSpareRequired = new string[rowCount - 1];
+                    string[] arrPartNumber = new string[rowCount - 1];
+                    int[] arrRowNo = new int[rowCount - 1];
+
+                    // Putting the data into the arrays
+                    j = 0;
+                    for (i = 2; i <= rowCount; i++)
+                    {
+                        string sFileName = "";
+                        if (xlRange.Cells[i, dicColNums["file_name"]].Value2 != null)
+                            sFileName = xlRange.Cells[i, dicColNums["file_name"]].Value2.ToString();
+
+                        string sPartType = "";
+                        if (xlRange.Cells[i, dicColNums["part_type"]].Value2 != null)
+                            sPartType = xlRange.Cells[i, dicColNums["part_type"]].Value2.ToString();
+
+                        string sExisting = "";
+                        if (xlRange.Cells[i, dicColNums["existing"]].Value2 != null)
+                            sExisting = xlRange.Cells[i, dicColNums["existing"]].Value2.ToString();
+
+                        string sDescription = "";
+                        if (xlRange.Cells[i, dicColNums["description"]].Value2 != null)
+                            sDescription = xlRange.Cells[i, dicColNums["description"]].Value2.ToString();
+
+                        string sRef = "";
+                        if (xlRange.Cells[i, dicColNums["ref"]].Value2 != null)
+                            sRef = xlRange.Cells[i, dicColNums["ref"]].Value2.ToString();
+
+                        string sManufacturer = "";
+                        if (xlRange.Cells[i, dicColNums["manufacturer"]].Value2 != null)
+                            sManufacturer = xlRange.Cells[i, dicColNums["manufacturer"]].Value2.ToString();
+
+                        string sSpareRequired = "";
+                        if (xlRange.Cells[i, dicColNums["spare_required"]].Value2 != null)
+                            sSpareRequired = xlRange.Cells[i, dicColNums["spare_required"]].Value2.ToString();
+
+                        string sPartNumber = "";
+                        if (xlRange.Cells[i, dicColNums["part_number"]].Value2 != null)
+                            sPartNumber = xlRange.Cells[i, dicColNums["part_number"]].Value2.ToString();
+
+
+                        arrFileName[j] = sFileName;
+                        arrPartType[j] = sPartType;
+                        arrExisting[j] = sExisting;
+                        arrDescription[j] = sDescription;
+                        arrRef[j] = sRef;
+                        arrManufacturer[j] = sManufacturer;
+                        arrSpareRequired[j] = sSpareRequired;
+                        arrPartNumber[j] = sPartNumber;
+                        arrRowNo[j] = i;
+                        j++;
+                    }
+                    // ---------------------------- END READING SPREADSHEET ----------------------------
+
+                    // ---------------------------- LOOPING THROUGH ROWS ----------------------------
+                    for (i = 0; i < j; i++)
+                    {
+                        string sFileName = arrFileName[i];
+                        string sPartType = arrPartType[i];
+                        string sDescription = arrDescription[i];
+                        string sRef = arrRef[i];
+                        string sExisting = arrExisting[i];
+                        string sManufacturer = arrManufacturer[i];
+                        string sSpareRequired = arrSpareRequired[i];
+                        string sPartNumber = arrPartNumber[i];
+
+                        string sPartCreateReturn = "";
+                        string sTItemCreateReturn = "";
+                        string sPartUpdateReturn = "";
+                        string sDocCreateReturn = "";
+                        string sDocToPartReturn = "";
+
+                        // ---------------------------- VALIDATIONS ----------------------------
+                        bool bValid = true;
+                        string sMessage = "";
+                        sWebAppId = "2";
+                        string[] arrValidTypes = { "M", "T"};
+
+                        var dicCurrentIssue = new Dictionary<String, String>
+                        {
+                            { "priority", "4" },
+                            { "message", "" }
+                        };
+
+                        // Description validation
+                        if (sDescription.Length < 1 || sDescription.Length > 60)
+                        {
+                            bValid = false;
+                            sMessage = "Failure: description name is outside character limit (1 - 60 characters)." + "\n";
+                            if (1 < int.Parse(dicCurrentIssue["priority"]))
+                            {
+                                dicCurrentIssue["priority"] = "1";
+                                dicCurrentIssue["message"] = sMessage;
+                            }
+                            sIssues += "Row " + (i + 2) + ", Col " + dicColNums["description"] + " - " + sMessage;
+                            iIssuesFound += 1;
+                        }
+
+                        // Unique Part Description validation 
+                        rtnString rtnNameExists = PartNameExists(sDescription, iWebAppId);
+                        if (rtnNameExists.bReturnValue)
+                        {
+                            bValid = false;
+                            sMessage = "Failure: the entered Description already exists in the database at Part No: " + rtnNameExists.sReturnValue + ".\n";
+                            if (1 < int.Parse(dicCurrentIssue["priority"]))
+                            {
+                                dicCurrentIssue["priority"] = "1";
+                                dicCurrentIssue["message"] = sMessage;
+                            }
+                            sIssues += "Row " + (i + 2) + ", Col " + dicColNums["description"] + " - " + sMessage;
+                            iIssuesFound += 1;
+                        }
+
+                        // Ref and Existing validation
+                        string[] arrValidExistingValues = { "y", "yes", "", "n", "no" };
+                        bool bExisting = false;
+                        if (!arrValidExistingValues.Contains(sExisting.ToLower())) 
+                        {
+                            bValid = false;
+                            sMessage = "Failure: Existing value is invalid. Must be blank, y, or n." + "\n";
+                            if (1 < int.Parse(dicCurrentIssue["priority"]))
+                            {
+                                dicCurrentIssue["priority"] = "1";
+                                dicCurrentIssue["message"] = sMessage;
+                            }
+                            sIssues += "Row " + (i + 2) + ", Col " + dicColNums["existing"] + " - " + sMessage;
+                            iIssuesFound += 1;
+                        }
+                        else if (sExisting.ToLower() == "y" || sExisting.ToLower() == "yes")
+                        {
+                            bExisting = true;
+                        }
+
+                        // Warning if listed as existing without a ref
+                        if (bExisting && sRef == "")
+                        {
+                            sMessage = "Warning: Ref missing from part listed as Existing." + "\n";
+                            if (2 < int.Parse(dicCurrentIssue["priority"]))
+                            {
+                                dicCurrentIssue["priority"] = "1";
+                                dicCurrentIssue["message"] = sMessage;
+                            }
+                            sIssues += "Row " + (i + 2) + ", Col " + dicColNums["ref"] + " - " + sMessage;
+                            iIssuesFound += 1;
+                        }
+                        else if (bExisting && sRef != "") // Check for the Ref against Windchill if listed existing and Ref provided
+                        {
+                            // Check if there is a provided Ref and get if an M or T part
+                            var sSPPartType = sRef.Substring(0, 1);
+                            bool bValidRef = true;
+                            if (!arrValidTypes.Contains(sSPPartType))
+                            {
+                                sMessage = "Warning: unexpected character in Ref." + "\n";
+                                if (2 < int.Parse(dicCurrentIssue["priority"]))
+                                {
+                                    dicCurrentIssue["priority"] = "1";
+                                    dicCurrentIssue["message"] = sMessage;
+                                }
+                                sIssues += "Row " + (i + 2) + ", Col " + dicColNums["ref"] + " - " + sMessage;
+                                iIssuesFound += 1;
+                                bValidRef = false;
+                            }
+
+                            // If there's a valid ref to check, check if there's a record
+                            if (bValidRef)
+                            {
+                                try
+                                {
+                                    bool bPartExists = PartExists(sRef, int.Parse(sWebAppId));
+
+                                    if (bPartExists)
+                                    {
+                                        bValid = false;
+                                        sMessage = "Warning: No record of this part was found in the database." + "\n";
+                                        if (2 < int.Parse(dicCurrentIssue["priority"]))
+                                        {
+                                            dicCurrentIssue["priority"] = "1";
+                                            dicCurrentIssue["message"] = sMessage;
+                                        }
+                                        sIssues += "Row " + (i + 2) + ", Col " + dicColNums["part_type"] + " - " + sMessage;
+                                        iIssuesFound += 1;
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    bValid = false;
+                                    sMessage = "Error: An exception occurred when checking if the part exists: " + e.Message + "\n";
+                                    if (0 < int.Parse(dicCurrentIssue["priority"]))
+                                    {
+                                        dicCurrentIssue["priority"] = "1";
+                                        dicCurrentIssue["message"] = sMessage;
+                                    }
+                                    sIssues += "Error on Row " + (i + 2) + ", Col " + dicColNums["part_type"] + " when checking if the part exists." +
+                                        e.Message;
+                                    iIssuesFound += 1;
+                                }
+                            }
+                        }
+                        else if (sPartType == "M" && (!bExisting && sRef != "")) // Fails if an M-part is listed as new but has a ref
+                        {
+                            bValid = false;
+                            sMessage = "Failure: part listed as new, but is listed with an existing ref." + "\n";
+                            if (1 < int.Parse(dicCurrentIssue["priority"]))
+                            {
+                                dicCurrentIssue["priority"] = "1";
+                                dicCurrentIssue["message"] = sMessage;
+                            }
+                            sIssues += "Row " + (i + 2) + ", Col " + dicColNums["ref"] + " - " + sMessage;
+                            iIssuesFound += 1;
+                        }
+                        else if (sPartType == "T" && (!bExisting && sRef == "")) // Fails if a T-part is listed as new but has no ref
+                        {
+                            bValid = false;
+                            sMessage = "Failure: T item listed as new, but no Ref was provided." + "\n";
+                            if (1 < int.Parse(dicCurrentIssue["priority"]))
+                            {
+                                dicCurrentIssue["priority"] = "1";
+                                dicCurrentIssue["message"] = sMessage;
+                            }
+                            sIssues += "Row " + (i + 2) + ", Col " + dicColNums["ref"] + " - " + sMessage;
+                            iIssuesFound += 1;
+                        }
+                        else if (sPartType == "T" && (!bExisting && sRef != "")) // Check if T item is existing
+                        {
+                            bool bTExists = PartExists(sRef, int.Parse(sWebAppId));
+
+                            if (bTExists)
+                            {
+                                bValid = false;
+                                sMessage = "Failure: T item's Ref is not unique and already exists. Enter a new number." + "\n";
+                                if (1 < int.Parse(dicCurrentIssue["priority"]))
+                                {
+                                    dicCurrentIssue["priority"] = "1";
+                                    dicCurrentIssue["message"] = sMessage;
+                                }
+                                sIssues += "Row " + (i + 2) + ", Col " + dicColNums["ref"] + " - " + sMessage;
+                                iIssuesFound += 1;
+                            }
+                        }
+
+                        // Part Type validation
+                        if (!arrValidTypes.Contains(sPartType))
+                        {
+                            bValid = false;
+                            sMessage = "Failure: invalid part type entered." + "\n";
+                            if (1 < int.Parse(dicCurrentIssue["priority"]))
+                            {
+                                dicCurrentIssue["priority"] = "1";
+                                dicCurrentIssue["message"] = sMessage;
+                            }
+                            sIssues += "Row " + (i + 2) + ", Col " + dicColNums["part_type"] + " - " + sMessage;
+                            iIssuesFound += 1;
+                        }
+
+                        // Manufacturer validation
+                        string sManufacturerCode = "";
+                        if (sManufacturer != "")
+                        {
+                            rtnString rtnManufacturer = GetManufacturerCode(sManufacturer, iWebAppId);
+
+                            if (!rtnManufacturer.bReturnValue)
+                            {
+                                bValid = false;
+                                sMessage = "Failure: " + rtnManufacturer.sReturnValue + "\n";
+                                if (1 < int.Parse(dicCurrentIssue["priority"]))
+                                {
+                                    dicCurrentIssue["priority"] = "1";
+                                    dicCurrentIssue["message"] = sMessage;
+                                }
+                                sIssues += "Row " + (i + 2) + ", Col " + dicColNums["manufacturer"] + " - " + sMessage;
+                                iIssuesFound += 1;
+                            }
+                            else
+                            {
+                                sManufacturerCode = rtnManufacturer.sReturnValue;
+                            }
+                        }
+
+                        // Spare validation
+                        if (sSpareRequired != "" && sSpareRequired.ToLower() != "y" && sSpareRequired.ToLower() != "yes")
+                        {
+                            bValid = false;
+                            sMessage = "Failure: invalid input for spare field. Must be left blank or 'Y'." + "\n";
+                            if (1 < int.Parse(dicCurrentIssue["priority"]))
+                            {
+                                dicCurrentIssue["priority"] = "1";
+                                dicCurrentIssue["message"] = sMessage;
+                            }
+                            sIssues += "Row " + (i + 2) + ", Col " + dicColNums["spare_required"] + " - " + sMessage;
+                            iIssuesFound += 1;
+                        }
+                        else
+                        {
+                            if (sSpareRequired.ToLower() == "y" || sSpareRequired.ToLower() == "yes")
+                            {
+                                sSpareRequired = "true";
+                            }
+                            else
+                            {
+                                sSpareRequired = "false";
+                            }
+                        }
+
+                        // ---------------------------- END VALIDATIONS ----------------------------
+
+                        // ---------------------------- CREATE THE WINDCHLL OBJECTS ----------------------------
+                        bool bProcessSuccess = false;
+                        string sCheckinComments = "";
+                        string sMatCatNo = "";
+                        // Create the part if it doesn't exist yet and validations are passed
+                        if (bValid && !bExisting)
+                        {
+                            if (sPartType == "M") // Create an M-Part
+                            {
+                                string sImportMaterialTypeCode = "MC9102";
+                                sCheckinComments = "Auto created CAD M-part from import.";
+                                
+
+                                sPartCreateReturn = CreateMaterialCatalogItem(sSessionId, sUserId, sFullName, sRef, sImportMaterialTypeCode, sDescription,
+                                "", "", "", "", "", "", "", "false", "false", "false", sSpareRequired, "false", "", "", "", "", "", "", "",
+                                sCheckinComments, sWebAppId);
+
+                                // Extract the new part number
+                                sMatCatNo = sPartCreateReturn.Substring(sPartCreateReturn.IndexOf("^") + 1, (sPartCreateReturn.Length - sPartCreateReturn.IndexOf("^") - 2));
+                                sPartNumber = sMatCatNo;
+
+                                // Create the link to the manufacturer
+                                if (sPartCreateReturn.StartsWith("Success") && sManufacturerCode != "")
+                                {
+                                    sPartUpdateReturn = AddManufacturerLink(sFullName, sManufacturerCode, sPartNumber, sMatCatNo);
+                                }
+                            }
+                            else if (sPartType == "T") // Create a T-Part
+                            {
+                                // Get the job
+                                string sJobCode = sRef.Substring(1, 3);
+
+                                // Get the Windchill Product from the job code
+                                string sProductName = "";
+                                rtnString rtnProduct = GetProductFromJob(sJobCode, 0, iWebAppId); // 0 for specifying a product
+                                if (rtnProduct.bReturnValue) { sProductName = rtnProduct.sReturnValue; }
+                                else // Fails if a product could not be found
+                                {
+                                    bValid = false;
+                                    sMessage = "Failure: could not find Windchill product for job code " + sJobCode + "\n";
+                                    if (1 < int.Parse(dicCurrentIssue["priority"]))
+                                    {
+                                        dicCurrentIssue["priority"] = "1";
+                                        dicCurrentIssue["message"] = sMessage;
+                                    }
+                                    sIssues += "Row " + (i + 2) + ", Col " + dicColNums["ref"] + " - " + sMessage;
+                                    iIssuesFound += 1;
+                                }
+
+                                string sFolderRaw = "";
+                                rtnString rtnJobFolder = GetPlantJobFolder(int.Parse(sJobCode), iWebAppId);
+                                if (bValid && rtnJobFolder.bReturnValue) { sFolderRaw = rtnJobFolder.sReturnValue; }
+                                else if (bValid && !rtnJobFolder.bReturnValue) // Fails if the job code could not be found
+                                {
+                                    bValid = false;
+                                    sMessage = "Failure: could not find Windchill folder for job code " + sJobCode + "\n";
+                                    if (1 < int.Parse(dicCurrentIssue["priority"]))
+                                    {
+                                        dicCurrentIssue["priority"] = "1";
+                                        dicCurrentIssue["message"] = sMessage;
+                                    }
+                                    sIssues += "Row " + (i + 2) + ", Col " + dicColNums["ref"] + " - " + sMessage;
+                                    iIssuesFound += 1;
+                                }
+
+                                string sFolder = sFolderRaw;
+                                if (sFolderRaw.Contains("/"))
+                                {
+                                    string sLastFolder = sFolderRaw.Substring(sFolderRaw.LastIndexOf("/" + 1));
+                                    string sChildFolder = sRef.Substring(0, 5);
+                                    rtnString folderRtn = GetWindchillFolderExists(sWebAppId, sProductName, sLastFolder, sChildFolder, 0);
+
+                                    if (folderRtn.bReturnValue)
+                                    {
+                                        sFolder = sFolderRaw + "/" + folderRtn.sReturnValue;
+                                    }
+                                }
+
+                                // Create the T Item
+                                if (bValid)
+                                {
+                                    string sTItemPartType = "local.rs.vsrs05.Regain.ProjectMaterialItem";
+                                    sCheckinComments = "Auto created T-part from import.";
+
+                                    sTItemCreateReturn = CreateProjectMaterialItem(sSessionId, sUserId, sFullName, sRef, sDescription, sProductName, sTItemPartType,
+                                        sFolder, sCheckinComments, "", "", "0", sWebAppId);
+
+                                    // Create the link to the manufacturer
+                                    if (sTItemCreateReturn.StartsWith("Success") && sManufacturerCode != "")
+                                    {
+                                        sPartUpdateReturn = AddManufacturerLink(sFullName, sManufacturerCode, sPartNumber, sRef);
+                                    }
+                                }
+                            }
+
+                            xlRange.Cells[i + 2, dicColNums["comments"]] = dicCurrentIssue["message"];
+                        } // Section is for future update logic
+                        else if (bValid && bExisting)
+                        {
+                            xlRange.Cells[i + 2, dicColNums["comments"]] = dicCurrentIssue["message"];
+                        } // Add to the comments array for the spreadsheet if there was an invalid input
+                        else
+                        {
+                            xlRange.Cells[i + 2, dicColNums["comments"]] = dicCurrentIssue["message"];
+                            continue;
+                        }
+
+                        // Create the document container for M Items
+                        if (sPartCreateReturn.StartsWith("Success"))
+                        {
+                            // New variables
+                            string sProductName = "Regain Material Catalogue";
+                            string sDocType = "local.rs.vsrs05.Regain.TD";
+                            string sFolder = "Material Catalogue/";
+                            string sJobCode = "M";
+                            string sRevision = "A";
+                            sCheckinComments = "Auto created CAD document from material catalogue part import.";
+
+                            sDocCreateReturn = CreateWCDoc(sSessionId, sUserId, sMatCatNo, sDescription, sProductName, sDocType, sFolder, "", sFullName, "",
+                                sJobCode, sRevision, sCheckinComments, "1", sWebAppId);
+
+                            if (sDocCreateReturn.StartsWith("Success"))
+                            {
+                                // Create the part-document link
+                                string sLinkType = "wt.part.WTPartReferenceLink";
+                                sDocToPartReturn = SetDocToPartRef(sSessionId, sUserId, sFullName, sMatCatNo, sMatCatNo, sCheckinComments, sLinkType, sWebAppId);
+
+                                if (!sDocCreateReturn.StartsWith("Success"))
+                                {
+                                    xlRange.Cells[i + 2, dicColNums["comments"]] = sDocToPartReturn;
+                                }
+                                else
+                                {
+                                    bProcessSuccess = true;
+                                }
+                            }
+                            else
+                            {
+                                xlRange.Cells[i + 2, dicColNums["comments"]] = sDocCreateReturn;
+                            }
+                        }
+                        else 
+                        {
+                            if (sPartCreateReturn.Length > 0)
+                                xlRange.Cells[i + 2, dicColNums["comments"]] = sPartCreateReturn;
+                        }
+                        // ---------------------------- END CREATION ----------------------------
+
+                        // Writing cells in return file
+                        if (bProcessSuccess)
+                        {
+                            // Ref
+                            xlRange.Cells[i + 2, dicColNums["ref"]] = sMatCatNo;
+                            xlRange.Cells[i + 2, dicColNums["ref"]].Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.DarkGreen); // Green text to show new number
+
+                            // Part Number
+                            xlRange.Cells[i + 2, dicColNums["part_number"]] = sMatCatNo;
+                            xlRange.Cells[i + 2, dicColNums["part_number"]].Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.DarkGreen);
+
+                            // File Name
+                            string sNewCADFileName = "";
+                            if (sPartType == "M") { sNewCADFileName = sMatCatNo + " - " + sDescription; }
+                            else { sNewCADFileName = sRef + " - " + sDescription; }
+
+                            xlRange.Cells[i + 2, dicColNums["new_file_name"]] = sNewCADFileName;
+                        }
+                        // ---------------------------- END LOOPING THROUGH ROWS ----------------------------
+                    }
+
+                    // ---------------------------- WRITING TO FILE AND EMAIL ----------------------------
+                    // Write the spreadsheet and send back via email
+                    string sFileNameNoFileType = sFile.Split('.')[0];
+                    string sNewExcelFileName = sFileNameNoFileType + "_results.xlsx";
+                    string sNewFileLocation = @"C:\Webroot\Regain\temp\" + sNewExcelFileName;
+                    xlWorkbook.SaveAs(sNewFileLocation);
+
+                    xlWorkbook.Close(true);
+                    xlWbks.Close();
+                    xlApp.Quit();
+
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWbks) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorksheet) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlRange) != 0) ;
+                    xlApp = null;
+                    xlWbks = null;
+                    xlWorkbook = null;
+                    xlWorksheet = null;
+                    xlRange = null;
+
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+
+                    System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                    foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
+                    {
+                        proc.Kill();
+                    }
+
+                    // Body of email to user, and location of the results file
+                    if (iIssuesFound == 0)
+                    {
+                        sIssues += "None to be reported.";
+                    }
+
+                    sBody += "Part import process has been completed.\n" +
+                        "Please see the attached spreadsheet which has been updated with new file names and comments where " +
+                        "there may have been issues during the upload process. A full list of issues is provided below.\n \n" +
+                        sIssues + "^";
+
+                    sBody += sNewExcelFileName + "^";
+
+                    return "Success^" + sBody;
+                }
+            }
+            catch (Exception ex)
+            {
+                failure = true;
+                return "Failure:" + ex.Message + "^";
+            }
+            finally
+            {
+                if (failure)
+                {
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+
+                    System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                    foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
+                    {
+                        proc.Kill();
+                    }
+                }
+            }
         }
     }
 }

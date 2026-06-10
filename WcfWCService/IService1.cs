@@ -1115,6 +1115,10 @@ namespace WcfWCService
         [OperationContract]
         [WebGet(UriTemplate = "processbulkupdatedocumentlifecycle/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}/{sLatestOrHistory}", ResponseFormat = WebMessageFormat.Xml)]
         string ProcessBulkUpdateDocumentLifecycle(string sSessionId, string sUserId, string sFile, string sWebAppId, string sLatestOrHistory);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "processmaterialpartsspreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string ProcessMaterialPartsSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
     }
 
 
