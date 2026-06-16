@@ -1119,6 +1119,11 @@ namespace WcfWCService
         [OperationContract]
         [WebGet(UriTemplate = "processmaterialpartsspreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string ProcessMaterialPartsSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "processmaterialprojectworkitemspreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string ProcessProjectWorkItemSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
+
     }
 
 
