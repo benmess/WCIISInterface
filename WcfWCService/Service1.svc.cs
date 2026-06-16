@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Packaging;
@@ -13495,6 +13496,33 @@ namespace WcfWCService
             return rtnCls;
         }
 
+        public rtnInt GetPartBooleanAttribute(String sPartNo, String sAttributeName, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            int iRtnValue = 0;
+            rtnInt rtnCls = new rtnInt();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select value from vwWindchillPartBooleanAttributes where WTPartNumber = '" + sPartNo + "' and name = '" + sAttributeName + "'";
+
+            //select * from vwWindchillLatestPart where WTPartNumber = '" + sPartNo + "'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+
+            if (rst.m_RecordCount > 0)
+            {
+
+                iRtnValue = rst.Get_Int(ds, "value", 0);
+                rtnCls.bReturnValue = true;
+                rtnCls.iReturnValue = iRtnValue;
+                ds.Dispose();
+            }
+            else
+            {
+                rtnCls.bReturnValue = false;
+            }
+
+            return rtnCls;
+        }
+
         public rtnFloat GetPartUsageQuantity(String sParentPartNo, String sChildPartNo, long lLineNumber, int iWebAppId)
         {
             RecordSet rst = new RecordSet();
@@ -20049,9 +20077,14 @@ namespace WcfWCService
                 iCurrValue++;
                 sNewValue = iCurrValue.ToString();
 
-                Console.WriteLine(sNewValue);
-
                 dicIssuesTracker["issuesFound"] = sNewValue;
+
+                string sNewValue2 = "";
+                int iCurrValue2 = int.Parse(dicIssuesTracker["totalIssuesFound"]);
+                iCurrValue2++;
+                sNewValue2 = iCurrValue2.ToString();
+
+                dicIssuesTracker["totalIssuesFound"] = sNewValue2;
             }
             // Validates the part description
             rtnString IsValidPartDescription(string sDesc, Dictionary<String, String> dicIssuesTracker, int iRowNumber, int iColumnNumber, int iWebAppId)
@@ -20251,6 +20284,80 @@ namespace WcfWCService
 
                 return rtn;
             }
+
+            // Validates the Composition column
+            rtnString IsCompositionValid(string sComposition, string sPartType, Dictionary<String, String> dicIssuesTracker, int iRowNumber, int iColumnNumber, int iWebAppId)
+            {
+                rtnString rtn = new rtnString();
+                rtn.bReturnValue = true;
+                rtn.sReturnValue = "";
+
+                if (sPartType == "M" && sComposition != "")
+                {
+                    bool bPartExists = PartExists(sComposition, iWebAppId);
+                    bool bIsCompositionType = false;
+
+                    rtnInt rtn2 = GetPartBooleanAttribute(sComposition, "CompositionType", iWebAppId);
+                    if (rtn2.bReturnValue = true && rtn2.iReturnValue == 1)
+                    {
+                        bIsCompositionType = true;
+                    }
+                    // Decide if valid
+                    if (!(bPartExists && bIsCompositionType))
+                    {
+                        string sMessage = "Failure: inputted composition part doesn't exist.\n";
+                        IncrementTracker(dicIssuesTracker);
+                        rtn.bReturnValue = false;
+                        rtn.sReturnValue = ReportSpreadsheetIssue(dicIssuesTracker, sMessage, "1", iRowNumber, iColumnNumber);
+                    }
+                }
+                else if (sPartType == "T" && sComposition != "")
+                {
+                    string sMessage = "Warning: composition cannot be assigned to a T part.\n";
+                    IncrementTracker(dicIssuesTracker);
+                    rtn.bReturnValue = false;
+                    rtn.sReturnValue = ReportSpreadsheetIssue(dicIssuesTracker, sMessage, "2", iRowNumber, iColumnNumber);
+                }
+
+                return rtn;
+            }
+
+            // Validates the Coating column
+            rtnString IsCoatingValid(string sCoating, string sPartType, Dictionary<String, String> dicIssuesTracker, int iRowNumber, int iColumnNumber, int iWebAppId)
+            {
+                rtnString rtn = new rtnString();
+                rtn.bReturnValue = true;
+                rtn.sReturnValue = "";
+
+                if (sPartType == "M" && sCoating != "")
+                {
+                    bool bPartExists = PartExists(sCoating, iWebAppId);
+                    bool bIsCoatingType = false;
+
+                    rtnInt rtn2 = GetPartBooleanAttribute(sCoating, "CompositionCoatingType", iWebAppId);
+                    if (rtn2.bReturnValue = true && rtn2.iReturnValue == 1)
+                    {
+                        bIsCoatingType = true;
+                    }
+                    // Decide if valid
+                    if (!(bPartExists && bIsCoatingType))
+                    {
+                        string sMessage = "Failure: inputted coating part doesn't exist.\n";
+                        IncrementTracker(dicIssuesTracker);
+                        rtn.bReturnValue = false;
+                        rtn.sReturnValue = ReportSpreadsheetIssue(dicIssuesTracker, sMessage, "1", iRowNumber, iColumnNumber);
+                    }
+                }
+                else if (sPartType == "T" && sCoating != "")
+                {
+                    string sMessage = "Warning: coating cannot be assigned to a T part.\n";
+                    IncrementTracker(dicIssuesTracker);
+                    rtn.bReturnValue = false;
+                    rtn.sReturnValue = ReportSpreadsheetIssue(dicIssuesTracker, sMessage, "2", iRowNumber, iColumnNumber);
+                }
+
+                return rtn;
+            }
             // ---------------------------- END HELPER FUNCTIONS ----------------------------
 
             Excel.Application xlApp = null;
@@ -20270,16 +20377,19 @@ namespace WcfWCService
                 {"manufacturer", 6 },
                 {"spare_required", 7 },
                 {"part_number", 8 },
-                {"new_file_name", 9 },
-                {"comments", 10 },
-                {"status", 11 }
+                {"composition", 9 },
+                {"coating", 10 },
+                {"new_file_name", 11 },
+                {"comments", 12 },
+                {"status", 13 }
             };
 
             var dicIssueTracker = new Dictionary<String, String>
             {
                 { "priority", "4" },
                 { "message", "" },
-                { "issuesFound", "0" }
+                { "issuesFound", "0" },
+                { "totalIssuesFound", "0" }
             };
 
             try
@@ -20304,6 +20414,18 @@ namespace WcfWCService
                     Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
                     Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
                     Excel.Range xlRange = xlWorksheet.UsedRange;
+
+                    // Checking if the spreadsheet matches the template
+                    string filenamecol = xlRange.Cells[1, dicColNums["file_name"]].Value2.ToString();
+                    string statuscolname = xlRange.Cells[1, dicColNums["status"]].Value2.ToString();
+
+                    if (xlRange.Cells[1, dicColNums["file_name"]].Value2.ToString() != "File Name" ||
+                        xlRange.Cells[1, dicColNums["status"]].Value2.ToString() != "Status")
+                    {
+                        throw new System.Exception("Invalid column formats. Expected columns, in order, are: \n\n" +
+                            "- File Name\n - Part Type\n - Existing\n - Description\n - Ref\n - Manufacturer\n " + 
+                            "- Spare Required\n - Part Number\n - Composition\n - Coating\n - New File Name\n - Comments\n - Status");
+                    }
 
                     int rowCount = xlRange.Rows.Count;
                     int colCount = xlRange.Columns.Count;
@@ -20333,6 +20455,8 @@ namespace WcfWCService
                     string[] arrManufacturer = new string[rowCount - 1];
                     string[] arrSpareRequired = new string[rowCount - 1];
                     string[] arrPartNumber = new string[rowCount - 1];
+                    string[] arrComposition = new string[rowCount - 1];
+                    string[] arrCoating = new string[rowCount - 1];
                     int[] arrRowNo = new int[rowCount - 1];
 
                     // Putting the data into the arrays
@@ -20371,6 +20495,14 @@ namespace WcfWCService
                         if (xlRange.Cells[i, dicColNums["part_number"]].Value2 != null)
                             sPartNumber = xlRange.Cells[i, dicColNums["part_number"]].Value2.ToString();
 
+                        string sComposition = "";
+                        if (xlRange.Cells[i, dicColNums["composition"]].Value2 != null)
+                            sComposition = xlRange.Cells[i, dicColNums["composition"]].Value2.ToString();
+
+                        string sCoating = "";
+                        if (xlRange.Cells[i, dicColNums["coating"]].Value2 != null)
+                            sCoating = xlRange.Cells[i, dicColNums["coating"]].Value2.ToString();
+
 
                         arrFileName[j] = sFileName;
                         arrPartType[j] = sPartType;
@@ -20380,6 +20512,8 @@ namespace WcfWCService
                         arrManufacturer[j] = sManufacturer;
                         arrSpareRequired[j] = sSpareRequired;
                         arrPartNumber[j] = sPartNumber;
+                        arrComposition[j] = sComposition;
+                        arrCoating[j] = sCoating;
                         arrRowNo[j] = i;
                         j++;
                     }
@@ -20396,6 +20530,8 @@ namespace WcfWCService
                         string sManufacturer = arrManufacturer[i];
                         string sSpareRequired = arrSpareRequired[i];
                         string sPartNumber = arrPartNumber[i];
+                        string sComposition = arrComposition[i];
+                        string sCoating = arrCoating[i];
 
                         string sPartCreateReturn = "";
                         string sTItemCreateReturn = "";
@@ -20408,31 +20544,27 @@ namespace WcfWCService
                         string sMessage = "";
                         sWebAppId = "2";
 
+                        string sManufacturerCode = "";
                         rtnString rtn = new rtnString();
-
-                        // Description validation
-                        rtn = IsValidPartDescription(sDescription, dicIssueTracker, i + 2, dicColNums["description"], iWebAppId);
-                        if (!rtn.bReturnValue)
-                        {
-                            bValid = false;
-                            sIssues += rtn.sReturnValue;
-                        }
 
                         // Ref and Existing validation
                         bool bExisting = sExisting.ToLower() == "y" || sExisting.ToLower() == "yes";
 
-                        rtn = IsValidExisting(sExisting, dicIssueTracker, i + 2, dicColNums["existing"]);
-                        if (!rtn.bReturnValue)
+                        if (!bExisting)
                         {
-                            bValid = false;
-                            sIssues += rtn.sReturnValue;
+                            rtn = IsValidExisting(sExisting, dicIssueTracker, i + 2, dicColNums["existing"]);
+                            if (!rtn.bReturnValue)
+                            {
+                                bValid = false;
+                                sIssues += rtn.sReturnValue;
+                            }
                         }
 
-                        // Warning if listed as existing without a ref
+                        // Check the Ref against Existing input
                         rtn = IsValidRef(sRef, sPartType, bExisting, dicIssueTracker, i + 2, dicColNums["ref"]);
                         if (!rtn.bReturnValue)
                         {
-                            bValid = false;
+                            bValid = rtn.sReturnValue.Contains("Warning") ? true : false;
                             sIssues += rtn.sReturnValue;
                         }
 
@@ -20444,31 +20576,58 @@ namespace WcfWCService
                             sIssues += rtn.sReturnValue;
                         }
 
-                        // Manufacturer validation
-                        string sManufacturerCode = "";
-                        rtn = IsManufacturerValid(sManufacturer, dicIssueTracker, i + 2, dicColNums["manufacturer"], iWebAppId);
-                        if (!rtn.bReturnValue)
+                        // Rest of validations occur only if part has been listed as new
+                        if (!bExisting)
                         {
-                            bValid = false;
-                            sIssues += rtn.sReturnValue;
-                        }
-                        else
-                        {
-                            sManufacturerCode = rtn.sReturnValue;
-                        }
+                            // Description validation
+                            rtn = IsValidPartDescription(sDescription, dicIssueTracker, i + 2, dicColNums["description"], iWebAppId);
+                            if (!rtn.bReturnValue)
+                            {
+                                bValid = false;
+                                sIssues += rtn.sReturnValue;
+                            }
 
-                        // Spare validation
-                        rtn = IsSpareValid(sSpareRequired, dicIssueTracker, i + 2, dicColNums["spare_required"]);
-                        if (!rtn.bReturnValue)
-                        {
-                            bValid = false;
-                            sIssues += rtn.sReturnValue;
-                        }
-                        else
-                        {
-                            sSpareRequired = rtn.sReturnValue;
-                        }
+                            // Manufacturer validation
+                            rtn = IsManufacturerValid(sManufacturer, dicIssueTracker, i + 2, dicColNums["manufacturer"], iWebAppId);
+                            if (!rtn.bReturnValue)
+                            {
+                                bValid = false;
+                                sIssues += rtn.sReturnValue;
+                            }
+                            else
+                            {
+                                sManufacturerCode = rtn.sReturnValue;
+                            }
 
+                            // Spare validation
+                            rtn = IsSpareValid(sSpareRequired, dicIssueTracker, i + 2, dicColNums["spare_required"]);
+                            if (!rtn.bReturnValue)
+                            {
+                                bValid = false;
+                                sIssues += rtn.sReturnValue;
+                            }
+                            else
+                            {
+                                sSpareRequired = rtn.sReturnValue;
+                            }
+
+                            // Composition validation
+                            rtn = IsCompositionValid(sComposition, sPartType, dicIssueTracker, i + 2, dicColNums["composition"], iWebAppId);
+                            if (!rtn.bReturnValue)
+                            {
+                                bValid = rtn.sReturnValue.Contains("Warning") ? true : false;
+                                sIssues += rtn.sReturnValue;
+                            }
+
+                            // Coating validation
+                            rtn = IsCoatingValid(sCoating, sPartType, dicIssueTracker, i + 2, dicColNums["coating"], iWebAppId);
+                            if (!rtn.bReturnValue)
+                            {
+                                bValid = rtn.sReturnValue.Contains("Warning") ? true : false;
+                                sIssues += rtn.sReturnValue;
+                            }
+                        }
+                        
                         // ---------------------------- END VALIDATIONS ----------------------------
 
                         // ---------------------------- CREATE THE WINDCHLL OBJECTS ----------------------------
@@ -20497,6 +20656,20 @@ namespace WcfWCService
                                 if (sPartCreateReturn.StartsWith("Success") && sManufacturerCode != "")
                                 {
                                     sPartUpdateReturn = AddManufacturerLink(sFullName, sManufacturerCode, sPartNumber, sMatCatNo);
+                                }
+
+                                // Create the link to the Composition
+                                if (sPartCreateReturn.StartsWith("Success") && sComposition != "")
+                                {
+                                    sPartUpdateReturn = SetPartToPartLink(sSessionId, sUserId, sFullName, sMatCatNo, sComposition,
+                                    "1.0", "Auto Link with composition from part import", "wt.part.WTPartUsageLink", "ea", "2");
+                                }
+
+                                // Create the link to the Coating
+                                if (sPartCreateReturn.StartsWith("Success") && sCoating != "")
+                                {
+                                    sPartUpdateReturn = SetPartToPartLink(sSessionId, sUserId, sFullName, sMatCatNo, sCoating,
+                                    "1.0", "Auto Link with coating from part import", "wt.part.WTPartUsageLink", "ea", "2");
                                 }
                             }
                             else if (sPartType == "T")
@@ -20556,6 +20729,8 @@ namespace WcfWCService
                                     {
                                         sPartUpdateReturn = AddManufacturerLink(sFullName, sManufacturerCode, sPartNumber, sRef);
                                     }
+
+                                    bProcessSuccess = true;
                                 }
                             }
 
@@ -20615,8 +20790,11 @@ namespace WcfWCService
                         if (bProcessSuccess || sPartUpdateReturn.StartsWith("Success"))
                         {
                             // Ref
-                            xlRange.Cells[i + 2, dicColNums["ref"]] = sMatCatNo;
-                            xlRange.Cells[i + 2, dicColNums["ref"]].Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.DarkGreen); // Green text to show new number
+                            if (sPartType == "M")
+                            {
+                                xlRange.Cells[i + 2, dicColNums["ref"]] = sMatCatNo;
+                                xlRange.Cells[i + 2, dicColNums["ref"]].Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.DarkGreen); // Green text to show new number
+                            }
 
                             // Part Number
                             xlRange.Cells[i + 2, dicColNums["part_number"]] = sMatCatNo;
@@ -20636,14 +20814,24 @@ namespace WcfWCService
                         else if (int.Parse(dicIssueTracker["issuesFound"]) == 0)
                         {
                             // Status
-                            xlRange.Cells[i + 2, dicColNums["status"]] = "Skipped";
+                            xlRange.Cells[i + 2, dicColNums["status"]] = "No action";
                             xlRange.Cells[i + 2, dicColNums["status"]].Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightBlue);
+                        }
+                        else if (dicIssueTracker["message"].StartsWith("Warning")) {
+                            xlRange.Cells[i + 2, dicColNums["status"]] = "Warning";
+                            xlRange.Cells[i + 2, dicColNums["status"]].Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.PaleGoldenrod);
                         }
                         else
                         {
                             xlRange.Cells[i + 2, dicColNums["status"]] = "Failure";
                             xlRange.Cells[i + 2, dicColNums["status"]].Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.PaleVioletRed);
                         }
+
+                        //Reset the issues tracker 
+                        dicIssueTracker["message"] = "";
+                        dicIssueTracker["priority"] = "4";
+                        dicIssueTracker["issuesFound"] = "0";
+
                         // ---------------------------- END LOOPING THROUGH ROWS ----------------------------
                     }
 
@@ -20679,7 +20867,7 @@ namespace WcfWCService
                     }
 
                     // Body of email to user, and location of the results file
-                    if (int.Parse(dicIssueTracker["issuesFound"]) == 0)
+                    if (int.Parse(dicIssueTracker["totalIssuesFound"]) == 0)
                     {
                         sIssues += "None to be reported.";
                     }
@@ -20697,7 +20885,7 @@ namespace WcfWCService
             catch (System.Exception ex)
             {
                 failure = true;
-                return "Failure:" + ex.Message + "^";
+                return ex.Message;
             }
             finally
             {
