@@ -1765,9 +1765,12 @@ namespace WcfWCService
             }
         }
 
+
+        //This creates a link without a line number
+        //Use SetPartToPartLinkWithLineNumber if you desire a line number in the link
         public string CreateParentChildPartLink(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNo, string sQty,
                                                string sPartUsageType, string sPartUsageUnit,
-                                               string sCheckInComments, string sLineNumber, string sWebAppId)
+                                               string sCheckInComments, string sWebAppId)
         {
 
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -1794,6 +1797,8 @@ namespace WcfWCService
                 sReturn2 = client2.setpartpartlink(sFullName, sParentPartNo, sChildPartNo, dQty, sCheckInComments, sPartUsageType, sPartUsageUnit, Convert.ToInt16(sWebAppId));
 
                 return sReturn2;
+
+                
             }
         }
 
@@ -11164,6 +11169,8 @@ namespace WcfWCService
 
             Excel.Application xlApp = null;
             Excel.Workbooks xlWbks = null;
+            int iProcessId = -1;
+
             try
             {
                 int iWebAppId = Convert.ToInt32(sWebAppId);
@@ -11182,6 +11189,8 @@ namespace WcfWCService
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
 
                     Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
                     Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
@@ -11370,11 +11379,25 @@ namespace WcfWCService
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                try
+                {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+
+/*                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                 foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                 {
                     proc.Kill();
                 }
+*/
             }
         }
 
@@ -11384,6 +11407,8 @@ namespace WcfWCService
             Excel.Application xlApp = null;
             Excel.Workbooks xlWbks = null;
             int iUpdateCount = 0;
+            int iProcessId = -1;
+
             try
             {
                 int iWebAppId = Convert.ToInt32(sWebAppId);
@@ -11402,6 +11427,9 @@ namespace WcfWCService
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
+
 
                     Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
                     Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
@@ -11545,11 +11573,25 @@ namespace WcfWCService
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                try
+                {
+                    if(iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+
+/*                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                 foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                 {
                     proc.Kill();
                 }
+*/
             }
         }
 
@@ -11558,6 +11600,8 @@ namespace WcfWCService
 
             Excel.Application xlApp = null;
             Excel.Workbooks xlWbks = null;
+            int iProcessId = -1;
+
             try
             {
                 int iWebAppId = Convert.ToInt32(sWebAppId);
@@ -11577,6 +11621,8 @@ namespace WcfWCService
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
 
                     Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
                     Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
@@ -12166,11 +12212,25 @@ namespace WcfWCService
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                try
+                {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+
+/*                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                 foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                 {
                     proc.Kill();
                 }
+*/
             }
         }
 
@@ -12267,6 +12327,8 @@ namespace WcfWCService
 
             Excel.Application xlApp = null;
             Excel.Workbooks xlWbks = null;
+            int iProcessId = -1;
+
             try
             {
                 int iWebAppId = Convert.ToInt32(sWebAppId);
@@ -12285,6 +12347,8 @@ namespace WcfWCService
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
 
                     Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
                     Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
@@ -12693,11 +12757,25 @@ namespace WcfWCService
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                try
+                {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+
+/*                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                 foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                 {
                     proc.Kill();
                 }
+*/
             }
         }
 
@@ -14421,6 +14499,8 @@ namespace WcfWCService
             Excel.Application xlApp = null;
             Excel.Workbooks xlWbks = null;
             string sRtn = "";
+            int iProcessId = -1;
+
             try
             {
                 int iWebAppId = Convert.ToInt32(sWebAppId);
@@ -14438,6 +14518,8 @@ namespace WcfWCService
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
 
                     Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
                     Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
@@ -14528,11 +14610,25 @@ namespace WcfWCService
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                try
+                {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+
+/*                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                 foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                 {
                     proc.Kill();
                 }
+*/
             }
         }
 
@@ -14542,6 +14638,8 @@ namespace WcfWCService
             Excel.Application xlApp = null;
             Excel.Workbooks xlWbks = null;
             string sRtn = "";
+            int iProcessId = -1;
+
             try
             {
                 int iWebAppId = Convert.ToInt32(sWebAppId);
@@ -14561,6 +14659,8 @@ namespace WcfWCService
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
 
                     Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
                     Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
@@ -14956,11 +15056,25 @@ namespace WcfWCService
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                try
+                {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+
+/*                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                 foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                 {
                     proc.Kill();
                 }
+*/
             }
         }
 
@@ -14999,6 +15113,7 @@ namespace WcfWCService
             bool bAttachFile = false;
             string sDateTimeStamp = DateTime.Now.ToString("yyyyMMdd_hhmmss");
             string sNewFileName = sFile;
+            int iProcessId = -1;
 
             try
             {
@@ -15019,6 +15134,8 @@ namespace WcfWCService
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
 
                     //Copy the file to a name with user and date and time
                     if (sFile.EndsWith(".xlsx"))
@@ -15376,11 +15493,25 @@ namespace WcfWCService
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                try
+                {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+                
+/*                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                 foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                 {
                     proc.Kill();
                 }
+*/
             }
         }
 
@@ -15391,6 +15522,7 @@ namespace WcfWCService
             bool bAttachFile = false;
             string sDateTimeStamp = DateTime.Now.ToString("yyyyMMdd_hhmmss");
             string sNewFileName = sFile;
+            int iProcessId = -1;
 
             try
             {
@@ -15411,6 +15543,8 @@ namespace WcfWCService
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
 
                     //Copy the file to a name with user and date and time
                     if (sFile.EndsWith(".xlsx"))
@@ -15933,11 +16067,25 @@ namespace WcfWCService
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                try
+                {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+
+/*                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                 foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                 {
                     proc.Kill();
                 }
+*/
             }
         }
 
@@ -15948,6 +16096,7 @@ namespace WcfWCService
             bool bAttachFile = false;
             string sDateTimeStamp = DateTime.Now.ToString("yyyyMMdd_hhmmss");
             string sNewFileName = sFile;
+            int iProcessId = -1;
 
             try
             {
@@ -15968,6 +16117,8 @@ namespace WcfWCService
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
 
                     //Copy the file to a name with user and date and time
                     if (sFile.EndsWith(".xlsx"))
@@ -16489,11 +16640,25 @@ namespace WcfWCService
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                try
+                {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+
+/*                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                 foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                 {
                     proc.Kill();
                 }
+*/
             }
         }
 
@@ -16504,6 +16669,7 @@ namespace WcfWCService
             bool bAttachFile = false;
             string sDateTimeStamp = DateTime.Now.ToString("yyyyMMdd_hhmmss");
             string sNewFileName = sFile;
+            int iProcessId = -1;
 
             try
             {
@@ -16523,6 +16689,8 @@ namespace WcfWCService
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
 
                     //Copy the file to a name with user and date and time
                     if (sFile.EndsWith(".xlsx"))
@@ -16870,11 +17038,25 @@ namespace WcfWCService
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                try
+                {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+
+/*                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                 foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                 {
                     proc.Kill();
                 }
+*/
             }
         }
 
@@ -16886,6 +17068,7 @@ namespace WcfWCService
             string sDateTimeStamp = DateTime.Now.ToString("yyyyMMdd_hhmmss");
             string sNewFileName = sFile;
             rtnInt rtnItem = new rtnInt();
+            int iProcessId = -1;
 
             try
             {
@@ -16911,6 +17094,8 @@ namespace WcfWCService
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
 
                     //Copy the file to a name with user and date and time
                     if (sFile.EndsWith(".xlsx"))
@@ -17337,11 +17522,25 @@ namespace WcfWCService
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                try
+                {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+
+/*                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                 foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                 {
                     proc.Kill();
                 }
+*/
             }
         }
 
@@ -17353,6 +17552,7 @@ namespace WcfWCService
             string sDateTimeStamp = DateTime.Now.ToString("yyyyMMdd_hhmmss");
             string sNewFileName = sFile;
             string sFormatMsg = "";
+            int iProcessId = -1;
 
             try
             {
@@ -17376,6 +17576,8 @@ namespace WcfWCService
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
 
                     //Copy the file to a name with user and date and time
                     if (sFile.EndsWith(".xlsx"))
@@ -17766,11 +17968,25 @@ namespace WcfWCService
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                try
+                {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+
+/*                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                 foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                 {
                     proc.Kill();
                 }
+*/
             }
         }
 
@@ -17901,6 +18117,8 @@ namespace WcfWCService
             bool bAttachFile = false;
             string sDateTimeStamp = DateTime.Now.ToString("yyyyMMdd_hhmmss");
             string sNewFileName = sFile;
+            int iProcessId = -1;
+
             try
             {
                 int iWebAppId = Convert.ToInt32(sWebAppId);
@@ -17920,6 +18138,8 @@ namespace WcfWCService
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
 
                     //Copy the file to a name with user and date and time
                     if (sFile.EndsWith(".xlsx"))
@@ -18284,11 +18504,25 @@ namespace WcfWCService
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                try
+                {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+
+/*                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                 foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                 {
                     proc.Kill();
                 }
+*/
             }
         }
 
@@ -18296,6 +18530,8 @@ namespace WcfWCService
         {
             Excel.Application xlApp = null;
             Excel.Workbooks xlWbks = null;
+            int iProcessId = -1;
+
             try
             {
                 int iWebAppId = Convert.ToInt32(sWebAppId);
@@ -18313,6 +18549,8 @@ namespace WcfWCService
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
 
                     Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
                     Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
@@ -18430,48 +18668,34 @@ namespace WcfWCService
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                try
+                {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+
+/*                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                 foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                 {
                     proc.Kill();
                 }
+*/
             }
         }
-
-        /*
-        public string CreateMPartAllComponents()
-        {
-            //Call the code that creates a new M Part. Send an empty string for the sMatCatNo to create a new auto numbered M part.
-            //sNewDefaultMaterialTypeCode will be MC09102 or whatever was created for the type for CAD aot created M Parts
-            //sSpareRqd will be 0 or 1 or maybe true or false
-            //sCheckinComments will be someting like Auot created CAD M Part
-            //sWebAppId = "2" this is always 2 now but we used to have 1 when creating for Fronesis
-            sRtn = CreateMaterialCatalogItem(sSessionId,,,"",sNewDefaultMaterialTypeCode,sStructuredName,,,....,sSpareRqd,,sCheckinComments, sWebAppId)
-
-
-            //Extract the new M part no Mnnnnn from sRtn
-            sMPartNo = sRtn.substring();
-
-            //sProductName = "Regain Material Catalogue"
-            //sDocType = 'local.rs.vsrs05.Regain.TD'
-            //string sFolder = "Material Catalogue/";
-            //sJobCode = "M"
-            //sRevision = "A"
-            //sCheckinComments will be someting like Auot created CAD M Part
-            //sWebAppId = "2" this is always 2 now but we used to have 1 when creating for Fronesis
-            CreateWCDoc(sSessiondId, sUserId, sMPartNo, sStructeredName, sProductName, sDocType, sFolder, "", sFullName, "", sJobCode, sRevision, sCheckinComments, sWebAppId);
-
-            //sLinkType = "wt.part.WTPartReferenceLink"
-            SetDocToPartRef(sSessionId, sUserId, sFullName, sMPartNo, sMPartNo, sCheckinComments, sLinkType, sWebAppId)
-            
-        }
-        */
 
         public string ProcessDocumentAttributesSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
         {
             Excel.Application xlApp = null;
             Excel.Workbooks xlWbks = null;
             ExampleService.MyJavaService3Client client2 = GetWCService();
+            int iProcessId = -1;
 
             try
             {
@@ -18490,6 +18714,8 @@ namespace WcfWCService
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
 
                     Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
                     Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
@@ -18621,11 +18847,25 @@ namespace WcfWCService
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                try
+                {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+
+/*                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                 foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                 {
                     proc.Kill();
                 }
+*/
             }
         }
 
@@ -18633,6 +18873,8 @@ namespace WcfWCService
         {
             Excel.Application xlApp = null;
             Excel.Workbooks xlWbks = null;
+            int iProcessId = -1;
+
             try
             {
                 int iWebAppId = Convert.ToInt32(sWebAppId);
@@ -18652,6 +18894,8 @@ namespace WcfWCService
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
 
                     Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
                     Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
@@ -18758,11 +19002,25 @@ namespace WcfWCService
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                try
+                {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+
+/*                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                 foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                 {
                     proc.Kill();
                 }
+*/
             }
         }
 
@@ -18770,6 +19028,8 @@ namespace WcfWCService
         {
             Excel.Application xlApp = null;
             Excel.Workbooks xlWbks = null;
+            int iProcessId = -1;
+
             try
             {
                 int iWebAppId = Convert.ToInt32(sWebAppId);
@@ -18787,6 +19047,8 @@ namespace WcfWCService
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
 
                     Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
                     Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
@@ -18908,11 +19170,25 @@ namespace WcfWCService
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                try
+                {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+
+/*                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                 foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                 {
                     proc.Kill();
                 }
+*/
             }
         }
 
@@ -19072,6 +19348,8 @@ namespace WcfWCService
         {
             Excel.Application xlApp = null;
             Excel.Workbooks xlWbks = null;
+            int iProcessId = -1;
+
             try
             {
                 int iWebAppId = Convert.ToInt32(sWebAppId);
@@ -19096,6 +19374,8 @@ namespace WcfWCService
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
 
                     Excel.Workbook xlWorkbook = xlWbks.Add(XlWBATemplate.xlWBATWorksheet);
                     Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
@@ -19362,7 +19642,7 @@ namespace WcfWCService
                     xlWorkbook = null;
                     xlWorksheet = null;
 
-                    GC.Collect();
+/*                    GC.Collect();
                     GC.WaitForPendingFinalizers();
 
                     System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
@@ -19370,6 +19650,7 @@ namespace WcfWCService
                     {
                         proc.Kill();
                     }
+*/
 
                     return sFileNameOnly;
                 }
@@ -19378,18 +19659,32 @@ namespace WcfWCService
             {
                 return "Failure:" + ex.Message + "^";
             }
-/*            finally
+            finally
             {
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                try
+                {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+
+/*                System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                 foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                 {
                     proc.Kill();
                 }
-            }
 */
+            }
+
         }
 
         public rtnInt SetWeighbridgeRecord(string sDocketNo, string sDocketDateIn, int iWeighbridgeInId, long lWeightIn, string sMaterialCode,
@@ -20366,6 +20661,8 @@ namespace WcfWCService
 
             string sIssues = "Issues reported: \n";
             bool failure = false;
+            int iProcessId = -1;
+
 
             var dicColNums = new Dictionary<string, int>
             {
@@ -20410,6 +20707,8 @@ namespace WcfWCService
 
                     xlApp = new Excel.Application();
                     xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
 
                     Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
                     Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
@@ -20857,7 +21156,7 @@ namespace WcfWCService
                     xlWorksheet = null;
                     xlRange = null;
 
-                    GC.Collect();
+/*                    GC.Collect();
                     GC.WaitForPendingFinalizers();
 
                     System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
@@ -20865,6 +21164,7 @@ namespace WcfWCService
                     {
                         proc.Kill();
                     }
+*/
 
                     // Body of email to user, and location of the results file
                     if (int.Parse(dicIssueTracker["totalIssuesFound"]) == 0)
@@ -20894,11 +21194,25 @@ namespace WcfWCService
                     GC.Collect();
                     GC.WaitForPendingFinalizers();
 
-                    System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                    try
+                    {
+                        if (iProcessId > 0)
+                        {
+                            Process process = Process.GetProcessById(iProcessId);
+                            process.Kill();
+                        }
+                    }
+                    catch (ArgumentException)
+                    {
+                        // Process already exited
+                    }
+
+/*                    System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                     foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                     {
                         proc.Kill();
                     }
+*/
                 }
             }
         }
@@ -20917,6 +21231,13 @@ namespace WcfWCService
                     dicIssuesTracker["priority"] = sIssuePriority;
                     dicIssuesTracker["message"] = sIssueMessage;
                 }
+
+                string sNewValue2 = "";
+                int iCurrValue2 = int.Parse(dicIssuesTracker["totalIssuesFound"]);
+                iCurrValue2++;
+                sNewValue2 = iCurrValue2.ToString();
+
+                dicIssuesTracker["totalIssuesFound"] = sNewValue2;
 
                 sReturnString += "Row " + iRowNumber + ", Col " + iColumnNumber + " - " + sIssueMessage;
                 return sReturnString;
@@ -21003,7 +21324,7 @@ namespace WcfWCService
                 bool bExists = PartExists(sPWICode, iWebAppId);
                 if (!bExists)
                 {
-                    sMessage = "Failure: the entered project work item or project item does not exist.\n";
+                    sMessage = "Failure: the entered project work item or project item " + sPWICode + " does not exist.\n";
                     IncrementTracker(dicIssuesTracker);
 
                     rtn.bReturnValue = false;
@@ -21012,12 +21333,36 @@ namespace WcfWCService
 
                 return rtn;
             }
+
+            // Validates whether a link exists
+            rtnString IsLinkExisting(string sParentCode, string sPWICode, Dictionary< String, String> dicIssuesTracker, int iRowNumber, int iColumnNumber, int iWebAppId)
+            {
+                // Unique Part code validation 
+                rtnString rtn = new rtnString();
+                rtn.bReturnValue = false;
+                rtn.sReturnValue = "";
+                rtnInt rtnExists = new rtnInt();
+
+                string sMessage = "";
+                rtnExists = PartPartLinkExists(sParentCode, sPWICode, iWebAppId);
+                if (rtnExists.bReturnValue)
+                {
+                    sMessage = "Failure: the entered parent " + sParentCode + " and the project work item "+ sPWICode + " are already linked.\n";
+                    IncrementTracker(dicIssuesTracker);
+
+                    rtn.bReturnValue = true;
+                    rtn.sReturnValue = rtn.sReturnValue + ReportSpreadsheetIssue(dicIssuesTracker, sMessage, "1", iRowNumber, iColumnNumber);
+                }
+
+                return rtn;
+            }
             // ---------------------------- END HELPER FUNCTIONS ----------------------------
 
+            ExampleService.MyJavaService3Client client2 = GetWCService();
             Excel.Application xlApp = null;
             Excel.Workbooks xlWbks = null;
-            ExampleService.MyJavaService3Client client2 = GetWCService();
 
+            int iProcessId = -1;
             string sIssues = "Issues reported: \n";
             bool failure = false;
 
@@ -21037,7 +21382,8 @@ namespace WcfWCService
             {
                 { "priority", "4" },
                 { "message", "" },
-                { "issuesFound", "0" }
+                { "issuesFound", "0" },
+                { "totalIssuesFound", "0" }
             };
 
             try
@@ -21056,10 +21402,11 @@ namespace WcfWCService
                     string sFullName = arrUser[2].ToString();
                     string sRecipeints = arrUser[3].ToString();
 
+
                     xlApp = new Excel.Application();
 
-                    int iProcessId;
                     GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
+
                     xlWbks = xlApp.Workbooks;
 
                     Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
@@ -21188,7 +21535,7 @@ namespace WcfWCService
                             sCheckinComments = "Auto created PWI from import.";
                             string sProductName = "Regain Projects";
                             string sPWIType = "local.rs.vsrs05.Regain.ProjectWorkItem";
-                            string sFolder = "Material Catalogue/";
+                            string sFolder = "";
 
                             string sJobCode = sPWICode.Substring(1, 3);
 
@@ -21198,7 +21545,7 @@ namespace WcfWCService
 
                             sPartCreateReturn = CreateProjectWorkItemNoParent(sSessionId, sUserId, sFullName, sPWICode, sPWIName, sProductName,
                                                                               sPWIType, sFolder, sCheckinComments, sDescription, "Active", 
-                                                                              sRequirements, sStatusIssues, sReviewApproval, "false", "1", 
+                                                                              sRequirements, sStatusIssues, sReviewApproval, "false", "0", 
                                                                               sWebAppId);
 
                             if (sPartCreateReturn.StartsWith("Success"))
@@ -21217,6 +21564,10 @@ namespace WcfWCService
                         }
                         // ---------------------------- END CREATION ----------------------------
 
+                        //Reset the issues tracker 
+                        dicIssueTracker["message"] = "";
+                        dicIssueTracker["priority"] = "4";
+                        dicIssueTracker["issuesFound"] = "0";
                         // ---------------------------- END LOOPING THROUGH ROWS FOR PWI CREATION ----------------------------
                     }
 
@@ -21261,13 +21612,28 @@ namespace WcfWCService
                             }
                         }
 
+                        // Part Link Existing validation
+                        bool bLinkExisting = false;
+
+                        //Returns false if the link does not exist, true if it does. If exists then skip this
+                        if (sParentCode.Equals(""))
+                            bLinkExisting = true;
+                        else
+                        {
+                            rtn = IsLinkExisting(sParentCode, sPWICode, dicIssueTracker, i + 2, dicColNums["parent_code"], iWebAppId);
+                            if (rtn.bReturnValue)
+                            {
+                                sIssues += rtn.sReturnValue;
+                                bExisting = false;
+                            }
+                        }
                         // ---------------------------- END VALIDATIONS ----------------------------
 
                         // ---------------------------- CREATE THE WINDCHLL OBJECTS ----------------------------
 
                         string sCheckinComments = "";
-                        // Create the part if it doesn't exist yet and validations are passed
-                        if (bValid && bExisting)
+                        // Create the part link if it doesn't exist yet and validations are passed
+                        if (bValid && bExisting && !bLinkExisting)
                         {
                             // ===== PWI LINK =====
                             sCheckinComments = "Creating link from " + sParentCode + " to " + sPWICode + ".";
@@ -21275,26 +21641,30 @@ namespace WcfWCService
 
                             int iNewLineNumber = GetNewLineNumber(sParentCode, iWebAppId);
 
-                            sPartCreateReturn = CreateParentChildPartLink(sSessionId, sUserId, sFullName, sParentCode,sPWICode, "1",
-                                                                          sLinkUsageType, "ea", sCheckinComments, iNewLineNumber.ToString(), 
-                                                                          sWebAppId);
+                            sPartCreateReturn = SetPartToPartLinkWithLineNumber(sSessionId, sUserId, sFullName, sParentCode,sPWICode, "1",
+                                                                                iNewLineNumber.ToString(), sCheckinComments, sLinkUsageType, "ea",
+                                                                                sWebAppId);
 
                             if (sPartCreateReturn.StartsWith("Success"))
                             {
-                                xlRange.Cells[i + 2, dicColNums["comments"]] = dicIssueTracker["message"];
+                                xlRange.Cells[i + 2, dicColNums["comments"]] = xlRange.Cells[i + 2, dicColNums["comments"]].Value2.ToString() + dicIssueTracker["message"];
                             }
                             else
                             {
                                 if (sPartCreateReturn.Length > 0)
-                                    xlRange.Cells[i + 2, dicColNums["comments"]] = sPartCreateReturn;
+                                    xlRange.Cells[i + 2, dicColNums["comments"]] = xlRange.Cells[i + 2, dicColNums["comments"]].Value2.ToString() + sPartCreateReturn;
                             }
                         }
                         else
                         {
-                            xlRange.Cells[i + 2, dicColNums["comments"]] = dicIssueTracker["message"];
+                            xlRange.Cells[i + 2, dicColNums["comments"]] = xlRange.Cells[i + 2, dicColNums["comments"]].Value2.ToString() + dicIssueTracker["message"];
                         }
                         // ---------------------------- END LINKING ----------------------------
 
+                        //Reset the issues tracker 
+                        dicIssueTracker["message"] = "";
+                        dicIssueTracker["priority"] = "4";
+                        dicIssueTracker["issuesFound"] = "0";
                         // ---------------------------- END LOOPING THROUGH ROWS FOR PWI LINKING ----------------------------
                     }
                     // ---------------------------- WRITING TO FILE AND EMAIL CONTENT----------------------------
@@ -21321,18 +21691,8 @@ namespace WcfWCService
                     xlWorksheet = null;
                     xlRange = null;
 
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-
-                    try
-                    {
-                        Process process = Process.GetProcessById(iProcessId);
-                        process.Kill();
-                    }
-                    catch (ArgumentException)
-                    {
-                        // Process already exited
-                    }
+                    //GC.Collect();
+                    //GC.WaitForPendingFinalizers();
 
                     /*
                     System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
@@ -21343,7 +21703,7 @@ namespace WcfWCService
                     */
 
                     // Body of email to user, and location of the results file
-                    if (int.Parse(dicIssueTracker["issuesFound"]) == 0)
+                    if (int.Parse(dicIssueTracker["totalIssuesFound"]) == 0)
                     {
                         sIssues += "None to be reported.";
                     }
@@ -21363,20 +21723,37 @@ namespace WcfWCService
                 failure = true;
                 return "Failure:" + ex.Message + "^";
             }
+
+            
             finally
             {
-                if (failure)
-                {
+                //if (failure)
+                //{
                     GC.Collect();
                     GC.WaitForPendingFinalizers();
 
-                    System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                    try
+                    {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                    {
+                        // Process already exited
+                    }
+
+/*                    System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
                     foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
                     {
                         proc.Kill();
                     }
-                }
+*/
+                //}
             }
+    
         }
 
         // 5. External reference declaration for getting the PID
