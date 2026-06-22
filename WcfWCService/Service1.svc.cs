@@ -20793,9 +20793,12 @@ namespace WcfWCService
                                 xlRange.Cells[i + 2, dicColNums["ref"]].Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.DarkGreen); // Green text to show new number
                             }
 
-                            // Part Number
-                            xlRange.Cells[i + 2, dicColNums["part_number"]] = sMatCatNo;
-                            xlRange.Cells[i + 2, dicColNums["part_number"]].Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.DarkGreen);
+                            // Part Number, if one wasn't specified
+                            if (sPartNumber == "")
+                            {
+                                xlRange.Cells[i + 2, dicColNums["part_number"]] = sMatCatNo;
+                                xlRange.Cells[i + 2, dicColNums["part_number"]].Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.DarkGreen);
+                            }
 
                             // File Name
                             string sNewCADFileName = "";
