@@ -20113,6 +20113,7 @@ namespace WcfWCService
         {
             // Shift the bit to the right position and check if it is 1 or 0
             return (iNumber >> iPosition) & 1;
+
         }
 
         public rtnBookingLoad GetBookingLoadsInfo(String sBookingNo, int iWebAppId)
