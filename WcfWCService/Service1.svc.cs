@@ -20109,6 +20109,11 @@ namespace WcfWCService
             else
                 return dateValue;
         }
+        public static int GetBitFromInt(int iNumber, int iPosition)
+        {
+            // Shift the bit to the right position and check if it is 1 or 0
+            return (iNumber >> iPosition) & 1;
+        }
 
         public rtnBookingLoad GetBookingLoadsInfo(String sBookingNo, int iWebAppId)
         {
@@ -21760,4 +21765,5 @@ namespace WcfWCService
         [DllImport("user32.dll", SetLastError = true)]
         static extern uint GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
     }
+
 }
