@@ -2077,6 +2077,270 @@ namespace WcfWCService
             }
         }
 
+        //All the fabrication values are boolean trherefore they are required to be sent as a string "true" or "false" NOT "1" or "0"
+        public string SetPartFabrications(string sSessionId, string sUserId, string sPartNo, string sFullname, 
+                                        string sFabrications, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                int iFabrication = Convert.ToInt32(sFabrications);
+
+                int iProfileCut = GetBitFromInt(iFabrication, 0);
+                int iPress = GetBitFromInt(iFabrication, 1);
+                int iWeld = GetBitFromInt(iFabrication, 2);
+                int iCountersink = GetBitFromInt(iFabrication, 3);
+                int iFabricate = GetBitFromInt(iFabrication, 4);
+                int iMachined = GetBitFromInt(iFabrication, 5);
+                int iPurchased = GetBitFromInt(iFabrication, 6);
+                int iPDF = GetBitFromInt(iFabrication, 7);
+                int iDXF = GetBitFromInt(iFabrication, 8);
+                int iSTEP = GetBitFromInt(iFabrication, 9);
+                string sCheckinComments = "Updating fabrication attributes for part " + sPartNo;
+
+                bool bProfileCut = false;
+                if (iProfileCut == 1)
+                    bProfileCut = true;
+
+                bool bPress = false;
+                if (iPress == 1)
+                    bPress = true;
+
+                bool bWeld = false;
+                if (iWeld == 1)
+                    bWeld = true;
+
+                bool bCountersink = false;
+                if (iCountersink == 1)
+                    bCountersink = true;
+
+                bool bFabricate = false;
+                if (iFabricate == 1)
+                    bFabricate = true;
+
+                bool bMachined = false;
+                if (iMachined == 1)
+                    bMachined = true;
+
+                bool bPurchased = false;
+                if (iPurchased == 1)
+                    bPurchased = true;
+
+                bool bPDF = false;
+                if (iPDF == 1)
+                    bPDF = true;
+
+                bool bDXF = false;
+                if (iDXF == 1)
+                    bDXF = true;
+
+                bool bSTEP = false;
+                if (iSTEP == 1)
+                    bSTEP = true;
+
+                return SetPartFabricationAttributes(sSessionId, sUserId, sPartNo, sFullname, 
+                                                   bProfileCut.ToString(), bPress.ToString(), bWeld.ToString(), bCountersink.ToString(),
+                                                   bFabricate.ToString(), bMachined.ToString(), bPurchased.ToString(), bPDF.ToString(),
+                                                   bDXF.ToString(), bSTEP.ToString(), sCheckinComments, sWebAppId);
+            }
+        }
+        public string SetPartFabricationAttributes(string sSessionId, string sUserId, string sPartNo, string sFullname,
+                                                  string sProfileCut, string sPress, string sWeld, string sCountersink,
+                                                  string sFabricate, string sMachined, string sPurchased, string sPDF,
+                                                  string sDXF, string sSTEP,
+                                                  string sCheckInComments, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[11];
+                string[] sAttributeValues = new string[11];
+                string[] sAttributeTypes = new string[11];
+
+                sAttributeNames[0] = "ProfileCut";
+                sAttributeNames[1] = "Press";
+                sAttributeNames[2] = "Weld";
+                sAttributeNames[3] = "Countersink";
+                sAttributeNames[4] = "Fabricate";
+                sAttributeNames[5] = "Machined";
+                sAttributeNames[6] = "Purchased";
+                sAttributeNames[7] = "PDF";
+                sAttributeNames[8] = "DXF";
+                sAttributeNames[9] = "STEP";
+                sAttributeNames[10] = "Originator";
+
+                sAttributeValues[0] = sProfileCut;
+                sAttributeValues[1] = sPress;
+                sAttributeValues[2] = sWeld;
+                sAttributeValues[3] = sCountersink;
+                sAttributeValues[4] = sFabricate;
+                sAttributeValues[5] = sMachined;
+                sAttributeValues[6] = sPurchased;
+                sAttributeValues[7] = sPDF;
+                sAttributeValues[8] = sDXF;
+                sAttributeValues[9] = sSTEP;
+                sAttributeValues[10] = sFullname;
+
+                sAttributeTypes[0] = "bool";
+                sAttributeTypes[1] = "bool";
+                sAttributeTypes[2] = "bool";
+                sAttributeTypes[3] = "bool";
+                sAttributeTypes[4] = "bool";
+                sAttributeTypes[5] = "bool";
+                sAttributeTypes[6] = "bool";
+                sAttributeTypes[7] = "bool";
+                sAttributeTypes[8] = "bool";
+                sAttributeTypes[9] = "bool";
+                sAttributeTypes[10] = "string";
+
+                //Sending across an empty string for the name means it remains unchanged. The name is manbdatory in Windchill and cannot be empty
+                return client2.setpartattributes(sPartNo, "", sFullname,sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        //All the fabrication values are boolean trherefore they are required to be sent as a string "true" or "false" NOT "1" or "0"
+        public string SetDocFabrications(string sSessionId, string sUserId, string sDocNo, string sFullname,
+                                        string sFabrications, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                int iFabrication = Convert.ToInt32(sFabrications);
+
+                int iProfileCut = GetBitFromInt(iFabrication, 0);
+                int iPress = GetBitFromInt(iFabrication, 1);
+                int iWeld = GetBitFromInt(iFabrication, 2);
+                int iCountersink = GetBitFromInt(iFabrication, 3);
+                int iFabricate = GetBitFromInt(iFabrication, 4);
+                int iMachined = GetBitFromInt(iFabrication, 5);
+                int iPurchased = GetBitFromInt(iFabrication, 6);
+                int iPDF = GetBitFromInt(iFabrication, 7);
+                int iDXF = GetBitFromInt(iFabrication, 8);
+                int iSTEP = GetBitFromInt(iFabrication, 9);
+                string sCheckinComments = "Updating fabrication attributes for document " + sDocNo;
+
+                bool bProfileCut = false;
+                if (iProfileCut == 1)
+                    bProfileCut = true;
+
+                bool bPress = false;
+                if (iPress == 1)
+                    bPress = true;
+
+                bool bWeld = false;
+                if (iWeld == 1)
+                    bWeld = true;
+
+                bool bCountersink = false;
+                if (iCountersink == 1)
+                    bCountersink = true;
+
+                bool bFabricate = false;
+                if (iFabricate == 1)
+                    bFabricate = true;
+
+                bool bMachined = false;
+                if (iMachined == 1)
+                    bMachined = true;
+
+                bool bPurchased = false;
+                if (iPurchased == 1)
+                    bPurchased = true;
+
+                bool bPDF = false;
+                if (iPDF == 1)
+                    bPDF = true;
+
+                bool bDXF = false;
+                if (iDXF == 1)
+                    bDXF = true;
+
+                bool bSTEP = false;
+                if (iSTEP == 1)
+                    bSTEP = true;
+
+                return SetDocFabricationAttributes(sSessionId, sUserId, sDocNo, sFullname,
+                                                   bProfileCut.ToString(), bPress.ToString(), bWeld.ToString(), bCountersink.ToString(),
+                                                   bFabricate.ToString(), bMachined.ToString(), bPurchased.ToString(), bPDF.ToString(),
+                                                   bDXF.ToString(), bSTEP.ToString(), sCheckinComments, sWebAppId);
+            }
+        }
+        public string SetDocFabricationAttributes(string sSessionId, string sUserId, string sDocNo, string sFullname,
+                                                  string sProfileCut, string sPress, string sWeld, string sCountersink,
+                                                  string sFabricate, string sMachined, string sPurchased, string sPDF,
+                                                  string sDXF, string sSTEP,
+                                                  string sCheckInComments, string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[11];
+                string[] sAttributeValues = new string[11];
+                string[] sAttributeTypes = new string[11];
+
+                sAttributeNames[0] = "DocProfileCut";
+                sAttributeNames[1] = "DocPress";
+                sAttributeNames[2] = "DocWeld";
+                sAttributeNames[3] = "DocCountersink";
+                sAttributeNames[4] = "DocFabricate";
+                sAttributeNames[5] = "DocMachined";
+                sAttributeNames[6] = "DocPurchased";
+                sAttributeNames[7] = "DocPDF";
+                sAttributeNames[8] = "DocDXF";
+                sAttributeNames[9] = "DocSTEP";
+                sAttributeNames[10] = "Originator";
+
+                sAttributeValues[0] = sProfileCut;
+                sAttributeValues[1] = sPress;
+                sAttributeValues[2] = sWeld;
+                sAttributeValues[3] = sCountersink;
+                sAttributeValues[4] = sFabricate;
+                sAttributeValues[5] = sMachined;
+                sAttributeValues[6] = sPurchased;
+                sAttributeValues[7] = sPDF;
+                sAttributeValues[8] = sDXF;
+                sAttributeValues[9] = sSTEP;
+                sAttributeValues[10] = sFullname;
+
+                sAttributeTypes[0] = "bool";
+                sAttributeTypes[1] = "bool";
+                sAttributeTypes[2] = "bool";
+                sAttributeTypes[3] = "bool";
+                sAttributeTypes[4] = "bool";
+                sAttributeTypes[5] = "bool";
+                sAttributeTypes[6] = "bool";
+                sAttributeTypes[7] = "bool";
+                sAttributeTypes[8] = "bool";
+                sAttributeTypes[9] = "bool";
+                sAttributeTypes[10] = "string";
+
+                //Sending across an empty string for the name means it remains unchanged. The name is manbdatory in Windchill and cannot be empty
+                return client2.setdocattributes(sDocNo, "", sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, Convert.ToInt16(sWebAppId));
+            }
+        }
+
         public string SetDocToDocRef(string sSessionId, string sUserId, string sFullName, string sDocNo, string sReferencedDocNo, string sCheckinComments, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
