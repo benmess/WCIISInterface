@@ -210,6 +210,34 @@ namespace WcfWCService
                                       string sCheckInComments, string sWebAppId);
 
         [OperationContract]
+        [WebGet(UriTemplate = "setpartfabricationns/{sSessionId}/{sUserId}/{sPartNo}/{sFullname}/{sFabrications}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string SetPartFabrications(string sSessionId, string sUserId, string sPartNo, string sFullname,
+                                        string sFabrications, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "setpartfabricationattributes/{sSessionId}/{sUserId}/{sPartNo}/{sFullname}/{sProfileCut}/{sPress}/{sWeld}/{sCountersink}/" +
+                              "{sFabricate}/{sMachined}/{sPurchased}/{sPDF}/{sDXF}/{sSTEP}/{sCheckInComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string SetPartFabricationAttributes(string sSessionId, string sUserId, string sPartNo, string sFullname,
+                                                  string sProfileCut, string sPress, string sWeld, string sCountersink,
+                                                  string sFabricate, string sMachined, string sPurchased, string sPDF,
+                                                  string sDXF, string sSTEP,
+                                                  string sCheckInComments, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "setdocfabricationns/{sSessionId}/{sUserId}/{sDocNo}/{sFullname}/{sFabrications}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string SetDocFabrications(string sSessionId, string sUserId, string sDocNo, string sFullname,
+                                        string sFabrications, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "setdocfabricationattributes/{sSessionId}/{sUserId}/{sDocNo}/{sFullname}/{sProfileCut}/{sPress}/{sWeld}/{sCountersink}/" +
+                              "{sFabricate}/{sMachined}/{sPurchased}/{sPDF}/{sDXF}/{sSTEP}/{sCheckInComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string SetDocFabricationAttributes(string sSessionId, string sUserId, string sDocNo, string sFullname,
+                                                  string sProfileCut, string sPress, string sWeld, string sCountersink,
+                                                  string sFabricate, string sMachined, string sPurchased, string sPDF,
+                                                  string sDXF, string sSTEP,
+                                                  string sCheckInComments, string sWebAppId);
+
+        [OperationContract]
         [WebGet(UriTemplate = "setdoctodocref/{sSessionId}/{sUserId}/{sFullname}/{sDocNo}/{sReferencedDocNo}/{sCheckinComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string SetDocToDocRef(string sSessionId, string sUserId, string sFullName, string sDocNo, string sReferencedDocNo, string sCheckinComments, string sWebAppId);
 
