@@ -1,10 +1,12 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Vml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.Office.Interop.Excel;
 using Microsoft.Office.Interop.Word;
@@ -19,6 +21,7 @@ using System.Data.Odbc;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -33,8 +36,11 @@ using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Web;
 using System.Web.Services;
+using System.Web.Services.Description;
 using System.Web.Services.Protocols;
 using WcfWCService.ExampleService;
 using Excel = Microsoft.Office.Interop.Excel;
@@ -264,6 +270,215 @@ namespace WcfWCService
             public string sErrorMsg;
         }
 
+        public class SpreadsheetTracker
+        {
+            public const int PRIORITY_ERROR = 0;
+            public const int PRIORITY_FAILURE = 1;
+            public const int PRIORITY_WARNING = 2;
+            public const int PRIORITY_NONE = 4;
+
+            public int iRowPriority = PRIORITY_NONE;
+            public string sRowMessage = "";
+            public int iRowIssues = 0;
+            public int iTotalIssues = 0;
+            public StringBuilder sbIssueLog = new StringBuilder();
+            public bool RowIsValid { get { return iRowPriority > PRIORITY_FAILURE; } }
+            public int TotalIssuesFound { get { return iTotalIssues; } }
+
+            // Records an issue against the current row and appends it to the run log.
+            public void Report(string sMessage, int iPriority, int iRowNumber, int iColumnNumber)
+            {
+                if (iPriority < iRowPriority)
+                {
+                    iRowPriority = iPriority;
+                    sRowMessage = sMessage;
+                }
+
+                iRowIssues++;
+                iTotalIssues++;
+
+                sbIssueLog.Append("Row " + iRowNumber + ", Col " + iColumnNumber + " - " + sMessage);
+            }
+
+            public void ResetRow()
+            {
+                iRowPriority = PRIORITY_NONE;
+                sRowMessage = "";
+                iRowIssues = 0;
+            }
+
+            public string GetIssueLog()
+            {
+                if (iTotalIssues == 0) { return "Issues reported: \nNone to be reported."; }
+                return "Issues reported: \n" + sbIssueLog.ToString();
+            }
+        }
+
+        public class PartsListRow
+        {
+            public int iRowNo;
+            public string sItem, sRef, sName, sDescription, sMass, sMassNormalised;
+            public bool bMassValid;
+            public Dictionary<string, string> dicFlags = new Dictionary<string, string>();
+        }
+
+        public class ItemNode<T>
+        {
+            public string sItem;
+            public int[] arrPath;
+            public int iRowNo;
+            public T data;
+            public ItemNode<T> parent;
+            public List<ItemNode<T>> lstChildren = new List<ItemNode<T>>();
+        }
+
+        public class ItemProblem
+        {
+            public string sMessage;
+            public int iPriority;
+        }
+
+        public class ItemTree<T>
+        {
+            public ItemNode<T> root = new ItemNode<T> { sItem = "", arrPath = new int[0] };
+            public Dictionary<string, ItemNode<T>> dicIndex = new Dictionary<string, ItemNode<T>>();
+            public Dictionary<int, List<ItemProblem>> dicProblems = new Dictionary<int, List<ItemProblem>>();
+
+            private int[] arrLastPath = new int[0];
+            private HashSet<string> hsReportedDuplicates = new HashSet<string>();
+
+            public void Add(string sItem, int iRowNo, T data)
+            {
+                // Correct formatting check
+                if (!Regex.IsMatch(sItem, @"^[1-9]\d*(\.[1-9]\d*)*$"))
+                {
+                    AddProblem(iRowNo, "invalid Item format '" + sItem +
+                        "'. Expected numbers separated by dots (e.g. 1, 1.2, 1.2.3).\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE);
+                    return;
+                }
+
+                int[] arrPath = Array.ConvertAll(sItem.Split('.'), int.Parse);
+
+                // Check for duplicates
+                if (dicIndex.ContainsKey(sItem))
+                {
+                    AddProblem(iRowNo, "Item " + sItem + " appears on more than one row.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE);
+
+                    if (hsReportedDuplicates.Add(sItem))
+                    {
+                        // If the first time the problem has been found, report it on the duplicate too
+                        AddProblem(dicIndex[sItem].iRowNo, "Item " + sItem + " appears on more than one row.\n",
+                            SpreadsheetTracker.PRIORITY_FAILURE);
+                    }
+                    return;
+                }
+
+                // Parent must already exist
+                ItemNode<T> parent = root;
+                if (arrPath.Length > 1)
+                {
+                    string sParent = sItem.Substring(0, sItem.LastIndexOf('.'));
+
+                    if (!dicIndex.ContainsKey(sParent))
+                    {
+                        AddProblem(iRowNo, "Item " + sItem + " has no parent row (" + sParent + ") above it.\n",
+                            SpreadsheetTracker.PRIORITY_FAILURE);
+                        return;
+                    }
+
+                    parent = dicIndex[sParent];
+                }
+
+                // Checks if there is gap between next expected item sequence
+                if (!IsValidNextItem(arrLastPath, arrPath))
+                {
+                    AddProblem(iRowNo, "Item " + sItem + " is out of sequence. Expected one of: " +
+                        string.Join(", ", GetExpectedNext(arrLastPath)) + "\n",
+                        SpreadsheetTracker.PRIORITY_WARNING);
+                }
+
+                // Record the data in the tree
+                var node = new ItemNode<T>
+                {
+                    sItem = sItem,
+                    arrPath = arrPath,
+                    iRowNo = iRowNo,
+                    data = data,
+                    parent = parent
+                };
+
+                parent.lstChildren.Add(node);
+                dicIndex[sItem] = node;
+                arrLastPath = arrPath;
+            }
+
+            private static bool IsValidNextItem(int[] arrPrev, int[] arrNext)
+            {
+                // Child
+                if (arrNext.Length == arrPrev.Length + 1)
+                {
+                    return IsSamePrefix(arrPrev, arrNext, arrPrev.Length) && arrNext[arrNext.Length - 1] == 1;
+                }
+
+                // Sibling
+                if (arrNext.Length <= arrPrev.Length)
+                {
+                    int iShorterLength = arrNext.Length - 1;
+                    bool bSamePrefix = IsSamePrefix(arrPrev, arrNext, iShorterLength);
+                    bool bShallowSiblingStep = arrNext[iShorterLength] == arrPrev[iShorterLength] + 1;
+
+                    return bSamePrefix && bShallowSiblingStep;
+                }
+
+                return false;
+            }
+
+            private static List<string> GetExpectedNext(int[] arrPrev)
+            {
+                var lst = new List<string>();
+
+                // Child
+                lst.Add(arrPrev.Length == 0 ? "1" : string.Join(".", arrPrev) + ".1");
+
+                // Sibling at every level (loop goes from the bottom/deepest level)
+                for (int i = arrPrev.Length - 1; i >= 0; i--)
+                {
+                    List<int> lstNextItem = new List<int>();
+                    int iIncrementedDigit = arrPrev[i] + 1;
+
+                    foreach (int iDigit in arrPrev)
+                    {
+                        lstNextItem.Add(iDigit);
+                    }
+                    lstNextItem.Add(iIncrementedDigit);
+
+                    string sThisExpectedItem = string.Join(".", lstNextItem);
+                    lst.Add(sThisExpectedItem);
+                }
+
+                return lst;
+            }
+
+            private static bool IsSamePrefix(int[] arrFirstItem, int[] arrSecondItem, int iLength)
+            {
+                for (int i = 0; i < iLength; i++)
+                {
+                    if (arrFirstItem[i] != arrSecondItem[i])
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            private void AddProblem(int iRowNo, string sMessage, int iPriority)
+            {
+                if (!dicProblems.ContainsKey(iRowNo)) { dicProblems[iRowNo] = new List<ItemProblem>(); }
+                dicProblems[iRowNo].Add(new ItemProblem { sMessage = sMessage, iPriority = iPriority });
+            }
+        }
 
         string[] garrReviewTypes = new string[] { "Prepare", "Check", "Review", "Approve" };
 
@@ -20288,6 +20503,28 @@ namespace WcfWCService
             return rtnString;
         }
 
+        public rtnString GetPartName(string sPartNo, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            rtnString rtnString = new rtnString();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select PartName from vwWindchillLatestPartWithType where WTPartNumber = '" + sPartNo +"'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+            rtnString.bReturnValue = false;
+            rtnString.sReturnValue = "";
+
+            // If there's a value, it will return the part name
+            if (rst.m_RecordCount > 0)
+            {
+                rtnString.bReturnValue = true;
+                rtnString.sReturnValue = rst.Get_NVarchar(ds, "PartName", 0);
+            }
+
+            ds.Dispose();
+
+            return rtnString;
+        }
+
         public rtnString GetWindchillFolderExists(string sWebAppId, string sProductName, string sLastFolder, string sChildFolder, int iProdOrLib)
         {
             string[] sParamNames = new string[4];
@@ -20331,6 +20568,90 @@ namespace WcfWCService
                 rtnClass.bReturnValue = false;
                 rtnClass.sReturnValue = e.Message;
                 return rtnClass;
+            }
+        }
+
+        // Creates a subpart, and if a document container does not exist, creates and links one
+        public rtnString CreateSubPart(string sSessionId, string sUserId, string sFullName, string sPartNo, string sPartName,
+                                                string sCheckInComments, string sPartDescription, string sMass,
+                                                string sProfileCut, string sPress, string sWeld, string sCountersink, string sFabricate,
+                                                string sMachined, string sPurchased, string sPdf, string sDxf, string sStep,
+                                                string sComments, string sWebAppId)
+        {
+            rtnString rtn = new rtnString() { bReturnValue = false };
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                rtn.sReturnValue = "User " + sUserId + " is not logged in";
+                return rtn;
+            }
+            else
+            {
+                bool bCreated = false;
+
+                // Check if the part exists
+                int iWebAppId = Convert.ToInt16(sWebAppId);
+                bool bSubpartExists = PartExists(sPartNo, iWebAppId);
+
+                // Create the part if it exists
+                if (!bSubpartExists)
+                {
+                    string sProductName = "Regain Material Catalogue";
+                    string sFolder = "Material Catalogue/";
+                    int iProdOrLibrary = 1;
+                    string sPartType = "local.rs.vsrs05.Regain.MaterialSubPart";
+
+                    Update_User_Time(sUserId, sSessionId);
+                    int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
+                    ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                    string[] sAttributeNames = new string[3];
+                    string[] sAttributeValues = new string[3];
+                    string[] sAttributeTypes = new string[3];
+                    string sReturn = "";
+
+                    sAttributeNames[0] = "Originator";
+                    sAttributeNames[1] = "LongDescription";
+                    sAttributeNames[2] = "Comments";
+
+                    sAttributeValues[0] = sFullName;
+                    sAttributeValues[1] = sPartDescription;
+                    sAttributeValues[2] = sComments;
+
+                    sAttributeTypes[0] = "string";
+                    sAttributeTypes[1] = "string";
+                    sAttributeTypes[2] = "string";
+
+                    if (sMass != null || sMass != "")
+                    {
+                        Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                        Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                        Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                        sAttributeNames[sAttributeNames.Length - 1] = "UnitWeight";
+                        sAttributeValues[sAttributeValues.Length - 1] = sMass;
+                        sAttributeTypes[sAttributeTypes.Length - 1] = "float";
+                    }
+
+                    sReturn = client2.createpart(sPartNo, sPartName, sProductName, sPartType, sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
+
+                    if (!sReturn.StartsWith("Success")) 
+                    {
+                        rtn.sReturnValue = "Something went wrong when creating subpart " + sPartNo;
+                        return rtn;
+                    }
+
+                    // Set the attributes
+                }
+                
+                
+
+
+                // Check a doc container exists
+
+
+                // If doesn't exist, create the doc container and the link
+
+                return rtn;
             }
         }
 
@@ -20593,7 +20914,7 @@ namespace WcfWCService
                     bool bIsCompositionType = false;
 
                     rtnInt rtn2 = GetPartBooleanAttribute(sComposition, "CompositionType", iWebAppId);
-                    if (rtn2.bReturnValue = true && rtn2.iReturnValue == 1)
+                    if (rtn2.bReturnValue == true && rtn2.iReturnValue == 1)
                     {
                         bIsCompositionType = true;
                     }
@@ -20630,7 +20951,7 @@ namespace WcfWCService
                     bool bIsCoatingType = false;
 
                     rtnInt rtn2 = GetPartBooleanAttribute(sCoating, "CompositionCoatingType", iWebAppId);
-                    if (rtn2.bReturnValue = true && rtn2.iReturnValue == 1)
+                    if (rtn2.bReturnValue == true && rtn2.iReturnValue == 1)
                     {
                         bIsCoatingType = true;
                     }
@@ -20852,81 +21173,45 @@ namespace WcfWCService
                         if (!bExisting)
                         {
                             rtn = IsValidExisting(sExisting, dicIssueTracker, i + 2, dicColNums["existing"]);
-                            if (!rtn.bReturnValue)
-                            {
-                                bValid = false;
-                                sIssues += rtn.sReturnValue;
-                            }
+                            if (!rtn.bReturnValue) { sIssues += rtn.sReturnValue; }
                         }
 
                         // Check the Ref against Existing input
                         rtn = IsValidRef(sRef, sPartType, bExisting, dicIssueTracker, i + 2, dicColNums["ref"]);
-                        if (!rtn.bReturnValue)
-                        {
-                            bValid = rtn.sReturnValue.Contains("Warning") ? true : false;
-                            sIssues += rtn.sReturnValue;
-                        }
+                        if (!rtn.bReturnValue) { sIssues += rtn.sReturnValue; }
 
                         // Part Type validation
                         rtn = IsPartTypeValid(sPartType, dicIssueTracker, i + 2, dicColNums["part_type"]);
-                        if (!rtn.bReturnValue)
-                        {
-                            bValid = false;
-                            sIssues += rtn.sReturnValue;
-                        }
+                        if (!rtn.bReturnValue) { sIssues += rtn.sReturnValue; }
 
                         // Rest of validations occur only if part has been listed as new
                         if (!bExisting)
                         {
                             // Description validation
                             rtn = IsValidPartDescription(sDescription, dicIssueTracker, i + 2, dicColNums["description"], iWebAppId);
-                            if (!rtn.bReturnValue)
-                            {
-                                bValid = false;
-                                sIssues += rtn.sReturnValue;
-                            }
+                            if (!rtn.bReturnValue) { sIssues += rtn.sReturnValue; }
 
                             // Manufacturer validation
                             rtn = IsManufacturerValid(sManufacturer, dicIssueTracker, i + 2, dicColNums["manufacturer"], iWebAppId);
-                            if (!rtn.bReturnValue)
-                            {
-                                bValid = false;
-                                sIssues += rtn.sReturnValue;
-                            }
-                            else
-                            {
-                                sManufacturerCode = rtn.sReturnValue;
-                            }
+                            if (!rtn.bReturnValue) { sIssues += rtn.sReturnValue; }
+                            else { sManufacturerCode = rtn.sReturnValue; }
 
                             // Spare validation
                             rtn = IsSpareValid(sSpareRequired, dicIssueTracker, i + 2, dicColNums["spare_required"]);
-                            if (!rtn.bReturnValue)
-                            {
-                                bValid = false;
-                                sIssues += rtn.sReturnValue;
-                            }
-                            else
-                            {
-                                sSpareRequired = rtn.sReturnValue;
-                            }
+                            if (!rtn.bReturnValue) { sIssues += rtn.sReturnValue; }
+                            else { sSpareRequired = rtn.sReturnValue; }
 
                             // Composition validation
                             rtn = IsCompositionValid(sComposition, sPartType, dicIssueTracker, i + 2, dicColNums["composition"], iWebAppId);
-                            if (!rtn.bReturnValue)
-                            {
-                                bValid = rtn.sReturnValue.Contains("Warning") ? true : false;
-                                sIssues += rtn.sReturnValue;
-                            }
+                            if (!rtn.bReturnValue && bValid) { sIssues += rtn.sReturnValue; }
 
                             // Coating validation
                             rtn = IsCoatingValid(sCoating, sPartType, dicIssueTracker, i + 2, dicColNums["coating"], iWebAppId);
-                            if (!rtn.bReturnValue)
-                            {
-                                bValid = rtn.sReturnValue.Contains("Warning") ? true : false;
-                                sIssues += rtn.sReturnValue;
-                            }
+                            if (!rtn.bReturnValue && bValid) { sIssues += rtn.sReturnValue;}
                         }
-                        
+
+                        bValid = int.Parse(dicIssueTracker["priority"]) > 1;
+
                         // ---------------------------- END VALIDATIONS ----------------------------
 
                         // ---------------------------- CREATE THE WINDCHLL OBJECTS ----------------------------
@@ -21005,7 +21290,7 @@ namespace WcfWCService
                                 string sFolder = sFolderRaw;
                                 if (sFolderRaw.Contains("/"))
                                 {
-                                    string sLastFolder = sFolderRaw.Substring(sFolderRaw.LastIndexOf("/" + 1));
+                                    string sLastFolder = sFolderRaw.Substring(sFolderRaw.LastIndexOf("/") + 1);
                                     string sChildFolder = sRef.Substring(0, 5);
                                     rtnString folderRtn = GetWindchillFolderExists(sWebAppId, sProductName, sLastFolder, sChildFolder, 0);
 
@@ -21119,7 +21404,7 @@ namespace WcfWCService
                             xlRange.Cells[i + 2, dicColNums["status"]] = "No action";
                             xlRange.Cells[i + 2, dicColNums["status"]].Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightBlue);
                         }
-                        else if (dicIssueTracker["message"].StartsWith("Warning")) {
+                        else if (int.Parse(dicIssueTracker["priority"]) == 2) {
                             xlRange.Cells[i + 2, dicColNums["status"]] = "Warning";
                             xlRange.Cells[i + 2, dicColNums["status"]].Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.PaleGoldenrod);
                         }
@@ -21219,7 +21504,6 @@ namespace WcfWCService
                 }
             }
         }
-
 
         public string ProcessProjectWorkItemSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
         {
@@ -21359,6 +21643,8 @@ namespace WcfWCService
 
                 return rtn;
             }
+
+
             // ---------------------------- END HELPER FUNCTIONS ----------------------------
 
             ExampleService.MyJavaService3Client client2 = GetWCService();
@@ -21504,7 +21790,6 @@ namespace WcfWCService
                         // ---------------------------- VALIDATIONS ----------------------------
                         bool bValid = true;
                         //string sMessage = "";
-                        sWebAppId = "2";
 
                         rtnString rtn = new rtnString();
 
@@ -21757,6 +22042,1110 @@ namespace WcfWCService
                 //}
             }
     
+        }
+
+        // Gets the value from a cell
+        public static string GetCellString(Excel._Worksheet xlWorksheet, int iRow, int iCol)
+        {
+            var sValue = xlWorksheet.Cells[iRow, iCol].Value2;
+            return sValue == null ? "" : sValue.ToString();
+        }
+        // Gets a double value from a cell, guarding excel errors which are converted to Int
+        private static string GetCellNumericString(Excel._Worksheet xlWorksheet, int iRow, int iCol)
+        {
+            var oValue = xlWorksheet.Cells[iRow, iCol].Value2;
+
+            if (oValue == null) { return ""; }
+            if (oValue is int) { return "#ERROR"; }   // Excel error value
+
+            return Convert.ToString(oValue, CultureInfo.InvariantCulture);
+        }
+
+        // Creates a document container and links it to the given part.
+        // Returns Success, or a message describing where it failed.
+        public rtnString CreateAndLinkDoc(string sSessionId, string sUserId, string sFullName,
+            string sPartNo, string sDocNo, string sDocName, string sDocType, string sRevision, 
+            string sProductName, string sFolder, string sJobCode, string sCheckinComments, string sWebAppId)
+        {
+            rtnString rtn = new rtnString();
+            rtn.bReturnValue = false;
+            rtn.sReturnValue = "";
+
+            string sDocCreateReturn = CreateWCDoc(sSessionId, sUserId, sDocNo, sDocName,
+                sProductName, sDocType, sFolder, "", sFullName, "",
+                sJobCode, sRevision, sCheckinComments, "1", sWebAppId);
+
+            if (!sDocCreateReturn.StartsWith("Success"))
+            {
+                rtn.sReturnValue = "could not create document container. Error reads - " + sDocCreateReturn;
+                return rtn;
+            }
+
+            string sLinkType = "wt.part.WTPartReferenceLink";
+            string sDocToPartReturn = SetDocToPartRef(sSessionId, sUserId, sFullName,
+                sDocNo, sPartNo, sCheckinComments, sLinkType, sWebAppId);
+
+            if (!sDocToPartReturn.StartsWith("Success"))
+            {
+                rtn.sReturnValue = "document container was created, but could not be linked to the part. Error reads - "
+                    + sDocToPartReturn;
+                return rtn;
+            }
+
+            rtn.bReturnValue = true;
+            return rtn;
+        }
+
+        // Resolves the Windchill product and folder for a job code.
+        // On success, sReturnValue is "<product>^<folder>".
+        // On failure, sReturnValue describes the problem.
+        public rtnString GetJobDetails(string sJobCode, string sChildFolder, int iWebAppId, string sWebAppId)
+        {
+            rtnString rtn = new rtnString();
+            rtn.bReturnValue = false;
+            rtn.sReturnValue = "";
+
+            int iJobNo;
+            if (!int.TryParse(sJobCode, NumberStyles.Integer, CultureInfo.InvariantCulture, out iJobNo))
+            {
+                rtn.sReturnValue = "job code '" + sJobCode + "' is not numeric.";
+                return rtn;
+            }
+
+            rtnString rtnProduct = GetProductFromJob(sJobCode, 0, iWebAppId);   // 0 for specifying a product
+            if (!rtnProduct.bReturnValue)
+            {
+                rtn.sReturnValue = "could not find Windchill product for job code " + sJobCode + ".";
+                return rtn;
+            }
+            string sProductName = rtnProduct.sReturnValue;
+
+            rtnString rtnJobFolder = GetPlantJobFolder(iJobNo, iWebAppId);
+            if (!rtnJobFolder.bReturnValue)
+            {
+                rtn.sReturnValue = "could not find Windchill folder for job code " + sJobCode + ".";
+                return rtn;
+            }
+
+            string sFolderRaw = rtnJobFolder.sReturnValue;
+            string sFolder = sFolderRaw;
+
+            // Append the child folder if one exists under the job folder
+            if (sFolderRaw.Contains("/") && sChildFolder != "")
+            {
+                string sLastFolder = sFolderRaw.Substring(sFolderRaw.LastIndexOf("/") + 1);
+                rtnString rtnChild = GetWindchillFolderExists(sWebAppId, sProductName, sLastFolder, sChildFolder, 0);
+
+                if (rtnChild.bReturnValue) { sFolder = sFolderRaw + "/" + rtnChild.sReturnValue; }
+            }
+
+            rtn.bReturnValue = true;
+            rtn.sReturnValue = sProductName + "^" + sFolder;
+            return rtn;
+        }
+
+        public string ProcessMaterialListSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
+        {
+            // ---------------------------- HELPER FUNCTIONS ----------------------------
+            bool AnyDocFlagSet(PartsListRow row)
+            {
+                string[] arrDocFlagKeys = { "pdf", "dxf", "step" };
+                foreach (string sKey in arrDocFlagKeys)
+                {
+                    if (row.dicFlags[sKey] == "true") { return true; }
+                }
+                return false;
+            }
+
+            string BuildAttributeSignature(PartsListRow row, string[] arrAttKeys)
+            {
+                var sb = new StringBuilder();
+
+                sb.Append(row.sName.ToUpper()).Append("|");
+                sb.Append(row.sDescription.ToUpper()).Append("|");
+                sb.Append(row.sMassNormalised).Append("|");
+
+                foreach (string sKey in arrAttKeys)
+                {
+                    sb.Append(row.dicFlags[sKey]).Append("|");
+                }
+
+                return sb.ToString();
+            }
+
+            // Refs where the rows have the same ref but different attributes.
+            HashSet<int> FindConflictingRefRows(List<PartsListRow> lstRows, string[] arrAttKeys)
+            {
+                var dicByRef = new Dictionary<string, List<PartsListRow>>();
+
+                foreach (PartsListRow row in lstRows)
+                {
+                    if (row.sRef == "") { continue; }
+
+                    if (!dicByRef.ContainsKey(row.sRef)) { dicByRef[row.sRef] = new List<PartsListRow>(); }
+                    dicByRef[row.sRef].Add(row);
+                }
+
+                var hsConflicting = new HashSet<int>();
+
+                foreach (var kvp in dicByRef)
+                {
+                    if (kvp.Value.Count < 2) { continue; }
+
+                    string sFirst = BuildAttributeSignature(kvp.Value[0], arrAttKeys);
+
+                    bool bAllMatch = true;
+                    foreach (PartsListRow row in kvp.Value)
+                    {
+                        if (BuildAttributeSignature(row, arrAttKeys) != sFirst) { bAllMatch = false; break; }
+                    }
+
+                    if (!bAllMatch)
+                    {
+                        foreach (PartsListRow row in kvp.Value) { hsConflicting.Add(row.iRowNo); }
+                    }
+                }
+
+                return hsConflicting;
+            }
+
+            Dictionary<int, List<string>> FindSiblingDuplicateRefs(ItemTree<PartsListRow> tree)
+            {
+                var dicDupes = new Dictionary<int, List<string>>();
+
+                // Make a list of the rows in the spreadsheet
+                var lstParents = new List<ItemNode<PartsListRow>> { tree.root };
+                foreach (ItemNode<PartsListRow> value in tree.dicIndex.Values)
+                {
+                    lstParents.Add(value);
+                }
+
+                // Go through the rows (top level rows are children of the synthetic root row)
+                foreach (ItemNode<PartsListRow> parent in lstParents)
+                {
+                    var dicByRef = new Dictionary<string, List<ItemNode<PartsListRow>>>();
+                    
+                    // Add a list to found Ref
+                    foreach (ItemNode<PartsListRow> child in parent.lstChildren)
+                    {
+                        string sRef = child.data.sRef;
+                        if (sRef == "") { continue; }
+
+                        if (!dicByRef.ContainsKey(sRef)) { dicByRef[sRef] = new List<ItemNode<PartsListRow>>(); }
+                        dicByRef[sRef].Add(child);
+                    }
+                    // If a ref has multiple in its list, it's a duplicate - add it to a dictionary with the row number
+                    foreach (var row in dicByRef)
+                    {
+                        if (row.Value.Count < 2) { continue; }
+
+                        foreach (ItemNode<PartsListRow> node in row.Value)
+                        {
+                            var lstOthers = new List<string>();
+                            foreach (ItemNode<PartsListRow> other in row.Value)
+                            {
+                                if (other != node) { lstOthers.Add(other.sItem); }
+                            }
+
+                            dicDupes[node.iRowNo] = lstOthers;
+                        }
+                    }
+                }
+
+                return dicDupes;
+            }
+
+            Dictionary<int, List<string>> FindSelfNestedRefs(ItemTree<PartsListRow> tree)
+            {
+                var dicNested = new Dictionary<int, List<string>>();
+
+                void Flag(int iRowNo, string sOtherItem)
+                {
+                    if (!dicNested.ContainsKey(iRowNo)) { dicNested[iRowNo] = new List<string>(); }
+                    if (!dicNested[iRowNo].Contains(sOtherItem)) { dicNested[iRowNo].Add(sOtherItem); }
+                }
+
+                foreach (ItemNode<PartsListRow> node in tree.dicIndex.Values)
+                {
+                    if (node.data.sRef == "") { continue; }
+
+                    ItemNode<PartsListRow> ancestor = node.parent;
+                    while (ancestor != tree.root)
+                    {
+                        if (ancestor.data.sRef == node.data.sRef)
+                        {
+                            Flag(node.iRowNo, ancestor.sItem);
+                            Flag(ancestor.iRowNo, node.sItem);
+                        }
+                        ancestor = ancestor.parent;
+                    }
+                }
+
+                return dicNested;
+            }
+
+            // Returns the parent item path, or "" for a top-level item.
+            string GetParentItem(string sItem)
+            {
+                int iLast = sItem.LastIndexOf('.');
+                return iLast < 0 ? "" : sItem.Substring(0, iLast);
+            }
+
+            // Validates the part description
+            bool IsValidPartDescription(string sDesc, SpreadsheetTracker tracker, int iRowNumber, int iColumnNumber)
+            {
+                string sMessage = "";
+                bool bRtn = true;
+
+                // Description length
+                if (sDesc == null || sDesc.Length < 1 || sDesc.Length > 60)
+                {
+                    sMessage = "Failure: description is outside character limit (1 - 60 characters)." + "\n";
+                    tracker.Report(sMessage, SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
+
+                    bRtn = false;
+                }
+
+                return bRtn;
+            }
+
+            // Validates Ref field - including name matching, existence, and formatting
+            bool IsValidRef(string sRef, string sName, bool bExists, SpreadsheetTracker tracker,
+                int iRowNumber, int iColumnNumber, int iWebAppId)
+            {
+                string sNameUpper = sName.ToUpper();
+
+                if (sRef == "" && sNameUpper.Length > 0)
+                {
+                    tracker.Report("Failure: Ref is missing.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
+                    return false;
+                }
+                else if (sRef.Length > 0 && sNameUpper == "")
+                {
+                    tracker.Report("Failure: Name is missing.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
+                    return false;
+                }
+                else if (sRef == "" && sNameUpper == "")
+                {
+                    // Skipped row
+                    return true;
+                }
+
+                // ---- Does it already exist? ----
+                if (bExists)
+                {
+                    rtnString rtnName = GetPartName(sRef, iWebAppId);
+
+                    if (!rtnName.bReturnValue)
+                    {
+                        tracker.Report("Error: could not read the name of existing part " + sRef + ".\n",
+                            SpreadsheetTracker.PRIORITY_ERROR, iRowNumber, iColumnNumber);
+                        return false;
+                    }
+
+                    if (rtnName.sReturnValue.Trim().ToUpper() != sNameUpper)
+                    {
+                        tracker.Report("Failure: Ref " + sRef + " exists with the name '"
+                            + rtnName.sReturnValue + "', which does not match the entered name '"
+                            + sName + "'.\n",
+                            SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                // ---- New part: must be well-formed ----
+                rtnString rtnFormat = isValidSubpartCode(sRef);
+                if (!rtnFormat.bReturnValue)
+                {
+                    tracker.Report(rtnFormat.sReturnValue,
+                            SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+            rtnString  isValidSubpartCode(string sRef)
+            {
+                rtnString rtn = new rtnString();
+
+                if (sRef.Length < 1)
+                {
+                    rtn.sReturnValue = "Failure: invalid sub-part ref.\n";
+                    rtn.bReturnValue = false;
+                    return rtn;
+                }
+
+                string sPrefix = sRef.Substring(0, 1);
+
+                if (sPrefix == "M")
+                {
+                    if (!Regex.IsMatch(sRef, @"^M\d{5}[A-Z]$"))
+                    {
+                        rtn.sReturnValue = "Failure: invalid M Ref sub-part format. Expected M followed by 5 digits and a letter (e.g. M12345A).\n";
+                        rtn.bReturnValue = false;
+                        return rtn;
+                    }
+
+                    rtn.bReturnValue = true;
+                    return rtn;
+                }
+
+                if (sPrefix == "T")
+                {
+                    if (sRef.Length < 5)
+                    {
+                        rtn.sReturnValue = "Failure: T Ref is too short.\n";
+                        rtn.bReturnValue = false;
+                        return rtn;
+                    }
+                    rtn.bReturnValue = true;
+                    return rtn;
+                }
+
+                rtn.sReturnValue = "Failure: New subpart Ref must start with M or T.\n";
+                rtn.bReturnValue = false;
+                return rtn;
+            }
+
+            /*
+            // Validates the Composition column -> COMMENTED, NOW IN COMPOSITION ASSIGNMENT IMPORT INSTEAD
+            bool IsCompositionValid(string sComposition, string sPartNo, SpreadsheetTracker tracker, int iRowNumber, int iColumnNumber, int iWebAppId)
+            {
+                bool bRtn = true;
+                char cPartType = sPartNo[0];
+
+                if (cPartType == 'T' && sComposition != "")
+                {
+                    string sMessage = "Warning: composition cannot be assigned to a T part.\n";
+                    tracker.Report(sMessage, SpreadsheetTracker.PRIORITY_WARNING, iRowNumber, iColumnNumber);
+                }
+
+                else if (cPartType == 'M' && sComposition != "")
+                {
+                    bool bPartExists = PartExists(sComposition, iWebAppId);
+                    bool bIsCompositionType = false;
+
+                    rtnInt rtn2 = GetPartBooleanAttribute(sComposition, "CompositionType", iWebAppId);
+                    if (rtn2.bReturnValue == true && rtn2.iReturnValue == 1)
+                    {
+                        bIsCompositionType = true;
+                    }
+                    // Decide if valid
+                    if (!(bPartExists && bIsCompositionType))
+                    {
+                        bRtn = false;
+                        string sMessage = "Failure: inputted composition part doesn't exist.\n";
+                        tracker.Report(sMessage, SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
+                    }
+                }
+
+                return bRtn;
+            }
+            */
+
+            // Validates the Mass column
+            bool IsValidMass(PartsListRow vals, SpreadsheetTracker tracker, int iRowNumber, int iColumnNumber)
+            {
+                if (vals.sMass == "#ERROR")
+                {
+                    tracker.Report("Failure: Mass contains a formula error or unresolved reference.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
+                    return false;
+                }
+                /* Check if Mass is able to be blank with Engineers
+                if (sMass == "")
+                {
+                    tracker.Report("Failure: Mass is missing.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
+                    return false;
+                }
+                */
+
+                if (!vals.bMassValid)
+                {
+                    tracker.Report("Failure: Mass is not a valid real number.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Converts every flag to "true" / "false" in place.
+            // Returns rowNo -> list of column keys that held an invalid value.
+            Dictionary<int, List<string>> NormaliseFlags(List<PartsListRow> lstRows, string[] arrAttKeys)
+            {
+                var dicInvalid = new Dictionary<int, List<string>>();
+
+                string[] arrTrueValues = { "y", "yes" };
+                string[] arrFalseValues = { "n", "no", "" };
+
+                foreach (PartsListRow row in lstRows)
+                {
+                    foreach (string sKey in arrAttKeys)
+                    {
+                        string sLower = row.dicFlags[sKey].Trim().ToLower();
+
+                        if (arrTrueValues.Contains(sLower))
+                        {
+                            row.dicFlags[sKey] = "true";
+                        }
+                        else if (arrFalseValues.Contains(sLower))
+                        {
+                            row.dicFlags[sKey] = "false";
+                        }
+                        else
+                        {
+                            row.dicFlags[sKey] = "false";   // safe default; row won't proceed
+
+                            if (!dicInvalid.ContainsKey(row.iRowNo)) { dicInvalid[row.iRowNo] = new List<string>(); }
+                            dicInvalid[row.iRowNo].Add(sKey);
+                        }
+                    }
+                }
+
+                return dicInvalid;
+            }
+
+            // Parses Mass once. Leaves sMass untouched for error reporting.
+            void NormaliseMasses(List<PartsListRow> lstRows)
+            {
+                foreach (PartsListRow row in lstRows)
+                {
+                    double dMass;
+                    if (double.TryParse(row.sMass.Trim(), NumberStyles.Float,
+                            CultureInfo.InvariantCulture, out dMass)
+                        && !double.IsNaN(dMass) && !double.IsInfinity(dMass))
+                    {
+                        row.bMassValid = true;
+                        row.sMassNormalised = dMass.ToString("0.######", CultureInfo.InvariantCulture);
+                    }
+                    else
+                    {
+                        row.bMassValid = false;
+                        row.sMassNormalised = "";
+                    }
+                }
+            }
+
+
+
+            // - Collective file attribute inputs (e.g. Purchased + Profile Cut, as an example).
+
+            // ---------------------------- END HELPER FUNCTIONS ----------------------------
+
+            Excel.Application xlApp = null;
+            Excel.Workbooks xlWbks = null;
+
+            int iProcessId = -1;
+
+            var dicColNums = new Dictionary<string, int>
+            {
+                {"item", 1 },
+                {"ref", 2 },
+                {"name", 3},
+                {"description", 4 },
+                {"mass", 5 },
+                {"profile_cut", 6 },
+                {"press", 7 },
+                {"weld", 8 },
+                {"countersink", 9 },
+                {"fabricate", 10 },
+                {"machined", 11 },
+                {"purchased", 12 },
+                {"pdf", 13 },
+                {"dxf", 14 },
+                {"step", 15 },
+                {"comments", 16 },
+                {"status", 17 }
+            };
+
+            var dicFlagLabels = new Dictionary<string, string>
+            {
+                { "profile_cut", "Profile Cut" },
+                { "press", "Press" },
+                { "weld", "Weld" },
+                { "countersink", "Countersink" },
+                { "fabricate", "Fabricate" },
+                { "machined", "Machined" },
+                { "purchased", "Purchased" },
+                { "pdf", "PDF" },
+                { "dxf", "DXF" },
+                { "step", "STEP" }
+            };
+
+            var issueTracker = new SpreadsheetTracker();
+            bool failure = false;
+
+            string[] arrFlagKeys = {
+                "profile_cut", "press", "weld", "countersink", "fabricate", "machined", "purchased", "pdf", "dxf", "step"
+            };
+
+            try
+            {
+                int iWebAppId = Convert.ToInt32(sWebAppId);
+
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    // ---------------------------- READING SPREADSHEET ----------------------------
+                    Update_User_Time(sUserId, sSessionId);
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+
+                    xlApp = new Excel.Application();
+                    xlApp.DisplayAlerts = false;
+                    xlWbks = xlApp.Workbooks;
+
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
+
+                    Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
+                    Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+                    Excel.Range xlRange = xlWorksheet.UsedRange;
+
+                    // Checking if the spreadsheet matches the template
+                    string[] arrExpectedHeaders = {
+                        "Item", "Ref", "Name", "Description", "Mass (kg)",
+                        "Profile Cut", "Press", "Weld", "Countersink",
+                        "Fabricate", "Machined", "Purchased",
+                        "PDF", "DXF", "STEP",
+                        "Comments", "Status"
+                    };
+
+                    if (xlRange.Row != 1 || xlRange.Column != 1)
+                    {
+                        throw new System.Exception("The spreadsheet must begin at cell A1.");
+                    }
+
+                    int rowCount = xlRange.Rows.Count;
+
+                    for (int i = 0; i < arrExpectedHeaders.Length; i++)
+                    {
+                        string sHeader = GetCellString(xlWorksheet, 1, i + 1).Trim();
+
+                        if (sHeader.ToUpper() != arrExpectedHeaders[i].ToUpper())
+                        {
+                            throw new System.Exception("Invalid column format at column " + (i + 1) +
+                                ". Expected '" + arrExpectedHeaders[i] + "' but found '" + sHeader + "'.\n\n" +
+                                "Expected columns, in order, are: " + string.Join(", ", arrExpectedHeaders));
+                        }
+                    }
+                    string sBody = "";
+
+                    var lstRows = new List<PartsListRow>();
+
+                    void WriteStatus(int iRowNo, string sStatus, System.Drawing.Color colour)
+                    {
+                        xlWorksheet.Cells[iRowNo, dicColNums["status"]] = sStatus;
+                        xlWorksheet.Cells[iRowNo, dicColNums["status"]].Interior.Color =
+                            System.Drawing.ColorTranslator.ToOle(colour);
+                        xlWorksheet.Cells[iRowNo, dicColNums["comments"]] = issueTracker.sRowMessage;
+                    }
+
+                    for (int i = 2; i <= rowCount; i++)
+                    {
+                        // Check if blank row (end)
+                        string sItem = GetCellString(xlWorksheet, i, dicColNums["item"]);
+                        if (sItem == "") { break; }
+
+                        // Create dictionary of flags
+                        Dictionary<string, string> dicFileFlags = new Dictionary<string, string>();
+                        foreach (string col in arrFlagKeys)
+                        {
+                            dicFileFlags[col] = GetCellString(xlWorksheet, i, dicColNums[col]);
+                        }
+
+                        // Create object for the row
+                        PartsListRow row = new PartsListRow
+                        {
+                            iRowNo = i,
+                            sItem = GetCellString(xlWorksheet, i, dicColNums["item"]).Trim(),
+                            sRef = GetCellString(xlWorksheet, i, dicColNums["ref"]).Trim().ToUpper(),
+                            sName = GetCellString(xlWorksheet, i, dicColNums["name"]).Trim(),
+                            sDescription = GetCellString(xlWorksheet, i, dicColNums["description"]).Trim(),
+                            sMass = GetCellNumericString(xlWorksheet, i, dicColNums["mass"]),
+                            dicFlags = dicFileFlags
+                        };
+
+                        lstRows.Add(row);
+                    }
+                    // ---------------------------- END READING SPREADSHEET ----------------------------
+                    var itemTree = new ItemTree<PartsListRow>();
+                    foreach (PartsListRow row in lstRows)
+                    {
+                        itemTree.Add(row.sItem, row.iRowNo, row);
+                    }
+
+                    NormaliseMasses(lstRows);
+                    Dictionary<int, List<string>> dicInvalidFlags = NormaliseFlags(lstRows, arrFlagKeys);
+                    Dictionary<int, List<string>> dicSiblingDupes = FindSiblingDuplicateRefs(itemTree);
+                    Dictionary<int, List<string>> dicSelfNested = FindSelfNestedRefs(itemTree);
+                    HashSet<int> hsConflicting = FindConflictingRefRows(lstRows, arrFlagKeys);
+
+                    // ---------------------------- LOOPING THROUGH ROWS ----------------------------
+                    for (int i = 0; i < lstRows.Count; i++)
+                    {
+                        issueTracker.ResetRow();
+                        var rowVals = lstRows[i];
+
+                        // ---------------------------- VALIDATIONS ----------------------------
+                        bool bSkipped = false;
+                        string sPrefix = "";
+                        bool bPartExists = false;
+
+                        // Check for problems in the tree building
+                        if (itemTree.dicProblems.ContainsKey(rowVals.iRowNo))
+                        {
+                            foreach (ItemProblem problem in itemTree.dicProblems[rowVals.iRowNo])
+                            {
+
+                                string sProblemType = "";
+                                if (problem.iPriority == SpreadsheetTracker.PRIORITY_FAILURE)
+                                {
+                                    sProblemType = "Failure";
+                                }
+                                else if (problem.iPriority == SpreadsheetTracker.PRIORITY_WARNING)
+                                {
+                                    sProblemType = "Warning";
+                                }
+                                else
+                                {
+                                    sProblemType = "Error";
+                                }
+
+                                issueTracker.Report(sProblemType + ": " + problem.sMessage,
+                                    problem.iPriority, rowVals.iRowNo, dicColNums["item"]);
+                            }
+                        }
+
+                        if (dicInvalidFlags.ContainsKey(rowVals.iRowNo))
+                        {
+                            foreach (string sKey in dicInvalidFlags[rowVals.iRowNo])
+                            {
+                                issueTracker.Report("Failure: invalid input for " + dicFlagLabels[sKey] +
+                                    ". Must be blank, Y, N, Yes, or No.\n",
+                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums[sKey]);
+                            }
+                        }
+
+                        if (dicSiblingDupes.ContainsKey(rowVals.iRowNo))
+                        {
+                            issueTracker.Report("Failure: Ref " + rowVals.sRef + " appears more than once under the same parent (see item " +
+                                string.Join(", ", dicSiblingDupes[rowVals.iRowNo]) + ").\n",
+                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+                        }
+
+                        if (dicSelfNested.ContainsKey(rowVals.iRowNo))
+                        {
+                            issueTracker.Report("Failure: Ref " + rowVals.sRef + " is a child of itself (see item " +
+                                string.Join(", ", dicSelfNested[rowVals.iRowNo]) + ").\n",
+                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+                        }
+
+                        if (hsConflicting.Contains(rowVals.iRowNo))
+                        {
+                            issueTracker.Report("Failure: this Ref appears on other rows with different attributes.\n",
+                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+                        }
+
+                        // Check if the row was intentionally left blank
+                        if (rowVals.sRef.Length == 0)
+                        {
+                            if (rowVals.sName.Length > 0)
+                            {
+                                issueTracker.Report("Failure: Ref is missing.\n",
+                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+                            }
+                            else { bSkipped = true; }
+                        }
+                        else
+                        {
+                            // Used later for creation. Put here so no exceptions occur from blank Refs
+                            sPrefix = rowVals.sRef.Substring(0, 1);
+
+                            try
+                            {
+                                bPartExists = PartExists(rowVals.sRef, iWebAppId);
+                            }
+                            catch (System.Exception e)
+                            {
+                                issueTracker.Report("Error: an exception occurred when checking if the part exists: "
+                                    + e.Message + "\n",
+                                    SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+                            }
+
+                            // Check the Ref against LMS' existing name in case of typos
+                            IsValidRef(rowVals.sRef, rowVals.sName, bPartExists, issueTracker, rowVals.iRowNo, dicColNums["ref"], iWebAppId);
+
+                            // Description validation
+                            IsValidPartDescription(rowVals.sDescription, issueTracker, rowVals.iRowNo, dicColNums["description"]);
+
+                            // Mass validation
+                            IsValidMass(rowVals, issueTracker, rowVals.iRowNo, dicColNums["mass"]);
+                        }
+
+                        // ---------------------------- END VALIDATIONS ----------------------------
+
+                        bool bUpdated = false;
+                        bool bCreated = false;
+                        bool bDocRequired = false;
+
+                        string sUpdateRtn = "";
+                        string sJobCode = "";
+                        string sProductName = "";
+                        string sFolder = "";
+                        string sCheckinComments;
+
+                        // Set job code
+                        if (sPrefix == "T" && rowVals.sRef.Length >= 4) { sJobCode = rowVals.sRef.Substring(1, 3); }
+                        else if (sPrefix == "M") { sJobCode = "M"; }
+                        else { sJobCode = ""; }
+
+                        // ---------------------------- CREATE THE WINDCHLL OBJECTS ----------------------------
+                        if (issueTracker.RowIsValid && !bSkipped)
+                        {
+                            // If part in LMS, modify its attributes
+                            if (bPartExists)
+                            {
+                                // Set part attributes
+                                sUpdateRtn = UpdatePartAttributes(sSessionId, sUserId, rowVals.sRef, rowVals.sDescription,
+                                    "UnitWeight", rowVals.sMassNormalised, "float",
+                                    "ProfileCut", rowVals.dicFlags["profile_cut"], "bool",
+                                    "Press", rowVals.dicFlags["press"], "bool",
+                                    "Weld", rowVals.dicFlags["weld"], "bool",
+                                    "Countersink", rowVals.dicFlags["countersink"], "bool",
+                                    "Updating file attributes (group 1) from import", sWebAppId);
+
+                                if (!sUpdateRtn.StartsWith("Success"))
+                                {
+                                    issueTracker.Report("Error: Something went wrong setting part attributes for part " + rowVals.sRef + ".",
+                                        SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+
+                                    WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                    continue;
+                                }
+
+                                sUpdateRtn = UpdatePartAttributes(sSessionId, sUserId, rowVals.sRef, rowVals.sDescription,
+                                    "Fabricate", rowVals.dicFlags["fabricate"], "bool",
+                                    "Machined", rowVals.dicFlags["machined"], "bool",
+                                    "Purchased", rowVals.dicFlags["purchased"], "bool",
+                                    null, null, null,
+                                    null, null, null,
+                                    "Updating file attributes (group 2) from import", sWebAppId);
+
+                                if (!sUpdateRtn.StartsWith("Success"))
+                                {
+                                    issueTracker.Report("Error: Something went wrong setting part attributes for part " + rowVals.sRef + ".",
+                                        SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+
+                                    WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                    continue;
+                                }
+
+                                sUpdateRtn = UpdatePartAttributes(sSessionId, sUserId, rowVals.sRef, rowVals.sDescription,
+                                    "PDF", rowVals.dicFlags["pdf"], "bool",
+                                    "DXF", rowVals.dicFlags["dxf"], "bool",
+                                    "STEP", rowVals.dicFlags["step"], "bool",
+                                    null, null, null,
+                                    null, null, null,
+                                    "Updating file attributes (group 3) from import", sWebAppId);
+
+                                if (!sUpdateRtn.StartsWith("Success"))
+                                {
+                                    issueTracker.Report("Error: Something went wrong setting part attributes for part " + rowVals.sRef + ".",
+                                        SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+
+                                    WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                    continue;
+                                }
+
+                                bUpdated = true;
+                            }
+                            else
+                            {
+                                // If part not in LMS, validate the code structure
+                                rtnString rtnFormat = isValidSubpartCode(rowVals.sRef);
+
+                                // If invalid code, report a failure
+                                if (!rtnFormat.bReturnValue)
+                                {
+                                    issueTracker.Report(rtnFormat.sReturnValue,
+                                            SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+
+                                    WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                    continue;
+                                }  
+
+                                if (sPrefix == "M")
+                                {
+                                    // ===== SUBPART CREATION =====
+                                    string sImportMaterialTypeCode = "MC9102";
+                                    sCheckinComments = "Auto created sub-part from material list import.";
+                                    // JAY - Assuming that for subparts spare is not required
+                                    string sPartCreateReturn = CreateSubPart(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sDescription, rowVals.sMassNormalised, sCheckinComments, "", "", sWebAppId);
+
+                                    if (sPartCreateReturn.StartsWith("Success"))
+                                    {
+                                        // Update the file attributes
+                                        sUpdateRtn = UpdatePartAttributes(sSessionId, sUserId, rowVals.sRef, rowVals.sDescription,
+                                            "ProfileCut", rowVals.dicFlags["profile_cut"], "bool",
+                                            "Press", rowVals.dicFlags["press"], "bool",
+                                            "Weld", rowVals.dicFlags["weld"], "bool",
+                                            "Countersink", rowVals.dicFlags["countersink"], "bool",
+                                            "Fabricate", rowVals.dicFlags["fabricate"], "bool",
+                                            "Updating file attributes (group 1) from import", sWebAppId);
+
+                                        if (!sUpdateRtn.StartsWith("Success"))
+                                        {
+                                            issueTracker.Report("Error: Something went wrong setting part attributes for part " + rowVals.sRef + ".",
+                                                SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+
+                                            WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                            continue;
+                                        }
+
+                                        sUpdateRtn = UpdatePartAttributes(sSessionId, sUserId, rowVals.sRef, rowVals.sDescription,
+                                            "Machined", rowVals.dicFlags["machined"], "bool",
+                                            "Purchased", rowVals.dicFlags["purchased"], "bool",
+                                            "PDF", rowVals.dicFlags["pdf"], "bool",
+                                            "DXF", rowVals.dicFlags["dxf"], "bool",
+                                            "STEP", rowVals.dicFlags["step"], "bool",
+                                            "Updating file attributes (group 2) from import", sWebAppId);
+
+                                        if (!sUpdateRtn.StartsWith("Success"))
+                                        {
+                                            issueTracker.Report("Error: Something went wrong setting part attributes for part " + rowVals.sRef + ".",
+                                                SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+
+                                            WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                            continue;
+                                        }
+
+                                        bCreated = true;
+                                    }
+                                    else
+                                    {
+                                        issueTracker.Report("Error: could not create M-item. Error reads - " + sPartCreateReturn + "\n",
+                                            SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+
+                                        WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                        continue;
+                                    }
+                                }
+                                else if (sPrefix == "T")
+                                {
+                                    // ===== T PART CREATION =====
+                                    string sTItemPartType = "local.rs.vsrs05.Regain.ProjectMaterialItem";
+                                    sCheckinComments = "Auto created T-part from import.";
+
+                                    string sChildFolder = rowVals.sRef.Length >= 5 ? rowVals.sRef.Substring(0, 5) : "";
+                                    rtnString rtnJob = GetJobDetails(sJobCode, sChildFolder, iWebAppId, sWebAppId);
+
+                                    if (!rtnJob.bReturnValue)
+                                    {
+                                        issueTracker.Report("Failure: " + rtnJob.sReturnValue + "\n",
+                                            SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+
+                                        WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                        continue;
+                                    }
+
+                                    string[] arrJobDetails = rtnJob.sReturnValue.Split('^');
+                                    sProductName = arrJobDetails[0];
+                                    sFolder = arrJobDetails[1];
+
+                                    string sTItemCreateReturn = CreateProjectMaterialItem(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sDescription, sProductName, sTItemPartType,
+                                        sFolder, sCheckinComments, "", "", "0", sWebAppId);
+
+                                    if (sTItemCreateReturn.StartsWith("Success"))
+                                    {
+                                        bCreated = true;
+
+                                        // Try set the Weight attribute now
+                                        SetPartAttribute(sSessionId, sUserId, sFullName, rowVals.sRef, "UnitWeight", rowVals.sMassNormalised, "float",
+                                            "Setting weight from materials list import.", sWebAppId);
+                                    }
+                                    else
+                                    {
+                                        issueTracker.Report("Error: could not create T-item. Error reads - " + sTItemCreateReturn + "\n",
+                                            SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+
+                                        WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                        continue;
+                                    }
+                                }
+                            }
+
+                            // Check if a doc container is required
+                            bool bDocWanted = (sPrefix == "M") || AnyDocFlagSet(rowVals);
+
+                            if (issueTracker.RowIsValid && bDocWanted)
+                            {
+                                if (!DocExists(rowVals.sRef, iWebAppId)) { bDocRequired = true; }
+                            }
+
+                            // Create a doc container if flagged
+                            if (bDocRequired && (bCreated || bUpdated))
+                            {
+                                // JAY check logic for Job Code on T parts - where are the documents created??
+                                if (sPrefix == "M")
+                                {
+                                    sProductName = "Regain Material Catalogue";
+                                    sFolder = "Material Catalogue/";
+                                }
+                                else if (sProductName == "")
+                                {
+                                    string sChildFolder = rowVals.sRef.Length >= 5 ? rowVals.sRef.Substring(0, 5) : "";
+                                    rtnString rtnJob = GetJobDetails(sJobCode, sChildFolder, iWebAppId, sWebAppId);
+
+                                    if (!rtnJob.bReturnValue)
+                                    {
+                                        issueTracker.Report("Failure: Part updated or created, then an issue occurred. " + rtnJob.sReturnValue + "\n",
+                                            SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+
+                                        WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                        continue;
+                                    }
+
+                                    string[] arrJobDetails = rtnJob.sReturnValue.Split('^');
+                                    sProductName = arrJobDetails[0];
+                                    sFolder = arrJobDetails[1];
+                                }
+
+                                // ===== M PART DOCUMENT CONTAINER CREATION =====
+                                string sDocType = "local.rs.vsrs05.Regain.TD";
+                                string sRevision = "A";
+                                sCheckinComments = "Auto created document container from Material List import.";
+
+                                rtnString rtnDocCreate = CreateAndLinkDoc(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sRef, rowVals.sDescription,
+                                    sDocType, sRevision, sProductName, sFolder, sJobCode, sCheckinComments, sWebAppId);
+
+                                if (!rtnDocCreate.bReturnValue)
+                                {
+                                    issueTracker.Report("Error: " + rtnDocCreate.sReturnValue + "\n",
+                                        SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+                                }
+                            }
+                        }
+                        
+                        // ---------------------------- END CREATION ----------------------------
+
+                        // Writing cells in return file
+                        if (!issueTracker.RowIsValid)
+                        {
+                            WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                        }
+                        else if (issueTracker.iRowPriority == SpreadsheetTracker.PRIORITY_WARNING)
+                        {
+                            WriteStatus(rowVals.iRowNo, "Warning", System.Drawing.Color.PaleGoldenrod);
+                        }
+                        else if (bCreated)
+                        {
+                            WriteStatus(rowVals.iRowNo, "Created", System.Drawing.Color.LawnGreen);
+                        }
+                        else if (bUpdated)
+                        {
+                            WriteStatus(rowVals.iRowNo, "Updated", System.Drawing.Color.PaleGreen);
+                        }
+                        else if (bSkipped)
+                        {
+                            WriteStatus(rowVals.iRowNo, "Skipped", System.Drawing.Color.LightBlue);
+                        }
+                        else
+                        {
+                            WriteStatus(rowVals.iRowNo, "Status Unknown", System.Drawing.Color.LightGray);
+                        }
+
+                        // ---------------------------- END LOOPING THROUGH ROWS ----------------------------
+                    }
+
+                    // ---------------------------- WRITING TO FILE AND EMAIL ---------------------------- 
+                    // Write the spreadsheet and send back via email
+                    string sFileNameNoFileType = sFile.Split('.')[0];
+                    string sNewExcelFileName = sFileNameNoFileType + "_results.xlsx";
+                    string sNewFileLocation = @"C:\Webroot\Regain\temp\" + sNewExcelFileName;
+                    xlWorkbook.SaveAs(sNewFileLocation);
+
+                    xlWorkbook.Close(true);
+                    xlWbks.Close();
+                    xlApp.Quit();
+
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWbks) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorksheet) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlRange) != 0) ;
+                    xlApp = null;
+                    xlWbks = null;
+                    xlWorkbook = null;
+                    xlWorksheet = null;
+                    xlRange = null;
+
+                    /*                    GC.Collect();
+                                        GC.WaitForPendingFinalizers();
+
+                                        System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                                        foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
+                                        {
+                                            proc.Kill();
+                                        }
+                    */
+
+                    // Body of email to user, and location of the results file
+                    sBody += "Material list import complete.\n" +
+                        "Please see the attached spreadsheet which has been updated with status and comments where " +
+                        "there may have been issues during the upload process. A full list of issues is provided below.\n \n" +
+                        issueTracker.GetIssueLog() + "^";
+
+                    sBody += sNewExcelFileName + "^";
+
+                    return "Success^" + sBody;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                failure = true;
+                return ex.Message;
+            }
+            finally
+            {
+                if (failure)
+                {
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+
+                    try
+                    {
+                        if (iProcessId > 0)
+                        {
+                            Process process = Process.GetProcessById(iProcessId);
+                            process.Kill();
+                        }
+                    }
+                    catch (ArgumentException)
+                    {
+                        // Process already exited
+                    }
+
+                    /*                    System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                                        foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
+                                        {
+                                            proc.Kill();
+                                        }
+                    */
+                }
+            }
         }
 
         // 5. External reference declaration for getting the PID
