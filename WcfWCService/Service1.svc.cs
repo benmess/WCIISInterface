@@ -16865,6 +16865,20 @@ namespace WcfWCService
                         }
 
                         //Now we have everything in an array and we know what is already exists and is in the system
+                        //We need to check if any seal numbers are inconsistent
+/*                        for (j = 0; j < rowCount - 2; j++)
+                        {
+                            for (i = 0; i < rowCount - 2; i++)
+                            {
+                                if (arrItems[i].sSealNo == arrItems[j].sSealNo && arrItems[i].sContainerNo != arrItems[j].sContainerNo)
+                                {
+                                    sBody += "Items on rows " + arrItems[j].iFileRowNo + " and " + +arrItems[i].iFileRowNo " haev the same seal number but different container numbers. The rows will be ignored.\r\n";
+                                }
+                            }
+                        }
+*/
+
+                        //Now we have everything in an array and we know what is already exists and is in the system
                         //We need to check if anything that does not exist is inconsistent with any other line
                         for (i = 0; i < rowCount - 2; i++)
                         {
@@ -16905,17 +16919,17 @@ namespace WcfWCService
                                 }
 
                                 //If the weighbridge docket doesn't exist
-/*                                if (!arrItems[i].sWBDocketNo.Equals(""))
-                                {
-                                    if (!WBDocketExists(arrItems[i].sWBDocketNo, iWebAppId))
-                                    {
-                                        sBody += "The weighbridge docket " + arrItems[i].sWBDocketNo + " on row " + arrItems[i].iFileRowNo + " does not exist. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
-                                        arrItems[i].bInsert = false;
-                                        bToBeInserted = false;
+                                /*                                if (!arrItems[i].sWBDocketNo.Equals(""))
+                                                                {
+                                                                    if (!WBDocketExists(arrItems[i].sWBDocketNo, iWebAppId))
+                                                                    {
+                                                                        sBody += "The weighbridge docket " + arrItems[i].sWBDocketNo + " on row " + arrItems[i].iFileRowNo + " does not exist. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                                                        arrItems[i].bInsert = false;
+                                                                        bToBeInserted = false;
 
-                                    }
-                                }
-*/
+                                                                    }
+                                                                }
+                                */
                                 //If the seal number is there but no container
                                 if (arrItems[i].sContainerNo.Equals("") && !arrItems[i].sSealNo.Equals(""))
                                 {
@@ -16986,10 +17000,21 @@ namespace WcfWCService
                                     {
                                         if (arrItems[i].sContainerNo.Equals(arrItems[j].sContainerNo) && !arrItems[i].sSealNo.Equals(arrItems[j].sSealNo))
                                         {
-                                            sBody += "The container number on rows " + arrItems[i].iFileRowNo + " and " + arrItems[j].iFileRowNo + " match but the respective seal numbers " +
+                                            sBody += "The container number " + arrItems[i].sContainerNo + " on rows " + arrItems[i].iFileRowNo + " and " + arrItems[j].iFileRowNo + " match but the respective seal numbers " +
                                                      arrItems[i].sSealNo + " and " + arrItems[j].sSealNo + " do not match. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
                                             arrItems[i].bInsert = false;
                                             bToBeInserted = false;
+                                            arrItems[j].bInsert = false;
+                                            break;
+                                        }
+
+                                        if (arrItems[i].sSealNo.Equals(arrItems[j].sSealNo) && !arrItems[i].sContainerNo.Equals(arrItems[j].sContainerNo))
+                                        {
+                                            sBody += "The seal number " + arrItems[i].sSealNo + " on rows " + arrItems[i].iFileRowNo + " and " + arrItems[j].iFileRowNo + " match but the respective container numbers " +
+                                                     arrItems[i].sContainerNo + " and " + arrItems[j].sContainerNo + " do not match. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                            arrItems[i].bInsert = false;
+                                            bToBeInserted = false;
+                                            arrItems[j].bInsert = false;
                                             break;
                                         }
                                     }
@@ -17426,10 +17451,21 @@ namespace WcfWCService
                                     {
                                         if (arrItems[i].sContainerNo.Equals(arrItems[j].sContainerNo) && !arrItems[i].sSealNo.Equals(arrItems[j].sSealNo))
                                         {
-                                            sBody += "The container number on rows " + arrItems[i].iFileRowNo + " and " + arrItems[j].iFileRowNo + " match but the respective seal numbers " +
+                                            sBody += "The container number " + arrItems[i].sContainerNo + " on rows " + arrItems[i].iFileRowNo + " and " + arrItems[j].iFileRowNo + " match but the respective seal numbers " +
                                                      arrItems[i].sSealNo + " and " + arrItems[j].sSealNo + " do not match. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
                                             arrItems[i].bInsert = false;
                                             bToBeInserted = false;
+                                            arrItems[j].bInsert = false;
+                                            break;
+                                        }
+
+                                        if (arrItems[i].sSealNo.Equals(arrItems[j].sSealNo) && !arrItems[i].sContainerNo.Equals(arrItems[j].sContainerNo))
+                                        {
+                                            sBody += "The seal number " + arrItems[i].sSealNo + " on rows " + arrItems[i].iFileRowNo + " and " + arrItems[j].iFileRowNo + " match but the respective container numbers " +
+                                                     arrItems[i].sContainerNo + " and " + arrItems[j].sContainerNo + " do not match. Row " + arrItems[i].iFileRowNo + " has not been processed.\r\n";
+                                            arrItems[i].bInsert = false;
+                                            bToBeInserted = false;
+                                            arrItems[j].bInsert = false;
                                             break;
                                         }
                                     }
