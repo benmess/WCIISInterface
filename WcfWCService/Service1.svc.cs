@@ -22493,6 +22493,29 @@ namespace WcfWCService
             return rtn;
         }
 
+        // Creates a document container and links it to the given part.
+        // Returns Success, or a message describing where it failed.
+        public string CreateAndLinkDocWrapper(string sSessionId, string sUserId, string sFullName,
+            string sPartNo, string sDocNo, string sDocName, string sDocType, string sRevision, string iProdOrLibrary,
+            string sProductName, string sFolder, string sJobCode, string sCheckinComments, string sWebAppId)
+        {
+            string sRtn;
+            rtnString rtn = new rtnString();
+            rtn = CreateAndLinkDoc(sSessionId, sUserId, sFullName,
+                                    sPartNo, sDocNo, sDocName, sDocType, sRevision, iProdOrLibrary,
+                                    sProductName, sFolder, sJobCode, sCheckinComments, sWebAppId);
+
+            if (!rtn.bReturnValue)
+            {
+                sRtn = "Failure";
+            }
+            else
+            {
+                sRtn = "Success";
+            }
+                return sRtn;
+        }
+
         // Resolves the Windchill product and folder for a job code.
         // On success, sReturnValue is "<product>^<folder>".
         // On failure, sReturnValue describes the problem.
