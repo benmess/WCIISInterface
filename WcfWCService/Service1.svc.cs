@@ -42,6 +42,7 @@ using System.Web;
 using System.Web.Services;
 using System.Web.Services.Description;
 using System.Web.Services.Protocols;
+using System.Web.UI.WebControls;
 using WcfWCService.ExampleService;
 using Excel = Microsoft.Office.Interop.Excel;
 using word = Microsoft.Office.Interop.Word;
@@ -317,8 +318,8 @@ namespace WcfWCService
         public class PartsListRow
         {
             public int iRowNo;
-            public string sItem, sRef, sName, sDescription, sMass, sMassNormalised;
-            public bool bMassValid;
+            public string sItem, sRef, sName, sDescription, sMass, sMassNormalised, sQty, sQtyNormalised;
+            public bool bMassValid, bQtyValid;
             public Dictionary<string, string> dicFlags = new Dictionary<string, string>();
         }
 
@@ -448,9 +449,9 @@ namespace WcfWCService
                     List<int> lstNextItem = new List<int>();
                     int iIncrementedDigit = arrPrev[i] + 1;
 
-                    foreach (int iDigit in arrPrev)
+                    for (int j = 0; j <= i - 1; j++)
                     {
-                        lstNextItem.Add(iDigit);
+                        lstNextItem.Add(arrPrev[i]);
                     }
                     lstNextItem.Add(iIncrementedDigit);
 
@@ -20841,12 +20842,120 @@ namespace WcfWCService
             }
         }
 
-        // Creates a subpart, and if a document container does not exist, creates and links one
-        public rtnString CreateSubPart(string sSessionId, string sUserId, string sFullName, string sPartNo, string sPartName,
-                                                string sCheckInComments, string sPartDescription, string sMass,
+        public string CreateSubPart(string sSessionId, string sUserId, string sFullName, string sPartNo, string sPartName,
+                                                string sCheckInComments, string sPartDescription, string sQuantity, string sMass, string sMatCatType,
                                                 string sProfileCut, string sPress, string sWeld, string sCountersink, string sFabricate,
                                                 string sMachined, string sPurchased, string sPdf, string sDxf, string sStep,
-                                                string sComments, string sWebAppId)
+                                                string sComments, string sParentPartNo, string sWebAppId)
+        {
+            string sReturn = "";
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                sReturn = "Failure: User " + sUserId + " is not logged in";
+                return sReturn;
+            }
+
+            string sProductName = "Regain Material Catalogue";
+            string sFolder = "Material Catalogue/";
+
+            // Check if the part exists
+            int iWebAppId = Convert.ToInt16(sWebAppId);
+            bool bSubpartExists = PartExists(sPartNo, iWebAppId);
+
+            // Create the part if it doesn't exist, otherwise return
+            if (!bSubpartExists)
+            {
+                int iProdOrLibrary = 1;
+                string sPartType = "local.rs.vsrs05.Regain.MaterialSubPart";
+
+                Update_User_Time(sUserId, sSessionId);
+                int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+
+                string[] sAttributeNames = new string[3];
+                string[] sAttributeValues = new string[3];
+                string[] sAttributeTypes = new string[3];
+
+                sAttributeNames[0] = "Originator";
+                sAttributeNames[1] = "LongDescription";
+                sAttributeNames[2] = "Comments";
+
+                sAttributeValues[0] = sFullName;
+                sAttributeValues[1] = sPartDescription;
+                sAttributeValues[2] = sComments;
+
+                sAttributeTypes[0] = "string";
+                sAttributeTypes[1] = "string";
+                sAttributeTypes[2] = "string";
+
+                if (sMass != null && sMass != "")
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+                    sAttributeNames[sAttributeNames.Length - 1] = "UnitWeight";
+                    sAttributeValues[sAttributeValues.Length - 1] = sMass;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "float";
+                }
+
+                sReturn = client2.createpart(sPartNo, sPartName, sProductName, sPartType, sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes,
+                    sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
+
+                if (!sReturn.StartsWith("Success"))
+                {
+                    sReturn = "Failure: Failure when creating subpart " + sPartNo + ": " + sReturn;
+                    return sReturn;
+                }
+
+                // Set the attributes
+                sCheckInComments = "Setting fabrication attributes from material list import";
+                sReturn = SetPartFabricationAttributes(sSessionId, sUserId, sPartNo, sFullName, sProfileCut, sPress, sWeld, sCountersink, sFabricate,
+                    sMachined, sPurchased, sPdf, sDxf, sStep, sCheckInComments, sWebAppId);
+
+                if (!sReturn.StartsWith("Success"))
+                {
+                    sReturn = "Failure: Failure when setting file attributes for subpart " + sPartNo + ": " + sReturn;
+                    return sReturn;
+                }
+
+                // Set the type link if provided
+                sCheckInComments = "Linking Material Catalogue Type link from material list import";
+                if (sMatCatType != null && sMatCatType != "")
+                {
+                    sMatCatType = sMatCatType.Trim();
+                    sCheckInComments = "Setting Material Catalogue Type link for subpart";
+                    sReturn = client2.setpartpartlink(sFullName, sMatCatType, sPartNo, 1, sCheckInComments, "wt.part.WTPartUsageLink", "", Convert.ToInt16(sWebAppId));
+
+                    if (!sReturn.StartsWith("Success"))
+                    {
+                        sReturn = "Failure: Failure when setting file attributes for subpart " + sPartNo + ": " + sReturn;
+                        return sReturn;
+                    }
+                }
+
+                // Set the parent link if provided
+                sCheckInComments = "Linking subpart to parent from material list import.";
+                if (sParentPartNo != null && sParentPartNo != "")
+                {
+                    sParentPartNo = sParentPartNo.Trim();
+                    sCheckInComments = "Setting parent link to subpart";
+                    sReturn = client2.setpartpartlink(sFullName, sParentPartNo, sPartNo, Convert.ToDouble(sQuantity), sCheckInComments, "wt.part.WTPartUsageLink", "", Convert.ToInt16(sWebAppId));
+                }
+            }
+            else
+            {
+                sReturn = "Success";
+            }
+
+            return sReturn;
+        }
+
+        // Creates a subpart, and if a document container does not exist, creates and links one
+        public rtnString CreateSubPartWithDoc(string sSessionId, string sUserId, string sFullName, string sPartNo, string sPartName,
+                                                string sCheckInComments, string sPartDescription, string sQuantity, string sMass, string sMatCatType,
+                                                string sProfileCut, string sPress, string sWeld, string sCountersink, string sFabricate,
+                                                string sMachined, string sPurchased, string sPdf, string sDxf, string sStep,
+                                                string sComments, string sParentPartNo, string sWebAppId)
         {
             rtnString rtn = new rtnString() { bReturnValue = false };
 
@@ -20855,74 +20964,56 @@ namespace WcfWCService
                 rtn.sReturnValue = "User " + sUserId + " is not logged in";
                 return rtn;
             }
-            else
+
+            string iProdOrLibrary = "1"; // No T subparts, so will always be Material Catalog
+            string sProductName = "Regain Material Catalogue";
+            string sFolder = "Material Catalogue/";
+
+            // Create the part
+            int iWebAppId = Convert.ToInt16(sWebAppId);
+            string sRtn = CreateSubPart(sSessionId, sUserId, sFullName, sPartNo, sPartName, sCheckInComments, sPartDescription, sQuantity, sMass, sMatCatType,
+                                                sProfileCut, sPress, sWeld, sCountersink, sFabricate, sMachined, sPurchased, sPdf, sDxf, sStep,
+                                                sComments, sParentPartNo, sWebAppId);
+
+            if (!sRtn.StartsWith("Success"))
             {
-                bool bCreated = false;
-
-                // Check if the part exists
-                int iWebAppId = Convert.ToInt16(sWebAppId);
-                bool bSubpartExists = PartExists(sPartNo, iWebAppId);
-
-                // Create the part if it exists
-                if (!bSubpartExists)
-                {
-                    string sProductName = "Regain Material Catalogue";
-                    string sFolder = "Material Catalogue/";
-                    int iProdOrLibrary = 1;
-                    string sPartType = "local.rs.vsrs05.Regain.MaterialSubPart";
-
-                    Update_User_Time(sUserId, sSessionId);
-                    int iiProdOrLibrary = Convert.ToInt16(iProdOrLibrary);
-                    ExampleService.MyJavaService3Client client2 = GetWCService();
-
-                    string[] sAttributeNames = new string[3];
-                    string[] sAttributeValues = new string[3];
-                    string[] sAttributeTypes = new string[3];
-                    string sReturn = "";
-
-                    sAttributeNames[0] = "Originator";
-                    sAttributeNames[1] = "LongDescription";
-                    sAttributeNames[2] = "Comments";
-
-                    sAttributeValues[0] = sFullName;
-                    sAttributeValues[1] = sPartDescription;
-                    sAttributeValues[2] = sComments;
-
-                    sAttributeTypes[0] = "string";
-                    sAttributeTypes[1] = "string";
-                    sAttributeTypes[2] = "string";
-
-                    if (sMass != null || sMass != "")
-                    {
-                        Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
-                        Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
-                        Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
-                        sAttributeNames[sAttributeNames.Length - 1] = "UnitWeight";
-                        sAttributeValues[sAttributeValues.Length - 1] = sMass;
-                        sAttributeTypes[sAttributeTypes.Length - 1] = "float";
-                    }
-
-                    sReturn = client2.createpart(sPartNo, sPartName, sProductName, sPartType, sFolder, sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, iiProdOrLibrary, Convert.ToInt16(sWebAppId));
-
-                    if (!sReturn.StartsWith("Success")) 
-                    {
-                        rtn.sReturnValue = "Something went wrong when creating subpart " + sPartNo;
-                        return rtn;
-                    }
-
-                    // Set the attributes
-                }
-                
-                
-
-
-                // Check a doc container exists
-
-
-                // If doesn't exist, create the doc container and the link
-
+                rtn.sReturnValue = sRtn;
                 return rtn;
             }
+
+            // If doc container doesn't exist, create it. If it does, link it
+            bool bDocExists = DocExists(sPartNo, iWebAppId);
+
+            rtnString rtn2 = new rtnString();
+            string sRtn2 = "";
+            if (!bDocExists)
+            {
+                sCheckInComments = "Create and link doc to subpart.";
+                rtn2 = CreateAndLinkDoc(sSessionId, sUserId, sFullName, sPartNo, sPartNo, sPartName, "local.rs.vsrs05.Regain.TD",
+                    "A", iProdOrLibrary, sProductName, sFolder, "M", sCheckInComments, sWebAppId);
+
+                if (!rtn2.bReturnValue)
+                {
+                    rtn.sReturnValue = "Error when creating and/or linking doc for subpart " + sPartNo + ": " + rtn2.sReturnValue;
+                    return rtn;
+                }
+            }
+            else if (bDocExists)
+            {
+                sCheckInComments = "Link doc to subpart";
+                string sPartRefLinkType = "wt.part.WTPartReferenceLink";
+                sRtn2 = SetDocToPartRef(sSessionId, sUserId, sFullName, sPartNo, sPartNo, sCheckInComments, sPartRefLinkType, sWebAppId);
+
+                if (!sRtn2.StartsWith("Success"))
+                {
+                    rtn.sReturnValue = "Error when linking existing doc to subpart " + sPartNo + ": " + sRtn2;
+                    return rtn;
+                }
+            }
+
+            rtn.bReturnValue = true;
+            rtn.sReturnValue = "Success";
+            return rtn;
         }
 
         public string ProcessMaterialPartsSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
@@ -21573,7 +21664,7 @@ namespace WcfWCService
                                 if (bValid)
                                 {
                                     string sTItemPartType = "local.rs.vsrs05.Regain.ProjectMaterialItem";
-                                    sCheckinComments = "Auto created T-part from import.";
+                                    sCheckinComments = "Auto created T-part from material list import.";
 
                                     sTItemCreateReturn = CreateProjectMaterialItem(sSessionId, sUserId, sFullName, sRef, sDescription, sProductName, sTItemPartType,
                                         sFolder, sCheckinComments, "", "", "0", sWebAppId);
@@ -22334,7 +22425,7 @@ namespace WcfWCService
         // Creates a document container and links it to the given part.
         // Returns Success, or a message describing where it failed.
         public rtnString CreateAndLinkDoc(string sSessionId, string sUserId, string sFullName,
-            string sPartNo, string sDocNo, string sDocName, string sDocType, string sRevision, 
+            string sPartNo, string sDocNo, string sDocName, string sDocType, string sRevision, string iProdOrLibrary,
             string sProductName, string sFolder, string sJobCode, string sCheckinComments, string sWebAppId)
         {
             rtnString rtn = new rtnString();
@@ -22343,7 +22434,7 @@ namespace WcfWCService
 
             string sDocCreateReturn = CreateWCDoc(sSessionId, sUserId, sDocNo, sDocName,
                 sProductName, sDocType, sFolder, "", sFullName, "",
-                sJobCode, sRevision, sCheckinComments, "1", sWebAppId);
+                sJobCode, sRevision, sCheckinComments, iProdOrLibrary, sWebAppId);
 
             if (!sDocCreateReturn.StartsWith("Success"))
             {
@@ -22412,6 +22503,39 @@ namespace WcfWCService
             rtn.bReturnValue = true;
             rtn.sReturnValue = sProductName + "^" + sFolder;
             return rtn;
+        }
+
+        public string UpdatePartToPartLink(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNumber, string sLineNumber, string dQty, string sCheckInComments, string sPartUsageType, string sUnit, string sWebAppId)
+        {
+            int iWebAppId = Convert.ToInt16(sWebAppId);
+            Update_User_Time(sUserId, sSessionId);
+            ExampleService.MyJavaService3Client client2 = GetWCService();
+            string sRtn = "";
+
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                
+                double ddQty = Convert.ToDouble(dQty);
+                int iLineNumber = Convert.ToInt32(sLineNumber);
+
+                string[] sAttributeNames3 = new string[1];
+                string[] sAttributeValues3 = new string[1];
+                string[] sAttributeTypes3 = new string[1];
+
+                sAttributeNames3[0] = "Originator";
+                sAttributeValues3[0] = sFullName;
+                sAttributeTypes3[0] = "string";
+
+                sRtn = client2.updatepartpartlinkwithattributes(sFullName, sParentPartNo, sChildPartNumber, ddQty, iLineNumber,
+                                                                sCheckInComments, sPartUsageType, sUnit,
+                                                                sAttributeNames3, sAttributeValues3, sAttributeTypes3, iWebAppId);
+            }
+
+            return sRtn;
         }
 
         public string ProcessMaterialListSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
@@ -22561,6 +22685,19 @@ namespace WcfWCService
                 return iLast < 0 ? "" : sItem.Substring(0, iLast);
             }
 
+            // Ref of the parent item's row, or "" for a top-level item or a parent with no Ref.
+            string GetParentRef(ItemTree<PartsListRow> tree, PartsListRow row)
+            {
+                string sChildRef = row.sItem;
+                if (!tree.dicIndex.ContainsKey(sChildRef)) { return ""; }
+
+                ItemNode<PartsListRow> parent = tree.dicIndex[sChildRef].parent;
+
+                if (parent == null || parent == tree.root) { return ""; }
+
+                return parent.data.sRef;
+            }
+
             // Validates the part description
             bool IsValidPartDescription(string sDesc, SpreadsheetTracker tracker, int iRowNumber, int iColumnNumber)
             {
@@ -22641,7 +22778,50 @@ namespace WcfWCService
                 }
             }
 
-            rtnString  isValidSubpartCode(string sRef)
+            bool IsValidQty(PartsListRow vals, SpreadsheetTracker tracker, int iRowNumber, int iColumnNumber)
+            {
+                // Check for spreadsheet error
+                if (vals.sQty == "#ERROR")
+                {
+                    tracker.Report("Failure: Qty contains a formula error or unresolved reference.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
+                    return false;
+                }
+                // Blank check - default is 1
+                if (vals.sQty == "")
+                {
+                    vals.sQtyNormalised = "1";
+                    vals.bQtyValid = true;
+                    return true;
+                }
+                // Checks the quantity validity, decided in normalise function
+                if (!vals.bQtyValid)
+                {
+                    tracker.Report("Failure: Qty is not a valid number.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
+                    return false;
+                }
+
+                double dQty = double.Parse(vals.sQtyNormalised, CultureInfo.InvariantCulture);
+
+                if (dQty <= 0)
+                {
+                    tracker.Report("Failure: Qty must be greater than zero.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
+                    return false;
+                }
+
+                if (dQty != Math.Floor(dQty))
+                {
+                    tracker.Report("Failure: Qty must be a whole number.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
+                    return false;
+                }
+
+                return true;
+            }
+
+            rtnString isValidSubpartCode(string sRef)
             {
                 rtnString rtn = new rtnString();
 
@@ -22684,42 +22864,6 @@ namespace WcfWCService
                 return rtn;
             }
 
-            /*
-            // Validates the Composition column -> COMMENTED, NOW IN COMPOSITION ASSIGNMENT IMPORT INSTEAD
-            bool IsCompositionValid(string sComposition, string sPartNo, SpreadsheetTracker tracker, int iRowNumber, int iColumnNumber, int iWebAppId)
-            {
-                bool bRtn = true;
-                char cPartType = sPartNo[0];
-
-                if (cPartType == 'T' && sComposition != "")
-                {
-                    string sMessage = "Warning: composition cannot be assigned to a T part.\n";
-                    tracker.Report(sMessage, SpreadsheetTracker.PRIORITY_WARNING, iRowNumber, iColumnNumber);
-                }
-
-                else if (cPartType == 'M' && sComposition != "")
-                {
-                    bool bPartExists = PartExists(sComposition, iWebAppId);
-                    bool bIsCompositionType = false;
-
-                    rtnInt rtn2 = GetPartBooleanAttribute(sComposition, "CompositionType", iWebAppId);
-                    if (rtn2.bReturnValue == true && rtn2.iReturnValue == 1)
-                    {
-                        bIsCompositionType = true;
-                    }
-                    // Decide if valid
-                    if (!(bPartExists && bIsCompositionType))
-                    {
-                        bRtn = false;
-                        string sMessage = "Failure: inputted composition part doesn't exist.\n";
-                        tracker.Report(sMessage, SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
-                    }
-                }
-
-                return bRtn;
-            }
-            */
-
             // Validates the Mass column
             bool IsValidMass(PartsListRow vals, SpreadsheetTracker tracker, int iRowNumber, int iColumnNumber)
             {
@@ -22742,6 +22886,64 @@ namespace WcfWCService
                 {
                     tracker.Report("Failure: Mass is not a valid real number.\n",
                         SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Links a row's part to the part on its parent item row.
+            // Returns true when no link was needed, or the link succeeded.
+            bool LinkToParentItem(PartsListRow row, ItemTree<PartsListRow> tree, string sFullName,
+                SpreadsheetTracker tracker, Dictionary<string, int> dicColNumbers, int iWebAppId)
+            {
+                string sParentRef = GetParentRef(tree, row);
+                if (sParentRef == "") { return true; }
+
+                if (!PartExists(sParentRef, iWebAppId))
+                {
+                    tracker.Report("Warning: parent part " + sParentRef +
+                        " was not found, so no parent link was created.\n",
+                        SpreadsheetTracker.PRIORITY_WARNING, row.iRowNo, dicColNumbers["item"]);
+                    return false;
+                }
+
+                string sLinkType = "wt.part.WTPartUsageLink";
+                string sUnit = "ea";
+                string sCheckInComments = "Auto link to parent item from material list import";
+                string sLinkRtn;
+
+                rtnInt rtnLink = PartPartLinkExists(sParentRef, row.sRef, iWebAppId);
+                
+                if (rtnLink.bReturnValue && rtnLink.iReturnValue >= 0)
+                {
+                    string sLineNumber = rtnLink.iReturnValue.ToString();
+
+                    // Link already exists — update it so the quantity matches the spreadsheet
+                    sLinkRtn = UpdatePartToPartLink(sSessionId, sUserId, sFullName, sParentRef, row.sRef, sLineNumber, row.sQtyNormalised,
+                        sCheckInComments, sLinkType, sUnit, sWebAppId);
+                }
+                else if (rtnLink.bReturnValue)
+                {
+                    // Row found but no usable line number — don't create a second link
+                    tracker.Report("Warning: a link between " + sParentRef + " and " + row.sRef +
+                        " already exists but could not be read, so its quantity was not updated.\n",
+                        SpreadsheetTracker.PRIORITY_WARNING, row.iRowNo, dicColNumbers["item"]);
+                    return false;
+                }
+                else
+                {
+                    int iLineNumber = GetNewLineNumber(sParentRef, iWebAppId);
+                    string sLineNumber = iLineNumber.ToString();
+                    sLinkRtn = SetPartToPartLinkWithLineNumber(sSessionId, sUserId, sFullName, sParentRef, row.sRef, row.sQtyNormalised,
+                        sLineNumber, sCheckInComments, sLinkType, sUnit, sWebAppId);
+                }
+
+                if (!sLinkRtn.StartsWith("Success"))
+                {
+                    tracker.Report("Warning: could not link " + row.sRef + " to parent part " +
+                        sParentRef + ". Error reads - " + sLinkRtn + "\n",
+                        SpreadsheetTracker.PRIORITY_WARNING, row.iRowNo, dicColNumbers["item"]);
                     return false;
                 }
 
@@ -22805,7 +23007,25 @@ namespace WcfWCService
                 }
             }
 
-
+            void NormaliseQuantities(List<PartsListRow> lstRows)
+            {
+                foreach (PartsListRow row in lstRows)
+                {
+                    double dQty;
+                    if (double.TryParse(row.sQty.Trim(), NumberStyles.Float,
+                            CultureInfo.InvariantCulture, out dQty)
+                        && !double.IsNaN(dQty) && !double.IsInfinity(dQty))
+                    {
+                        row.bQtyValid = true;
+                        row.sQtyNormalised = dQty.ToString("0.######", CultureInfo.InvariantCulture);
+                    }
+                    else
+                    {
+                        row.bQtyValid = false;
+                        row.sQtyNormalised = "";
+                    }
+                }
+            }
 
             // - Collective file attribute inputs (e.g. Purchased + Profile Cut, as an example).
 
@@ -22822,19 +23042,20 @@ namespace WcfWCService
                 {"ref", 2 },
                 {"name", 3},
                 {"description", 4 },
-                {"mass", 5 },
-                {"profile_cut", 6 },
-                {"press", 7 },
-                {"weld", 8 },
-                {"countersink", 9 },
-                {"fabricate", 10 },
-                {"machined", 11 },
-                {"purchased", 12 },
-                {"pdf", 13 },
-                {"dxf", 14 },
-                {"step", 15 },
-                {"comments", 16 },
-                {"status", 17 }
+                {"qty", 5 },
+                {"mass", 6 },
+                {"profile_cut", 7 },
+                {"press", 8 },
+                {"weld", 9 },
+                {"countersink", 10 },
+                {"fabricate", 11 },
+                {"machined", 12 },
+                {"purchased", 13 },
+                {"pdf", 14 },
+                {"dxf", 15 },
+                {"step", 16 },
+                {"comments", 17 },
+                {"status", 18 }
             };
 
             var dicFlagLabels = new Dictionary<string, string>
@@ -22886,7 +23107,7 @@ namespace WcfWCService
 
                     // Checking if the spreadsheet matches the template
                     string[] arrExpectedHeaders = {
-                        "Item", "Ref", "Name", "Description", "Mass (kg)",
+                        "Item", "Ref", "Name", "Description", "Qty", "Mass (kg)",
                         "Profile Cut", "Press", "Weld", "Countersink",
                         "Fabricate", "Machined", "Purchased",
                         "PDF", "DXF", "STEP",
@@ -22944,6 +23165,7 @@ namespace WcfWCService
                             sRef = GetCellString(xlWorksheet, i, dicColNums["ref"]).Trim().ToUpper(),
                             sName = GetCellString(xlWorksheet, i, dicColNums["name"]).Trim(),
                             sDescription = GetCellString(xlWorksheet, i, dicColNums["description"]).Trim(),
+                            sQty = GetCellNumericString(xlWorksheet, i, dicColNums["qty"]),
                             sMass = GetCellNumericString(xlWorksheet, i, dicColNums["mass"]),
                             dicFlags = dicFileFlags
                         };
@@ -22957,6 +23179,7 @@ namespace WcfWCService
                         itemTree.Add(row.sItem, row.iRowNo, row);
                     }
 
+                    NormaliseQuantities(lstRows);
                     NormaliseMasses(lstRows);
                     Dictionary<int, List<string>> dicInvalidFlags = NormaliseFlags(lstRows, arrFlagKeys);
                     Dictionary<int, List<string>> dicSiblingDupes = FindSiblingDuplicateRefs(itemTree);
@@ -23061,6 +23284,9 @@ namespace WcfWCService
                             // Description validation
                             IsValidPartDescription(rowVals.sDescription, issueTracker, rowVals.iRowNo, dicColNums["description"]);
 
+                            // Qty validation
+                            IsValidQty(rowVals, issueTracker, rowVals.iRowNo, dicColNums["qty"]);
+
                             // Mass validation
                             IsValidMass(rowVals, issueTracker, rowVals.iRowNo, dicColNums["mass"]);
                         }
@@ -23073,13 +23299,14 @@ namespace WcfWCService
 
                         string sUpdateRtn = "";
                         string sJobCode = "";
+                        string iProdOrLibrary = "";
                         string sProductName = "";
                         string sFolder = "";
                         string sCheckinComments;
 
                         // Set job code
-                        if (sPrefix == "T" && rowVals.sRef.Length >= 4) { sJobCode = rowVals.sRef.Substring(1, 3); }
-                        else if (sPrefix == "M") { sJobCode = "M"; }
+                        if (sPrefix == "T" && rowVals.sRef.Length >= 4) { sJobCode = rowVals.sRef.Substring(1, 3); iProdOrLibrary = "0"; }
+                        else if (sPrefix == "M") { sJobCode = "M"; iProdOrLibrary = "1"; }
                         else { sJobCode = ""; }
 
                         // ---------------------------- CREATE THE WINDCHLL OBJECTS ----------------------------
@@ -23088,70 +23315,40 @@ namespace WcfWCService
                             // If part in LMS, modify its attributes
                             if (bPartExists)
                             {
-                                // Set part attributes
-                                sUpdateRtn = UpdatePartAttributes(sSessionId, sUserId, rowVals.sRef, rowVals.sDescription,
-                                    "UnitWeight", rowVals.sMassNormalised, "float",
-                                    "ProfileCut", rowVals.dicFlags["profile_cut"], "bool",
-                                    "Press", rowVals.dicFlags["press"], "bool",
-                                    "Weld", rowVals.dicFlags["weld"], "bool",
-                                    "Countersink", rowVals.dicFlags["countersink"], "bool",
-                                    "Updating file attributes (group 1) from import", sWebAppId);
+                                // Set part file attributes
+                                sUpdateRtn = SetPartFabricationAttributes(sSessionId, sUserId, rowVals.sRef, sFullName, rowVals.dicFlags["profile_cut"], rowVals.dicFlags["press"],
+                                    rowVals.dicFlags["weld"], rowVals.dicFlags["countersink"], rowVals.dicFlags["fabricate"], rowVals.dicFlags["machined"], rowVals.dicFlags["purchased"],
+                                    rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"], 
+                                    "Updating file attributes from material list import", sWebAppId);
 
                                 if (!sUpdateRtn.StartsWith("Success"))
                                 {
-                                    issueTracker.Report("Error: Something went wrong setting part attributes for part " + rowVals.sRef + ".",
-                                        SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
-
-                                    WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
-                                    continue;
-                                }
-
-                                sUpdateRtn = UpdatePartAttributes(sSessionId, sUserId, rowVals.sRef, rowVals.sDescription,
-                                    "Fabricate", rowVals.dicFlags["fabricate"], "bool",
-                                    "Machined", rowVals.dicFlags["machined"], "bool",
-                                    "Purchased", rowVals.dicFlags["purchased"], "bool",
-                                    null, null, null,
-                                    null, null, null,
-                                    "Updating file attributes (group 2) from import", sWebAppId);
-
-                                if (!sUpdateRtn.StartsWith("Success"))
-                                {
-                                    issueTracker.Report("Error: Something went wrong setting part attributes for part " + rowVals.sRef + ".",
-                                        SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
-
-                                    WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
-                                    continue;
-                                }
-
-                                sUpdateRtn = UpdatePartAttributes(sSessionId, sUserId, rowVals.sRef, rowVals.sDescription,
-                                    "PDF", rowVals.dicFlags["pdf"], "bool",
-                                    "DXF", rowVals.dicFlags["dxf"], "bool",
-                                    "STEP", rowVals.dicFlags["step"], "bool",
-                                    null, null, null,
-                                    null, null, null,
-                                    "Updating file attributes (group 3) from import", sWebAppId);
-
-                                if (!sUpdateRtn.StartsWith("Success"))
-                                {
-                                    issueTracker.Report("Error: Something went wrong setting part attributes for part " + rowVals.sRef + ".",
-                                        SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+                                    issueTracker.Report("Failure: Something went wrong setting part attributes for part " + rowVals.sRef + ".",
+                                        SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
 
                                     WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
                                     continue;
                                 }
 
                                 bUpdated = true;
+
+                                // Update the link to parent if a subpart
+                                rtnString rtn = isValidSubpartCode(rowVals.sRef);
+                                if (rtn.bReturnValue)
+                                {
+                                    LinkToParentItem(rowVals, itemTree, sFullName, issueTracker, dicColNums, iWebAppId);
+                                }
                             }
                             else
                             {
-                                // If part not in LMS, validate the code structure
+                                // Validate the code structure
                                 rtnString rtnFormat = isValidSubpartCode(rowVals.sRef);
 
                                 // If invalid code, report a failure
                                 if (!rtnFormat.bReturnValue)
                                 {
                                     issueTracker.Report(rtnFormat.sReturnValue,
-                                            SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+                                            SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
 
                                     WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
                                     continue;
@@ -23162,56 +23359,35 @@ namespace WcfWCService
                                     // ===== SUBPART CREATION =====
                                     string sImportMaterialTypeCode = "MC9102";
                                     sCheckinComments = "Auto created sub-part from material list import.";
-                                    // JAY - Assuming that for subparts spare is not required
-                                    string sPartCreateReturn = CreateSubPart(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sDescription, rowVals.sMassNormalised, sCheckinComments, "", "", sWebAppId);
 
-                                    if (sPartCreateReturn.StartsWith("Success"))
+                                    // Check for parent creation (in case it failed on previous rows)
+                                    string sParentRef = GetParentRef(itemTree, rowVals);
+
+                                    if (sParentRef != "" && !PartExists(sParentRef, iWebAppId))
                                     {
-                                        // Update the file attributes
-                                        sUpdateRtn = UpdatePartAttributes(sSessionId, sUserId, rowVals.sRef, rowVals.sDescription,
-                                            "ProfileCut", rowVals.dicFlags["profile_cut"], "bool",
-                                            "Press", rowVals.dicFlags["press"], "bool",
-                                            "Weld", rowVals.dicFlags["weld"], "bool",
-                                            "Countersink", rowVals.dicFlags["countersink"], "bool",
-                                            "Fabricate", rowVals.dicFlags["fabricate"], "bool",
-                                            "Updating file attributes (group 1) from import", sWebAppId);
+                                        issueTracker.Report("Warning: parent part " + sParentRef +
+                                            " could not be found. Subpart creation will continue without linking.\n",
+                                            SpreadsheetTracker.PRIORITY_WARNING, rowVals.iRowNo, dicColNums["item"]);
 
-                                        if (!sUpdateRtn.StartsWith("Success"))
-                                        {
-                                            issueTracker.Report("Error: Something went wrong setting part attributes for part " + rowVals.sRef + ".",
-                                                SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
-
-                                            WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
-                                            continue;
-                                        }
-
-                                        sUpdateRtn = UpdatePartAttributes(sSessionId, sUserId, rowVals.sRef, rowVals.sDescription,
-                                            "Machined", rowVals.dicFlags["machined"], "bool",
-                                            "Purchased", rowVals.dicFlags["purchased"], "bool",
-                                            "PDF", rowVals.dicFlags["pdf"], "bool",
-                                            "DXF", rowVals.dicFlags["dxf"], "bool",
-                                            "STEP", rowVals.dicFlags["step"], "bool",
-                                            "Updating file attributes (group 2) from import", sWebAppId);
-
-                                        if (!sUpdateRtn.StartsWith("Success"))
-                                        {
-                                            issueTracker.Report("Error: Something went wrong setting part attributes for part " + rowVals.sRef + ".",
-                                                SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
-
-                                            WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
-                                            continue;
-                                        }
-
-                                        bCreated = true;
+                                        sParentRef = "";
                                     }
-                                    else
+
+                                    // Create the subpart
+                                    rtnString sPartCreateRtn = CreateSubPartWithDoc(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sDescription, sCheckinComments,
+                                        "", rowVals.sQtyNormalised, rowVals.sMassNormalised, sImportMaterialTypeCode, rowVals.dicFlags["profile_cut"], rowVals.dicFlags["press"], 
+                                        rowVals.dicFlags["weld"], rowVals.dicFlags["countersink"], rowVals.dicFlags["fabricate"], rowVals.dicFlags["machined"], 
+                                        rowVals.dicFlags["purchased"], rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"], "", sParentRef, sWebAppId);
+
+                                    if (!sPartCreateRtn.bReturnValue)
                                     {
-                                        issueTracker.Report("Error: could not create M-item. Error reads - " + sPartCreateReturn + "\n",
-                                            SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+                                        issueTracker.Report("Failure: could not create M-item. " + sPartCreateRtn.sReturnValue + "\n",
+                                            SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
 
                                         WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
                                         continue;
                                     }
+
+                                    bCreated = true;
                                 }
                                 else if (sPrefix == "T")
                                 {
@@ -23231,6 +23407,7 @@ namespace WcfWCService
                                         continue;
                                     }
 
+                                    // Create T item
                                     string[] arrJobDetails = rtnJob.sReturnValue.Split('^');
                                     sProductName = arrJobDetails[0];
                                     sFolder = arrJobDetails[1];
@@ -23238,22 +23415,47 @@ namespace WcfWCService
                                     string sTItemCreateReturn = CreateProjectMaterialItem(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sDescription, sProductName, sTItemPartType,
                                         sFolder, sCheckinComments, "", "", "0", sWebAppId);
 
-                                    if (sTItemCreateReturn.StartsWith("Success"))
+                                    if (!sTItemCreateReturn.StartsWith("Success"))
                                     {
-                                        bCreated = true;
-
-                                        // Try set the Weight attribute now
-                                        SetPartAttribute(sSessionId, sUserId, sFullName, rowVals.sRef, "UnitWeight", rowVals.sMassNormalised, "float",
-                                            "Setting weight from materials list import.", sWebAppId);
-                                    }
-                                    else
-                                    {
-                                        issueTracker.Report("Error: could not create T-item. Error reads - " + sTItemCreateReturn + "\n",
-                                            SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+                                        issueTracker.Report("Failure: could not create T-item. Error reads - " + sTItemCreateReturn + "\n",
+                                            SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
 
                                         WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
                                         continue;
                                     }
+
+                                    bCreated = true;
+                                    
+                                    // Set weight attribute
+                                    string sRtnAttributeSet = SetPartAttribute(sSessionId, sUserId, sFullName, rowVals.sRef, "UnitWeight", rowVals.sMassNormalised, "float",
+                                            "Setting weight from materials list import.", sWebAppId);
+
+                                    if (!sRtnAttributeSet.StartsWith("Success"))
+                                    {
+                                        issueTracker.Report("Failure: could not set T-item weight. Error reads - " + sRtnAttributeSet + "\n",
+                                            SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+
+                                        WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                        continue;
+                                    }
+
+                                    // Set file attributes
+                                    sCheckinComments = "Updating file attributes from material list import";
+                                    sUpdateRtn = SetPartFabricationAttributes(sSessionId, sUserId, rowVals.sRef, sFullName, rowVals.dicFlags["profile_cut"], rowVals.dicFlags["press"],
+                                    rowVals.dicFlags["weld"], rowVals.dicFlags["countersink"], rowVals.dicFlags["fabricate"], rowVals.dicFlags["machined"], rowVals.dicFlags["purchased"],
+                                    rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"], sCheckinComments, sWebAppId);
+
+                                    if (!sUpdateRtn.StartsWith("Success"))
+                                    {
+                                        issueTracker.Report("Failure: Something went wrong setting part attributes for part " + rowVals.sRef + ".",
+                                            SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+
+                                        WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                        continue;
+                                    }
+
+                                    // Set link to parent
+                                    LinkToParentItem(rowVals, itemTree, sFullName, issueTracker, dicColNums, iWebAppId);
                                 }
                             }
 
@@ -23293,13 +23495,12 @@ namespace WcfWCService
                                     sFolder = arrJobDetails[1];
                                 }
 
-                                // ===== M PART DOCUMENT CONTAINER CREATION =====
                                 string sDocType = "local.rs.vsrs05.Regain.TD";
                                 string sRevision = "A";
                                 sCheckinComments = "Auto created document container from Material List import.";
 
                                 rtnString rtnDocCreate = CreateAndLinkDoc(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sRef, rowVals.sDescription,
-                                    sDocType, sRevision, sProductName, sFolder, sJobCode, sCheckinComments, sWebAppId);
+                                    sDocType, sRevision, iProdOrLibrary, sProductName, sFolder, sJobCode, sCheckinComments, sWebAppId);
 
                                 if (!rtnDocCreate.bReturnValue)
                                 {
