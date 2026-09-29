@@ -21016,6 +21016,58 @@ namespace WcfWCService
             return rtn;
         }
 
+        public rtnStringArray GetTechnicalDocFolderPath(String sDocNo, String sDocType, string sProdOrLib, int iWebAppId)
+        {
+            String[] sParamNames = new String[3];
+            Object[] objParamValues = new Object[3];
+            int i;
+            rtnStringArray rtnClass = new rtnStringArray();
+
+            StoredProc SP = new StoredProc();
+            RecordSet rs = new RecordSet();
+
+            int iProdOrLib = -1;
+            int.TryParse(sProdOrLib, out iProdOrLib);
+            if (iProdOrLib < 0) 
+            {
+                rtnClass.bReturnValue = false;
+                rtnClass.sReturnValue = "Invalid product or library indicator. Must be 0 for Product, or 1 for Library";
+                return rtnClass;
+            }
+
+            SP.SetProcName("SP_GetWindchillDocumentPath");
+            SP.SetParam("@pvchDocumentNumber", sDocNo);
+            SP.SetParam("@pvchDocumentType", sDocType);
+            SP.SetParam("@piProdOrLib", iProdOrLib);
+
+            int iRecordCount = SP.RunStoredProcDataSet();
+
+            if (iRecordCount <= 0)
+            {
+                rtnClass.bReturnValue = false;
+                rtnClass.sReturnValue = "Cannot find folder for document number " + sDocNo;
+                return rtnClass;
+            }
+            else
+            {
+                try
+                {
+                    DataSet ds = SP.GetDataSet();
+
+                    string sRtnValue = rs.Get_NVarchar(ds, "FolderPath", 0);
+                    rtnClass.sReturnValue = sRtnValue;
+                    rtnClass.bReturnValue = true;
+                    return rtnClass;
+                }
+                catch (System.Exception e)
+                {
+                    rtnClass.bReturnValue = false;
+                    rtnClass.sReturnValue = e.Message;
+                    return rtnClass;
+                }
+            }
+        }
+
         public string ProcessMaterialPartsSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
         {
             // ---------------------------- HELPER FUNCTIONS ----------------------------
@@ -22873,7 +22925,7 @@ namespace WcfWCService
                         SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
                     return false;
                 }
-                /* Check if Mass is able to be blank with Engineers
+                /* JAY Check if Mass is able to be blank with Engineers
                 if (sMass == "")
                 {
                     tracker.Report("Failure: Mass is missing.\n",
@@ -22885,6 +22937,15 @@ namespace WcfWCService
                 if (!vals.bMassValid)
                 {
                     tracker.Report("Failure: Mass is not a valid real number.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
+                    return false;
+                }
+
+                double dMass = double.Parse(vals.sMassNormalised, CultureInfo.InvariantCulture);
+
+                if (dMass < 0)
+                {
+                    tracker.Report("Failure: Mass cannot be negative.\n",
                         SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
                     return false;
                 }
@@ -23191,259 +23252,151 @@ namespace WcfWCService
                     {
                         issueTracker.ResetRow();
                         var rowVals = lstRows[i];
-
-                        // ---------------------------- VALIDATIONS ----------------------------
-                        bool bSkipped = false;
-                        string sPrefix = "";
-                        bool bPartExists = false;
-
-                        // Check for problems in the tree building
-                        if (itemTree.dicProblems.ContainsKey(rowVals.iRowNo))
+                        try
                         {
-                            foreach (ItemProblem problem in itemTree.dicProblems[rowVals.iRowNo])
+                            // ---------------------------- VALIDATIONS ----------------------------
+                            bool bSkipped = false;
+                            string sPrefix = "";
+                            bool bPartExists = false;
+
+                            // Check for problems in the tree building
+                            if (itemTree.dicProblems.ContainsKey(rowVals.iRowNo))
                             {
+                                foreach (ItemProblem problem in itemTree.dicProblems[rowVals.iRowNo])
+                                {
 
-                                string sProblemType = "";
-                                if (problem.iPriority == SpreadsheetTracker.PRIORITY_FAILURE)
-                                {
-                                    sProblemType = "Failure";
-                                }
-                                else if (problem.iPriority == SpreadsheetTracker.PRIORITY_WARNING)
-                                {
-                                    sProblemType = "Warning";
-                                }
-                                else
-                                {
-                                    sProblemType = "Error";
-                                }
+                                    string sProblemType = "";
+                                    if (problem.iPriority == SpreadsheetTracker.PRIORITY_FAILURE)
+                                    {
+                                        sProblemType = "Failure";
+                                    }
+                                    else if (problem.iPriority == SpreadsheetTracker.PRIORITY_WARNING)
+                                    {
+                                        sProblemType = "Warning";
+                                    }
+                                    else
+                                    {
+                                        sProblemType = "Error";
+                                    }
 
-                                issueTracker.Report(sProblemType + ": " + problem.sMessage,
-                                    problem.iPriority, rowVals.iRowNo, dicColNums["item"]);
+                                    issueTracker.Report(sProblemType + ": " + problem.sMessage,
+                                        problem.iPriority, rowVals.iRowNo, dicColNums["item"]);
+                                }
                             }
-                        }
 
-                        if (dicInvalidFlags.ContainsKey(rowVals.iRowNo))
-                        {
-                            foreach (string sKey in dicInvalidFlags[rowVals.iRowNo])
+                            if (dicInvalidFlags.ContainsKey(rowVals.iRowNo))
                             {
-                                issueTracker.Report("Failure: invalid input for " + dicFlagLabels[sKey] +
-                                    ". Must be blank, Y, N, Yes, or No.\n",
-                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums[sKey]);
+                                foreach (string sKey in dicInvalidFlags[rowVals.iRowNo])
+                                {
+                                    issueTracker.Report("Failure: invalid input for " + dicFlagLabels[sKey] +
+                                        ". Must be blank, Y, N, Yes, or No.\n",
+                                        SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums[sKey]);
+                                }
                             }
-                        }
 
-                        if (dicSiblingDupes.ContainsKey(rowVals.iRowNo))
-                        {
-                            issueTracker.Report("Failure: Ref " + rowVals.sRef + " appears more than once under the same parent (see item " +
-                                string.Join(", ", dicSiblingDupes[rowVals.iRowNo]) + ").\n",
-                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
-                        }
-
-                        if (dicSelfNested.ContainsKey(rowVals.iRowNo))
-                        {
-                            issueTracker.Report("Failure: Ref " + rowVals.sRef + " is a child of itself (see item " +
-                                string.Join(", ", dicSelfNested[rowVals.iRowNo]) + ").\n",
-                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
-                        }
-
-                        if (hsConflicting.Contains(rowVals.iRowNo))
-                        {
-                            issueTracker.Report("Failure: this Ref appears on other rows with different attributes.\n",
-                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
-                        }
-
-                        // Check if the row was intentionally left blank
-                        if (rowVals.sRef.Length == 0)
-                        {
-                            if (rowVals.sName.Length > 0)
+                            if (dicSiblingDupes.ContainsKey(rowVals.iRowNo))
                             {
-                                issueTracker.Report("Failure: Ref is missing.\n",
+                                issueTracker.Report("Failure: Ref " + rowVals.sRef + " appears more than once under the same parent (see item " +
+                                    string.Join(", ", dicSiblingDupes[rowVals.iRowNo]) + ").\n",
                                     SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
                             }
-                            else { bSkipped = true; }
-                        }
-                        else
-                        {
-                            // Used later for creation. Put here so no exceptions occur from blank Refs
-                            sPrefix = rowVals.sRef.Substring(0, 1);
 
-                            try
+                            if (dicSelfNested.ContainsKey(rowVals.iRowNo))
                             {
-                                bPartExists = PartExists(rowVals.sRef, iWebAppId);
-                            }
-                            catch (System.Exception e)
-                            {
-                                issueTracker.Report("Error: an exception occurred when checking if the part exists: "
-                                    + e.Message + "\n",
-                                    SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+                                issueTracker.Report("Failure: Ref " + rowVals.sRef + " is a child of itself (see item " +
+                                    string.Join(", ", dicSelfNested[rowVals.iRowNo]) + ").\n",
+                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
                             }
 
-                            // Check the Ref against LMS' existing name in case of typos
-                            IsValidRef(rowVals.sRef, rowVals.sName, bPartExists, issueTracker, rowVals.iRowNo, dicColNums["ref"], iWebAppId);
-
-                            // Description validation
-                            IsValidPartDescription(rowVals.sDescription, issueTracker, rowVals.iRowNo, dicColNums["description"]);
-
-                            // Qty validation
-                            IsValidQty(rowVals, issueTracker, rowVals.iRowNo, dicColNums["qty"]);
-
-                            // Mass validation
-                            IsValidMass(rowVals, issueTracker, rowVals.iRowNo, dicColNums["mass"]);
-                        }
-
-                        // ---------------------------- END VALIDATIONS ----------------------------
-
-                        bool bUpdated = false;
-                        bool bCreated = false;
-                        bool bDocRequired = false;
-
-                        string sUpdateRtn = "";
-                        string sJobCode = "";
-                        string iProdOrLibrary = "";
-                        string sProductName = "";
-                        string sFolder = "";
-                        string sCheckinComments;
-
-                        // Set job code
-                        if (sPrefix == "T" && rowVals.sRef.Length >= 4) { sJobCode = rowVals.sRef.Substring(1, 3); iProdOrLibrary = "0"; }
-                        else if (sPrefix == "M") { sJobCode = "M"; iProdOrLibrary = "1"; }
-                        else { sJobCode = ""; }
-
-                        // ---------------------------- CREATE THE WINDCHLL OBJECTS ----------------------------
-                        if (issueTracker.RowIsValid && !bSkipped)
-                        {
-                            // If part in LMS, modify its attributes
-                            if (bPartExists)
+                            if (hsConflicting.Contains(rowVals.iRowNo))
                             {
-                                // Set part file attributes
-                                sUpdateRtn = SetPartFabricationAttributes(sSessionId, sUserId, rowVals.sRef, sFullName, rowVals.dicFlags["profile_cut"], rowVals.dicFlags["press"],
-                                    rowVals.dicFlags["weld"], rowVals.dicFlags["countersink"], rowVals.dicFlags["fabricate"], rowVals.dicFlags["machined"], rowVals.dicFlags["purchased"],
-                                    rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"], 
-                                    "Updating file attributes from material list import", sWebAppId);
+                                issueTracker.Report("Failure: this Ref appears on other rows with different attributes.\n",
+                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+                            }
 
-                                if (!sUpdateRtn.StartsWith("Success"))
+                            // Check if the row was intentionally left blank
+                            if (rowVals.sRef.Length == 0)
+                            {
+                                if (rowVals.sName.Length > 0)
                                 {
-                                    issueTracker.Report("Failure: Something went wrong setting part attributes for part " + rowVals.sRef + ".",
+                                    issueTracker.Report("Failure: Ref is missing.\n",
                                         SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
-
-                                    WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
-                                    continue;
                                 }
-
-                                bUpdated = true;
-
-                                // Update the link to parent if a subpart
-                                rtnString rtn = isValidSubpartCode(rowVals.sRef);
-                                if (rtn.bReturnValue)
-                                {
-                                    LinkToParentItem(rowVals, itemTree, sFullName, issueTracker, dicColNums, iWebAppId);
-                                }
+                                else { bSkipped = true; }
                             }
                             else
                             {
-                                // Validate the code structure
-                                rtnString rtnFormat = isValidSubpartCode(rowVals.sRef);
+                                // Used later for creation. Put here so no exceptions occur from blank Refs
+                                sPrefix = rowVals.sRef.Substring(0, 1);
 
-                                // If invalid code, report a failure
-                                if (!rtnFormat.bReturnValue)
+                                try
                                 {
-                                    issueTracker.Report(rtnFormat.sReturnValue,
-                                            SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
-
-                                    WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
-                                    continue;
-                                }  
-
-                                if (sPrefix == "M")
-                                {
-                                    // ===== SUBPART CREATION =====
-                                    string sImportMaterialTypeCode = "MC9102";
-                                    sCheckinComments = "Auto created sub-part from material list import.";
-
-                                    // Check for parent creation (in case it failed on previous rows)
-                                    string sParentRef = GetParentRef(itemTree, rowVals);
-
-                                    if (sParentRef != "" && !PartExists(sParentRef, iWebAppId))
-                                    {
-                                        issueTracker.Report("Warning: parent part " + sParentRef +
-                                            " could not be found. Subpart creation will continue without linking.\n",
-                                            SpreadsheetTracker.PRIORITY_WARNING, rowVals.iRowNo, dicColNums["item"]);
-
-                                        sParentRef = "";
-                                    }
-
-                                    // Create the subpart
-                                    rtnString sPartCreateRtn = CreateSubPartWithDoc(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sDescription, sCheckinComments,
-                                        "", rowVals.sQtyNormalised, rowVals.sMassNormalised, sImportMaterialTypeCode, rowVals.dicFlags["profile_cut"], rowVals.dicFlags["press"], 
-                                        rowVals.dicFlags["weld"], rowVals.dicFlags["countersink"], rowVals.dicFlags["fabricate"], rowVals.dicFlags["machined"], 
-                                        rowVals.dicFlags["purchased"], rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"], "", sParentRef, sWebAppId);
-
-                                    if (!sPartCreateRtn.bReturnValue)
-                                    {
-                                        issueTracker.Report("Failure: could not create M-item. " + sPartCreateRtn.sReturnValue + "\n",
-                                            SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
-
-                                        WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
-                                        continue;
-                                    }
-
-                                    bCreated = true;
+                                    bPartExists = PartExists(rowVals.sRef, iWebAppId);
                                 }
-                                else if (sPrefix == "T")
+                                catch (System.Exception e)
                                 {
-                                    // ===== T PART CREATION =====
-                                    string sTItemPartType = "local.rs.vsrs05.Regain.ProjectMaterialItem";
-                                    sCheckinComments = "Auto created T-part from import.";
+                                    issueTracker.Report("Error: an exception occurred when checking if the part exists: "
+                                        + e.Message + "\n",
+                                        SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+                                }
 
-                                    string sChildFolder = rowVals.sRef.Length >= 5 ? rowVals.sRef.Substring(0, 5) : "";
-                                    rtnString rtnJob = GetJobDetails(sJobCode, sChildFolder, iWebAppId, sWebAppId);
+                                // Check the Ref against LMS' existing name in case of typos
+                                IsValidRef(rowVals.sRef, rowVals.sName, bPartExists, issueTracker, rowVals.iRowNo, dicColNums["ref"], iWebAppId);
 
-                                    if (!rtnJob.bReturnValue)
+                                // Description validation
+                                IsValidPartDescription(rowVals.sDescription, issueTracker, rowVals.iRowNo, dicColNums["description"]);
+
+                                // Qty validation
+                                IsValidQty(rowVals, issueTracker, rowVals.iRowNo, dicColNums["qty"]);
+
+                                // Mass validation
+                                IsValidMass(rowVals, issueTracker, rowVals.iRowNo, dicColNums["mass"]);
+                            }
+
+                            // ---------------------------- END VALIDATIONS ----------------------------
+
+                            bool bUpdated = false;
+                            bool bCreated = false;
+                            bool bDocRequired = false;
+
+                            string sUpdateRtn = "";
+                            string sJobCode = "";
+                            string iProdOrLibrary = "";
+                            string sProductName = "";
+                            string sFolder = "";
+                            string sCheckinComments;
+
+                            // Set job code
+                            if (sPrefix == "T" && rowVals.sRef.Length >= 4) { sJobCode = rowVals.sRef.Substring(1, 3); iProdOrLibrary = "0"; }
+                            else if (sPrefix == "M") { sJobCode = "M"; iProdOrLibrary = "1"; }
+                            else { sJobCode = ""; }
+
+                            // ---------------------------- CREATE THE WINDCHLL OBJECTS ----------------------------
+                            if (issueTracker.RowIsValid && !bSkipped)
+                            {
+                                // If part in LMS, modify its attributes
+                                if (bPartExists)
+                                {
+                                    // Set the name and mass
+                                    sUpdateRtn = UpdatePartAttributes(sSessionId, sUserId, rowVals.sRef, rowVals.sDescription,
+                                        "UnitWeight", rowVals.sMassNormalised, "float",
+                                        null, null, null, null, null, null, null, null, null, null, null, null,
+                                        "Updating weight and name from material list import", sWebAppId);
+
+                                    if (!sUpdateRtn.StartsWith("Success"))
                                     {
-                                        issueTracker.Report("Failure: " + rtnJob.sReturnValue + "\n",
+                                        issueTracker.Report("Failure: Something went wrong setting name or weight for part " + rowVals.sRef + ".",
                                             SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
 
                                         WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
                                         continue;
                                     }
 
-                                    // Create T item
-                                    string[] arrJobDetails = rtnJob.sReturnValue.Split('^');
-                                    sProductName = arrJobDetails[0];
-                                    sFolder = arrJobDetails[1];
-
-                                    string sTItemCreateReturn = CreateProjectMaterialItem(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sDescription, sProductName, sTItemPartType,
-                                        sFolder, sCheckinComments, "", "", "0", sWebAppId);
-
-                                    if (!sTItemCreateReturn.StartsWith("Success"))
-                                    {
-                                        issueTracker.Report("Failure: could not create T-item. Error reads - " + sTItemCreateReturn + "\n",
-                                            SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
-
-                                        WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
-                                        continue;
-                                    }
-
-                                    bCreated = true;
-                                    
-                                    // Set weight attribute
-                                    string sRtnAttributeSet = SetPartAttribute(sSessionId, sUserId, sFullName, rowVals.sRef, "UnitWeight", rowVals.sMassNormalised, "float",
-                                            "Setting weight from materials list import.", sWebAppId);
-
-                                    if (!sRtnAttributeSet.StartsWith("Success"))
-                                    {
-                                        issueTracker.Report("Failure: could not set T-item weight. Error reads - " + sRtnAttributeSet + "\n",
-                                            SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
-
-                                        WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
-                                        continue;
-                                    }
-
-                                    // Set file attributes
-                                    sCheckinComments = "Updating file attributes from material list import";
+                                    // Set part file attributes
                                     sUpdateRtn = SetPartFabricationAttributes(sSessionId, sUserId, rowVals.sRef, sFullName, rowVals.dicFlags["profile_cut"], rowVals.dicFlags["press"],
-                                    rowVals.dicFlags["weld"], rowVals.dicFlags["countersink"], rowVals.dicFlags["fabricate"], rowVals.dicFlags["machined"], rowVals.dicFlags["purchased"],
-                                    rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"], sCheckinComments, sWebAppId);
+                                        rowVals.dicFlags["weld"], rowVals.dicFlags["countersink"], rowVals.dicFlags["fabricate"], rowVals.dicFlags["machined"], rowVals.dicFlags["purchased"],
+                                        rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"],
+                                        "Updating file attributes from material list import", sWebAppId);
 
                                     if (!sUpdateRtn.StartsWith("Success"))
                                     {
@@ -23454,91 +23407,252 @@ namespace WcfWCService
                                         continue;
                                     }
 
-                                    // Set link to parent
-                                    LinkToParentItem(rowVals, itemTree, sFullName, issueTracker, dicColNums, iWebAppId);
-                                }
-                            }
+                                    bUpdated = true;
 
-                            // Check if a doc container is required
-                            bool bDocWanted = (sPrefix == "M") || AnyDocFlagSet(rowVals);
-
-                            if (issueTracker.RowIsValid && bDocWanted)
-                            {
-                                if (!DocExists(rowVals.sRef, iWebAppId)) { bDocRequired = true; }
-                            }
-
-                            // Create a doc container if flagged
-                            if (bDocRequired && (bCreated || bUpdated))
-                            {
-                                // JAY check logic for Job Code on T parts - where are the documents created??
-                                if (sPrefix == "M")
-                                {
-                                    sProductName = "Regain Material Catalogue";
-                                    sFolder = "Material Catalogue/";
-                                }
-                                else if (sProductName == "")
-                                {
-                                    string sChildFolder = rowVals.sRef.Length >= 5 ? rowVals.sRef.Substring(0, 5) : "";
-                                    rtnString rtnJob = GetJobDetails(sJobCode, sChildFolder, iWebAppId, sWebAppId);
-
-                                    if (!rtnJob.bReturnValue)
+                                    // Update the link to parent if a subpart
+                                    rtnString rtn = isValidSubpartCode(rowVals.sRef);
+                                    if (rtn.bReturnValue)
                                     {
-                                        issueTracker.Report("Failure: Part updated or created, then an issue occurred. " + rtnJob.sReturnValue + "\n",
-                                            SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+                                        LinkToParentItem(rowVals, itemTree, sFullName, issueTracker, dicColNums, iWebAppId);
+                                    }
+                                }
+                                else
+                                {
+                                    // Validate the code structure
+                                    rtnString rtnFormat = isValidSubpartCode(rowVals.sRef);
+
+                                    // If invalid code, report a failure
+                                    if (!rtnFormat.bReturnValue)
+                                    {
+                                        issueTracker.Report(rtnFormat.sReturnValue,
+                                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
 
                                         WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
                                         continue;
                                     }
 
-                                    string[] arrJobDetails = rtnJob.sReturnValue.Split('^');
-                                    sProductName = arrJobDetails[0];
-                                    sFolder = arrJobDetails[1];
+                                    if (sPrefix == "M")
+                                    {
+                                        // ===== SUBPART CREATION =====
+                                        string sImportMaterialTypeCode = "MC9102";
+                                        sCheckinComments = "Auto created sub-part from material list import.";
+
+                                        // Check for parent creation (in case it failed on previous rows)
+                                        string sParentRef = GetParentRef(itemTree, rowVals);
+
+                                        if (sParentRef != "" && !PartExists(sParentRef, iWebAppId))
+                                        {
+                                            issueTracker.Report("Warning: parent part " + sParentRef +
+                                                " could not be found. Subpart creation will continue without linking.\n",
+                                                SpreadsheetTracker.PRIORITY_WARNING, rowVals.iRowNo, dicColNums["item"]);
+
+                                            sParentRef = "";
+                                        }
+
+                                        // Create the subpart
+                                        rtnString sPartCreateRtn = CreateSubPartWithDoc(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sDescription, sCheckinComments,
+                                            "", rowVals.sQtyNormalised, rowVals.sMassNormalised, sImportMaterialTypeCode, rowVals.dicFlags["profile_cut"], rowVals.dicFlags["press"],
+                                            rowVals.dicFlags["weld"], rowVals.dicFlags["countersink"], rowVals.dicFlags["fabricate"], rowVals.dicFlags["machined"],
+                                            rowVals.dicFlags["purchased"], rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"], "", sParentRef, sWebAppId);
+
+                                        if (!sPartCreateRtn.bReturnValue)
+                                        {
+                                            issueTracker.Report("Failure: could not create M-item. " + sPartCreateRtn.sReturnValue + "\n",
+                                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+
+                                            WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                            continue;
+                                        }
+
+                                        bCreated = true;
+                                    }
+                                    else if (sPrefix == "T")
+                                    {
+                                        // ===== T PART CREATION =====
+                                        string sTItemPartType = "local.rs.vsrs05.Regain.ProjectMaterialItem";
+                                        sCheckinComments = "Auto created T-part from import.";
+
+                                        string sChildFolder = rowVals.sRef.Length >= 5 ? rowVals.sRef.Substring(0, 5) : "";
+                                        rtnString rtnJob = GetJobDetails(sJobCode, sChildFolder, iWebAppId, sWebAppId);
+
+                                        if (!rtnJob.bReturnValue)
+                                        {
+                                            issueTracker.Report("Failure: " + rtnJob.sReturnValue + "\n",
+                                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+
+                                            WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                            continue;
+                                        }
+
+                                        // Create T item
+                                        string[] arrJobDetails = rtnJob.sReturnValue.Split('^');
+                                        sProductName = arrJobDetails[0];
+                                        sFolder = arrJobDetails[1];
+
+                                        string sTItemCreateReturn = CreateProjectMaterialItem(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sDescription, sProductName, sTItemPartType,
+                                            sFolder, sCheckinComments, "", "", "0", sWebAppId);
+
+                                        if (!sTItemCreateReturn.StartsWith("Success"))
+                                        {
+                                            issueTracker.Report("Failure: could not create T-item. Error reads - " + sTItemCreateReturn + "\n",
+                                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+
+                                            WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                            continue;
+                                        }
+
+                                        bCreated = true;
+
+                                        // Set weight attribute
+                                        string sRtnAttributeSet = SetPartAttribute(sSessionId, sUserId, sFullName, rowVals.sRef, "UnitWeight", rowVals.sMassNormalised, "float",
+                                                "Setting weight from materials list import.", sWebAppId);
+
+                                        if (!sRtnAttributeSet.StartsWith("Success"))
+                                        {
+                                            issueTracker.Report("Failure: could not set T-item weight. Error reads - " + sRtnAttributeSet + "\n",
+                                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+
+                                            WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                            continue;
+                                        }
+
+                                        // Set file attributes
+                                        sCheckinComments = "Updating file attributes from material list import";
+                                        sUpdateRtn = SetPartFabricationAttributes(sSessionId, sUserId, rowVals.sRef, sFullName, rowVals.dicFlags["profile_cut"], rowVals.dicFlags["press"],
+                                        rowVals.dicFlags["weld"], rowVals.dicFlags["countersink"], rowVals.dicFlags["fabricate"], rowVals.dicFlags["machined"], rowVals.dicFlags["purchased"],
+                                        rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"], sCheckinComments, sWebAppId);
+
+                                        if (!sUpdateRtn.StartsWith("Success"))
+                                        {
+                                            issueTracker.Report("Failure: Something went wrong setting part attributes for part " + rowVals.sRef + ".",
+                                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+
+                                            WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                            continue;
+                                        }
+
+                                        // Set link to parent
+                                        LinkToParentItem(rowVals, itemTree, sFullName, issueTracker, dicColNums, iWebAppId);
+                                    }
                                 }
 
-                                string sDocType = "local.rs.vsrs05.Regain.TD";
-                                string sRevision = "A";
-                                sCheckinComments = "Auto created document container from Material List import.";
+                                // Check if a doc container is required
+                                bool bDocWanted = (sPrefix == "M") || AnyDocFlagSet(rowVals);
 
-                                rtnString rtnDocCreate = CreateAndLinkDoc(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sRef, rowVals.sDescription,
-                                    sDocType, sRevision, iProdOrLibrary, sProductName, sFolder, sJobCode, sCheckinComments, sWebAppId);
-
-                                if (!rtnDocCreate.bReturnValue)
+                                if (issueTracker.RowIsValid && bDocWanted && (bCreated || bUpdated))
                                 {
-                                    issueTracker.Report("Error: " + rtnDocCreate.sReturnValue + "\n",
-                                        SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+                                    if (!DocExists(rowVals.sRef, iWebAppId)) // If the doc doesn't exist
+                                    {
+                                        string sDocType = "local.rs.vsrs05.Regain.TD";
+                                        string sDocType2 = "TD";
+                                        string sRevision = "A";
+
+                                        if (sPrefix == "M")
+                                        {
+                                            sProductName = "Regain Material Catalogue";
+                                            sFolder = "Material Catalogue/";
+                                        }
+                                        else if (sPrefix == "T")
+                                        {
+                                            if (sProductName == "")
+                                            {
+                                                string sChildFolder = rowVals.sRef.Length >= 5 ? rowVals.sRef.Substring(0, 5) : "";
+                                                rtnString rtnJob = GetJobDetails(sJobCode, sChildFolder, iWebAppId, sWebAppId);
+
+                                                if (!rtnJob.bReturnValue)
+                                                {
+                                                    issueTracker.Report("Failure: Part updated or created, then an issue occurred. " + rtnJob.sReturnValue + "\n",
+                                                        SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+
+                                                    WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                                    continue;
+                                                }
+
+                                                sProductName = rtnJob.sReturnValue.Split('^')[0];
+                                            }
+
+                                            // Document folder comes from the technical doc folder lookup
+                                            rtnStringArray rtnDocFolder = GetTechnicalDocFolderPath(sJobCode, sDocType2, iProdOrLibrary, iWebAppId);
+
+                                            if (!rtnDocFolder.bReturnValue)
+                                            {
+                                                issueTracker.Report("Failure: Part updated or created, but no document folder was found. " + rtnDocFolder.sReturnValue + "\n",
+                                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+
+                                                WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                                continue;
+                                            }
+
+                                            sFolder = rtnDocFolder.sReturnValue;
+                                        }
+
+                                        sCheckinComments = "Auto created document container from Material List import.";
+
+                                        rtnString rtnDocCreate = CreateAndLinkDoc(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sRef, rowVals.sDescription,
+                                            sDocType, sRevision, iProdOrLibrary, sProductName, sFolder, sJobCode, sCheckinComments, sWebAppId);
+
+                                        if (!rtnDocCreate.bReturnValue)
+                                        {
+                                            issueTracker.Report("Error: " + rtnDocCreate.sReturnValue + "\n",
+                                                SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+                                        }
+                                    }
+                                    else // If the doc exists
+                                    {
+                                        string sLinkType = "wt.part.WTPartReferenceLink";
+                                        string sLinkComments = "Linked existing document container from Material List import.";
+
+                                        string sLinkRtn = SetDocToPartRef(sSessionId, sUserId, sFullName,
+                                            rowVals.sRef, rowVals.sRef, sLinkComments, sLinkType, sWebAppId);
+
+                                        if (!sLinkRtn.StartsWith("Success"))
+                                        {
+                                            issueTracker.Report("Error: existing document " + rowVals.sRef +
+                                                " could not be linked to the part. Error reads - " + sLinkRtn + "\n",
+                                                SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+                                        }
+                                    }
                                 }
                             }
-                        }
-                        
-                        // ---------------------------- END CREATION ----------------------------
 
-                        // Writing cells in return file
-                        if (!issueTracker.RowIsValid)
-                        {
-                            WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
-                        }
-                        else if (issueTracker.iRowPriority == SpreadsheetTracker.PRIORITY_WARNING)
-                        {
-                            WriteStatus(rowVals.iRowNo, "Warning", System.Drawing.Color.PaleGoldenrod);
-                        }
-                        else if (bCreated)
-                        {
-                            WriteStatus(rowVals.iRowNo, "Created", System.Drawing.Color.LawnGreen);
-                        }
-                        else if (bUpdated)
-                        {
-                            WriteStatus(rowVals.iRowNo, "Updated", System.Drawing.Color.PaleGreen);
-                        }
-                        else if (bSkipped)
-                        {
-                            WriteStatus(rowVals.iRowNo, "Skipped", System.Drawing.Color.LightBlue);
-                        }
-                        else
-                        {
-                            WriteStatus(rowVals.iRowNo, "Status Unknown", System.Drawing.Color.LightGray);
-                        }
+                            // ---------------------------- END CREATION ----------------------------
 
-                        // ---------------------------- END LOOPING THROUGH ROWS ----------------------------
+                            // Writing cells in return file
+                            if (!issueTracker.RowIsValid)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                            }
+                            else if (issueTracker.iRowPriority == SpreadsheetTracker.PRIORITY_WARNING)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Warning", System.Drawing.Color.PaleGoldenrod);
+                            }
+                            else if (bCreated)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Created", System.Drawing.Color.LawnGreen);
+                            }
+                            else if (bUpdated)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Updated", System.Drawing.Color.PaleGreen);
+                            }
+                            else if (bSkipped)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Skipped", System.Drawing.Color.LightBlue);
+                            }
+                            else
+                            {
+                                WriteStatus(rowVals.iRowNo, "Status Unknown", System.Drawing.Color.LightGray);
+                            }
+
+                            // ---------------------------- END LOOPING THROUGH ROWS ----------------------------
+                        }
+                        catch (System.Exception e)
+                        {
+                            // Catch all for Windchill exceptions
+                            issueTracker.Report("Error: Server message reads: " + e.Message + "\n",
+                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+
+                            WriteStatus(rowVals.iRowNo, "Error", System.Drawing.Color.PaleVioletRed);
+                        }
                     }
 
                     // ---------------------------- WRITING TO FILE AND EMAIL ---------------------------- 
