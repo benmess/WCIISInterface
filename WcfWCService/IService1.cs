@@ -1155,6 +1155,14 @@ namespace WcfWCService
         [OperationContract]
         [WebGet(UriTemplate = "processmateriallistspreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string ProcessMaterialListSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "createandlinkdocwrapper/{sSessionId}/{sUserId}/{sFullName}/{sPartNo}/" +
+                              "{sDocNo}/{sDocName}/{sDocType}/{sRevision}/{iProdOrLibrary}/{sProductName}/" +
+                              "{sFolder}/{sJobCode}/{sCheckinComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string CreateAndLinkDocWrapper(string sSessionId, string sUserId, string sFullName,
+                                       string sPartNo, string sDocNo, string sDocName, string sDocType, string sRevision, string iProdOrLibrary,
+                                       string sProductName, string sFolder, string sJobCode, string sCheckinComments, string sWebAppId);
     }
 
 
