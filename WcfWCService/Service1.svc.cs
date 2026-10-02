@@ -22782,7 +22782,7 @@ namespace WcfWCService
                 }
                 else if (sRef.Length > 0 && sNameUpper == "")
                 {
-                    tracker.Report("Failure: Name is missing.\n",
+                    tracker.Report("Failure: Name is missing. If creating a new part, put the name in both the name and description.\n",
                         SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
                     return false;
                 }
@@ -22925,18 +22925,17 @@ namespace WcfWCService
                         SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
                     return false;
                 }
-                /* JAY Check if Mass is able to be blank with Engineers
-                if (sMass == "")
+
+                if (vals.sMass == "")
                 {
                     tracker.Report("Failure: Mass is missing.\n",
                         SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
                     return false;
                 }
-                */
 
                 if (!vals.bMassValid)
                 {
-                    tracker.Report("Failure: Mass is not a valid real number.\n",
+                    tracker.Report("Failure: Mass is not valid. Expected a number, optionally followed by kg (e.g. 0.125 kg).\n",
                         SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
                     return false;
                 }
@@ -23047,23 +23046,25 @@ namespace WcfWCService
                 return dicInvalid;
             }
 
-            // Parses Mass once. Leaves sMass untouched for error reporting.
+            // Parses Mass once, accepting an optional "kg" suffix. Leaves sMass untouched for error reporting.
             void NormaliseMasses(List<PartsListRow> lstRows)
             {
                 foreach (PartsListRow row in lstRows)
                 {
+                    row.bMassValid = false;
+                    row.sMassNormalised = "";
+
+                    // Strip a trailing unit: "0.125 kg", "0.125kg", "0.125 KG"
+                    string sValue = row.sMass.Trim();
+                    Match match = Regex.Match(sValue, @"^(.*?)\s*(kg)?$", RegexOptions.IgnoreCase);
+                    if (match.Success) { sValue = match.Groups[1].Value.Trim(); }
+
                     double dMass;
-                    if (double.TryParse(row.sMass.Trim(), NumberStyles.Float,
-                            CultureInfo.InvariantCulture, out dMass)
+                    if (double.TryParse(sValue, NumberStyles.Float, CultureInfo.InvariantCulture, out dMass)
                         && !double.IsNaN(dMass) && !double.IsInfinity(dMass))
                     {
                         row.bMassValid = true;
                         row.sMassNormalised = dMass.ToString("0.######", CultureInfo.InvariantCulture);
-                    }
-                    else
-                    {
-                        row.bMassValid = false;
-                        row.sMassNormalised = "";
                     }
                 }
             }
