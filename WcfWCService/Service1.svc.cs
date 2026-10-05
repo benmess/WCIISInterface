@@ -23494,7 +23494,7 @@ namespace WcfWCService
                                     if (sPrefix == "M")
                                     {
                                         // ===== SUBPART CREATION =====
-                                        string sImportMaterialTypeCode = "MC9102";
+                                        string sImportMaterialTypeCode = ""; // Takes parent typing for now
                                         sCheckinComments = "Auto created sub-part from material list import.";
 
                                         // Check for parent creation (in case it failed on previous rows)
