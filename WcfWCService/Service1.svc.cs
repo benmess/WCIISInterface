@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Configuration;
 using System.Data;
 using System.Data.Odbc;
@@ -22975,6 +22976,34 @@ namespace WcfWCService
                 return rtn;
             }
 
+            // Validates that a subpart's parent is valid
+            bool IsValidSubpartParent(PartsListRow row, ItemTree<PartsListRow> tree,
+                SpreadsheetTracker tracker, Dictionary<string, int> dicColNumbers)
+            {
+                // Row was rejected by the tree and already reported
+                if (!tree.dicIndex.ContainsKey(row.sItem)) { return false; }
+
+                ItemNode<PartsListRow> parent = tree.dicIndex[row.sItem].parent;
+
+                if (parent == null || parent == tree.root)
+                {
+                    tracker.Report("Failure: new sub-part " + row.sRef +
+                        " must be listed under a parent item. A sub-part cannot be created on its own.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["item"]);
+                    return false;
+                }
+
+                if (parent.data.sRef == "")
+                {
+                    tracker.Report("Failure: new sub-part " + row.sRef + " is listed under item " +
+                        parent.sItem + ", which has no Ref. A sub-part must be linked to a parent part.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["item"]);
+                    return false;
+                }
+
+                return true;
+            }
+
             // Validates the Mass column
             bool IsValidMass(PartsListRow vals, SpreadsheetTracker tracker, int iRowNumber, int iColumnNumber)
             {
@@ -23411,6 +23440,12 @@ namespace WcfWCService
 
                                 // Mass validation
                                 IsValidMass(rowVals, issueTracker, rowVals.iRowNo, dicColNums["mass"]);
+
+                                // New sub-part parent validation
+                                if (!bPartExists && sPrefix == "M")
+                                {
+                                    IsValidSubpartParent(rowVals, itemTree, issueTracker, dicColNums);
+                                }
                             }
 
                             // ---------------------------- END VALIDATIONS ----------------------------
@@ -23500,13 +23535,14 @@ namespace WcfWCService
                                         // Check for parent creation (in case it failed on previous rows)
                                         string sParentRef = GetParentRef(itemTree, rowVals);
 
-                                        if (sParentRef != "" && !PartExists(sParentRef, iWebAppId))
+                                        if (sParentRef == "" && !PartExists(sParentRef, iWebAppId))
                                         {
-                                            issueTracker.Report("Warning: parent part " + sParentRef +
-                                                " could not be found. Subpart creation will continue without linking.\n",
-                                                SpreadsheetTracker.PRIORITY_WARNING, rowVals.iRowNo, dicColNums["item"]);
+                                            issueTracker.Report("Failure: parent part " + sParentRef +
+                                                " does not exist, so sub-part " + rowVals.sRef + " was not created.\n",
+                                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["item"]);
 
-                                            sParentRef = "";
+                                            WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                            continue;
                                         }
 
                                         // Create the subpart
