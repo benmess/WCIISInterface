@@ -21,6 +21,7 @@ using System.Data.Odbc;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.EnterpriseServices;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -3662,6 +3663,88 @@ namespace WcfWCService
 */
                 return client2.setpartpartlinkwithattributes(sFullName, sContainerNo, sLoadNo, ddQty, sCheckInComments, "local.rs.vsrs05.Regain.ContainerLoadLink", "tonne",
                                                              lLineNumber, sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
+            }
+        }
+
+        public string UpdateLoadAttributes(string sSessionId, string sUserId, string sFullName, string sLoadNo, string sCheckinComments, 
+                                           string sSealNo, string sWBDocketNo,string sTruckRego, string sPackagingIn, string sPackagingOut, 
+                                           string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[1];
+                string[] sAttributeValues = new string[1];
+                string[] sAttributeTypes = new string[1];
+                string sRtn;
+
+                sAttributeNames[0] = "RegainbPortalUser";
+                sAttributeValues[0] = sFullName;
+                sAttributeTypes[0] = "string";
+
+                if (sSealNo != null)
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "ContainerSealNo";
+                    sAttributeValues[sAttributeValues.Length - 1] = sSealNo;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sWBDocketNo != null)
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "WBDocket";
+                    sAttributeValues[sAttributeValues.Length - 1] = sWBDocketNo;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sTruckRego != null)
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "TruckRego";
+                    sAttributeValues[sAttributeValues.Length - 1] = sTruckRego;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "string";
+                }
+
+                if (sPackagingIn != null)
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "PackagingIn";
+                    sAttributeValues[sAttributeValues.Length - 1] = sPackagingIn;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "double";
+                }
+
+                if (sPackagingOut != null)
+                {
+                    Array.Resize<string>(ref sAttributeNames, sAttributeNames.Length + 1);
+                    Array.Resize<string>(ref sAttributeValues, sAttributeValues.Length + 1);
+                    Array.Resize<string>(ref sAttributeTypes, sAttributeTypes.Length + 1);
+
+                    sAttributeNames[sAttributeNames.Length - 1] = "PackagingOut";
+                    sAttributeValues[sAttributeValues.Length - 1] = sPackagingOut;
+                    sAttributeTypes[sAttributeTypes.Length - 1] = "double";
+                }
+
+                sRtn = client2.setpartattributes(sLoadNo, "", sFullName, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckinComments, Convert.ToInt16(sWebAppId));
+
+                return sRtn;
             }
         }
 
@@ -17964,7 +18047,6 @@ namespace WcfWCService
 
                                 }
 
-                                //aaaa
                                 //The sreadsheet does not have moisture percentages so set to 0
                                 rtnItem = SetShippingContainerRecord(arrItems[i]);
 
