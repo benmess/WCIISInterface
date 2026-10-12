@@ -24501,6 +24501,13 @@ namespace WcfWCService
             }
         }
 
+        public string ProcessPartAssemblyLinksSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
+        {
+            Console.WriteLine("Hot here");
+
+            return "Not implemented.";
+        }
+
         // 5. External reference declaration for getting the PID
         [DllImport("user32.dll", SetLastError = true)]
         static extern uint GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
