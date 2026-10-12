@@ -482,6 +482,17 @@ namespace WcfWCService
             }
         }
 
+        public class CompositionAssignmentRow
+        {
+            public int iRowNo;
+            public string sItem;
+            public string sRef;
+            public string sDescription;
+            public string sCompositionNo;
+            public string sCompositionName;
+            public string sAction;
+        }
+
         string[] garrReviewTypes = new string[] { "Prepare", "Check", "Review", "Approve" };
 
         public string CookieLogin(string sUsername, string sPassword, string sWebAppId)
@@ -23535,7 +23546,7 @@ namespace WcfWCService
                                         // Check for parent creation (in case it failed on previous rows)
                                         string sParentRef = GetParentRef(itemTree, rowVals);
 
-                                        if (sParentRef == "" && !PartExists(sParentRef, iWebAppId))
+                                        if (sParentRef == "" || !PartExists(sParentRef, iWebAppId))
                                         {
                                             issueTracker.Report("Failure: parent part " + sParentRef +
                                                 " does not exist, so sub-part " + rowVals.sRef + " was not created.\n",
@@ -23826,6 +23837,667 @@ namespace WcfWCService
                                         }
                     */
                 }
+            }
+        }
+
+        public rtnStringArray2 GetPartCompositionNumbers(String sPartNo, int iWebAppId)
+        {
+            rtnStringArray2 rtnClass = new rtnStringArray2();
+            rtnClass.sArray = new string[0];
+
+            StoredProc SP = new StoredProc();
+            RecordSet rs = new RecordSet();
+
+            SP.SetProcName("SP_GetWindchillPartLinkedCompositions");
+            SP.SetParam("@pvchPartNumber", sPartNo);
+            int iRecordCount = SP.RunStoredProcDataSet();
+
+            if (iRecordCount < 0)
+            {
+                rtnClass.bReturnValue = false;
+                rtnClass.sReturnValue = "Could not read the compositions for part number " + sPartNo;
+                return rtnClass;
+            }
+
+            try
+            {
+                DataSet ds = SP.GetDataSet();
+                var lstCompositions = new List<string>();
+
+                for (int i = 0; i < iRecordCount; i++)
+                {
+                    string sCompositionNo = rs.Get_NVarchar(ds, "PMAPartNumber", i).Trim().ToUpper();
+
+                    if (Regex.IsMatch(sCompositionNo, @"^MC[0-9]{4}$") && !lstCompositions.Contains(sCompositionNo))
+                    {
+                        lstCompositions.Add(sCompositionNo);
+                    }
+                }
+
+                rtnClass.sArray = lstCompositions.ToArray();
+                rtnClass.bReturnValue = true;
+                return rtnClass;
+            }
+            catch (System.Exception e)
+            {
+                rtnClass.bReturnValue = false;
+                rtnClass.sReturnValue = e.Message;
+                return rtnClass;
+            }
+        }
+
+        public string ProcessMaterialCompositionAssignmentSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
+        {
+            // What the Composition No cell tells the import to do with the row
+            const string ACTION_LINK = "LINK";          // MC + four digits: link the part to this composition
+            const string ACTION_REMOVE = "REMOVE";      // None: remove the part's composition link
+            const string ACTION_SKIP = "SKIP";          // blank or Generic: leave the part alone
+            const string ACTION_INVALID = "INVALID";    // anything else
+
+            const string COMPOSITION_PATTERN = @"^MC[0-9]{4}$";
+
+            // ---------------------------- HELPER FUNCTIONS ----------------------------
+
+            // Expects the value already trimmed and upper-cased.
+            string GetCompositionAction(string sCompositionNo)
+            {
+                if (sCompositionNo == "" || sCompositionNo == "GENERIC") { return ACTION_SKIP; }
+                if (sCompositionNo == "NONE") { return ACTION_REMOVE; }
+                if (Regex.IsMatch(sCompositionNo, COMPOSITION_PATTERN)) { return ACTION_LINK; }
+
+                return ACTION_INVALID;
+            }
+
+            // The value compared between rows that share a Ref.
+            // Blank and Generic both mean "leave alone", so they count as the same value.
+            string GetCompositionSignature(CompositionAssignmentRow row)
+            {
+                return row.sAction == ACTION_SKIP ? "" : row.sCompositionNo;
+            }
+
+            // Finds the rows with different Compositions for same Ref. Returns row numbers of conflicts
+            Dictionary<int, List<int>> FindConflictingRefRows(List<CompositionAssignmentRow> lstRows)
+            {
+                var dicConflicts = new Dictionary<int, List<int>>();
+                var dicRefAppearances = new Dictionary<string, List<CompositionAssignmentRow>>();
+
+                // Put the rows into the dictionary to track appearances in the spreadsheet
+                foreach (CompositionAssignmentRow row in lstRows)
+                {
+                    if (row.sRef == "") { continue; }
+
+                    if (!dicRefAppearances.ContainsKey(row.sRef)) { dicRefAppearances[row.sRef] = new List<CompositionAssignmentRow>(); }
+                    dicRefAppearances[row.sRef].Add(row);
+                }
+
+                // Finding conflicts
+                foreach (var kvp in dicRefAppearances)
+                {
+                    // Only one found, skip
+                    if (kvp.Value.Count < 2) { continue; }
+
+                    string sFirstValue = GetCompositionSignature(kvp.Value[0]);
+
+                    // Check the rows against each other
+                    bool bAllMatch = true;
+                    foreach (CompositionAssignmentRow row in kvp.Value)
+                    {
+                        if (GetCompositionSignature(row) != sFirstValue) { bAllMatch = false; break; }
+                    }
+
+                    // If a conflict, find the conflicting row numbers excluding own
+                    if (!bAllMatch)
+                    {
+                        foreach (CompositionAssignmentRow row in kvp.Value)
+                        {
+                            var lstOthers = new List<int>();
+                            foreach (CompositionAssignmentRow other in kvp.Value)
+                            {
+                                if (other.iRowNo != row.iRowNo) { lstOthers.Add(other.iRowNo); }
+                            }
+
+                            dicConflicts[row.iRowNo] = lstOthers;
+                        }
+                    }
+                }
+
+                return dicConflicts;
+            }
+
+            // Validates the Ref. It must be filled in, be a part and not a composition, exist in LMS, and have an LMS name that matches the Description column.
+            // Stops at the first problem found. Not called for skipped rows.
+            bool IsValidRef(CompositionAssignmentRow row, SpreadsheetTracker tracker,
+                Dictionary<string, int> dicColNumbers, int iWebAppId)
+            {
+                if (row.sRef == "")
+                {
+                    tracker.Report("Failure: Ref is missing.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
+                    return false;
+                }
+
+                // SQL Injection guard. Must stay above the LMS lookups below
+                if (row.sRef.Contains("'"))
+                {
+                    tracker.Report("Failure: Ref contains an invalid character (').\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
+                    return false;
+                }
+
+                // Can't put a composition part as the Ref
+                if (Regex.IsMatch(row.sRef, COMPOSITION_PATTERN))
+                {
+                    tracker.Report("Failure: Ref " + row.sRef +
+                        " is a composition number. A composition cannot be assigned a composition.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
+                    return false;
+                }
+
+                // Part must exist
+                if (!PartExists(row.sRef, iWebAppId))
+                {
+                    tracker.Report("Failure: Ref " + row.sRef +
+                        " was not found in LMS.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
+                    return false;
+                }
+
+                // Description must be filled in and match the part name, in case the Ref was mistyped
+                if (row.sDescription == "")
+                {
+                    tracker.Report("Failure: Description is missing. It must match the part name in LMS.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["description"]);
+                    return false;
+                }
+
+                rtnString rtnName = GetPartName(row.sRef, iWebAppId);
+
+                if (rtnName.sReturnValue.Trim().ToUpper() != row.sDescription.ToUpper())
+                {
+                    tracker.Report("Failure: Ref " + row.sRef + " exists with the name '" +
+                        rtnName.sReturnValue.Trim() + "', which does not match the entered Description '" +
+                        row.sDescription + "'.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["description"]);
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Validates the Composition No.
+            bool IsValidCompositionNo(CompositionAssignmentRow row, Dictionary<string, bool> dicExists,
+                SpreadsheetTracker tracker, int iColumnNumber, int iNameColumnNumber, int iWebAppId)
+            {
+                // Malformed composition number
+                if (row.sAction == ACTION_INVALID)
+                {
+                    tracker.Report("Failure: invalid Composition No '" + row.sCompositionNo +
+                        "'. Must be MC followed by four digits (e.g. MC0123), None, Generic, or blank.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, iColumnNumber);
+                    return false;
+                }
+
+                // Only a composition being linked has to exist. None has nothing to look up
+                if (row.sAction != ACTION_LINK) { return true; }
+
+                // Composition must exist if linking. Save in dic for later reference
+                if (!dicExists.ContainsKey(row.sCompositionNo))
+                {
+                    dicExists[row.sCompositionNo] = PartExists(row.sCompositionNo, iWebAppId);
+                }
+
+                if (!dicExists[row.sCompositionNo])
+                {
+                    tracker.Report("Failure: composition " + row.sCompositionNo +
+                        " was not found in LMS.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, iColumnNumber);
+                    return false;
+                }
+
+                // Composition Name must be filled in and match the composition's name
+                if (row.sCompositionName == "")
+                {
+                    tracker.Report("Failure: Composition Name is missing. It must match the composition name in LMS.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, iNameColumnNumber);
+                    return false;
+                }
+
+                rtnString rtnName = GetPartName(row.sCompositionNo, iWebAppId);
+
+                if (rtnName.sReturnValue.Trim().ToUpper() != row.sCompositionName.ToUpper())
+                {
+                    tracker.Report("Failure: composition " + row.sCompositionNo + " exists with the name '" +
+                        rtnName.sReturnValue.Trim() + "', which does not match the entered Composition Name '" +
+                        row.sCompositionName + "'.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, iNameColumnNumber);
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Removes the part's link to each composition in the list. Returns the compositions that were removed.
+            List<string> RemoveCompositionLinks(CompositionAssignmentRow row, List<string> lstCompositions,
+                string sFullName, int iPriorityIfFails, SpreadsheetTracker tracker, int iColumnNumber)
+            {
+                var lstRemoved = new List<string>();
+
+                string sPrefix = "Failure";
+                if (iPriorityIfFails == SpreadsheetTracker.PRIORITY_WARNING) { sPrefix = "Warning"; }
+
+                foreach (string sOldCompositionNo in lstCompositions)
+                {
+                    string sDeleteRtn = DeletePartToPartLink(sSessionId, sUserId, sFullName,
+                        sOldCompositionNo, row.sRef,
+                        "Deleting composition link for " + row.sRef + " from composition assignment import.", sWebAppId);
+
+                    if (sDeleteRtn.StartsWith("Success"))
+                    {
+                        lstRemoved.Add(sOldCompositionNo);
+                    }
+                    else
+                    {
+                        tracker.Report(sPrefix + ": could not remove the link between " + row.sRef +
+                            " and composition " + sOldCompositionNo + ". Error reads - " + sDeleteRtn + "\n",
+                            iPriorityIfFails, row.iRowNo, iColumnNumber);
+                    }
+                }
+
+                return lstRemoved;
+            }
+
+            // ---------------------------- END HELPER FUNCTIONS ----------------------------
+
+            Excel.Application xlApp = null;
+            Excel.Workbooks xlWbks = null;
+
+            int iProcessId = -1;
+
+            var dicColNums = new Dictionary<string, int>
+            {
+                {"item", 1 },
+                {"ref", 2 },
+                {"description", 3 },
+                {"composition_no", 4 },
+                {"composition_name", 5 },
+                {"comments", 6 },
+                {"status", 7 }
+            };
+
+            var issueTracker = new SpreadsheetTracker();
+            bool failure = false;
+
+            try
+            {
+                int iWebAppId = Convert.ToInt32(sWebAppId);
+
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    // ---------------------------- READING SPREADSHEET ----------------------------
+                    Update_User_Time(sUserId, sSessionId);
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+
+                    xlApp = new Excel.Application();
+                    xlApp.DisplayAlerts = false;
+                    xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
+
+                    Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
+                    Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+                    Excel.Range xlRange = xlWorksheet.UsedRange;
+
+                    // Checking if the spreadsheet matches the template
+                    string[] arrExpectedHeaders = {
+                        "Item", "Ref", "Description", "Composition No", "Composition Name",
+                        "Comments", "Status"
+                    };
+
+                    if (xlRange.Row != 1 || xlRange.Column != 1)
+                    {
+                        throw new System.Exception("The spreadsheet must begin at cell A1.");
+                    }
+
+                    int rowCount = xlRange.Rows.Count;
+
+                    for (int i = 0; i < arrExpectedHeaders.Length; i++)
+                    {
+                        string sHeader = GetCellString(xlWorksheet, 1, i + 1).Trim();
+
+                        if (sHeader.ToUpper() != arrExpectedHeaders[i].ToUpper())
+                        {
+                            throw new System.Exception("Invalid column format at column " + (i + 1) +
+                                ". Expected '" + arrExpectedHeaders[i] + "' but found '" + sHeader + "'.\n\n" +
+                                "Expected columns, in order, are: " + string.Join(", ", arrExpectedHeaders));
+                        }
+                    }
+
+                    string sBody = "";
+
+                    void WriteStatus(int iRowNo, string sStatus, System.Drawing.Color colour, string sComment)
+                    {
+                        xlWorksheet.Cells[iRowNo, dicColNums["status"]] = sStatus;
+                        xlWorksheet.Cells[iRowNo, dicColNums["status"]].Interior.Color =
+                            System.Drawing.ColorTranslator.ToOle(colour);
+                        xlWorksheet.Cells[iRowNo, dicColNums["comments"]] = sComment;
+                    }
+
+                    // Get the data from the spreadsheet and put into Row objects
+                    var lstRows = new List<CompositionAssignmentRow>();
+                    int iStopRow = -1;
+
+                    for (int i = 2; i <= rowCount; i++)
+                    {
+                        // A blank Item marks the end of the data
+                        string sItem = GetCellString(xlWorksheet, i, dicColNums["item"]).Trim();
+                        if (sItem == "") { iStopRow = i; break; }
+
+                        string sCompositionNo = GetCellString(xlWorksheet, i, dicColNums["composition_no"]).Trim().ToUpper();
+
+                        CompositionAssignmentRow row = new CompositionAssignmentRow
+                        {
+                            iRowNo = i,
+                            sItem = sItem,
+                            sRef = GetCellString(xlWorksheet, i, dicColNums["ref"]).Trim().ToUpper(),
+                            sDescription = GetCellString(xlWorksheet, i, dicColNums["description"]).Trim(),
+                            sCompositionNo = sCompositionNo,
+                            sCompositionName = GetCellString(xlWorksheet, i, dicColNums["composition_name"]).Trim(),
+                            sAction = GetCompositionAction(sCompositionNo)
+                        };
+
+                        lstRows.Add(row);
+                    }
+
+                    // ---------------------------- END READING SPREADSHEET ----------------------------
+
+                    // Spreadsheet-wide checks
+                    Dictionary<int, List<int>> dicConflicts = FindConflictingRefRows(lstRows);
+
+                    var dicCompositionExists = new Dictionary<string, bool>();
+                    var dicAppliedRefs = new Dictionary<string, int>();
+                    var sbChangeLog = new StringBuilder();
+
+                    string sLinkType = "wt.part.WTPartUsageLink";
+                    string sUnit = "ea";
+                    string sQty = "1";
+
+                    // ---------------------------- LOOPING THROUGH ROWS ----------------------------
+                    for (int i = 0; i < lstRows.Count; i++)
+                    {
+                        issueTracker.ResetRow();
+                        CompositionAssignmentRow rowVals = lstRows[i];
+
+                        string sRowStatus = ""; // Linked, Updated, Removed or Unchanged
+                        string sRowNote = ""; // what was done, written to Comments
+
+                        try
+                        {
+                            // ---------------------------- VALIDATIONS ----------------------------
+                            bool bSkipped = false;
+
+                            // Conflicting rows check
+                            if (dicConflicts.ContainsKey(rowVals.iRowNo))
+                            {
+                                issueTracker.Report("Failure: Ref " + rowVals.sRef +
+                                    " has different Composition No values on different rows (see also row " +
+                                    string.Join(", ", dicConflicts[rowVals.iRowNo]) +
+                                    "). Every occurrence of a Ref must have the same Composition No.\n",
+                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["composition_no"]);
+                            }
+
+                            if (rowVals.sRef == "")
+                            {
+                                bSkipped = true;
+                                sRowNote = "No Ref entered; no change made.";
+                            }
+                            else if (rowVals.sAction == ACTION_SKIP)
+                            {
+                                // Blank or Generic: nothing will be written, so the row is not validated
+                                bSkipped = true;
+                                sRowNote = "No composition to assign (blank or Generic); no change made.";
+                            }
+                            else
+                            {
+                                // Ref validation - including existence in LMS and name matching
+                                IsValidRef(rowVals, issueTracker, dicColNums, iWebAppId);
+
+                                // Composition No. validation - including existence in LMS when linking
+                                IsValidCompositionNo(rowVals, dicCompositionExists, issueTracker,
+                                    dicColNums["composition_no"], dicColNums["composition_name"], iWebAppId);
+                            }
+                            // ---------------------------- END VALIDATIONS ----------------------------
+
+                            // ---------------------------- LINK COMPOSITIONS ----------------------------
+                            if (issueTracker.RowIsValid && !bSkipped)
+                            {
+                                if (dicAppliedRefs.ContainsKey(rowVals.sRef))
+                                {
+                                    // Same Ref and already applied
+                                    sRowStatus = "Unchanged";
+                                    sRowNote = "Already applied on row " + dicAppliedRefs[rowVals.sRef] + ".";
+                                }
+                                else
+                                {
+                                    rtnStringArray2 rtnCompositions = GetPartCompositionNumbers(rowVals.sRef, iWebAppId);
+
+                                    // Stop here if the lookup failed
+                                    if (!rtnCompositions.bReturnValue)
+                                    {
+                                        issueTracker.Report("Error: could not read the current composition for " + rowVals.sRef +
+                                            ". Error reads - " + rtnCompositions.sReturnValue + "\n",
+                                            SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+
+                                        WriteStatus(rowVals.iRowNo, "Error", System.Drawing.Color.PaleVioletRed, issueTracker.sRowMessage);
+                                        continue;
+                                    }
+
+                                    List<string> lstCurrentCompositions = new List<string>(rtnCompositions.sArray);
+
+                                    if (rowVals.sAction == ACTION_LINK)
+                                    {
+                                        bool bAlreadyLinked = lstCurrentCompositions.Contains(rowVals.sCompositionNo);
+                                        bool bLinked = true;
+
+                                        // Link to Composition first
+                                        if (!bAlreadyLinked)
+                                        {
+                                            string sLinkRtn = CreateParentChildPartLink(sSessionId, sUserId, sFullName,
+                                                rowVals.sCompositionNo, rowVals.sRef, sQty, sLinkType, sUnit,
+                                                "Linked part to composition from composition assignment import.", sWebAppId);
+
+                                            if (!sLinkRtn.StartsWith("Success"))
+                                            {
+                                                bLinked = false;
+                                                issueTracker.Report("Failure: could not link " + rowVals.sRef + " to composition " +
+                                                    rowVals.sCompositionNo + ". Error reads - " + sLinkRtn + "\n",
+                                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["composition_no"]);
+                                            }
+                                        }
+
+                                        // Remove other compositions
+                                        if (bLinked)
+                                        {
+                                            // Remove any other composition the part is linked to
+                                            var lstOldCompositions = new List<string>(lstCurrentCompositions);
+                                            lstOldCompositions.Remove(rowVals.sCompositionNo);
+
+                                            List<string> lstRemoved = RemoveCompositionLinks(rowVals, lstOldCompositions, sFullName,
+                                                SpreadsheetTracker.PRIORITY_WARNING, issueTracker, dicColNums["composition_no"]);
+
+                                            // Comments - Composition was switched
+                                            if (lstRemoved.Count > 0 && !bAlreadyLinked)
+                                            {
+                                                sRowStatus = "Updated";
+                                                sRowNote = "Composition changed from " + string.Join(", ", lstRemoved) +
+                                                    " to " + rowVals.sCompositionNo + ".";
+                                                sbChangeLog.Append("Row " + rowVals.iRowNo + " - " + rowVals.sRef + ": " + sRowNote + "\n");
+                                            }
+                                            // No new link, but compositions removed
+                                            else if (lstRemoved.Count > 0)
+                                            {
+                                                sRowStatus = "Updated";
+                                                sRowNote = "Already linked to " + rowVals.sCompositionNo +
+                                                    ". Removed extra composition link to " + string.Join(", ", lstRemoved) + ".";
+                                                sbChangeLog.Append("Row " + rowVals.iRowNo + " - " + rowVals.sRef + ": " + sRowNote + "\n");
+                                            }
+                                            // New link to a composition
+                                            else if (!bAlreadyLinked)
+                                            {
+                                                sRowStatus = "Linked";
+                                                sRowNote = "Linked to " + rowVals.sCompositionNo + ".";
+                                            }
+                                            else
+                                            {
+                                                sRowStatus = "Unchanged";
+                                            }
+
+                                            dicAppliedRefs[rowVals.sRef] = rowVals.iRowNo;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // ---- REMOVE ----
+                                        if (lstCurrentCompositions.Count == 0)
+                                        {
+                                            sRowStatus = "Unchanged";
+                                            sRowNote = "No composition link to remove.";
+                                            dicAppliedRefs[rowVals.sRef] = rowVals.iRowNo;
+                                        }
+                                        else
+                                        {
+                                            List<string> lstRemoved = RemoveCompositionLinks(rowVals, lstCurrentCompositions, sFullName,
+                                                SpreadsheetTracker.PRIORITY_FAILURE, issueTracker, dicColNums["composition_no"]);
+
+                                            bool bAllRemoved = (lstRemoved.Count == lstCurrentCompositions.Count);
+
+                                            if (lstRemoved.Count > 0)
+                                            {
+                                                sRowNote = "Removed composition link to " + string.Join(", ", lstRemoved) + ".";
+                                                sbChangeLog.Append("Row " + rowVals.iRowNo + " - " + rowVals.sRef + ": " + sRowNote + "\n");
+                                            }
+
+                                            if (bAllRemoved)
+                                            {
+                                                sRowStatus = "Removed";
+                                                dicAppliedRefs[rowVals.sRef] = rowVals.iRowNo;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            // ---------------------------- END LINKING ----------------------------
+
+                            // Writing cells in return file
+                            string sRowComment = (sRowNote + " " + issueTracker.sRowMessage).Trim();
+
+                            if (!issueTracker.RowIsValid)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed, sRowComment);
+                            }
+                            else if (issueTracker.iRowPriority == SpreadsheetTracker.PRIORITY_WARNING)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Warning", System.Drawing.Color.PaleGoldenrod, sRowComment);
+                            }
+                            else if (bSkipped)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Skipped", System.Drawing.Color.LightBlue, sRowComment);
+                            }
+                            else if (sRowStatus == "Linked")
+                            {
+                                WriteStatus(rowVals.iRowNo, "Linked", System.Drawing.Color.LawnGreen, sRowComment);
+                            }
+                            else if (sRowStatus == "Updated")
+                            {
+                                WriteStatus(rowVals.iRowNo, "Updated", System.Drawing.Color.PaleGreen, sRowComment);
+                            }
+                            else if (sRowStatus == "Removed")
+                            {
+                                WriteStatus(rowVals.iRowNo, "Removed", System.Drawing.Color.LightSalmon, sRowComment);
+                            }
+                            else if (sRowStatus == "Unchanged")
+                            {
+                                WriteStatus(rowVals.iRowNo, "Unchanged", System.Drawing.Color.Gainsboro, sRowComment);
+                            }
+                            else
+                            {
+                                WriteStatus(rowVals.iRowNo, "Status Unknown", System.Drawing.Color.LightGray, sRowComment);
+                            }
+                        }
+                        catch (System.Exception e)
+                        {
+                            // Catch all for database and Windchill exceptions
+                            issueTracker.Report("Error: Server message reads: " + e.Message + "\n",
+                                SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+
+                            WriteStatus(rowVals.iRowNo, "Error", System.Drawing.Color.PaleVioletRed,
+                                (sRowNote + " " + issueTracker.sRowMessage).Trim());
+                        }
+                    }
+                    // ---------------------------- END LOOPING THROUGH ROWS ----------------------------
+
+                    // ---------------------------- WRITING TO FILE AND EMAIL ----------------------------
+                    // Write the spreadsheet and send back via email
+                    string sFileNameNoFileType = sFile.Split('.')[0];
+                    string sNewExcelFileName = sFileNameNoFileType + "_results.xlsx";
+                    string sNewFileLocation = @"C:\Webroot\Regain\temp\" + sNewExcelFileName;
+                    xlWorkbook.SaveAs(sNewFileLocation);
+
+                    xlWorkbook.Close(true);
+                    xlWbks.Close();
+                    xlApp.Quit();
+
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWbks) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorksheet) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlRange) != 0) ;
+                    xlApp = null;
+                    xlWbks = null;
+                    xlWorkbook = null;
+                    xlWorksheet = null;
+                    xlRange = null;
+
+                    // Body of email to user, and location of the results file
+                    sBody += "Material composition assignment import complete.\n" +
+                        "Please see the attached spreadsheet which has been updated with status and comments where " +
+                        "there may have been issues during the import process. A full list of issues is provided below.\n \n" +
+                        issueTracker.GetIssueLog();
+
+                    if (sbChangeLog.Length > 0)
+                    {
+                        sBody += "\n \nComposition links replaced or removed: \n" + sbChangeLog.ToString();
+                    }
+
+                    sBody += "^";
+
+                    sBody += sNewExcelFileName + "^";
+
+                    return "Success^" + sBody;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                failure = true;
+                return ex.Message;
+            }
+            finally
+            {
+                Process[] excelProcesses = Process.GetProcessesByName("excel");
+                foreach (Process p in excelProcesses)
+                {
+                    if (string.IsNullOrEmpty(p.MainWindowTitle)) // use MainWindowTitle to distinguish this excel process with other excel processes 
+                    {
+                        p.Kill();
+                    }
+                }
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
             }
         }
 
