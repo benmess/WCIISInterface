@@ -3683,7 +3683,7 @@ namespace WcfWCService
                 string[] sAttributeTypes = new string[1];
                 string sRtn;
 
-                sAttributeNames[0] = "RegainbPortalUser";
+                sAttributeNames[0] = "RegainPortalUser";
                 sAttributeValues[0] = sFullName;
                 sAttributeTypes[0] = "string";
 
