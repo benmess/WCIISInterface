@@ -22853,7 +22853,7 @@ namespace WcfWCService
                 }
                 else if (sRef.Length > 0 && sNameUpper == "")
                 {
-                    tracker.Report("Failure: Name is missing. If creating a new part, put the name in both the name and description.\n",
+                    tracker.Report("Failure: LMS Name is missing. If creating a new part, put the name in both the name and description.\n",
                         SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
                     return false;
                 }
@@ -22878,7 +22878,7 @@ namespace WcfWCService
                     if (rtnName.sReturnValue.Trim().ToUpper() != sNameUpper)
                     {
                         tracker.Report("Failure: Ref " + sRef + " exists with the name '"
-                            + rtnName.sReturnValue + "', which does not match the entered name '"
+                            + rtnName.sReturnValue + "', which does not match the entered LMS Name '"
                             + sName + "'.\n",
                             SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
                         return false;
@@ -23268,7 +23268,7 @@ namespace WcfWCService
 
                     // Checking if the spreadsheet matches the template
                     string[] arrExpectedHeaders = {
-                        "Item", "Ref", "Name", "Description", "Qty", "Mass (kg)",
+                        "Item", "Ref", "LMS Name", "Description", "Qty", "Mass (kg)",
                         "Profile Cut", "Press", "Weld", "Countersink",
                         "Fabricate", "Machined", "Purchased",
                         "PDF", "DXF", "STEP",
