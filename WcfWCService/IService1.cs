@@ -387,6 +387,12 @@ namespace WcfWCService
                                                         string sLineNumber, string sOutFlag, string sSealNo, string sWebAppId);
 
         [OperationContract]
+        [WebGet(UriTemplate = "updateloadattributes/{sSessionId}/{sUserId}/{sFullName}/{sLoadNo}/{sCheckinComments}/{sSealNo}/{sWBDocketNo}/{sTruckRego}/{sPackagingIn}/{sPackagingOut}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string UpdateLoadAttributes(string sSessionId, string sUserId, string sFullName, string sLoadNo, string sCheckinComments,
+                                           string sSealNo, string sWBDocketNo, string sTruckRego, string sPackagingIn, string sPackagingOut,
+                                           string sWebAppId);
+
+        [OperationContract]
         [WebGet(UriTemplate = "setcabletraylink/{sSessionId}/{sUserId}/{sFullName}/{sCableNo}/{sCableTrayNo}/{sLineNumber}/{sSeq}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string SetCableTrayLink(string sSessionId, string sUserId, string sFullName, string sCableNo, string sCableTrayNo, string sLineNumber, string sSeq, string sWebAppId);
 
