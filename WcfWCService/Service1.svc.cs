@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
+﻿using Azure.Identity;
+using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.EMMA;
@@ -8,6 +9,9 @@ using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Vml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Graph;
+using Microsoft.Graph.Models;
 using Microsoft.Office.Interop.Excel;
 using Microsoft.Office.Interop.Word;
 using Microsoft.SqlServer.Server;
@@ -39,6 +43,7 @@ using System.ServiceModel.Web;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Services;
 using System.Web.Services.Description;
@@ -47,6 +52,11 @@ using System.Web.UI.WebControls;
 using WcfWCService.ExampleService;
 using Excel = Microsoft.Office.Interop.Excel;
 using word = Microsoft.Office.Interop.Word;
+using Process = System.Diagnostics.Process;
+using Microsoft.Graph.Drives.Item.SharedWithMe; // Required namespace for the v5 model
+using Microsoft.Identity.Client;
+using System.Runtime.CompilerServices;
+using Task = System.Threading.Tasks.Task;
 
 namespace WcfWCService
 {
@@ -55,6 +65,11 @@ namespace WcfWCService
     [ServiceBehavior(Namespace = "http://regain.com/rest")]
     public class Service1 : IService1
     {
+        private const string ClientId = "YOUR_CLIENT_ID";
+        private const string TenantId = "YOUR_TENANT_ID"; // or "common" / "organizations"
+        private const string Username = "user@yourdomain.com";
+        private const string Password = "YOUR_PASSWORD";
+
         public class rtnInt
         {
             public int iReturnValue;
@@ -314,6 +329,13 @@ namespace WcfWCService
                 if (iTotalIssues == 0) { return "Issues reported: \nNone to be reported."; }
                 return "Issues reported: \n" + sbIssueLog.ToString();
             }
+        }
+
+        public class PartFileUploadRow
+        {
+            public int iRowNo;
+            public string sItem;
+            public bool bValidPart;
         }
 
         public class PartsListRow
@@ -23874,10 +23896,364 @@ namespace WcfWCService
                 }
             }
         }
+        public string ProcessFileLMSUploadSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
+        {
+            // ---------------------------- HELPER FUNCTIONS ----------------------------
+
+            // ---------------------------- END HELPER FUNCTIONS ----------------------------
+
+            Excel.Application xlApp = null;
+            Excel.Workbooks xlWbks = null;
+
+            int iProcessId = -1;
+
+            var dicColNums = new Dictionary<string, int>
+            {
+                {"item", 1 },
+                {"comments", 2 },
+                {"status", 3 }
+            };
+
+            var issueTracker = new SpreadsheetTracker();
+            bool failure = false;
+
+            try
+            {
+                int iWebAppId = Convert.ToInt32(sWebAppId);
+
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    // ---------------------------- READING SPREADSHEET ----------------------------
+                    Update_User_Time(sUserId, sSessionId);
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+
+                    xlApp = new Excel.Application();
+                    xlApp.DisplayAlerts = false;
+                    xlWbks = xlApp.Workbooks;
+
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
+
+                    Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
+                    Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+                    Excel.Range xlRange = xlWorksheet.UsedRange;
+
+                    // Checking if the spreadsheet matches the template
+                    string[] arrExpectedHeaders = {
+                        "Item", 
+                        "Comments", "Status"
+                    };
+
+                    if (xlRange.Row != 1 || xlRange.Column != 1)
+                    {
+                        throw new System.Exception("The spreadsheet must begin at cell A1.");
+                    }
+
+                    int rowCount = xlRange.Rows.Count;
+
+                    for (int i = 0; i < arrExpectedHeaders.Length; i++)
+                    {
+                        string sHeader = GetCellString(xlWorksheet, 1, i + 1).Trim();
+
+                        if (sHeader.ToUpper() != arrExpectedHeaders[i].ToUpper())
+                        {
+                            throw new System.Exception("Invalid column format at column " + (i + 1) +
+                                ". Expected '" + arrExpectedHeaders[i] + "' but found '" + sHeader + "'.\n\n" +
+                                "Expected columns, in order, are: " + string.Join(", ", arrExpectedHeaders));
+                        }
+                    }
+                    string sBody = "";
+
+                    var lstRows = new List<PartFileUploadRow>();
+
+                    void WriteStatus(int iRowNo, string sStatus, System.Drawing.Color colour)
+                    {
+                        xlWorksheet.Cells[iRowNo, dicColNums["status"]] = sStatus;
+                        xlWorksheet.Cells[iRowNo, dicColNums["status"]].Interior.Color =
+                            System.Drawing.ColorTranslator.ToOle(colour);
+                        xlWorksheet.Cells[iRowNo, dicColNums["comments"]] = issueTracker.sRowMessage;
+                    }
+
+                    for (int i = 2; i <= rowCount; i++)
+                    {
+                        // Check if blank row (end)
+                        string sItem = GetCellString(xlWorksheet, i, dicColNums["item"]);
+                        if (sItem == "") { break; }
+
+                        // Create object for the row
+                        PartFileUploadRow row = new PartFileUploadRow
+                        {
+                            iRowNo = i,
+                            sItem = GetCellString(xlWorksheet, i, dicColNums["item"]).Trim(),
+                        };
+
+                        lstRows.Add(row);
+                    }
+                    // ---------------------------- END READING SPREADSHEET ----------------------------
+
+
+                    // ---------------------------- LOOPING THROUGH ROWS ----------------------------
+                    for (int i = 0; i < lstRows.Count; i++)
+                    {
+                        issueTracker.ResetRow();
+                        var rowVals = lstRows[i];
+                        try
+                        {
+                            // ---------------------------- VALIDATIONS ----------------------------
+                            bool bSkipped = false;
+                            string sPrefix = "";
+                            bool bPartExists = true;
+
+                            if(!PartExists(lstRows[i].sItem, iWebAppId))
+                            {
+                                issueTracker.Report("Failure: this part does not exist.\n",
+                                    SpreadsheetTracker.PRIORITY_WARNING, rowVals.iRowNo, dicColNums["item"]);
+                                bPartExists = false;
+                            }
+
+                            // ---------------------------- END VALIDATIONS ----------------------------
+
+                            bool bUpdated = false;
+                            bool bCreated = false;
+
+                            // ---------------------------- CREATE THE WINDCHLL OBJECTS ----------------------------
+                            if (issueTracker.RowIsValid)
+                            {
+                                // If part in LMS, modify its attributes
+                                if (bPartExists)
+                                {
+                                    //This is where we read the CAD one drive and try and find the pdf, dxf or step file
+                                    String sType = "pdf";
+                                    FindCADFile(lstRows[i].sItem, sType).GetAwaiter().GetResult();
+                                }
+
+                            }
+
+                            // ---------------------------- END CREATION ----------------------------
+
+                            // Writing cells in return file
+                            if (!issueTracker.RowIsValid)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                            }
+                            else if (issueTracker.iRowPriority == SpreadsheetTracker.PRIORITY_WARNING)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Warning", System.Drawing.Color.PaleGoldenrod);
+                            }
+                            else if (bCreated)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Created", System.Drawing.Color.LawnGreen);
+                            }
+                            else if (bUpdated)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Updated", System.Drawing.Color.PaleGreen);
+                            }
+                            else if (bSkipped)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Skipped", System.Drawing.Color.LightBlue);
+                            }
+                            else
+                            {
+                                WriteStatus(rowVals.iRowNo, "Status Unknown", System.Drawing.Color.LightGray);
+                            }
+
+                            // ---------------------------- END LOOPING THROUGH ROWS ----------------------------
+                        }
+                        catch (System.Exception e)
+                        {
+                            // Catch all for Windchill exceptions
+                            issueTracker.Report("Error: Server message reads: " + e.Message + "\n",
+                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+
+                            WriteStatus(rowVals.iRowNo, "Error", System.Drawing.Color.PaleVioletRed);
+                        }
+                    }
+
+                    // ---------------------------- WRITING TO FILE AND EMAIL ---------------------------- 
+                    // Write the spreadsheet and send back via email
+                    string sFileNameNoFileType = sFile.Split('.')[0];
+                    string sNewExcelFileName = sFileNameNoFileType + "_results.xlsx";
+                    string sNewFileLocation = @"C:\Webroot\Regain\temp\" + sNewExcelFileName;
+                    xlWorkbook.SaveAs(sNewFileLocation);
+
+                    xlWorkbook.Close(true);
+                    xlWbks.Close();
+                    xlApp.Quit();
+
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWbks) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorksheet) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlRange) != 0) ;
+                    xlApp = null;
+                    xlWbks = null;
+                    xlWorkbook = null;
+                    xlWorksheet = null;
+                    xlRange = null;
+
+                    // Body of email to user, and location of the results file
+                    sBody += "Part Files LMS Upload complete.\n" +
+                        "Please see the attached spreadsheet which has been updated with status and comments where " +
+                        "there may have been issues during the upload process. A full list of issues is provided below.\n \n" +
+                        issueTracker.GetIssueLog() + "^";
+
+                    sBody += sNewExcelFileName + "^";
+
+                    return "Success^" + sBody;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                failure = true;
+                return ex.Message;
+            }
+            finally
+            {
+                if (failure)
+                {
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+
+                    try
+                    {
+                        if (iProcessId > 0)
+                        {
+                            Process process = Process.GetProcessById(iProcessId);
+                            process.Kill();
+                        }
+                    }
+                    catch (ArgumentException)
+                    {
+                        // Process already exited
+                    }
+
+                    /*                    System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+                                        foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
+                                        {
+                                            proc.Kill();
+                                        }
+                    */
+                }
+            }
+        }
 
         // 5. External reference declaration for getting the PID
         [DllImport("user32.dll", SetLastError = true)]
         static extern uint GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
-    }
 
+        static async Task FindCADFile(string sPart, string sType)
+        {
+
+            /*            AppDomain.CurrentDomain.AssemblyResolve += (sender, resolveArgs) =>
+                        {
+                            var asmName = new System.Reflection.AssemblyName(resolveArgs.Name);
+                            if (asmName.Name.Equals("Microsoft.IdentityModel.Abstractions", StringComparison.OrdinalIgnoreCase))
+                            {
+                                string binPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Microsoft.IdentityModel.Abstractions.dll");
+                                if (File.Exists(binPath))
+                                {
+                                    return System.Reflection.Assembly.LoadFrom(binPath);
+                                }
+                            }
+                            return null;
+                        };
+
+                        */
+            try
+            {
+
+                string[] scopes = new[] { "Files.Read", "User.Read" };
+
+                var app = PublicClientApplicationBuilder.Create(ClientId)
+                    .WithAuthority(AzureCloudInstance.AzurePublic, TenantId)
+                    .Build();
+
+                var securePassword = new System.Security.SecureString();
+                foreach (char c in Password) securePassword.AppendChar(c);
+
+                // Acquire token via username & password (ROPC)
+                AuthenticationResult result = await app.AcquireTokenByUsernamePassword(scopes, Username, securePassword).ExecuteAsync();
+
+                Console.WriteLine("Token acquired: " + result.AccessToken);
+
+                await ReadSharedFolderAsync(result.AccessToken);
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine($"Error occurred: {e.StackTrace}");
+            }
+        }
+
+        static async Task ReadSharedFolderAsync(string accessToken)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+
+                // Access shared items or specific drive items via Microsoft Graph
+                // Example: Get the user's 'sharedWithMe' items
+                string response = await httpClient.GetStringAsync("https://microsoft.com");
+                Console.WriteLine(response);
+            }
+
+        }
+
+        public bool FindCADFileBad(string sPartNo, string sType)
+        {
+            string tenantId = "://onmicrosoft.com";
+            string clientId = "14d82eec-5b4b-49e5-95b5-5441180093d3";
+            string username = "lms@regainmaterials.com";
+            string password =  "Nrk#2026";
+
+
+            var scopes = new[] { "https://graph.microsoft.com/.default" };
+            var options = new UsernamePasswordCredentialOptions { AuthorityHost = AzureAuthorityHosts.AzurePublicCloud };
+            var credential = new UsernamePasswordCredential(username, password, tenantId, clientId, options);
+            var graphClient = new GraphServiceClient(credential, scopes);
+
+            try
+            {
+                Console.WriteLine("Fetching shared items synchronously...");
+
+                // 2. Instantiate a base request builder and inject the explicit URL mapping
+                var requestUrl = "https://graph.microsoft.com/v1.0/me/drive/sharedWithMe";
+
+                // Note: We use dummy index values in Drives[""] to generate the builder type, then override the URL
+                var sharedItemsResponse = graphClient.Drives["root"]
+                    .SharedWithMe
+                    .WithUrl(requestUrl)
+                    .GetAsync()
+                    .GetAwaiter()
+                    .GetResult(); // Complete blocking synchronous execution
+
+                // 3. Process the results safely
+                if (sharedItemsResponse?.Value != null)
+                {
+                    foreach (var item in sharedItemsResponse.Value)
+                    {
+                        // Fall back to RemoteItem metadata if standard item properties are null
+                        string name = item.Name ?? item.RemoteItem?.Name ?? "Unknown Item";
+                        bool isFolder = item.Folder != null || item.RemoteItem?.Folder != null;
+                        string type = isFolder ? "[Folder]" : "[File]";
+
+                        Console.WriteLine($"{type} {name} (ID: {item.Id})");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No items found shared with this user account.");
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine($"Error occurred: {ex.Message}");
+            }
+            return true;
+        }
+    }
 }
