@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Configuration;
 using System.Data;
 using System.Data.Odbc;
@@ -502,6 +503,29 @@ namespace WcfWCService
                 if (!dicProblems.ContainsKey(iRowNo)) { dicProblems[iRowNo] = new List<ItemProblem>(); }
                 dicProblems[iRowNo].Add(new ItemProblem { sMessage = sMessage, iPriority = iPriority });
             }
+        }
+
+        public class CompositionAssignmentRow
+        {
+            public int iRowNo;
+            public string sItem;
+            public string sRef;
+            public string sDescription;
+            public string sCompositionNo;
+            public string sCompositionName;
+            public string sAction;
+        }
+
+        public class PartAssemblyLinkRow
+        {
+            public int iRowNo;
+            public string sItem = "";
+            public string sRef = "";
+            public string sDescription = "";
+            public string sQty = "";
+            public string sQtyNormalised = "";
+            public bool bQtyValid = false;
+            public bool bValidated = false;
         }
 
         string[] garrReviewTypes = new string[] { "Prepare", "Check", "Review", "Approve" };
@@ -22753,6 +22777,76 @@ namespace WcfWCService
             return sRtn;
         }
 
+        // Finds the worksheet holding the import by checking sheets 1 to iSheetsToCheck in order (e.g. to skip a cover sheet).
+        // Returns the first sheet that matches the template. Throws with each sheet's reason if none do.
+        private Excel._Worksheet GetImportWorksheet(Excel.Workbook xlWorkbook, string[] arrExpectedHeaders, int iSheetsToCheck = 2)
+        {
+            string sExpectedColumns = "Expected columns, in order, are: " + string.Join(", ", arrExpectedHeaders);
+
+            // Never check fewer than 1 sheet, or more sheets than the workbook has
+            int iSheetCount = xlWorkbook.Worksheets.Count;
+            int iLastSheetToCheck = Math.Min(Math.Max(iSheetsToCheck, 1), iSheetCount);
+
+            var lstProblems = new List<string>();
+
+            for (int iSheetNo = 1; iSheetNo <= iLastSheetToCheck; iSheetNo++)
+            {
+                Excel._Worksheet xlWorksheet = xlWorkbook.Worksheets[iSheetNo];
+                string sProblem = CheckSpreadsheetHeader(xlWorksheet, arrExpectedHeaders);
+
+                if (sProblem == "") { return xlWorksheet; }
+
+                // Not the import sheet, so release it before trying the next
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorksheet);
+                lstProblems.Add(sProblem);
+            }
+
+            // Only one sheet was checked: same message as before
+            if (lstProblems.Count == 1)
+            {
+                throw new System.Exception(lstProblems[0] + "\n\n" + sExpectedColumns);
+            }
+
+            // Several sheets checked: give the reason for each
+            var sbProblems = new StringBuilder();
+            for (int i = 0; i < lstProblems.Count; i++)
+            {
+                int iSheetNo = i + 1;
+                sbProblems.Append("Sheet " + iSheetNo + ": " + lstProblems[i] + "\n");
+            }
+
+            throw new System.Exception("None of the first " + lstProblems.Count + " sheets match the import template.\n\n" +
+                sbProblems.ToString() + "\n" + sExpectedColumns);
+        }
+
+        // Checks a worksheet against the import template. Returns "" if it matches, otherwise the reason it doesn't.
+        private string CheckSpreadsheetHeader(Excel._Worksheet xlSheet, string[] arrExpectedHeaders)
+        {
+            Excel.Range xlUsedRange = xlSheet.UsedRange;
+            bool bStartsAtA1 = xlUsedRange.Row == 1 && xlUsedRange.Column == 1;
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(xlUsedRange);
+
+            if (!bStartsAtA1)
+            {
+                return "The spreadsheet must begin at cell A1.";
+            }
+
+            for (int i = 0; i < arrExpectedHeaders.Length; i++)
+            {
+                int iColumnNumber = i + 1;
+                string sHeader = GetCellString(xlSheet, 1, iColumnNumber).Trim();
+                string sExpectedHeader = arrExpectedHeaders[i];
+
+                if (sHeader.ToUpper() != sExpectedHeader.ToUpper())
+                {
+                    return "Invalid column format at column " + iColumnNumber +
+                        ". Expected '" + sExpectedHeader + "' but found '" + sHeader + "'.";
+                }
+            }
+
+            return "";
+        }
+
         public string ProcessMaterialListSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
         {
             // ---------------------------- HELPER FUNCTIONS ----------------------------
@@ -22945,7 +23039,7 @@ namespace WcfWCService
                 }
                 else if (sRef.Length > 0 && sNameUpper == "")
                 {
-                    tracker.Report("Failure: Name is missing. If creating a new part, put the name in both the name and description.\n",
+                    tracker.Report("Failure: LMS Name is missing. If creating a new part, put the name in both the name and description.\n",
                         SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
                     return false;
                 }
@@ -22970,7 +23064,7 @@ namespace WcfWCService
                     if (rtnName.sReturnValue.Trim().ToUpper() != sNameUpper)
                     {
                         tracker.Report("Failure: Ref " + sRef + " exists with the name '"
-                            + rtnName.sReturnValue + "', which does not match the entered name '"
+                            + rtnName.sReturnValue + "', which does not match the entered LMS Name '"
                             + sName + "'.\n",
                             SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
                         return false;
@@ -23077,6 +23171,34 @@ namespace WcfWCService
                 rtn.sReturnValue = "Failure: New subpart Ref must start with M or T.\n";
                 rtn.bReturnValue = false;
                 return rtn;
+            }
+
+            // Validates that a subpart's parent is valid
+            bool IsValidSubpartParent(PartsListRow row, ItemTree<PartsListRow> tree,
+                SpreadsheetTracker tracker, Dictionary<string, int> dicColNumbers)
+            {
+                // Row was rejected by the tree and already reported
+                if (!tree.dicIndex.ContainsKey(row.sItem)) { return false; }
+
+                ItemNode<PartsListRow> parent = tree.dicIndex[row.sItem].parent;
+
+                if (parent == null || parent == tree.root)
+                {
+                    tracker.Report("Failure: new sub-part " + row.sRef +
+                        " must be listed under a parent item. A sub-part cannot be created on its own.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["item"]);
+                    return false;
+                }
+
+                if (parent.data.sRef == "")
+                {
+                    tracker.Report("Failure: new sub-part " + row.sRef + " is listed under item " +
+                        parent.sItem + ", which has no Ref. A sub-part must be linked to a parent part.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["item"]);
+                    return false;
+                }
+
+                return true;
             }
 
             // Validates the Mass column
@@ -23323,40 +23445,24 @@ namespace WcfWCService
                     xlApp.DisplayAlerts = false;
                     xlWbks = xlApp.Workbooks;
 
-
                     GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
 
                     Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
-                    Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
-                    Excel.Range xlRange = xlWorksheet.UsedRange;
 
                     // Checking if the spreadsheet matches the template
                     string[] arrExpectedHeaders = {
-                        "Item", "Ref", "Name", "Description", "Qty", "Mass (kg)",
+                        "Item", "Ref", "LMS Name", "Description", "Qty", "Mass (kg)",
                         "Profile Cut", "Press", "Weld", "Countersink",
                         "Fabricate", "Machined", "Purchased",
                         "PDF", "DXF", "STEP",
                         "Comments", "Status"
                     };
 
-                    if (xlRange.Row != 1 || xlRange.Column != 1)
-                    {
-                        throw new System.Exception("The spreadsheet must begin at cell A1.");
-                    }
-
+                    // The import is normally sheet 1, but a cover sheet may push it to sheet 2
+                    Excel._Worksheet xlWorksheet = GetImportWorksheet(xlWorkbook, arrExpectedHeaders);
+                    Excel.Range xlRange = xlWorksheet.UsedRange;
                     int rowCount = xlRange.Rows.Count;
 
-                    for (int i = 0; i < arrExpectedHeaders.Length; i++)
-                    {
-                        string sHeader = GetCellString(xlWorksheet, 1, i + 1).Trim();
-
-                        if (sHeader.ToUpper() != arrExpectedHeaders[i].ToUpper())
-                        {
-                            throw new System.Exception("Invalid column format at column " + (i + 1) +
-                                ". Expected '" + arrExpectedHeaders[i] + "' but found '" + sHeader + "'.\n\n" +
-                                "Expected columns, in order, are: " + string.Join(", ", arrExpectedHeaders));
-                        }
-                    }
                     string sBody = "";
 
                     var lstRows = new List<PartsListRow>();
@@ -23515,6 +23621,12 @@ namespace WcfWCService
 
                                 // Mass validation
                                 IsValidMass(rowVals, issueTracker, rowVals.iRowNo, dicColNums["mass"]);
+
+                                // New sub-part parent validation
+                                if (!bPartExists && sPrefix == "M")
+                                {
+                                    IsValidSubpartParent(rowVals, itemTree, issueTracker, dicColNums);
+                                }
                             }
 
                             // ---------------------------- END VALIDATIONS ----------------------------
@@ -23604,13 +23716,14 @@ namespace WcfWCService
                                         // Check for parent creation (in case it failed on previous rows)
                                         string sParentRef = GetParentRef(itemTree, rowVals);
 
-                                        if (sParentRef != "" && !PartExists(sParentRef, iWebAppId))
+                                        if (sParentRef == "" || !PartExists(sParentRef, iWebAppId))
                                         {
-                                            issueTracker.Report("Warning: parent part " + sParentRef +
-                                                " could not be found. Subpart creation will continue without linking.\n",
-                                                SpreadsheetTracker.PRIORITY_WARNING, rowVals.iRowNo, dicColNums["item"]);
+                                            issueTracker.Report("Failure: parent part " + sParentRef +
+                                                " does not exist, so sub-part " + rowVals.sRef + " was not created.\n",
+                                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["item"]);
 
-                                            sParentRef = "";
+                                            WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                            continue;
                                         }
 
                                         // Create the subpart
@@ -24138,6 +24251,1645 @@ namespace WcfWCService
                                             proc.Kill();
                                         }
                     */
+                }
+            }
+        }
+
+        public rtnStringArray2 GetPartCompositionNumbers(String sPartNo, int iWebAppId)
+        {
+            rtnStringArray2 rtnClass = new rtnStringArray2();
+            rtnClass.sArray = new string[0];
+
+            StoredProc SP = new StoredProc();
+            RecordSet rs = new RecordSet();
+
+            SP.SetProcName("SP_GetWindchillPartLinkedCompositions");
+            SP.SetParam("@pvchPartNumber", sPartNo);
+            int iRecordCount = SP.RunStoredProcDataSet();
+
+            if (iRecordCount < 0)
+            {
+                rtnClass.bReturnValue = false;
+                rtnClass.sReturnValue = "Could not read the compositions for part number " + sPartNo;
+                return rtnClass;
+            }
+
+            try
+            {
+                DataSet ds = SP.GetDataSet();
+                var lstCompositions = new List<string>();
+
+                for (int i = 0; i < iRecordCount; i++)
+                {
+                    string sCompositionNo = rs.Get_NVarchar(ds, "PMAPartNumber", i).Trim().ToUpper();
+
+                    if (Regex.IsMatch(sCompositionNo, @"^MC[0-9]{4}$") && !lstCompositions.Contains(sCompositionNo))
+                    {
+                        lstCompositions.Add(sCompositionNo);
+                    }
+                }
+
+                rtnClass.sArray = lstCompositions.ToArray();
+                rtnClass.bReturnValue = true;
+                return rtnClass;
+            }
+            catch (System.Exception e)
+            {
+                rtnClass.bReturnValue = false;
+                rtnClass.sReturnValue = e.Message;
+                return rtnClass;
+            }
+        }
+
+        public string ProcessMaterialCompositionAssignmentSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
+        {
+            // What the Composition No cell tells the import to do with the row
+            const string ACTION_LINK = "LINK";          // MC + four digits: link the part to this composition
+            const string ACTION_REMOVE = "REMOVE";      // None: remove the part's composition link
+            const string ACTION_SKIP = "SKIP";          // blank or Generic: leave the part alone
+            const string ACTION_INVALID = "INVALID";    // anything else
+
+            const string COMPOSITION_PATTERN = @"^MC[0-9]{4}$";
+
+            // ---------------------------- HELPER FUNCTIONS ----------------------------
+
+            // Expects the value already trimmed and upper-cased.
+            string GetCompositionAction(string sCompositionNo)
+            {
+                if (sCompositionNo == "" || sCompositionNo == "GENERIC") { return ACTION_SKIP; }
+                if (sCompositionNo == "NONE") { return ACTION_REMOVE; }
+                if (Regex.IsMatch(sCompositionNo, COMPOSITION_PATTERN)) { return ACTION_LINK; }
+
+                return ACTION_INVALID;
+            }
+
+            // The value compared between rows that share a Ref.
+            // Blank and Generic both mean "leave alone", so they count as the same value.
+            string GetCompositionSignature(CompositionAssignmentRow row)
+            {
+                return row.sAction == ACTION_SKIP ? "" : row.sCompositionNo;
+            }
+
+            // Finds the rows with different Compositions for same Ref. Returns row numbers of conflicts
+            Dictionary<int, List<int>> FindConflictingRefRows(List<CompositionAssignmentRow> lstRows)
+            {
+                var dicConflicts = new Dictionary<int, List<int>>();
+                var dicRefAppearances = new Dictionary<string, List<CompositionAssignmentRow>>();
+
+                // Put the rows into the dictionary to track appearances in the spreadsheet
+                foreach (CompositionAssignmentRow row in lstRows)
+                {
+                    if (row.sRef == "") { continue; }
+
+                    if (!dicRefAppearances.ContainsKey(row.sRef)) { dicRefAppearances[row.sRef] = new List<CompositionAssignmentRow>(); }
+                    dicRefAppearances[row.sRef].Add(row);
+                }
+
+                // Finding conflicts
+                foreach (var kvp in dicRefAppearances)
+                {
+                    // Only one found, skip
+                    if (kvp.Value.Count < 2) { continue; }
+
+                    string sFirstValue = GetCompositionSignature(kvp.Value[0]);
+
+                    // Check the rows against each other
+                    bool bAllMatch = true;
+                    foreach (CompositionAssignmentRow row in kvp.Value)
+                    {
+                        if (GetCompositionSignature(row) != sFirstValue) { bAllMatch = false; break; }
+                    }
+
+                    // If a conflict, find the conflicting row numbers excluding own
+                    if (!bAllMatch)
+                    {
+                        foreach (CompositionAssignmentRow row in kvp.Value)
+                        {
+                            var lstOthers = new List<int>();
+                            foreach (CompositionAssignmentRow other in kvp.Value)
+                            {
+                                if (other.iRowNo != row.iRowNo) { lstOthers.Add(other.iRowNo); }
+                            }
+
+                            dicConflicts[row.iRowNo] = lstOthers;
+                        }
+                    }
+                }
+
+                return dicConflicts;
+            }
+
+            // Validates the Ref. It must be filled in, be a part and not a composition, exist in LMS, and have an LMS name that matches the Description column.
+            // Stops at the first problem found. Not called for skipped rows.
+            bool IsValidRef(CompositionAssignmentRow row, SpreadsheetTracker tracker,
+                Dictionary<string, int> dicColNumbers, int iWebAppId)
+            {
+                if (row.sRef == "")
+                {
+                    tracker.Report("Failure: Ref is missing.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
+                    return false;
+                }
+
+                // SQL Injection guard. Must stay above the LMS lookups below
+                if (row.sRef.Contains("'"))
+                {
+                    tracker.Report("Failure: Ref contains an invalid character (').\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
+                    return false;
+                }
+
+                // Can't put a composition part as the Ref
+                if (Regex.IsMatch(row.sRef, COMPOSITION_PATTERN))
+                {
+                    tracker.Report("Failure: Ref " + row.sRef +
+                        " is a composition number. A composition cannot be assigned a composition.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
+                    return false;
+                }
+
+                // Part must exist
+                if (!PartExists(row.sRef, iWebAppId))
+                {
+                    tracker.Report("Failure: Ref " + row.sRef +
+                        " was not found in LMS.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
+                    return false;
+                }
+
+                // Description must be filled in and match the part name, in case the Ref was mistyped
+                if (row.sDescription == "")
+                {
+                    tracker.Report("Failure: Description is missing. It must match the part name in LMS.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["description"]);
+                    return false;
+                }
+
+                rtnString rtnName = GetPartName(row.sRef, iWebAppId);
+
+                if (rtnName.sReturnValue.Trim().ToUpper() != row.sDescription.ToUpper())
+                {
+                    tracker.Report("Failure: Ref " + row.sRef + " exists with the name '" +
+                        rtnName.sReturnValue.Trim() + "', which does not match the entered Description '" +
+                        row.sDescription + "'.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["description"]);
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Validates the Composition No.
+            bool IsValidCompositionNo(CompositionAssignmentRow row, Dictionary<string, bool> dicExists,
+                SpreadsheetTracker tracker, int iColumnNumber, int iNameColumnNumber, int iWebAppId)
+            {
+                // Malformed composition number
+                if (row.sAction == ACTION_INVALID)
+                {
+                    tracker.Report("Failure: invalid Composition No '" + row.sCompositionNo +
+                        "'. Must be MC followed by four digits (e.g. MC0123), None, Generic, or blank.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, iColumnNumber);
+                    return false;
+                }
+
+                // Only a composition being linked has to exist. None has nothing to look up
+                if (row.sAction != ACTION_LINK) { return true; }
+
+                // Composition must exist if linking. Save in dic for later reference
+                if (!dicExists.ContainsKey(row.sCompositionNo))
+                {
+                    dicExists[row.sCompositionNo] = PartExists(row.sCompositionNo, iWebAppId);
+                }
+
+                if (!dicExists[row.sCompositionNo])
+                {
+                    tracker.Report("Failure: composition " + row.sCompositionNo +
+                        " was not found in LMS.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, iColumnNumber);
+                    return false;
+                }
+
+                // Composition Name must be filled in and match the composition's name
+                if (row.sCompositionName == "")
+                {
+                    tracker.Report("Failure: Composition Name is missing. It must match the composition name in LMS.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, iNameColumnNumber);
+                    return false;
+                }
+
+                rtnString rtnName = GetPartName(row.sCompositionNo, iWebAppId);
+
+                if (rtnName.sReturnValue.Trim().ToUpper() != row.sCompositionName.ToUpper())
+                {
+                    tracker.Report("Failure: composition " + row.sCompositionNo + " exists with the name '" +
+                        rtnName.sReturnValue.Trim() + "', which does not match the entered Composition Name '" +
+                        row.sCompositionName + "'.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, iNameColumnNumber);
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Removes the part's link to each composition in the list. Returns the compositions that were removed.
+            List<string> RemoveCompositionLinks(CompositionAssignmentRow row, List<string> lstCompositions,
+                string sFullName, int iPriorityIfFails, SpreadsheetTracker tracker, int iColumnNumber)
+            {
+                var lstRemoved = new List<string>();
+
+                string sPrefix = "Failure";
+                if (iPriorityIfFails == SpreadsheetTracker.PRIORITY_WARNING) { sPrefix = "Warning"; }
+
+                foreach (string sOldCompositionNo in lstCompositions)
+                {
+                    string sDeleteRtn = DeletePartToPartLink(sSessionId, sUserId, sFullName,
+                        sOldCompositionNo, row.sRef,
+                        "Deleting composition link for " + row.sRef + " from composition assignment import.", sWebAppId);
+
+                    if (sDeleteRtn.StartsWith("Success"))
+                    {
+                        lstRemoved.Add(sOldCompositionNo);
+                    }
+                    else
+                    {
+                        tracker.Report(sPrefix + ": could not remove the link between " + row.sRef +
+                            " and composition " + sOldCompositionNo + ". Error reads - " + sDeleteRtn + "\n",
+                            iPriorityIfFails, row.iRowNo, iColumnNumber);
+                    }
+                }
+
+                return lstRemoved;
+            }
+
+            // ---------------------------- END HELPER FUNCTIONS ----------------------------
+
+            Excel.Application xlApp = null;
+            Excel.Workbooks xlWbks = null;
+
+            int iProcessId = -1;
+
+            var dicColNums = new Dictionary<string, int>
+            {
+                {"item", 1 },
+                {"ref", 2 },
+                {"description", 3 },
+                {"composition_no", 4 },
+                {"composition_name", 5 },
+                {"comments", 6 },
+                {"status", 7 }
+            };
+
+            var issueTracker = new SpreadsheetTracker();
+            bool failure = false;
+
+            try
+            {
+                int iWebAppId = Convert.ToInt32(sWebAppId);
+
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    // ---------------------------- READING SPREADSHEET ----------------------------
+                    Update_User_Time(sUserId, sSessionId);
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+
+                    xlApp = new Excel.Application();
+                    xlApp.DisplayAlerts = false;
+                    xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
+
+                    Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
+
+                    // Checking if the spreadsheet matches the template
+                    string[] arrExpectedHeaders = {
+                        "Item", "Ref", "Description", "Composition No", "Composition Name",
+                        "Comments", "Status"
+                    };
+
+                    // The import is normally sheet 1, but a cover sheet may push it to sheet 2
+                    Excel._Worksheet xlWorksheet = GetImportWorksheet(xlWorkbook, arrExpectedHeaders);
+                    Excel.Range xlRange = xlWorksheet.UsedRange;
+                    int rowCount = xlRange.Rows.Count;
+
+                    string sBody = "";
+
+                    void WriteStatus(int iRowNo, string sStatus, System.Drawing.Color colour, string sComment)
+                    {
+                        xlWorksheet.Cells[iRowNo, dicColNums["status"]] = sStatus;
+                        xlWorksheet.Cells[iRowNo, dicColNums["status"]].Interior.Color =
+                            System.Drawing.ColorTranslator.ToOle(colour);
+                        xlWorksheet.Cells[iRowNo, dicColNums["comments"]] = sComment;
+                    }
+
+                    // Get the data from the spreadsheet and put into Row objects
+                    var lstRows = new List<CompositionAssignmentRow>();
+                    int iStopRow = -1;
+
+                    for (int i = 2; i <= rowCount; i++)
+                    {
+                        // A blank Item marks the end of the data
+                        string sItem = GetCellString(xlWorksheet, i, dicColNums["item"]).Trim();
+                        if (sItem == "") { iStopRow = i; break; }
+
+                        string sCompositionNo = GetCellString(xlWorksheet, i, dicColNums["composition_no"]).Trim().ToUpper();
+
+                        CompositionAssignmentRow row = new CompositionAssignmentRow
+                        {
+                            iRowNo = i,
+                            sItem = sItem,
+                            sRef = GetCellString(xlWorksheet, i, dicColNums["ref"]).Trim().ToUpper(),
+                            sDescription = GetCellString(xlWorksheet, i, dicColNums["description"]).Trim(),
+                            sCompositionNo = sCompositionNo,
+                            sCompositionName = GetCellString(xlWorksheet, i, dicColNums["composition_name"]).Trim(),
+                            sAction = GetCompositionAction(sCompositionNo)
+                        };
+
+                        lstRows.Add(row);
+                    }
+
+                    // ---------------------------- END READING SPREADSHEET ----------------------------
+
+                    // Spreadsheet-wide checks
+                    Dictionary<int, List<int>> dicConflicts = FindConflictingRefRows(lstRows);
+
+                    var dicCompositionExists = new Dictionary<string, bool>();
+                    var dicAppliedRefs = new Dictionary<string, int>();
+                    var sbChangeLog = new StringBuilder();
+
+                    string sLinkType = "wt.part.WTPartUsageLink";
+                    string sUnit = "ea";
+                    string sQty = "1";
+
+                    // ---------------------------- LOOPING THROUGH ROWS ----------------------------
+                    for (int i = 0; i < lstRows.Count; i++)
+                    {
+                        issueTracker.ResetRow();
+                        CompositionAssignmentRow rowVals = lstRows[i];
+
+                        string sRowStatus = ""; // Linked, Updated, Removed or Unchanged
+                        string sRowNote = ""; // what was done, written to Comments
+
+                        try
+                        {
+                            // ---------------------------- VALIDATIONS ----------------------------
+                            bool bSkipped = false;
+
+                            // Conflicting rows check
+                            if (dicConflicts.ContainsKey(rowVals.iRowNo))
+                            {
+                                issueTracker.Report("Failure: Ref " + rowVals.sRef +
+                                    " has different Composition No values on different rows (see also row " +
+                                    string.Join(", ", dicConflicts[rowVals.iRowNo]) +
+                                    "). Every occurrence of a Ref must have the same Composition No.\n",
+                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["composition_no"]);
+                            }
+
+                            if (rowVals.sRef == "")
+                            {
+                                bSkipped = true;
+                                sRowNote = "No Ref entered; no change made.";
+                            }
+                            else if (rowVals.sAction == ACTION_SKIP)
+                            {
+                                // Blank or Generic: nothing will be written, so the row is not validated
+                                bSkipped = true;
+                                sRowNote = "No composition to assign (blank or Generic); no change made.";
+                            }
+                            else
+                            {
+                                // Ref validation - including existence in LMS and name matching
+                                IsValidRef(rowVals, issueTracker, dicColNums, iWebAppId);
+
+                                // Composition No. validation - including existence in LMS when linking
+                                IsValidCompositionNo(rowVals, dicCompositionExists, issueTracker,
+                                    dicColNums["composition_no"], dicColNums["composition_name"], iWebAppId);
+                            }
+                            // ---------------------------- END VALIDATIONS ----------------------------
+
+                            // ---------------------------- LINK COMPOSITIONS ----------------------------
+                            if (issueTracker.RowIsValid && !bSkipped)
+                            {
+                                if (dicAppliedRefs.ContainsKey(rowVals.sRef))
+                                {
+                                    // Same Ref and already applied
+                                    sRowStatus = "Unchanged";
+                                    sRowNote = "Already applied on row " + dicAppliedRefs[rowVals.sRef] + ".";
+                                }
+                                else
+                                {
+                                    rtnStringArray2 rtnCompositions = GetPartCompositionNumbers(rowVals.sRef, iWebAppId);
+
+                                    // Stop here if the lookup failed
+                                    if (!rtnCompositions.bReturnValue)
+                                    {
+                                        issueTracker.Report("Error: could not read the current composition for " + rowVals.sRef +
+                                            ". Error reads - " + rtnCompositions.sReturnValue + "\n",
+                                            SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+
+                                        WriteStatus(rowVals.iRowNo, "Error", System.Drawing.Color.PaleVioletRed, issueTracker.sRowMessage);
+                                        continue;
+                                    }
+
+                                    List<string> lstCurrentCompositions = new List<string>(rtnCompositions.sArray);
+
+                                    if (rowVals.sAction == ACTION_LINK)
+                                    {
+                                        bool bAlreadyLinked = lstCurrentCompositions.Contains(rowVals.sCompositionNo);
+                                        bool bLinked = true;
+
+                                        // Link to Composition first
+                                        if (!bAlreadyLinked)
+                                        {
+                                            string sLinkRtn = CreateParentChildPartLink(sSessionId, sUserId, sFullName,
+                                                rowVals.sCompositionNo, rowVals.sRef, sQty, sLinkType, sUnit,
+                                                "Linked part to composition from composition assignment import.", sWebAppId);
+
+                                            if (!sLinkRtn.StartsWith("Success"))
+                                            {
+                                                bLinked = false;
+                                                issueTracker.Report("Failure: could not link " + rowVals.sRef + " to composition " +
+                                                    rowVals.sCompositionNo + ". Error reads - " + sLinkRtn + "\n",
+                                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["composition_no"]);
+                                            }
+                                        }
+
+                                        // Remove other compositions
+                                        if (bLinked)
+                                        {
+                                            // Remove any other composition the part is linked to
+                                            var lstOldCompositions = new List<string>(lstCurrentCompositions);
+                                            lstOldCompositions.Remove(rowVals.sCompositionNo);
+
+                                            List<string> lstRemoved = RemoveCompositionLinks(rowVals, lstOldCompositions, sFullName,
+                                                SpreadsheetTracker.PRIORITY_WARNING, issueTracker, dicColNums["composition_no"]);
+
+                                            // Comments - Composition was switched
+                                            if (lstRemoved.Count > 0 && !bAlreadyLinked)
+                                            {
+                                                sRowStatus = "Updated";
+                                                sRowNote = "Composition changed from " + string.Join(", ", lstRemoved) +
+                                                    " to " + rowVals.sCompositionNo + ".";
+                                                sbChangeLog.Append("Row " + rowVals.iRowNo + " - " + rowVals.sRef + ": " + sRowNote + "\n");
+                                            }
+                                            // No new link, but compositions removed
+                                            else if (lstRemoved.Count > 0)
+                                            {
+                                                sRowStatus = "Updated";
+                                                sRowNote = "Already linked to " + rowVals.sCompositionNo +
+                                                    ". Removed extra composition link to " + string.Join(", ", lstRemoved) + ".";
+                                                sbChangeLog.Append("Row " + rowVals.iRowNo + " - " + rowVals.sRef + ": " + sRowNote + "\n");
+                                            }
+                                            // New link to a composition
+                                            else if (!bAlreadyLinked)
+                                            {
+                                                sRowStatus = "Linked";
+                                                sRowNote = "Linked to " + rowVals.sCompositionNo + ".";
+                                            }
+                                            else
+                                            {
+                                                sRowStatus = "Unchanged";
+                                            }
+
+                                            dicAppliedRefs[rowVals.sRef] = rowVals.iRowNo;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // ---- REMOVE ----
+                                        if (lstCurrentCompositions.Count == 0)
+                                        {
+                                            sRowStatus = "Unchanged";
+                                            sRowNote = "No composition link to remove.";
+                                            dicAppliedRefs[rowVals.sRef] = rowVals.iRowNo;
+                                        }
+                                        else
+                                        {
+                                            List<string> lstRemoved = RemoveCompositionLinks(rowVals, lstCurrentCompositions, sFullName,
+                                                SpreadsheetTracker.PRIORITY_FAILURE, issueTracker, dicColNums["composition_no"]);
+
+                                            bool bAllRemoved = (lstRemoved.Count == lstCurrentCompositions.Count);
+
+                                            if (lstRemoved.Count > 0)
+                                            {
+                                                sRowNote = "Removed composition link to " + string.Join(", ", lstRemoved) + ".";
+                                                sbChangeLog.Append("Row " + rowVals.iRowNo + " - " + rowVals.sRef + ": " + sRowNote + "\n");
+                                            }
+
+                                            if (bAllRemoved)
+                                            {
+                                                sRowStatus = "Removed";
+                                                dicAppliedRefs[rowVals.sRef] = rowVals.iRowNo;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            // ---------------------------- END LINKING ----------------------------
+
+                            // Writing cells in return file
+                            string sRowComment = (sRowNote + " " + issueTracker.sRowMessage).Trim();
+
+                            if (!issueTracker.RowIsValid)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed, sRowComment);
+                            }
+                            else if (issueTracker.iRowPriority == SpreadsheetTracker.PRIORITY_WARNING)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Warning", System.Drawing.Color.PaleGoldenrod, sRowComment);
+                            }
+                            else if (bSkipped)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Skipped", System.Drawing.Color.LightBlue, sRowComment);
+                            }
+                            else if (sRowStatus == "Linked")
+                            {
+                                WriteStatus(rowVals.iRowNo, "Linked", System.Drawing.Color.LawnGreen, sRowComment);
+                            }
+                            else if (sRowStatus == "Updated")
+                            {
+                                WriteStatus(rowVals.iRowNo, "Updated", System.Drawing.Color.PaleGreen, sRowComment);
+                            }
+                            else if (sRowStatus == "Removed")
+                            {
+                                WriteStatus(rowVals.iRowNo, "Removed", System.Drawing.Color.LightSalmon, sRowComment);
+                            }
+                            else if (sRowStatus == "Unchanged")
+                            {
+                                WriteStatus(rowVals.iRowNo, "Unchanged", System.Drawing.Color.Gainsboro, sRowComment);
+                            }
+                            else
+                            {
+                                WriteStatus(rowVals.iRowNo, "Status Unknown", System.Drawing.Color.LightGray, sRowComment);
+                            }
+                        }
+                        catch (System.Exception e)
+                        {
+                            // Catch all for database and Windchill exceptions
+                            issueTracker.Report("Error: Server message reads: " + e.Message + "\n",
+                                SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+
+                            WriteStatus(rowVals.iRowNo, "Error", System.Drawing.Color.PaleVioletRed,
+                                (sRowNote + " " + issueTracker.sRowMessage).Trim());
+                        }
+                    }
+                    // ---------------------------- END LOOPING THROUGH ROWS ----------------------------
+
+                    // ---------------------------- WRITING TO FILE AND EMAIL ----------------------------
+                    // Write the spreadsheet and send back via email
+                    string sFileNameNoFileType = sFile.Split('.')[0];
+                    string sNewExcelFileName = sFileNameNoFileType + "_results.xlsx";
+                    string sNewFileLocation = @"C:\Webroot\Regain\temp\" + sNewExcelFileName;
+                    xlWorkbook.SaveAs(sNewFileLocation);
+
+                    xlWorkbook.Close(true);
+                    xlWbks.Close();
+                    xlApp.Quit();
+
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWbks) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorksheet) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlRange) != 0) ;
+                    xlApp = null;
+                    xlWbks = null;
+                    xlWorkbook = null;
+                    xlWorksheet = null;
+                    xlRange = null;
+
+                    // Body of email to user, and location of the results file
+                    sBody += "Material composition assignment import complete.\n" +
+                        "Please see the attached spreadsheet which has been updated with status and comments where " +
+                        "there may have been issues during the import process. A full list of issues is provided below.\n \n" +
+                        issueTracker.GetIssueLog();
+
+                    if (sbChangeLog.Length > 0)
+                    {
+                        sBody += "\n \nComposition links replaced or removed: \n" + sbChangeLog.ToString();
+                    }
+
+                    sBody += "^";
+
+                    sBody += sNewExcelFileName + "^";
+
+                    return "Success^" + sBody;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                failure = true;
+                return ex.Message;
+            }
+            finally
+            {
+                if (failure)
+                {
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+
+                    try
+                    {
+                        if (iProcessId > 0)
+                        {
+                            Process process = Process.GetProcessById(iProcessId);
+                            process.Kill();
+                        }
+                    }
+                    catch (ArgumentException)
+                    {
+                        // Process already exited
+                    }
+                }
+            }
+        }
+
+        public rtnStringArray2 GetPartUsageLinks(String sParentPartNo, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            rtnStringArray2 rtnCls = new rtnStringArray2();
+            rtnCls.sArray = new string[0];
+            rtnCls.sReturnValue = "";
+            rst.SetWebApp(iWebAppId);
+
+            try
+            {
+                string sSQL = "select PMBPartNumber, LineNumber, Quantity from vwWindchillPartUsageInfo where PMAPartNumber = '" + sParentPartNo + "'";
+                DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+
+                var lstLinks = new List<string>();
+
+                for (int i = 0; i < rst.m_RecordCount; i++)
+                {
+                    string sChild = rst.Get_NVarchar(ds, "PMBPartNumber", i).Trim().ToUpper();
+                    int iLineNumber = rst.Get_Int(ds, "LineNumber", i);
+                    double dQty = rst.Get_Float(ds, "Quantity", i);
+
+                    lstLinks.Add(sChild + "^" + iLineNumber + "^" + dQty.ToString("0.######", CultureInfo.InvariantCulture));
+                }
+
+                if (ds != null) { ds.Dispose(); }
+
+                rtnCls.bReturnValue = true;
+                rtnCls.sArray = lstLinks.ToArray();
+            }
+            catch (System.Exception e)
+            {
+                rtnCls.bReturnValue = false;
+                rtnCls.sReturnValue = e.Message;
+            }
+
+            return rtnCls;
+        }
+
+        public string ProcessPartAssemblyLinksSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
+        {
+            const string LINK_TYPE = "wt.part.WTPartUsageLink";
+            const string LINK_UNIT = "ea";
+
+            // Positions within each link from GetPartUsageLinks
+            const int LINK_CHILD = 0;
+            const int LINK_LINE = 1;
+            const int LINK_QTY = 2;
+
+            // ---------------------------- HELPER FUNCTIONS ----------------------------
+
+            // Checks and reports if the parent has unlisted children that exist in LMS
+            void CheckForExtraLinks(PartAssemblyLinkRow row, HashSet<string> hsSheetChildren,
+                Dictionary<string, List<string[]>> dicLinkCache, SpreadsheetTracker tracker,
+                Dictionary<string, int> dicColNumbers, int iWebAppId)
+            {
+                string sParentRef = row.sRef;
+
+                string sError;
+                List<string[]> lstExistingLinks = ReadLinks(sParentRef, dicLinkCache, iWebAppId, out sError);
+
+                if (lstExistingLinks == null)
+                {
+                    tracker.Report("Warning: could not read the existing links under " + sParentRef +
+                        " to check for links not in this sheet. Error reads - " + sError + "\n",
+                        SpreadsheetTracker.PRIORITY_WARNING, row.iRowNo, dicColNumbers["ref"]);
+                    return;
+                }
+
+                // Finding children linked in LMS that aren't listed under this parent anywhere in the sheet
+                var lstExtraChildren = new List<string>();
+                foreach (string[] arrExistingLink in lstExistingLinks)
+                {
+                    string sLinkedChildRef = arrExistingLink[LINK_CHILD];
+
+                    bool bListedInSheet = hsSheetChildren.Contains(sLinkedChildRef);
+                    bool bAlreadyFound = lstExtraChildren.Contains(sLinkedChildRef);
+
+                    if (!bListedInSheet && !bAlreadyFound) { lstExtraChildren.Add(sLinkedChildRef); }
+                }
+
+                if (lstExtraChildren.Count > 0)
+                {
+                    string sExtraChildren = string.Join(", ", lstExtraChildren);
+
+                    tracker.Report("Warning: " + sParentRef + " has existing links in LMS to " + sExtraChildren +
+                        ", which are not listed under it in this sheet. They were left in place.\n",
+                        SpreadsheetTracker.PRIORITY_WARNING, row.iRowNo, dicColNumbers["ref"]);
+                }
+            }
+
+            // Checks that repeating subassemblies have matching quantities and links
+            Dictionary<int, List<string>> FindConflictingStructures(ItemTree<PartAssemblyLinkRow> tree)
+            {
+                // Builds a comparable text of the node's children and quantities, e.g. "M12345A:2|T1234X:1"
+                string GetChildrenQuantities(ItemNode<PartAssemblyLinkRow> node)
+                {
+                    var lstChildQuantities = new List<string>();
+                    foreach (ItemNode<PartAssemblyLinkRow> child in node.lstChildren)
+                    {
+                        string sChildRef = child.data.sRef;
+                        string sChildQty = child.data.sQtyNormalised;
+
+                        if (sChildRef == "") { continue; }
+                        lstChildQuantities.Add(sChildRef + ":" + sChildQty);
+                    }
+
+                    // Sorted so the same children in a different order still match
+                    lstChildQuantities.Sort(StringComparer.Ordinal);
+                    return string.Join("|", lstChildQuantities);
+                }
+
+                // Get the list of children and quantities for comparison
+                var dicOccurrencesByRef = new Dictionary<string, List<ItemNode<PartAssemblyLinkRow>>>();
+                var dicChildQuantities = new Dictionary<int, string>();
+                foreach (ItemNode<PartAssemblyLinkRow> node in tree.dicIndex.Values)
+                {
+                    string sRef = node.data.sRef;
+                    if (sRef == "") { continue; }
+
+                    string sChildrenQuantities = GetChildrenQuantities(node);
+                    if (sChildrenQuantities == "") { continue; }
+
+                    dicChildQuantities[node.iRowNo] = sChildrenQuantities;
+
+                    if (!dicOccurrencesByRef.ContainsKey(sRef)) { dicOccurrencesByRef[sRef] = new List<ItemNode<PartAssemblyLinkRow>>(); }
+                    dicOccurrencesByRef[sRef].Add(node);
+                }
+
+                // Check for conflicts
+                var dicConflicts = new Dictionary<int, List<string>>();
+                foreach (var kvp in dicOccurrencesByRef)
+                {
+                    List<ItemNode<PartAssemblyLinkRow>> lstRefOccurrences = kvp.Value;
+                    if (lstRefOccurrences.Count < 2) { continue; }
+
+                    // Get the first match and loop through the rest and compare
+                    ItemNode<PartAssemblyLinkRow> firstOccurrence = lstRefOccurrences[0];
+                    string sFirstQuantities = dicChildQuantities[firstOccurrence.iRowNo];
+
+                    bool bAllMatch = true;
+                    foreach (ItemNode<PartAssemblyLinkRow> occurrence in lstRefOccurrences)
+                    {
+                        string sThisQuantities = dicChildQuantities[occurrence.iRowNo];
+                        if (sThisQuantities != sFirstQuantities) { bAllMatch = false; break; }
+                    }
+
+                    if (!bAllMatch)
+                    {
+                        // Every occurrence is conflicting; list the other occurrences' items against each one
+                        foreach (ItemNode<PartAssemblyLinkRow> occurrence in lstRefOccurrences)
+                        {
+                            var lstOtherItems = new List<string>();
+                            foreach (ItemNode<PartAssemblyLinkRow> otherOccurrence in lstRefOccurrences)
+                            {
+                                if (otherOccurrence != occurrence) { lstOtherItems.Add(otherOccurrence.sItem); }
+                            }
+
+                            dicConflicts[occurrence.iRowNo] = lstOtherItems;
+                        }
+                    }
+                }
+
+                return dicConflicts;
+            }
+
+            // Checks for nested children of themselves
+            Dictionary<int, string> FindCycleRows(ItemTree<PartAssemblyLinkRow> tree)
+            {
+                // Unique parent -> children links across the whole sheet
+                var dicChildrenByParent = new Dictionary<string, HashSet<string>>();
+
+                foreach (ItemNode<PartAssemblyLinkRow> node in tree.dicIndex.Values)
+                {
+                    ItemNode<PartAssemblyLinkRow> parent = node.parent;
+                    if (parent == tree.root) { continue; }
+
+                    string sThisRef = node.data.sRef;
+                    string sParentRef = parent.data.sRef;
+                    if (sThisRef == "" || sParentRef == "") { continue; }
+
+                    if (!dicChildrenByParent.ContainsKey(sParentRef)) { dicChildrenByParent[sParentRef] = new HashSet<string>(); }
+                    dicChildrenByParent[sParentRef].Add(sThisRef);
+                }
+
+                // Follows links down from sFromRef and returns whether sToRef is reached
+                var dicReachable = new Dictionary<string, bool>();
+                bool CanReach(string sFromRef, string sToRef)
+                {
+                    string sPairKey = sFromRef + "|" + sToRef;
+                    if (dicReachable.ContainsKey(sPairKey)) { return dicReachable[sPairKey]; }
+
+                    var hsVisited = new HashSet<string>();
+                    var queueToVisit = new Queue<string>();
+                    queueToVisit.Enqueue(sFromRef);
+
+                    bool bFound = false;
+                    while (queueToVisit.Count > 0)
+                    {
+                        string sCurrentRef = queueToVisit.Dequeue();
+                        if (sCurrentRef == sToRef) { bFound = true; break; }
+
+                        bool bAlreadyVisited = !hsVisited.Add(sCurrentRef);
+                        bool bHasChildren = dicChildrenByParent.ContainsKey(sCurrentRef);
+                        if (bAlreadyVisited || !bHasChildren) { continue; }
+
+                        foreach (string sChildRef in dicChildrenByParent[sCurrentRef]) { queueToVisit.Enqueue(sChildRef); }
+                    }
+
+                    dicReachable[sPairKey] = bFound;
+                    return bFound;
+                }
+
+                // Traverse whole tree and check node doesn't reappear as a child
+                var dicCycles = new Dictionary<int, string>();
+                foreach (ItemNode<PartAssemblyLinkRow> node in tree.dicIndex.Values)
+                {
+                    ItemNode<PartAssemblyLinkRow> parent = node.parent;
+                    if (parent == tree.root) { continue; }
+
+                    string sChildRef = node.data.sRef;
+                    string sParentRef = parent.data.sRef;
+                    if (sChildRef == "" || sParentRef == "") { continue; }
+
+                    // If the parent sits somewhere below the child, this link closes a loop
+                    bool bParentIsBelowChild = CanReach(sChildRef, sParentRef);
+                    if (bParentIsBelowChild)
+                    {
+                        dicCycles[node.iRowNo] = sParentRef;
+                    }
+                }
+
+                return dicCycles;
+            }
+
+            // Refs listed more than once under the same parent.
+            Dictionary<int, List<string>> FindSiblingDuplicateRefs(ItemTree<PartAssemblyLinkRow> tree)
+            {
+                var dicDupes = new Dictionary<int, List<string>>();
+
+                // Top-level rows are children of the synthetic root
+                var lstParents = new List<ItemNode<PartAssemblyLinkRow>> { tree.root };
+                foreach (ItemNode<PartAssemblyLinkRow> value in tree.dicIndex.Values) { lstParents.Add(value); }
+
+                foreach (ItemNode<PartAssemblyLinkRow> parent in lstParents)
+                {
+                    // Group this parent's children by Ref
+                    var dicChildrenByRef = new Dictionary<string, List<ItemNode<PartAssemblyLinkRow>>>();
+
+                    foreach (ItemNode<PartAssemblyLinkRow> child in parent.lstChildren)
+                    {
+                        string sChildRef = child.data.sRef;
+                        if (sChildRef == "") { continue; }
+
+                        if (!dicChildrenByRef.ContainsKey(sChildRef)) { dicChildrenByRef[sChildRef] = new List<ItemNode<PartAssemblyLinkRow>>(); }
+                        dicChildrenByRef[sChildRef].Add(child);
+                    }
+
+                    // Any Ref with more than one child is a duplicate
+                    foreach (var kvp in dicChildrenByRef)
+                    {
+                        List<ItemNode<PartAssemblyLinkRow>> lstSiblingsWithRef = kvp.Value;
+                        if (lstSiblingsWithRef.Count < 2) { continue; }
+
+                        foreach (ItemNode<PartAssemblyLinkRow> sibling in lstSiblingsWithRef)
+                        {
+                            var lstOtherItems = new List<string>();
+                            foreach (ItemNode<PartAssemblyLinkRow> otherSibling in lstSiblingsWithRef)
+                            {
+                                if (otherSibling != sibling) { lstOtherItems.Add(otherSibling.sItem); }
+                            }
+
+                            dicDupes[sibling.iRowNo] = lstOtherItems;
+                        }
+                    }
+                }
+
+                return dicDupes;
+            }
+
+            // The row's node in the tree, or null if the tree rejected the row (already reported as a tree problem).
+            ItemNode<PartAssemblyLinkRow> GetNode(ItemTree<PartAssemblyLinkRow> tree, PartAssemblyLinkRow row)
+            {
+                if (!tree.dicIndex.ContainsKey(row.sItem)) { return null; }
+
+                ItemNode<PartAssemblyLinkRow> node = tree.dicIndex[row.sItem];
+
+                // A duplicate item number points at the other row
+                bool bNodeIsThisRow = node.iRowNo == row.iRowNo;
+                return bNodeIsThisRow ? node : null;
+            }
+
+            // Gets all parent parts and lists their children in a lookup dictionary
+            Dictionary<string, HashSet<string>> GetSheetChildren(ItemTree<PartAssemblyLinkRow> tree)
+            {
+                var dicChildren = new Dictionary<string, HashSet<string>>();
+
+                foreach (ItemNode<PartAssemblyLinkRow> node in tree.dicIndex.Values)
+                {
+                    ItemNode<PartAssemblyLinkRow> parent = node.parent;
+                    if (parent == tree.root) { continue; }
+
+                    string sChildRef = node.data.sRef;
+                    string sParentRef = parent.data.sRef;
+                    if (sChildRef == "" || sParentRef == "") { continue; }
+
+                    if (!dicChildren.ContainsKey(sParentRef)) { dicChildren[sParentRef] = new HashSet<string>(); }
+                    dicChildren[sParentRef].Add(sChildRef);
+                }
+
+                return dicChildren;
+            }
+
+            // Validates the parent of a row that is not top-level. The parent must have a Ref and must have passed its own validation.
+            bool IsValidParent(ItemNode<PartAssemblyLinkRow> node, SpreadsheetTracker tracker, Dictionary<string, int> dicColNumbers)
+            {
+                ItemNode<PartAssemblyLinkRow> parent = node.parent;
+                string sParentItem = parent.sItem;
+                string sParentRef = parent.data.sRef;
+                bool bParentValidated = parent.data.bValidated;
+
+                if (sParentRef == "")
+                {
+                    tracker.Report("Failure: item " + node.sItem + " is listed under item " + sParentItem +
+                        ", which has no Ref, so there is no part to link it to.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, node.iRowNo, dicColNumbers["item"]);
+                    return false;
+                }
+
+                if (!bParentValidated)
+                {
+                    tracker.Report("Failure: parent item " + sParentItem + " (" + sParentRef +
+                        ") failed validation, so this row was not linked.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, node.iRowNo, dicColNumbers["item"]);
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Validates the quantity. Blank was already defaulted to 1 in NormaliseQuantities.
+            bool IsValidQty(PartAssemblyLinkRow row, SpreadsheetTracker tracker, int iColumnNumber)
+            {
+                if (row.sQty == "#ERROR")
+                {
+                    tracker.Report("Failure: Quantity contains a formula error or unresolved reference.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, iColumnNumber);
+                    return false;
+                }
+
+                if (!row.bQtyValid)
+                {
+                    tracker.Report("Failure: Quantity is not a valid number.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, iColumnNumber);
+                    return false;
+                }
+
+                double dQty = double.Parse(row.sQtyNormalised, CultureInfo.InvariantCulture);
+
+                if (dQty <= 0)
+                {
+                    tracker.Report("Failure: Quantity must be greater than zero.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, iColumnNumber);
+                    return false;
+                }
+
+                bool bIsWholeNumber = dQty == Math.Floor(dQty);
+                if (!bIsWholeNumber)
+                {
+                    tracker.Report("Failure: Quantity must be a whole number.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, iColumnNumber);
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Validates the Ref. It must exist in LMS and its LMS name must match the Description column
+            bool IsValidRef(PartAssemblyLinkRow row, SpreadsheetTracker tracker,
+                Dictionary<string, int> dicColNumbers, int iWebAppId)
+            {
+                // SQL injection guard. Must stay above the LMS lookups below
+                if (row.sRef.Contains("'"))
+                {
+                    tracker.Report("Failure: Ref contains an invalid character (').\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
+                    return false;
+                }
+
+                if (!PartExists(row.sRef, iWebAppId))
+                {
+                    tracker.Report("Failure: Ref " + row.sRef + " was not found in LMS.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
+                    return false;
+                }
+
+                // Description must be filled in and match the part name, in case the Ref was mistyped
+                if (row.sDescription == "")
+                {
+                    tracker.Report("Failure: Description is missing. It must match the part name in LMS.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["description"]);
+                    return false;
+                }
+
+                rtnString rtnName = GetPartName(row.sRef, iWebAppId);
+
+                if (!rtnName.bReturnValue)
+                {
+                    tracker.Report("Error: could not read the name of part " + row.sRef + ".\n",
+                        SpreadsheetTracker.PRIORITY_ERROR, row.iRowNo, dicColNumbers["ref"]);
+                    return false;
+                }
+
+                string sLmsName = rtnName.sReturnValue.Trim();
+                bool bNameMatches = sLmsName.ToUpper() == row.sDescription.ToUpper();
+
+                if (!bNameMatches)
+                {
+                    tracker.Report("Failure: Ref " + row.sRef + " exists with the name '" +
+                        sLmsName + "', which does not match the entered Description '" +
+                        row.sDescription + "'.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["description"]);
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Links to the parent and returns "Linked", "Updated", "Unchanged", "Error", or "" when it fails.
+            string LinkToParent(PartAssemblyLinkRow row, string sParentRef, string sFullName,
+                Dictionary<string, List<string[]>> dicLinkCache, Dictionary<string, int> dicAppliedLinks,
+                StringBuilder sbChangeLog, SpreadsheetTracker tracker, Dictionary<string, int> dicColNumbers,
+                int iWebAppId, out string sNote)
+            {
+                sNote = "";
+                string sChildRef = row.sRef;
+                string sNewQty = row.sQtyNormalised;
+
+                // Check if a repeated sub-assembly
+                string sPairKey = sParentRef + "|" + sChildRef;
+                if (dicAppliedLinks.ContainsKey(sPairKey))
+                {
+                    int iAppliedOnRow = dicAppliedLinks[sPairKey];
+                    sNote = "Link under " + sParentRef + " already applied on row " + iAppliedOnRow + ".";
+                    return "Unchanged";
+                }
+
+                // Check if the link exists
+                string sError;
+                List<string[]> lstExistingLinks = ReadLinks(sParentRef, dicLinkCache, iWebAppId, out sError);
+
+                if (lstExistingLinks == null)
+                {
+                    tracker.Report("Error: could not read the existing links under " + sParentRef +
+                        ". Error reads - " + sError + "\n",
+                        SpreadsheetTracker.PRIORITY_ERROR, row.iRowNo, dicColNumbers["ref"]);
+                    return "Error";
+                }
+
+                // The parent's existing links that point at this child
+                var lstLinksToChild = new List<string[]>();
+                foreach (string[] arrExistingLink in lstExistingLinks)
+                {
+                    string sLinkedChildRef = arrExistingLink[LINK_CHILD];
+                    if (sLinkedChildRef == sChildRef) { lstLinksToChild.Add(arrExistingLink); }
+                }
+
+                int iLinkCount = lstLinksToChild.Count;
+
+                // No link yet: create one
+                if (iLinkCount == 0)
+                {
+                    string sNewLineNumber = GetNewLineNumber(sParentRef, iWebAppId).ToString();
+
+                    string sCreateRtn = SetPartToPartLinkWithLineNumber(sSessionId, sUserId, sFullName, sParentRef, sChildRef,
+                        sNewQty, sNewLineNumber, "Linked to parent from part assembly links import.",
+                        LINK_TYPE, LINK_UNIT, sWebAppId);
+
+                    if (!sCreateRtn.StartsWith("Success"))
+                    {
+                        tracker.Report("Failure: could not link " + sChildRef + " under " + sParentRef +
+                            ". Error reads - " + sCreateRtn + "\n",
+                            SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
+                        return "";
+                    }
+
+                    dicLinkCache.Remove(sParentRef);
+                    dicAppliedLinks[sPairKey] = row.iRowNo;
+                    sNote = "Linked under " + sParentRef + " with quantity " + sNewQty + ".";
+                    return "Linked";
+                }
+
+                // One link: check the quantity
+                if (iLinkCount == 1)
+                {
+                    string[] arrExistingLink = lstLinksToChild[0];
+                    string sExistingLineNumber = arrExistingLink[LINK_LINE];
+                    string sExistingQty = arrExistingLink[LINK_QTY];
+
+                    double dExistingQty = double.Parse(sExistingQty, CultureInfo.InvariantCulture);
+                    double dNewQty = double.Parse(sNewQty, CultureInfo.InvariantCulture);
+                    bool bQtyMatches = dExistingQty == dNewQty;
+
+                    if (bQtyMatches)
+                    {
+                        dicAppliedLinks[sPairKey] = row.iRowNo;
+                        return "Unchanged";
+                    }
+
+                    string sUpdateRtn = UpdatePartToPartLink(sSessionId, sUserId, sFullName, sParentRef, sChildRef,
+                        sExistingLineNumber, sNewQty, "Updated quantity from part assembly links import.",
+                        LINK_TYPE, LINK_UNIT, sWebAppId);
+
+                    if (!sUpdateRtn.StartsWith("Success"))
+                    {
+                        tracker.Report("Failure: could not update the quantity of " + sChildRef + " under " + sParentRef +
+                            ". Error reads - " + sUpdateRtn + "\n",
+                            SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["qty"]);
+                        return "";
+                    }
+
+                    dicLinkCache.Remove(sParentRef);
+                    dicAppliedLinks[sPairKey] = row.iRowNo;
+                    sNote = "Quantity under " + sParentRef + " changed from " + sExistingQty + " to " + sNewQty + ".";
+                    sbChangeLog.Append("Row " + row.iRowNo + " - " + sChildRef + ": " + sNote + "\n");
+                    return "Updated";
+                }
+
+                // Several links: remove them all and create one, keeping the lowest line number or getting a new one if none exist
+                int? iLowestLineNumber = null;
+                foreach (string[] arrDuplicateLink in lstLinksToChild)
+                {
+                    int iLineNumber = int.Parse(arrDuplicateLink[LINK_LINE], CultureInfo.InvariantCulture);
+
+                    if (iLineNumber <= 0) { continue; } // Line number returns as -1 where it is null in WC
+                    if (iLowestLineNumber == null || iLineNumber < iLowestLineNumber) { iLowestLineNumber = iLineNumber; }
+                }
+
+                if (iLowestLineNumber == null) { iLowestLineNumber = GetNewLineNumber(sParentRef, iWebAppId); }
+
+                // Deleting...
+                string sDeleteRtn = DeletePartToPartLink(sSessionId, sUserId, sFullName, sParentRef, sChildRef,
+                    "Removing duplicate links from part assembly links import.", sWebAppId);
+
+                if (!sDeleteRtn.StartsWith("Success"))
+                {
+                    tracker.Report("Failure: found " + iLinkCount + " links of " + sChildRef + " under " + sParentRef +
+                        " but could not remove them. Error reads - " + sDeleteRtn + "\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
+                    return "";
+                }
+
+                dicLinkCache.Remove(sParentRef);
+
+                // Make the new link
+                string sReplaceRtn = SetPartToPartLinkWithLineNumber(sSessionId, sUserId, sFullName, sParentRef, sChildRef,
+                    sNewQty, iLowestLineNumber.ToString(), "Replaced duplicate links from part assembly links import.",
+                    LINK_TYPE, LINK_UNIT, sWebAppId);
+
+                if (!sReplaceRtn.StartsWith("Success"))
+                {
+                    string sLost = "Removed " + iLinkCount + " duplicate links of " + sChildRef + " under " + sParentRef +
+                        " but could not create the replacement, so it is no longer linked.";
+
+                    tracker.Report("Failure: " + sLost + " Error reads - " + sReplaceRtn + "\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
+                    sbChangeLog.Append("Row " + row.iRowNo + " - " + sChildRef + ": " + sLost + "\n");
+                    return "";
+                }
+
+                dicAppliedLinks[sPairKey] = row.iRowNo;
+                sNote = "Replaced " + iLinkCount + " duplicate links under " + sParentRef +
+                    " with one link (quantity " + sNewQty + ", line " + iLowestLineNumber + ").";
+                sbChangeLog.Append("Row " + row.iRowNo + " - " + sChildRef + ": " + sNote + "\n");
+                return "Updated";
+            }
+
+            // Parses Quantity once. Blank defaults to 1, in line with the material list import.
+            void NormaliseQuantities(List<PartAssemblyLinkRow> lstRows)
+            {
+                foreach (PartAssemblyLinkRow row in lstRows)
+                {
+                    string sValue = row.sQty.Trim();
+
+                    if (sValue == "")
+                    {
+                        row.bQtyValid = true;
+                        row.sQtyNormalised = "1";
+                        continue;
+                    }
+
+                    double dQty;
+                    bool bParsed = double.TryParse(sValue, NumberStyles.Float, CultureInfo.InvariantCulture, out dQty);
+                    bool bIsRealNumber = bParsed && !double.IsNaN(dQty) && !double.IsInfinity(dQty);
+
+                    if (bIsRealNumber)
+                    {
+                        row.bQtyValid = true;
+                        row.sQtyNormalised = dQty.ToString("0.######", CultureInfo.InvariantCulture);
+                    }
+                    else
+                    {
+                        row.bQtyValid = false;
+                        row.sQtyNormalised = "";
+                    }
+                }
+            }
+
+            // Existing links under a parent as [child, line number, quantity], returns null if the lookup fails
+            List<string[]> ReadLinks(string sParentRef, Dictionary<string, List<string[]>> dicLinkCache,
+                int iWebAppId, out string sError)
+            {
+                sError = "";
+                // Previous results cached in case part occurs many times in the assembly
+                bool bAlreadyRead = dicLinkCache.ContainsKey(sParentRef);
+                if (bAlreadyRead) { return dicLinkCache[sParentRef]; }
+
+                rtnStringArray2 rtnLinks = GetPartUsageLinks(sParentRef, iWebAppId);
+
+                if (!rtnLinks.bReturnValue)
+                {
+                    sError = rtnLinks.sReturnValue;
+                    return null;
+                }
+
+                var lstLinks = new List<string[]>();
+                foreach (string sLink in rtnLinks.sArray)
+                {
+                    string[] arrLinkParts = sLink.Split('^');
+                    lstLinks.Add(arrLinkParts);
+                }
+
+                dicLinkCache[sParentRef] = lstLinks;
+                return lstLinks;
+            }
+
+            // ---------------------------- END HELPER FUNCTIONS ----------------------------
+
+            Excel.Application xlApp = null;
+            Excel.Workbooks xlWbks = null;
+
+            int iProcessId = -1;
+
+            var dicColNums = new Dictionary<string, int>
+            {
+                {"item", 1 },
+                {"ref", 2 },
+                {"description", 3 },
+                {"qty", 4 },
+                {"comments", 5 },
+                {"status", 6 }
+            };
+
+            var issueTracker = new SpreadsheetTracker();
+            bool failure = false;
+
+            try
+            {
+                int iWebAppId = Convert.ToInt32(sWebAppId);
+
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    // ---------------------------- READING SPREADSHEET ----------------------------
+                    Update_User_Time(sUserId, sSessionId);
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+
+                    xlApp = new Excel.Application();
+                    xlApp.DisplayAlerts = false;
+                    xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
+
+                    Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
+
+                    // Checking if the spreadsheet matches the template
+                    string[] arrExpectedHeaders = {
+                        "Item", "Ref", "Description", "Qty", "Comments", "Status"
+                    };
+
+                    // Get the correct sheet (checks first 2 for valid sheets, throws if none matching expected headers found)
+                    Excel._Worksheet xlWorksheet = GetImportWorksheet(xlWorkbook, arrExpectedHeaders);
+                    Excel.Range xlRange = xlWorksheet.UsedRange;
+                    int rowCount = xlRange.Rows.Count;
+
+                    string sBody = "";
+
+                    void WriteStatus(int iRowNo, string sStatus, System.Drawing.Color colour, string sComment)
+                    {
+                        xlWorksheet.Cells[iRowNo, dicColNums["status"]] = sStatus;
+                        xlWorksheet.Cells[iRowNo, dicColNums["status"]].Interior.Color =
+                            System.Drawing.ColorTranslator.ToOle(colour);
+                        xlWorksheet.Cells[iRowNo, dicColNums["comments"]] = sComment;
+                    }
+
+                    // Get the data from the spreadsheet and put into Row objects
+                    var lstRows = new List<PartAssemblyLinkRow>();
+
+                    for (int i = 2; i <= rowCount; i++)
+                    {
+                        // A blank Item marks the end of the data
+                        string sItem = GetCellString(xlWorksheet, i, dicColNums["item"]).Trim();
+                        if (sItem == "") { break; }
+
+                        PartAssemblyLinkRow row = new PartAssemblyLinkRow
+                        {
+                            iRowNo = i,
+                            sItem = sItem,
+                            sRef = GetCellString(xlWorksheet, i, dicColNums["ref"]).Trim().ToUpper(),
+                            sDescription = GetCellString(xlWorksheet, i, dicColNums["description"]).Trim(),
+                            sQty = GetCellNumericString(xlWorksheet, i, dicColNums["qty"])
+                        };
+
+                        lstRows.Add(row);
+                    }
+                    // ---------------------------- END READING SPREADSHEET ----------------------------
+
+                    var itemTree = new ItemTree<PartAssemblyLinkRow>();
+                    foreach (PartAssemblyLinkRow row in lstRows)
+                    {
+                        itemTree.Add(row.sItem, row.iRowNo, row);
+                    }
+
+                    // Spreadsheet-wide checks. Quantities first, because the structure comparison uses them
+                    NormaliseQuantities(lstRows);
+                    Dictionary<int, List<string>> dicSiblingDupes = FindSiblingDuplicateRefs(itemTree);
+                    Dictionary<int, string> dicCycles = FindCycleRows(itemTree);
+                    Dictionary<int, List<string>> dicConflicts = FindConflictingStructures(itemTree);
+                    Dictionary<string, HashSet<string>> dicSheetChildren = GetSheetChildren(itemTree);
+
+                    var dicLinkCache = new Dictionary<string, List<string[]>>();
+                    var dicAppliedLinks = new Dictionary<string, int>();
+                    var hsExtraLinksChecked = new HashSet<string>();
+                    var sbChangeLog = new StringBuilder();
+
+                    // ---------------------------- LOOPING THROUGH ROWS ----------------------------
+                    for (int i = 0; i < lstRows.Count; i++)
+                    {
+                        issueTracker.ResetRow();
+                        PartAssemblyLinkRow rowVals = lstRows[i];
+
+                        string sRowStatus = ""; // Linked, Updated, Unchanged or Error
+                        string sRowNote = "";   // what was done, written to Comments
+
+                        try
+                        {
+                            // ---------------------------- VALIDATIONS ----------------------------
+                            bool bSkipped = false;
+
+                            ItemNode<PartAssemblyLinkRow> node = GetNode(itemTree, rowVals);
+                            bool bInTree = node != null;
+                            bool bTopLevel = bInTree && node.parent == itemTree.root;
+
+                            // Check for problems in the tree building
+                            if (itemTree.dicProblems.ContainsKey(rowVals.iRowNo))
+                            {
+                                foreach (ItemProblem problem in itemTree.dicProblems[rowVals.iRowNo])
+                                {
+                                    string sProblemType = "";
+                                    if (problem.iPriority == SpreadsheetTracker.PRIORITY_FAILURE)
+                                    {
+                                        sProblemType = "Failure";
+                                    }
+                                    else if (problem.iPriority == SpreadsheetTracker.PRIORITY_WARNING)
+                                    {
+                                        sProblemType = "Warning";
+                                    }
+                                    else
+                                    {
+                                        sProblemType = "Error";
+                                    }
+
+                                    issueTracker.Report(sProblemType + ": " + problem.sMessage,
+                                        problem.iPriority, rowVals.iRowNo, dicColNums["item"]);
+                                }
+                            }
+
+                            // Safety net: a row outside the tree can't be linked, even if no tree problem was recorded
+                            if (!bInTree && issueTracker.RowIsValid)
+                            {
+                                issueTracker.Report("Failure: item " + rowVals.sItem + " could not be placed in the item structure.\n",
+                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["item"]);
+                            }
+
+                            if (dicSiblingDupes.ContainsKey(rowVals.iRowNo))
+                            {
+                                string sDuplicateItems = string.Join(", ", dicSiblingDupes[rowVals.iRowNo]);
+
+                                issueTracker.Report("Failure: Ref " + rowVals.sRef + " appears more than once under the same parent (see item " +
+                                    sDuplicateItems + ").\n",
+                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+                            }
+
+                            if (dicCycles.ContainsKey(rowVals.iRowNo))
+                            {
+                                // Only reported when not already caught as self-nesting in the same branch
+                                string sLoopParentRef = dicCycles[rowVals.iRowNo];
+
+                                issueTracker.Report("Failure: linking " + rowVals.sRef + " under " + sLoopParentRef +
+                                    " would create a loop, because " + sLoopParentRef + " is also listed below " +
+                                    rowVals.sRef + " in the sheet.\n",
+                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+                            }
+
+                            if (dicConflicts.ContainsKey(rowVals.iRowNo))
+                            {
+                                string sConflictingItems = string.Join(", ", dicConflicts[rowVals.iRowNo]);
+
+                                issueTracker.Report("Failure: Ref " + rowVals.sRef + " is listed with different children or quantities at item " +
+                                    sConflictingItems + ". Every occurrence of an assembly must have the same structure.\n",
+                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+                            }
+
+                            if (rowVals.sRef == "")
+                            {
+                                bSkipped = true;
+                                sRowNote = "No Ref entered; no change made.";
+                            }
+                            else
+                            {
+                                // Ref validation - including existence in LMS and name matching
+                                IsValidRef(rowVals, issueTracker, dicColNums, iWebAppId);
+
+                                // Quantity validation
+                                IsValidQty(rowVals, issueTracker, dicColNums["qty"]);
+
+                                // Parent validation - parent must have a Ref and have passed its own validation
+                                if (bInTree && !bTopLevel)
+                                {
+                                    IsValidParent(node, issueTracker, dicColNums);
+                                }
+                            }
+
+                            // Recorded before linking, so a link failure on this row doesn't fail its children
+                            rowVals.bValidated = !bSkipped && bInTree && issueTracker.RowIsValid;
+                            // ---------------------------- END VALIDATIONS ----------------------------
+
+                            // ---------------------------- LINKING ----------------------------
+                            if (rowVals.bValidated)
+                            {
+                                // As a parent: warn about LMS links not listed in the sheet (once per parent Ref)
+                                bool bHasSheetChildren = dicSheetChildren.ContainsKey(rowVals.sRef);
+                                bool bExtraLinksChecked = hsExtraLinksChecked.Contains(rowVals.sRef);
+
+                                if (bHasSheetChildren && !bExtraLinksChecked)
+                                {
+                                    hsExtraLinksChecked.Add(rowVals.sRef);
+                                    CheckForExtraLinks(rowVals, dicSheetChildren[rowVals.sRef], dicLinkCache,
+                                        issueTracker, dicColNums, iWebAppId);
+                                }
+
+                                // As a child: link under the parent
+                                if (bTopLevel)
+                                {
+                                    sRowStatus = "Unchanged";
+                                    sRowNote = "Top-level item; no parent link.";
+                                }
+                                else
+                                {
+                                    string sParentRef = node.parent.data.sRef;
+
+                                    sRowStatus = LinkToParent(rowVals, sParentRef, sFullName, dicLinkCache,
+                                        dicAppliedLinks, sbChangeLog, issueTracker, dicColNums, iWebAppId, out sRowNote);
+                                }
+                            }
+                            // ---------------------------- END LINKING ----------------------------
+
+                            // Writing cells in return file
+                            string sRowComment = (sRowNote + " " + issueTracker.sRowMessage).Trim();
+
+                            if (sRowStatus == "Error")
+                            {
+                                WriteStatus(rowVals.iRowNo, "Error", System.Drawing.Color.PaleVioletRed, sRowComment);
+                            }
+                            else if (!issueTracker.RowIsValid)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed, sRowComment);
+                            }
+                            else if (issueTracker.iRowPriority == SpreadsheetTracker.PRIORITY_WARNING)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Warning", System.Drawing.Color.PaleGoldenrod, sRowComment);
+                            }
+                            else if (bSkipped)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Skipped", System.Drawing.Color.LightBlue, sRowComment);
+                            }
+                            else if (sRowStatus == "Linked")
+                            {
+                                WriteStatus(rowVals.iRowNo, "Linked", System.Drawing.Color.LawnGreen, sRowComment);
+                            }
+                            else if (sRowStatus == "Updated")
+                            {
+                                WriteStatus(rowVals.iRowNo, "Updated", System.Drawing.Color.PaleGreen, sRowComment);
+                            }
+                            else if (sRowStatus == "Unchanged")
+                            {
+                                WriteStatus(rowVals.iRowNo, "Unchanged", System.Drawing.Color.Gainsboro, sRowComment);
+                            }
+                            else
+                            {
+                                WriteStatus(rowVals.iRowNo, "Status Unknown", System.Drawing.Color.LightGray, sRowComment);
+                            }
+                        }
+                        catch (System.Exception e)
+                        {
+                            // Catch all for database and Windchill exceptions
+                            issueTracker.Report("Error: Server message reads: " + e.Message + "\n",
+                                SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+
+                            WriteStatus(rowVals.iRowNo, "Error", System.Drawing.Color.PaleVioletRed,
+                                (sRowNote + " " + issueTracker.sRowMessage).Trim());
+                        }
+                    }
+                    // ---------------------------- END LOOPING THROUGH ROWS ----------------------------
+
+                    // ---------------------------- WRITING TO FILE AND EMAIL ----------------------------
+                    // Write the spreadsheet and send back via email
+                    string sFileNameNoFileType = sFile.Split('.')[0];
+                    string sNewExcelFileName = sFileNameNoFileType + "_results.xlsx";
+                    string sNewFileLocation = @"C:\Webroot\Regain\temp\" + sNewExcelFileName;
+                    xlWorkbook.SaveAs(sNewFileLocation);
+
+                    xlWorkbook.Close(true);
+                    xlWbks.Close();
+                    xlApp.Quit();
+
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWbks) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorksheet) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlRange) != 0) ;
+                    xlApp = null;
+                    xlWbks = null;
+                    xlWorkbook = null;
+                    xlWorksheet = null;
+                    xlRange = null;
+
+                    // Body of email to user, and location of the results file
+                    sBody += "Part assembly links import complete.\n" +
+                        "Please see the attached spreadsheet which has been updated with status and comments where " +
+                        "there may have been issues during the import process. A full list of issues is provided below.\n \n" +
+                        issueTracker.GetIssueLog();
+
+                    if (sbChangeLog.Length > 0)
+                    {
+                        sBody += "\n \nExisting links changed or replaced: \n" + sbChangeLog.ToString();
+                    }
+
+                    sBody += "^";
+
+                    sBody += sNewExcelFileName + "^";
+
+                    return "Success^" + sBody;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                failure = true;
+                return ex.Message;
+            }
+            finally
+            {
+                // Only this run's Excel instance, and only if the run failed before closing it
+                if (failure)
+                {
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+
+                    try
+                    {
+                        if (iProcessId > 0)
+                        {
+                            Process process = Process.GetProcessById(iProcessId);
+                            process.Kill();
+                        }
+                    }
+                    catch (ArgumentException)
+                    {
+                        // Process already exited
+                    }
                 }
             }
         }

@@ -1173,6 +1173,14 @@ namespace WcfWCService
         string CreateAndLinkDocWrapper(string sSessionId, string sUserId, string sFullName,
                                        string sPartNo, string sDocNo, string sDocName, string sDocType, string sRevision, string iProdOrLibrary,
                                        string sProductName, string sFolder, string sJobCode, string sCheckinComments, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "processmaterialcompositionassignmentspreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string ProcessMaterialCompositionAssignmentSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "processpartassemblylinksspreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string ProcessPartAssemblyLinksSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
     }
 
 
