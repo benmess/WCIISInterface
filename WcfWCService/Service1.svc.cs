@@ -506,6 +506,23 @@ namespace WcfWCService
             public bool bValidated = false;
         }
 
+        public class FunctionalLocationLinkRow
+        {
+            public int iRowNo;
+            public string sFlNo = "";
+            public string sFlName = "";
+            public bool bStatesFl;
+
+            public FunctionalLocationLinkRow flRow;
+            public string sParentFlNo = "";
+            public string sRef = "";
+            public string sDescription = "";
+            public string sQty = "";
+            public string sQtyNormalised = "";
+            public bool bQtyValid;
+            public bool bFlValidated;
+        }
+
         string[] garrReviewTypes = new string[] { "Prepare", "Check", "Review", "Approve" };
 
         public string CookieLogin(string sUsername, string sPassword, string sWebAppId)
@@ -22032,30 +22049,17 @@ namespace WcfWCService
             }
             finally
             {
-                if (failure)
+                try
                 {
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-
-                    try
+                    if (iProcessId > 0)
                     {
-                        if (iProcessId > 0)
-                        {
-                            Process process = Process.GetProcessById(iProcessId);
-                            process.Kill();
-                        }
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
                     }
-                    catch (ArgumentException)
-                    {
-                        // Process already exited
-                    }
-
-/*                    System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
-                    foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
-                    {
-                        proc.Kill();
-                    }
-*/
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
                 }
             }
         }
@@ -22570,13 +22574,8 @@ namespace WcfWCService
             
             finally
             {
-                //if (failure)
-                //{
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-
-                    try
-                    {
+                try
+                {
                     if (iProcessId > 0)
                     {
                         Process process = Process.GetProcessById(iProcessId);
@@ -22584,17 +22583,9 @@ namespace WcfWCService
                     }
                 }
                 catch (ArgumentException)
-                    {
-                        // Process already exited
-                    }
-
-/*                    System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
-                    foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
-                    {
-                        proc.Kill();
-                    }
-*/
-                //}
+                {
+                    // Process already exited
+                }
             }
     
         }
@@ -24619,23 +24610,17 @@ namespace WcfWCService
             }
             finally
             {
-                if (failure)
+                try
                 {
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-
-                    try
+                    if (iProcessId > 0)
                     {
-                        if (iProcessId > 0)
-                        {
-                            Process process = Process.GetProcessById(iProcessId);
-                            process.Kill();
-                        }
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
                     }
-                    catch (ArgumentException)
-                    {
-                        // Process already exited
-                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
                 }
             }
         }
@@ -25605,24 +25590,830 @@ namespace WcfWCService
             }
             finally
             {
-                // Only this run's Excel instance, and only if the run failed before closing it
-                if (failure)
+                try
                 {
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-
-                    try
+                    if (iProcessId > 0)
                     {
-                        if (iProcessId > 0)
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+            }
+        }
+
+        public string ProcessFunctionalLocationLinksSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
+        {
+            const string LINK_TYPE = "wt.part.WTPartUsageLink";
+            const string LINK_UNIT = "ea";
+
+            // Positions within each link from GetPartUsageLinks
+            const int LINK_CHILD = 0;
+            const int LINK_LINE = 1;
+            const int LINK_QTY = 2;
+
+            const string FL_PATTERN = @"^P[0-9]{3}[A-Z0-9]*$";
+
+            // ---------------------------- HELPER FUNCTIONS ----------------------------
+
+            // Find rows that repeat an FL + Ref pair in the sheet. Returns the row numbers of the other occurrences.
+            Dictionary<int, List<int>> FindDuplicatePairs(List<FunctionalLocationLinkRow> lstRows)
+            {
+                // Group the rows by parent FL and Ref
+                var dicRowsByPair = new Dictionary<string, List<FunctionalLocationLinkRow>>();
+
+                foreach (FunctionalLocationLinkRow row in lstRows)
+                {
+                    string sParentFlNo = row.sParentFlNo;
+                    string sChildRef = row.sRef;
+                    if (sParentFlNo == "" || sChildRef == "") { continue; }
+
+                    string sPairKey = sParentFlNo + "|" + sChildRef;
+                    if (!dicRowsByPair.ContainsKey(sPairKey)) { dicRowsByPair[sPairKey] = new List<FunctionalLocationLinkRow>(); }
+                    dicRowsByPair[sPairKey].Add(row);
+                }
+
+                // Any pair on more than one row is a duplicate
+                var dicDupes = new Dictionary<int, List<int>>();
+                foreach (var kvp in dicRowsByPair)
+                {
+                    List<FunctionalLocationLinkRow> lstPairRows = kvp.Value;
+                    if (lstPairRows.Count < 2) { continue; }
+
+                    // Go through duplicates and and the other duplicated rows to the dictionary
+                    foreach (FunctionalLocationLinkRow row in lstPairRows)
+                    {
+                        var lstOtherRows = new List<int>();
+                        foreach (FunctionalLocationLinkRow otherRow in lstPairRows)
                         {
-                            Process process = Process.GetProcessById(iProcessId);
-                            process.Kill();
+                            if (otherRow.iRowNo != row.iRowNo) { lstOtherRows.Add(otherRow.iRowNo); }
+                        }
+
+                        dicDupes[row.iRowNo] = lstOtherRows;
+                    }
+                }
+
+                return dicDupes;
+            }
+
+            // Checks for FLs listed below themselves within the sheet. Returns the parent FL that closes the loop for each row.
+            // Links already in LMS are not checked; Windchill rejects a cyclical link when it is created.
+            // A Ref linked directly under itself is reported separately in the row loop.
+            Dictionary<int, string> FindCycleRows(List<FunctionalLocationLinkRow> lstRows)
+            {
+                // Unique parent -> children links across the whole sheet
+                var dicChildrenByParent = new Dictionary<string, HashSet<string>>();
+
+                foreach (FunctionalLocationLinkRow row in lstRows)
+                {
+                    string sParentFlNo = row.sParentFlNo;
+                    string sChildRef = row.sRef;
+                    if (sParentFlNo == "" || sChildRef == "" || sParentFlNo == sChildRef) { continue; }
+
+                    if (!dicChildrenByParent.ContainsKey(sParentFlNo)) { dicChildrenByParent[sParentFlNo] = new HashSet<string>(); }
+                    dicChildrenByParent[sParentFlNo].Add(sChildRef);
+                }
+
+                // Function to follow links down from a parent ref to see if a target ref can be reached
+                var dicReachable = new Dictionary<string, bool>();
+                bool CanReach(string sFromRef, string sToRef)
+                {
+                    string sPairKey = sFromRef + "|" + sToRef;
+                    if (dicReachable.ContainsKey(sPairKey)) { return dicReachable[sPairKey]; }
+
+                    var hsVisited = new HashSet<string>();
+                    var queueToVisit = new Queue<string>();
+                    queueToVisit.Enqueue(sFromRef);
+
+                    bool bFound = false;
+                    while (queueToVisit.Count > 0)
+                    {
+                        string sCurrentRef = queueToVisit.Dequeue();
+                        if (sCurrentRef == sToRef) { bFound = true; break; }
+
+                        bool bAlreadyVisited = !hsVisited.Add(sCurrentRef);
+                        bool bHasChildren = dicChildrenByParent.ContainsKey(sCurrentRef);
+                        if (bAlreadyVisited || !bHasChildren) { continue; }
+
+                        foreach (string sChildRef in dicChildrenByParent[sCurrentRef]) { queueToVisit.Enqueue(sChildRef); }
+                    }
+
+                    dicReachable[sPairKey] = bFound;
+                    return bFound;
+                }
+
+                // Check each link doesn't have its parent somewhere below its child
+                var dicCycles = new Dictionary<int, string>();
+                foreach (FunctionalLocationLinkRow row in lstRows)
+                {
+                    string sParentFlNo = row.sParentFlNo;
+                    string sChildRef = row.sRef;
+                    if (sParentFlNo == "" || sChildRef == "" || sParentFlNo == sChildRef) { continue; }
+
+                    bool bParentIsBelowChild = CanReach(sChildRef, sParentFlNo);
+                    if (bParentIsBelowChild)
+                    {
+                        dicCycles[row.iRowNo] = sParentFlNo;
+                    }
+                }
+
+                return dicCycles;
+            }
+
+            // FL Validation
+            bool IsValidFunctionalLocation(FunctionalLocationLinkRow row, Dictionary<string, bool> dicFlExists,
+                SpreadsheetTracker tracker, Dictionary<string, int> dicColNumbers, int iWebAppId)
+            {
+                string sFlNo = row.sFlNo;
+
+                // Check number structure
+                if (!Regex.IsMatch(sFlNo, FL_PATTERN))
+                {
+                    tracker.Report("Failure: Functional Location No " + sFlNo +
+                        " is not a valid Functional Location number. It must be P followed by a three-digit job code (e.g. P291, P292A).\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["fl_no"]);
+                    return false;
+                }
+
+                // Existence cached, as the same FL may be stated in more than one block
+                if (!dicFlExists.ContainsKey(sFlNo))
+                {
+                    dicFlExists[sFlNo] = PartExists(sFlNo, iWebAppId);
+                }
+
+                if (!dicFlExists[sFlNo])
+                {
+                    tracker.Report("Failure: Functional Location " + sFlNo + " was not found in LMS.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["fl_no"]);
+                    return false;
+                }
+
+                // FL Name must be filled in and match the FL's name, in case the FL No was mistyped
+                if (row.sFlName == "")
+                {
+                    tracker.Report("Failure: Functional Location Name is missing. It must match the Functional Location name in LMS.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["fl_name"]);
+                    return false;
+                }
+
+                rtnString rtnName = GetPartName(sFlNo, iWebAppId);
+                string sLmsName = rtnName.sReturnValue.Trim();
+                bool bNameMatches = sLmsName.ToUpper() == row.sFlName.ToUpper();
+
+                if (!bNameMatches)
+                {
+                    tracker.Report("Failure: Functional Location " + sFlNo + " exists with the name '" +
+                        sLmsName + "', which does not match the entered Functional Location Name '" +
+                        row.sFlName + "'.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["fl_name"]);
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Validates the carried-down parent of a row that doesn't state its own FL.
+            bool IsValidParentFl(FunctionalLocationLinkRow row, SpreadsheetTracker tracker, Dictionary<string, int> dicColNumbers)
+            {
+                FunctionalLocationLinkRow flRow = row.flRow;
+
+                // If the Ref has no FL and is on the first row of the spreadsheet
+                if (flRow == null)
+                {
+                    tracker.Report("Failure: no Functional Location No is stated on or above this row, so there is nothing to link the Ref under.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["fl_no"]);
+                    return false;
+                }
+
+                // If the parent was invalid, fail
+                if (!flRow.bFlValidated)
+                {
+                    tracker.Report("Failure: Functional Location " + flRow.sFlNo + " (row " + flRow.iRowNo +
+                        ") failed validation, so this row was not linked.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["fl_no"]);
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Quantity validation
+            bool IsValidQty(FunctionalLocationLinkRow row, SpreadsheetTracker tracker, int iColumnNumber)
+            {
+                if (row.sQty == "#ERROR")
+                {
+                    tracker.Report("Failure: Quantity contains a formula error or unresolved reference.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, iColumnNumber);
+                    return false;
+                }
+
+                if (!row.bQtyValid)
+                {
+                    tracker.Report("Failure: Quantity is not a valid number.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, iColumnNumber);
+                    return false;
+                }
+
+                double dQty = double.Parse(row.sQtyNormalised, CultureInfo.InvariantCulture);
+
+                if (dQty <= 0)
+                {
+                    tracker.Report("Failure: Quantity must be greater than zero.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, iColumnNumber);
+                    return false;
+                }
+
+                bool bIsWholeNumber = dQty == Math.Floor(dQty);
+                if (!bIsWholeNumber)
+                {
+                    tracker.Report("Failure: Quantity must be a whole number.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, iColumnNumber);
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Ref validation
+            bool IsValidRef(FunctionalLocationLinkRow row, SpreadsheetTracker tracker,
+                Dictionary<string, int> dicColNumbers, int iWebAppId)
+            {
+                // SQL injection guard
+                if (row.sRef.Contains("'"))
+                {
+                    tracker.Report("Failure: Ref contains an invalid character (').\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
+                    return false;
+                }
+
+                if (!PartExists(row.sRef, iWebAppId))
+                {
+                    tracker.Report("Failure: Ref " + row.sRef + " was not found in LMS.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
+                    return false;
+                }
+
+                // Description must be filled in and match the part name, in case the Ref was mistyped
+                if (row.sDescription == "")
+                {
+                    tracker.Report("Failure: Description is missing. It must match the part name in LMS.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["description"]);
+                    return false;
+                }
+
+                rtnString rtnName = GetPartName(row.sRef, iWebAppId);
+
+                if (!rtnName.bReturnValue)
+                {
+                    tracker.Report("Error: could not read the name of part " + row.sRef + ".\n",
+                        SpreadsheetTracker.PRIORITY_ERROR, row.iRowNo, dicColNumbers["ref"]);
+                    return false;
+                }
+
+                string sLmsName = rtnName.sReturnValue.Trim();
+                bool bNameMatches = sLmsName.ToUpper() == row.sDescription.ToUpper();
+
+                if (!bNameMatches)
+                {
+                    tracker.Report("Failure: Ref " + row.sRef + " exists with the name '" +
+                        sLmsName + "', which does not match the entered Description '" +
+                        row.sDescription + "'.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["description"]);
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Links to the parent and returns "Linked", "Updated", "Unchanged", "Error", or "" when it fails.
+            string LinkToParent(FunctionalLocationLinkRow row, string sParentRef, string sFullName,
+                Dictionary<string, List<string[]>> dicLinkCache, Dictionary<string, int> dicAppliedLinks,
+                StringBuilder sbChangeLog, SpreadsheetTracker tracker, Dictionary<string, int> dicColNumbers,
+                int iWebAppId, out string sNote)
+            {
+                sNote = "";
+                string sChildRef = row.sRef;
+                string sNewQty = row.sQtyNormalised;
+
+                // Check if this link was already applied on an earlier row
+                string sPairKey = sParentRef + "|" + sChildRef;
+                if (dicAppliedLinks.ContainsKey(sPairKey))
+                {
+                    int iAppliedOnRow = dicAppliedLinks[sPairKey];
+                    sNote = "Link under " + sParentRef + " already applied on row " + iAppliedOnRow + ".";
+                    return "Unchanged";
+                }
+
+                // Check if the link exists
+                string sError;
+                List<string[]> lstExistingLinks = ReadLinks(sParentRef, dicLinkCache, iWebAppId, out sError);
+
+                if (lstExistingLinks == null)
+                {
+                    tracker.Report("Error: could not read the existing links under " + sParentRef +
+                        ". Error reads - " + sError + "\n",
+                        SpreadsheetTracker.PRIORITY_ERROR, row.iRowNo, dicColNumbers["ref"]);
+                    return "Error";
+                }
+
+                // The parent's existing links that point at this child
+                var lstLinksToChild = new List<string[]>();
+                foreach (string[] arrExistingLink in lstExistingLinks)
+                {
+                    string sLinkedChildRef = arrExistingLink[LINK_CHILD];
+                    if (sLinkedChildRef == sChildRef) { lstLinksToChild.Add(arrExistingLink); }
+                }
+
+                int iLinkCount = lstLinksToChild.Count;
+
+                // No link yet: create one
+                if (iLinkCount == 0)
+                {
+                    string sNewLineNumber = GetNewLineNumber(sParentRef, iWebAppId).ToString();
+
+                    string sCreateRtn = SetPartToPartLinkWithLineNumber(sSessionId, sUserId, sFullName, sParentRef, sChildRef,
+                        sNewQty, sNewLineNumber, "Linked to Functional Location from functional location links import.",
+                        LINK_TYPE, LINK_UNIT, sWebAppId);
+
+                    if (!sCreateRtn.StartsWith("Success"))
+                    {
+                        tracker.Report("Failure: could not link " + sChildRef + " under " + sParentRef +
+                            ". Error reads - " + sCreateRtn + "\n",
+                            SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
+                        return "";
+                    }
+
+                    dicLinkCache.Remove(sParentRef);
+                    dicAppliedLinks[sPairKey] = row.iRowNo;
+                    sNote = "Linked under " + sParentRef + " with quantity " + sNewQty + ".";
+                    return "Linked";
+                }
+
+                // One link: check the quantity
+                if (iLinkCount == 1)
+                {
+                    string[] arrExistingLink = lstLinksToChild[0];
+                    string sExistingLineNumber = arrExistingLink[LINK_LINE];
+                    string sExistingQty = arrExistingLink[LINK_QTY];
+
+                    double dExistingQty = double.Parse(sExistingQty, CultureInfo.InvariantCulture);
+                    double dNewQty = double.Parse(sNewQty, CultureInfo.InvariantCulture);
+                    bool bQtyMatches = dExistingQty == dNewQty;
+
+                    if (bQtyMatches)
+                    {
+                        dicAppliedLinks[sPairKey] = row.iRowNo;
+                        return "Unchanged";
+                    }
+
+                    string sUpdateRtn = UpdatePartToPartLink(sSessionId, sUserId, sFullName, sParentRef, sChildRef,
+                        sExistingLineNumber, sNewQty, "Updated quantity from functional location links import.",
+                        LINK_TYPE, LINK_UNIT, sWebAppId);
+
+                    if (!sUpdateRtn.StartsWith("Success"))
+                    {
+                        tracker.Report("Failure: could not update the quantity of " + sChildRef + " under " + sParentRef +
+                            ". Error reads - " + sUpdateRtn + "\n",
+                            SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["qty"]);
+                        return "";
+                    }
+
+                    dicLinkCache.Remove(sParentRef);
+                    dicAppliedLinks[sPairKey] = row.iRowNo;
+                    sNote = "Quantity under " + sParentRef + " changed from " + sExistingQty + " to " + sNewQty + ".";
+                    sbChangeLog.Append("Row " + row.iRowNo + " - " + sChildRef + ": " + sNote + "\n");
+                    return "Updated";
+                }
+
+                // Several links: remove them all and create one, keeping the lowest line number or getting a new one if none exist
+                int? iLowestLineNumber = null;
+                foreach (string[] arrDuplicateLink in lstLinksToChild)
+                {
+                    int iLineNumber = int.Parse(arrDuplicateLink[LINK_LINE], CultureInfo.InvariantCulture);
+
+                    if (iLineNumber <= 0) { continue; } // Line number returns as -1 where it is null in WC
+                    if (iLowestLineNumber == null || iLineNumber < iLowestLineNumber) { iLowestLineNumber = iLineNumber; }
+                }
+
+                if (iLowestLineNumber == null) { iLowestLineNumber = GetNewLineNumber(sParentRef, iWebAppId); }
+
+                // Deleting...
+                string sDeleteRtn = DeletePartToPartLink(sSessionId, sUserId, sFullName, sParentRef, sChildRef,
+                    "Removing duplicate links from functional location links import.", sWebAppId);
+
+                if (!sDeleteRtn.StartsWith("Success"))
+                {
+                    tracker.Report("Failure: found " + iLinkCount + " links of " + sChildRef + " under " + sParentRef +
+                        " but could not remove them. Error reads - " + sDeleteRtn + "\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
+                    return "";
+                }
+
+                dicLinkCache.Remove(sParentRef);
+
+                // Make the new link
+                string sReplaceRtn = SetPartToPartLinkWithLineNumber(sSessionId, sUserId, sFullName, sParentRef, sChildRef,
+                    sNewQty, iLowestLineNumber.ToString(), "Replaced duplicate links from functional location links import.",
+                    LINK_TYPE, LINK_UNIT, sWebAppId);
+
+                if (!sReplaceRtn.StartsWith("Success"))
+                {
+                    string sLost = "Removed " + iLinkCount + " duplicate links of " + sChildRef + " under " + sParentRef +
+                        " but could not create the replacement, so it is no longer linked.";
+
+                    tracker.Report("Failure: " + sLost + " Error reads - " + sReplaceRtn + "\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
+                    sbChangeLog.Append("Row " + row.iRowNo + " - " + sChildRef + ": " + sLost + "\n");
+                    return "";
+                }
+
+                dicAppliedLinks[sPairKey] = row.iRowNo;
+                sNote = "Replaced " + iLinkCount + " duplicate links under " + sParentRef +
+                    " with one link (quantity " + sNewQty + ", line " + iLowestLineNumber + ").";
+                sbChangeLog.Append("Row " + row.iRowNo + " - " + sChildRef + ": " + sNote + "\n");
+                return "Updated";
+            }
+
+            // Parses Qty once, empty defaults to 1
+            void NormaliseQuantities(List<FunctionalLocationLinkRow> lstRows)
+            {
+                foreach (FunctionalLocationLinkRow row in lstRows)
+                {
+                    string sValue = row.sQty.Trim();
+
+                    if (sValue == "")
+                    {
+                        row.bQtyValid = true;
+                        row.sQtyNormalised = "1";
+                        continue;
+                    }
+
+                    double dQty;
+                    bool bParsed = double.TryParse(sValue, NumberStyles.Float, CultureInfo.InvariantCulture, out dQty);
+                    bool bIsRealNumber = bParsed && !double.IsNaN(dQty) && !double.IsInfinity(dQty);
+
+                    if (bIsRealNumber)
+                    {
+                        row.bQtyValid = true;
+                        row.sQtyNormalised = dQty.ToString("0.######", CultureInfo.InvariantCulture);
+                    }
+                    else
+                    {
+                        row.bQtyValid = false;
+                        row.sQtyNormalised = "";
+                    }
+                }
+            }
+
+            // Existing links under a parent as [child, line number, quantity], returns null if the lookup fails
+            List<string[]> ReadLinks(string sParentRef, Dictionary<string, List<string[]>> dicLinkCache,
+                int iWebAppId, out string sError)
+            {
+                sError = "";
+                // Previous results cached in case the parent occurs many times in the sheet
+                bool bAlreadyRead = dicLinkCache.ContainsKey(sParentRef);
+                if (bAlreadyRead) { return dicLinkCache[sParentRef]; }
+
+                rtnStringArray2 rtnLinks = GetPartUsageLinks(sParentRef, iWebAppId);
+
+                if (!rtnLinks.bReturnValue)
+                {
+                    sError = rtnLinks.sReturnValue;
+                    return null;
+                }
+
+                var lstLinks = new List<string[]>();
+                foreach (string sLink in rtnLinks.sArray)
+                {
+                    string[] arrLinkParts = sLink.Split('^');
+                    lstLinks.Add(arrLinkParts);
+                }
+
+                dicLinkCache[sParentRef] = lstLinks;
+                return lstLinks;
+            }
+
+            // ---------------------------- END HELPER FUNCTIONS ----------------------------
+
+            Excel.Application xlApp = null;
+            Excel.Workbooks xlWbks = null;
+
+            int iProcessId = -1;
+
+            var dicColNums = new Dictionary<string, int>
+            {
+                {"fl_no", 1 },
+                {"fl_name", 2 },
+                {"ref", 3 },
+                {"description", 4 },
+                {"qty", 5 },
+                {"comments", 6 },
+                {"status", 7 }
+            };
+
+            var issueTracker = new SpreadsheetTracker();
+            bool failure = false;
+
+            try
+            {
+                int iWebAppId = Convert.ToInt32(sWebAppId);
+
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    // ---------------------------- READING SPREADSHEET ----------------------------
+                    Update_User_Time(sUserId, sSessionId);
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+
+                    xlApp = new Excel.Application();
+                    xlApp.DisplayAlerts = false;
+                    xlWbks = xlApp.Workbooks;
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
+
+                    Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
+
+                    // Checking if the spreadsheet matches the template
+                    string[] arrExpectedHeaders = {
+                        "Functional Location No", "Functional Location Name", "Ref", "Description", "Qty",
+                        "Comments", "Status"
+                    };
+
+                    // Get the correct sheet (checks first 2 for valid sheets, throws if none matching expected headers found)
+                    Excel._Worksheet xlWorksheet = GetImportWorksheet(xlWorkbook, arrExpectedHeaders);
+                    Excel.Range xlRange = xlWorksheet.UsedRange;
+                    int rowCount = xlRange.Rows.Count;
+
+                    string sBody = "";
+
+                    void WriteStatus(int iRowNo, string sStatus, System.Drawing.Color colour, string sComment)
+                    {
+                        xlWorksheet.Cells[iRowNo, dicColNums["status"]] = sStatus;
+                        xlWorksheet.Cells[iRowNo, dicColNums["status"]].Interior.Color =
+                            System.Drawing.ColorTranslator.ToOle(colour);
+                        xlWorksheet.Cells[iRowNo, dicColNums["comments"]] = sComment;
+                    }
+
+                    // Get the data from the spreadsheet and put into Row objects
+                    var lstRows = new List<FunctionalLocationLinkRow>();
+                    FunctionalLocationLinkRow currentFlRow = null;
+
+                    for (int i = 2; i <= rowCount; i++)
+                    {
+                        string sFlNo = GetCellString(xlWorksheet, i, dicColNums["fl_no"]).Trim().ToUpper();
+                        string sFlName = GetCellString(xlWorksheet, i, dicColNums["fl_name"]).Trim();
+                        string sRef = GetCellString(xlWorksheet, i, dicColNums["ref"]).Trim().ToUpper();
+
+                        // A row with no FL No, FL Name or Ref marks the end of the data.
+                        bool bRowIsBlank = sFlNo == "" && sFlName == "" && sRef == "";
+                        if (bRowIsBlank) { break; }
+
+                        FunctionalLocationLinkRow row = new FunctionalLocationLinkRow
+                        {
+                            iRowNo = i,
+                            sFlNo = sFlNo,
+                            sFlName = sFlName,
+                            bStatesFl = sFlNo != "",
+                            sRef = sRef,
+                            sDescription = GetCellString(xlWorksheet, i, dicColNums["description"]).Trim(),
+                            sQty = GetCellNumericString(xlWorksheet, i, dicColNums["qty"])
+                        };
+
+                        // A stated FL becomes the parent for this row and every row below, until the next FL is stated
+                        if (row.bStatesFl) { currentFlRow = row; }
+
+                        row.flRow = currentFlRow;
+                        row.sParentFlNo = currentFlRow == null ? "" : currentFlRow.sFlNo;
+
+                        lstRows.Add(row);
+                    }
+                    // ---------------------------- END READING SPREADSHEET ----------------------------
+
+                    // Spreadsheet-wide checks
+                    NormaliseQuantities(lstRows);
+                    Dictionary<int, List<int>> dicDuplicatePairs = FindDuplicatePairs(lstRows);
+                    Dictionary<int, string> dicCycles = FindCycleRows(lstRows);
+
+                    var dicFlExists = new Dictionary<string, bool>();
+                    var dicLinkCache = new Dictionary<string, List<string[]>>();
+                    var dicAppliedLinks = new Dictionary<string, int>();
+                    var sbChangeLog = new StringBuilder();
+
+                    // ---------------------------- LOOPING THROUGH ROWS ----------------------------
+                    for (int i = 0; i < lstRows.Count; i++)
+                    {
+                        issueTracker.ResetRow();
+                        FunctionalLocationLinkRow rowVals = lstRows[i];
+
+                        string sRowStatus = ""; // Linked, Updated, Unchanged or Error
+                        string sRowNote = "";
+
+                        try
+                        {
+                            // ---------------------------- VALIDATIONS ----------------------------
+                            bool bSkipped = false;
+
+                            // FL validation - only on rows that state an FL. Recorded on the row so the rows below can check it
+                            if (rowVals.bStatesFl)
+                            {
+                                rowVals.bFlValidated = IsValidFunctionalLocation(rowVals, dicFlExists, issueTracker,
+                                    dicColNums, iWebAppId);
+                            }
+                            else if (rowVals.sFlName != "")
+                            {
+                                // Each FL must have a number
+                                issueTracker.Report("Failure: Functional Location Name '" + rowVals.sFlName +
+                                    "' was entered without a Functional Location No.\n",
+                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["fl_no"]);
+                            }
+                            // Duplicate row check
+                            if (dicDuplicatePairs.ContainsKey(rowVals.iRowNo))
+                            {
+                                string sDuplicateRows = string.Join(", ", dicDuplicatePairs[rowVals.iRowNo]);
+
+                                issueTracker.Report("Failure: Ref " + rowVals.sRef + " is listed more than once under Functional Location " +
+                                    rowVals.sParentFlNo + " (see also row " + sDuplicateRows +
+                                    "). List each Ref once under a Functional Location, with its total quantity.\n",
+                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+                            }
+                            // Self-nesting checks
+                            bool bLinksToItself = rowVals.sRef != "" && rowVals.sRef == rowVals.sParentFlNo;
+                            if (bLinksToItself)
+                            {
+                                issueTracker.Report("Failure: Functional Location " + rowVals.sRef + " cannot be linked under itself.\n",
+                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+                            }
+
+                            if (dicCycles.ContainsKey(rowVals.iRowNo))
+                            {
+                                string sLoopParentFlNo = dicCycles[rowVals.iRowNo];
+
+                                issueTracker.Report("Failure: linking " + rowVals.sRef + " under " + sLoopParentFlNo +
+                                    " would create a loop, because " + sLoopParentFlNo + " is also listed below " +
+                                    rowVals.sRef + " in the sheet.\n",
+                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+                            }
+                            // Either skip, or use parent FL as the FL to link to
+                            if (rowVals.sRef == "")
+                            {
+                                bSkipped = true;
+
+                                if (rowVals.bStatesFl)
+                                {
+                                    sRowNote = "Sets Functional Location " + rowVals.sFlNo + " for the rows below; no link made.";
+                                }
+                                else
+                                {
+                                    sRowNote = "No Ref entered; no change made.";
+                                }
+                            }
+                            else
+                            {
+                                // Parent validation - a carried-down FL must exist above and have passed its own validation
+                                if (!rowVals.bStatesFl)
+                                {
+                                    IsValidParentFl(rowVals, issueTracker, dicColNums);
+                                }
+
+                                // Ref validation - including existence in LMS and name matching
+                                IsValidRef(rowVals, issueTracker, dicColNums, iWebAppId);
+
+                                // Quantity validation
+                                IsValidQty(rowVals, issueTracker, dicColNums["qty"]);
+                            }
+                            // ---------------------------- END VALIDATIONS ----------------------------
+
+                            // ---------------------------- LINKING ----------------------------
+                            if (issueTracker.RowIsValid && !bSkipped)
+                            {
+                                try
+                                {
+                                    sRowStatus = LinkToParent(rowVals, rowVals.sParentFlNo, sFullName, dicLinkCache,
+                                        dicAppliedLinks, sbChangeLog, issueTracker, dicColNums, iWebAppId, out sRowNote);
+                                }
+                                catch (System.Exception e)
+                                {
+                                    issueTracker.Report("Error: a link could not be established in the database. The error reported is: " + 
+                                        e.Message + "\n",
+                                    SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+                                }
+                                
+                            }
+                            // ---------------------------- END LINKING ----------------------------
+
+                            // Writing cells in return file
+                            string sRowComment = (sRowNote + " " + issueTracker.sRowMessage).Trim();
+
+                            if (sRowStatus == "Error")
+                            {
+                                WriteStatus(rowVals.iRowNo, "Error", System.Drawing.Color.PaleVioletRed, sRowComment);
+                            }
+                            else if (!issueTracker.RowIsValid)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed, sRowComment);
+                            }
+                            else if (issueTracker.iRowPriority == SpreadsheetTracker.PRIORITY_WARNING)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Warning", System.Drawing.Color.PaleGoldenrod, sRowComment);
+                            }
+                            else if (bSkipped)
+                            {
+                                WriteStatus(rowVals.iRowNo, "Skipped", System.Drawing.Color.LightBlue, sRowComment);
+                            }
+                            else if (sRowStatus == "Linked")
+                            {
+                                WriteStatus(rowVals.iRowNo, "Linked", System.Drawing.Color.LawnGreen, sRowComment);
+                            }
+                            else if (sRowStatus == "Updated")
+                            {
+                                WriteStatus(rowVals.iRowNo, "Updated", System.Drawing.Color.PaleGreen, sRowComment);
+                            }
+                            else if (sRowStatus == "Unchanged")
+                            {
+                                WriteStatus(rowVals.iRowNo, "Unchanged", System.Drawing.Color.Gainsboro, sRowComment);
+                            }
+                            else
+                            {
+                                WriteStatus(rowVals.iRowNo, "Status Unknown", System.Drawing.Color.LightGray, sRowComment);
+                            }
+                        }
+                        catch (System.Exception e)
+                        {
+                            // Catch all for database and Windchill exceptions
+                            issueTracker.Report("Error: Server message reads: " + e.Message + "\n",
+                                SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+
+                            WriteStatus(rowVals.iRowNo, "Error", System.Drawing.Color.PaleVioletRed,
+                                (sRowNote + " " + issueTracker.sRowMessage).Trim());
                         }
                     }
-                    catch (ArgumentException)
+                    // ---------------------------- END LOOPING THROUGH ROWS ----------------------------
+
+                    // ---------------------------- WRITING TO FILE AND EMAIL ----------------------------
+                    // Write the spreadsheet and send back via email
+                    string sFileNameNoFileType = sFile.Split('.')[0];
+                    string sNewExcelFileName = sFileNameNoFileType + "_results.xlsx";
+                    string sNewFileLocation = @"C:\Webroot\Regain\temp\" + sNewExcelFileName;
+                    xlWorkbook.SaveAs(sNewFileLocation);
+
+                    xlWorkbook.Close(true);
+                    xlWbks.Close();
+                    xlApp.Quit();
+
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWbks) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorksheet) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlRange) != 0) ;
+                    xlApp = null;
+                    xlWbks = null;
+                    xlWorkbook = null;
+                    xlWorksheet = null;
+                    xlRange = null;
+
+                    // Body of email to user, and location of the results file
+                    sBody += "Functional location links import complete.\n" +
+                        "Please see the attached spreadsheet which has been updated with status and comments where " +
+                        "there may have been issues during the import process. A full list of issues is provided below.\n \n" +
+                        issueTracker.GetIssueLog();
+
+                    if (sbChangeLog.Length > 0)
                     {
-                        // Process already exited
+                        sBody += "\n \nExisting links changed or replaced: \n" + sbChangeLog.ToString();
                     }
+
+                    sBody += "^";
+
+                    sBody += sNewExcelFileName + "^";
+
+                    return "Success^" + sBody;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                failure = true;
+                return ex.Message;
+            }
+            finally
+            {
+                try
+                {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
                 }
             }
         }

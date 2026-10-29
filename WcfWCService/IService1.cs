@@ -1177,6 +1177,11 @@ namespace WcfWCService
         [OperationContract]
         [WebGet(UriTemplate = "processpartassemblylinksspreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string ProcessPartAssemblyLinksSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "processfunctionallocationlinksspreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string ProcessFunctionalLocationLinksSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
+        
     }
 
 
