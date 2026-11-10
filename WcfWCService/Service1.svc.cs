@@ -13925,13 +13925,36 @@ namespace WcfWCService
         {
             RecordSet rst = new RecordSet();
             rst.SetWebApp(iWebAppId);
-            string sSQL = "select * from vwWindchillLatestDocumentWithType where WTDocumentNumber = '" + sDocNo + "' COLLATE SQL_Latin1_General_CP1_CI_AS";
+            string sSQL = "select D.Revision from [dbo].[vwWindchillLatestDocRev] DR, vwWindchillLatestDocumentWithType D " +
+                          "where DR.WTDocumentNumber = '" + sDocNo + "' COLLATE SQL_Latin1_General_CP1_CI_AS " + 
+                          "and D.MaxRevisionSort = DR.MaxSortRevision " + 
+                          "and D.WTDocumentNumber = DR.WTDocumentNumber";
             DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
             string sRtnValue = "";
 
             if (rst.m_RecordCount > 0)
             {
                 sRtnValue = rst.Get_NVarchar(ds, "Revision", 0);
+            }
+
+
+            ds.Dispose();
+
+            return sRtnValue;
+        }
+
+        public string GetDocJobCode(String sDocNo, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select * from vwWindchillDocumentStringAttributes where WTDocumentNumber = '" + sDocNo + "' COLLATE SQL_Latin1_General_CP1_CI_AS " +
+                          " and name = 'JobCode'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+            string sRtnValue = "";
+
+            if (rst.m_RecordCount > 0)
+            {
+                sRtnValue = rst.Get_NVarchar(ds, "value", 0);
             }
 
 
@@ -14226,12 +14249,28 @@ namespace WcfWCService
                 iRtnValue = rst.Get_Int(ds, "value", 0);
                 rtnCls.bReturnValue = true;
                 rtnCls.iReturnValue = iRtnValue;
-                ds.Dispose();
+                rtnCls.sErrMessage = "";
             }
             else
             {
-                rtnCls.bReturnValue = false;
+                if (rst.m_RecordCount == 0)
+                {
+                    //This means that the attribute is not even present.
+                    //Make it zero (0) when this occurs here
+                    rtnCls.iReturnValue = 0;
+                    rtnCls.bReturnValue = true;
+                    rtnCls.sErrMessage = "";
+                }
+                else 
+                {
+                    rtnCls.iReturnValue = 0;
+                    rtnCls.bReturnValue = false;
+                    rtnCls.sErrMessage = "Something is wrong with getting boolean attribute " + sAttributeName + " for part number " + sPartNo;
+                }
+
             }
+
+            ds.Dispose();
 
             return rtnCls;
         }
@@ -24035,7 +24074,11 @@ namespace WcfWCService
                 }
             }
         }
-        public string ProcessFileLMSUploadSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
+
+        // sVerifyOrUpload = 0 means verify only
+        // sVerifyOrUpload = 1 means to upload the files to LMS
+        public string ProcessFileLMSUploadSpreadsheet(string sSessionId, string sUserId, string sFile, 
+                                                      string sVerifyOrUpload, string sWebAppId)
         {
             OneDriveInteraction ODI = new OneDriveInteraction();
             OneDriveInteraction.CADFileResult ODIResult= new OneDriveInteraction.CADFileResult();
@@ -24060,8 +24103,9 @@ namespace WcfWCService
                 {"comments pdf", 7 },
                 {"comments dxf", 8 },
                 {"comments step", 9 },
-                {"status", 10 },
-                {"comments overall", 11}
+                {"comments lms", 10 },
+                {"status", 11 },
+                {"comments overall", 12}
             };
 
             var issueTracker = new SpreadsheetTracker();
@@ -24070,6 +24114,7 @@ namespace WcfWCService
             try
             {
                 int iWebAppId = Convert.ToInt32(sWebAppId);
+                int iVerifyOrUpload = Convert.ToInt32(sVerifyOrUpload);
 
                 if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
                 {
@@ -24096,7 +24141,7 @@ namespace WcfWCService
                     // Checking if the spreadsheet matches the template
                     string[] arrExpectedHeaders = {
                         "Item", "Description", "Revision Pdf", "Revision Dxf", "Revision Step", "Revision LMS",
-                        "Comments Pdf", "Comments Dxf", "Comments Step",
+                        "Comments Pdf", "Comments Dxf", "Comments Step", "Comments LMS",
                         "Status", "Comments Overall"
                     };
 
@@ -24176,7 +24221,7 @@ namespace WcfWCService
                         issueTracker.ResetRow();
                         var rowVals = lstRows[i];
                         ODIResult.Clear();
-                        try
+                        try //A try catch for each row
                         {
                             // ---------------------------- VALIDATIONS ----------------------------
                             bool bSkipped = false;
@@ -24207,15 +24252,9 @@ namespace WcfWCService
 
                                     //Then have a call to set all the Mat Cat Folders into a list in the ODI class
                                     //The 2nd parameter is whether we are doing a validation stage or an actual upload stage
-                                    ODIResult = ODI.FindCADFile(lstRows[i].sItem, lstRows[i].sRevisionPDF, lstRows[i].sRevisionDXF,
-                                                                lstRows[i].sRevisionSTEP, 0, iWebAppId)
+                                    ODIResult = ODI.FindCADFile(sSessionId, sUserId, sFullName, lstRows[i].sItem, lstRows[i].sRevisionPDF, lstRows[i].sRevisionDXF,
+                                                                lstRows[i].sRevisionSTEP, iVerifyOrUpload, iWebAppId)
                                                                 .GetAwaiter().GetResult();
-
-                                    /*if (!sResult.Equals(""))
-                                    {
-                                        sBody += sResult + "\n";
-                                        break;
-                                    }*/
                                 }
 
                             }
@@ -24223,8 +24262,7 @@ namespace WcfWCService
                             // ---------------------------- END CREATION ----------------------------
 
                             // Writing cells in return file
-
-                            for (int j = 0; j < 4; j++)
+                            for (int j = 0; j < 5; j++)
                             {
                                 string sType = "pdf";
                                 string sType2 = "revision pdf";
@@ -24293,38 +24331,29 @@ namespace WcfWCService
                                             WriteRevision(rowVals.iRowNo, ODIResult.sOverallRevision, sType2, System.Drawing.Color.PaleGreen);
 
                                         break;
+                                    case 4:
+                                        sType = "comments lms";
+                                        if (!ODIResult.sLMSComment.Equals(""))
+                                        {
+                                            issueTracker.Report(ODIResult.sLMSComment + "\n",
+                                                SpreadsheetTracker.PRIORITY_WARNING, rowVals.iRowNo, dicColNums["comments lms"]);
+                                            WriteComments(rowVals.iRowNo, ODIResult.sLMSComment, sType, System.Drawing.Color.PaleGreen);
+                                        }
+                                        break;
                                 }
 
 
-/*                                if (!issueTracker.RowIsValid)
-                                {
-                                    WriteStatus(rowVals.iRowNo, "Failure", "status", System.Drawing.Color.PaleVioletRed);
-                                }
-                                else if (issueTracker.iRowPriority == SpreadsheetTracker.PRIORITY_WARNING)
-                                {
-                                    WriteStatus(rowVals.iRowNo, "Warning", sType, System.Drawing.Color.PaleGoldenrod);
-                                }
-                               
-                                else if (bCreated)
-                                {
-                                    WriteStatus(rowVals.iRowNo, "Created", "status", System.Drawing.Color.LawnGreen);
-                                }
-                                else if (bUpdated)
-                                {
-                                    WriteStatus(rowVals.iRowNo, "Updated", "status", System.Drawing.Color.PaleGreen);
-                                }
-                                else if (bSkipped)
-                                {
-                                    WriteStatus(rowVals.iRowNo, "Skipped", "status", System.Drawing.Color.LightBlue);
-                                }
-                                else
-                                {
-                                    WriteStatus(rowVals.iRowNo, "Status Unknown", "status", System.Drawing.Color.LightGray);
-                                }
-*/
+
                             }
 
-                            // ---------------------------- END LOOPING THROUGH ROWS ----------------------------
+                            if (ODIResult.sStatus.Equals("Failure"))
+                            {
+                                WriteComments(rowVals.iRowNo, ODIResult.sStatusComments, "status", System.Drawing.Color.PaleVioletRed);
+                            }
+                            else if (ODIResult.sStatus.Equals("Uploaded"))
+                            {
+                                WriteComments(rowVals.iRowNo, ODIResult.sStatusComments, "status", System.Drawing.Color.PaleGreen);
+                            }
                         }
                         catch (System.Exception e)
                         {
@@ -24335,6 +24364,7 @@ namespace WcfWCService
                             WriteComments(rowVals.iRowNo, "Error: Server message reads: " + e.Message + "\n", "comments overall", System.Drawing.Color.PaleVioletRed);
                         }
                     }
+                    // ---------------------------- END LOOPING THROUGH ROWS ----------------------------
 
                     // ---------------------------- WRITING TO FILE AND EMAIL ---------------------------- 
                     // Write the spreadsheet and send back via email

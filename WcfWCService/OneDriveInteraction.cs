@@ -65,6 +65,7 @@ namespace WcfWCService
             public string id;
             public string name;
             public string type;
+            public string downloadurl;
         }
         public class FileItemExtra
         {
@@ -76,6 +77,7 @@ namespace WcfWCService
             public bool revfoundpdf;
             public bool revfounddxf;
             public bool revfoundstep;
+            public string donwloadurl;
         }
         public class FileRequirement
         {
@@ -98,10 +100,13 @@ namespace WcfWCService
             public string sPDFComment = "";
             public string sDXFComment = "";
             public string sSTEPComment = "";
+            public string sLMSComment = "";
             public string sPDFRevision = "";
             public string sDXFRevision = "";
             public string sSTEPRevision = "";
             public string sOverallRevision = "";
+            public string sStatus = "";
+            public string sStatusComments = "";
 
             public void Clear()
             {
@@ -109,6 +114,7 @@ namespace WcfWCService
                 sPDFComment = "";
                 sDXFComment = "";
                 sSTEPComment = "";
+                sLMSComment = "";
                 sPDFRevision = "";
                 sDXFRevision = "";
                 sSTEPRevision = "";
@@ -395,10 +401,12 @@ namespace WcfWCService
                                         string name = item.GetProperty("name").GetString();
                                         string id = item.GetProperty("id").GetString();
                                         string type = item.TryGetProperty("folder", out _) ? "Folder" : "File";
+                                        string downloadurl = item.TryGetProperty("@microsoft.graph.downloadUrl", out _) ? item.GetProperty("@microsoft.graph.downloadUrl").GetString() : "";
 
                                         itemFile.name = name;
                                         itemFile.type = type;
                                         itemFile.id = id;
+                                        itemFile.downloadurl = downloadurl;
 
                                         result.FileItems.Add(itemFile);
                                     }
@@ -561,7 +569,9 @@ namespace WcfWCService
 
         // iUpload = 0 means verify only
         // iUpload = 1 means attach to the windchill container
-        public async Task<CADFileResult> FindCADFile(string sPart, string sRevisionPDF, string sRevisionDXF, string sRevisionSTEP,
+        public async Task<CADFileResult> FindCADFile(string sSessionId, string sUserId, string sFullname, 
+                                                     string sPart, string sRevisionPDF,
+                                                     string sRevisionDXF, string sRevisionSTEP,
                                                      int iUpload, int iWebAppId)
         {
             Service1 serv = new Service1();
@@ -569,7 +579,9 @@ namespace WcfWCService
             FileRequirement fileReqs = new FileRequirement();
             CADFileResult result = new CADFileResult();
             List<string> allRevs = new List<string>();
-            string sLMSRevision = "";
+            List<FileItemExtra> fileToDownload = new List<FileItemExtra>();
+            string sLMSRevision = "", sLMSDocContName = "";
+            string sMaxRev = "", sJobCode = "M", s2ndMaxRev = "";
 
             try
             {
@@ -582,6 +594,8 @@ namespace WcfWCService
                     //Get the LMS Revision
                     sLMSRevision = serv.GetDocRevision(sPart, iWebAppId);
                     allRevs.Add(sLMSRevision);
+                    sJobCode = serv.GetDocJobCode(sPart, iWebAppId);
+                    sLMSDocContName = serv.GetDocName(sPart, iWebAppId);
 
                     foreach (FolderItem folderitem in m_MatCatFolders)
                     {
@@ -632,8 +646,28 @@ namespace WcfWCService
                                                     sRevision = fileItem.name.Substring(iLastV + 1, iLastDot - iLastV - 1); //The 1 in each is to ignore the v
                                                     sRevision = sRevision.Trim();
                                                 }
+                                                else
+                                                {
+                                                    //The revision could be immedaitely after the part number
+                                                    //eg M06176A v1 Part Name.dxf
+                                                    int iFirstSpace = fileItem.name.IndexOf(sPart + " v");
+                                                    if(iFirstSpace >= 0)
+                                                    {
+                                                        iFirstSpace += +sPart.Length + 2;
+                                                        int iNextSpace = fileItem.name.Substring(iFirstSpace).IndexOf(" ");
+                                                        string sVersion = "";
+                                                        if (iNextSpace > 0)
+                                                        {
+                                                            sVersion = fileItem.name.Substring(iFirstSpace, iNextSpace);
+                                                        }
+
+                                                        sRevision = sVersion.Trim();
+                                                    }
+
+                                                }
                                             }
                                         }
+
                                         string sRevisionCompare = sRevision;
                                         if(sRevision.Contains("."))
                                         {
@@ -679,7 +713,8 @@ namespace WcfWCService
                                             revision = sRevision,
                                             revfoundpdf = bFoundRevPDF,
                                             revfounddxf = bFoundRevDXF,
-                                            revfoundstep = bFoundRevSTEP
+                                            revfoundstep = bFoundRevSTEP,
+                                            donwloadurl = fileItem.downloadurl
                                         };
 
                                         fileItems.Add(thisItem);
@@ -727,7 +762,8 @@ namespace WcfWCService
                                                         type = pdffileitem.type,
                                                         id = pdffileitem.id,
                                                         extension = pdffileitem.extension,
-                                                        revision = pdffileitem.revision
+                                                        revision = pdffileitem.revision,
+                                                        donwloadurl = pdffileitem.donwloadurl
                                                     };
                                                     fileItemsPdf.Add(thisItem);
                                                 }
@@ -744,6 +780,7 @@ namespace WcfWCService
 
                                             result.sPDFRevision = sortedfileItemsPdf[0].revision;
                                             allRevs.Add(result.sPDFRevision);
+                                            fileToDownload.Add(sortedfileItemsPdf[0]);
                                         }
                                         else
                                         {
@@ -778,7 +815,8 @@ namespace WcfWCService
                                                         type = dxffileitem.type,
                                                         id = dxffileitem.id,
                                                         extension = dxffileitem.extension,
-                                                        revision = dxffileitem.revision
+                                                        revision = dxffileitem.revision,
+                                                        donwloadurl = dxffileitem.donwloadurl
                                                     };
                                                     fileItemsDxf.Add(thisItem);
                                                 }
@@ -795,6 +833,7 @@ namespace WcfWCService
 
                                             result.sDXFRevision = sortedfileItemsDxf[0].revision;
                                             allRevs.Add(result.sDXFRevision);
+                                            fileToDownload.Add(sortedfileItemsDxf[0]);
                                         }
                                         else
                                         {
@@ -829,7 +868,8 @@ namespace WcfWCService
                                                         type = stepfileitem.type,
                                                         id = stepfileitem.id,
                                                         extension = stepfileitem.extension,
-                                                        revision = stepfileitem.revision
+                                                        revision = stepfileitem.revision,
+                                                        donwloadurl = stepfileitem.donwloadurl
                                                     };
                                                     fileItemsStep.Add(thisItem);
                                                 }
@@ -846,6 +886,7 @@ namespace WcfWCService
 
                                             result.sSTEPRevision = sortedfileItemsStep[0].revision;
                                             allRevs.Add(result.sSTEPRevision);
+                                            fileToDownload.Add(sortedfileItemsStep[0]);
                                         }
                                         else
                                         {
@@ -867,7 +908,6 @@ namespace WcfWCService
                         }
 
                         // Finds the maximum value using our custom rule
-                        string sMaxRev = "";
                         if(allRevs.Count >0)
                             sMaxRev = allRevs
                                     .OrderByDescending(ii => string.IsNullOrEmpty(ii) ? 2 : char.IsLetter(ii[0]) ? 0 : 1)
@@ -879,6 +919,24 @@ namespace WcfWCService
                             sMaxRev = sMaxRev.Substring(0, sMaxRev.IndexOf("."));
                         }
 
+                        if (allRevs.Count > 1)
+                            s2ndMaxRev = allRevs
+                                    .OrderByDescending(ii => string.IsNullOrEmpty(ii) ? 2 : char.IsLetter(ii[0]) ? 0 : 1)
+                                    .ThenByDescending(ii => ii)
+                                    .Skip(1)
+                                    .FirstOrDefault();
+
+                        if(!s2ndMaxRev.Equals(sMaxRev))
+                        {
+                            CustomStringComparer clsComp = new CustomStringComparer();
+                            int iLMSCompare = clsComp.Compare(sLMSRevision, sMaxRev);
+
+                            if (iLMSCompare > 0)
+                            {
+                                result.sLMSComment = "LMS document container revision is further advanced than the highest revision of the required files and therefore will not be modified";
+                            }
+                        }
+
                         result.sOverallRevision = sMaxRev;
 
                         /*                        string sMaxRevision = allRevs
@@ -887,7 +945,7 @@ namespace WcfWCService
 
                                                 result.sOverallRevision = sMaxRevision;
                         */
-                        return result;
+//                        return result;
                     }
                 }
                 else
@@ -897,11 +955,47 @@ namespace WcfWCService
 
                 }
                 //This download url has to be read each time from the json response because it includes the current access token
-                //The json has the fully formed url in the response so just grab it.
-                /*                string sDownloadUrl = "https://regainmaterials-my.sharepoint.com/personal/regain_regainmaterials_com/_layouts/15/download.aspx?UniqueId=891da239-bbea-453e-b015-a5fa8a36a134&Translate=false&tempauth=v1.eyJzaXRlaWQiOiI4YmY0YjAyYy1hZTJiLTQyMTItYWZhNy1iZGQzMDMyN2RiMjMiLCJhcHBfZGlzcGxheW5hbWUiOiJHcmFwaCBFeHBsb3JlciIsImFwcGlkIjoiZGU4YmM4YjUtZDlmOS00OGIxLWE4YWQtYjc0OGRhNzI1MDY0IiwiYXVkIjoiMDAwMDAwMDMtMDAwMC0wZmYxLWNlMDAtMDAwMDAwMDAwMDAwL3JlZ2Fpbm1hdGVyaWFscy1teS5zaGFyZXBvaW50LmNvbUA1YTVhZDVjMC03ODdhLTQ2ZTQtOTA5Ny1lNmM0MWIzYzk3ZmMiLCJleHAiOiIxNzkyNDY5ODE0In0.CkQKDGVudHJhX2NsYWltcxI0Q0xYOTJ0WUdFQUFhRmkxd1UzTnlUMDU0ZVVWaFJGRnZXamhVWTFCNlFVRXFBREFCUUFNPQoyCgphY3RvcmFwcGlkEiQwMDAwMDAwMy0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDAKCgoEc25pZBICNjQSCwiik5j_05jXPxAFGg0yMC4xOTAuMTQyLjQwKixpRXFlNUc4N2lNc3UxZlJiTkg5bG9pbzFYY2hTTUEvQlJsQVdZOWd3eGdrPTClATgBQhCiRpfLZXAAUNc34QkSqQZmShBoYXNoZWRwcm9vZnRva2VuUghbImttc2kiXWokMDA5Yjg0OWEtM2Y1OS0wMWFmLTQ3NjctMTUwOGQyYmQ0ODQzcikwaC5mfG1lbWJlcnNoaXB8MTAwMzIwMDY0NGQ4OGQwMEBsaXZlLmNvbXoBMoIBEgnA1VpaenjkRhGQl-bEGzyX_JIBClJlZ2FpbiBMTVOiARdsbXNAcmVnYWlubWF0ZXJpYWxzLmNvbaoBEDEwMDMyMDA2NDREODhEMDCyAR5hbGxmaWxlcy5yZWFkIGFsbHByb2ZpbGVzLnJlYWTIAQHiARYtcFNzck9OeHlFYURRb1o4VGNQekFB6gEHWyJDUDEiXfIBATE.BrVUuuCtg-9W8tgHXezt4XaI-o9HycR4rkkbf0cdPBQ&ApiVersion=2.0";
+                //The json has the fully formed url in the response so just grab it and hold it in the class
+                if(iUpload == 1)
+                {
+                    if(fileToDownload.Count >0)
+                    {
+                        //Here the variable sMaxRev should hold the new revision of the LMS document container
+                        if(!sLMSRevision.Equals(sMaxRev) && !sMaxRev.Equals(""))
+                        {
+                            string sLMSRevUpdate = serv.ReviseDocumentAndRemoveAttachments(sSessionId, sUserId, sFullname, 
+                                                                                           sPart, sLMSDocContName,
+                                                                                           sMaxRev, "", sFullname, "", sJobCode,
+                                                                                           "Revising document to " + sMaxRev + " from auto part upload process",
+                                                                                           "1", iWebAppId.ToString());
 
-                                await DownloadFileFromUrlAsync(sDownloadUrl, @"C:\WebRoot\Regain\Uploads\ExampleDownload2.dxf");
-                */
+                            if(!sLMSRevUpdate.StartsWith("Success"))
+                            {
+                                result.sStatusComments = "Could not raise revision of part document container " + sPart + " to " + sMaxRev;
+                                result.sStatus = "Failure";
+                                return result;
+                            }
+                        }
+
+                        for (int i = 0; i < fileToDownload.Count; i++)
+                        {
+                            string sDownloadUrl = fileToDownload[i].donwloadurl;
+                            string sThisPath = @"C:\WebRoot\Regain\Uploads\" + fileToDownload[i].name;
+                            await DownloadFileFromUrlAsync(sDownloadUrl, sThisPath);
+                            string sAttachResult = serv.AttachWCDoc(sSessionId, sUserId, sFullname, sPart, fileToDownload[i].name, sThisPath, "true", "Initiated from auto upload code", iWebAppId.ToString());
+                            if (!sAttachResult.StartsWith("Success"))
+                            {
+                                result.sStatusComments += "Could not attach file " + fileToDownload[i].name + "\n";
+                                result.sStatus = "Failure";
+                                return result;
+                            }
+                        }
+
+                        result.sStatusComments = "Uploaded";
+                        result.sStatus = "Uploaded";
+                    }
+                }
+
                 return result;
             }
             catch (System.Exception e)
@@ -961,6 +1055,9 @@ namespace WcfWCService
 
         public class CustomStringComparer : IComparer<string>
         {
+            //Returns < 0 means x < y
+            //Returns = 0 means x = y
+            //Retunrs > 0 means x > y
             public int Compare(string x, string y)
             {
                 // Handle nulls and exact matches

@@ -1163,8 +1163,8 @@ namespace WcfWCService
         string ProcessMaterialListSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
 
         [OperationContract]
-        [WebGet(UriTemplate = "processfilelmsuploadspreadsheet/{sSessionId}/{sUserId}/{sFile}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
-        string ProcessFileLMSUploadSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId);
+        [WebGet(UriTemplate = "processfilelmsuploadspreadsheet/{sSessionId}/{sUserId}/{sFile}/{sVerifyOrUpload}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string ProcessFileLMSUploadSpreadsheet(string sSessionId, string sUserId, string sFile, string sVerifyOrUpload, string sWebAppId);
 
         [OperationContract]
         [WebGet(UriTemplate = "createandlinkdocwrapper/{sSessionId}/{sUserId}/{sFullName}/{sPartNo}/" +
