@@ -27,14 +27,6 @@ namespace WcfWCService
 {
     public class OneDriveInteraction
     {
-
-        /*        private const string ClientId = "78d7fc1a-b197-467f-bcf9-30dce4339bda";
-                private const string TenantId = "5a5ad5c0-787a-46e4-9097-e6c41b3c97fc"; // or "common" / "organizations"
-                private const string Username = "LMS@regainmaterials.com";
-                private const string Password = "Nrk#2026";
-                private const string ClientSecret = "dgP8Q~JEhjRJNNLT28fqAkgIvMYP0baZWBP6.cIP";
-        */
-
         private string m_driveId;
         private string m_CADFolderId;
         private string m_AccessToken;
@@ -194,7 +186,7 @@ namespace WcfWCService
                 string[] scopes = new[] { "https://graph.microsoft.com/.default" };
 
                 var app = ConfidentialClientApplicationBuilder.Create(sWCIISAppClientId)
-                        .WithClientSecret(sWCIISApplicationClientSecret) // Paste your generated client secret value here
+                        .WithClientSecret(sWCIISApplicationClientSecret)
                         .WithAuthority(AzureCloudInstance.AzurePublic, sWCIISAppTenantId)
                         .Build();
 
