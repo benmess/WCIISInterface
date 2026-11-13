@@ -216,12 +216,14 @@ namespace WcfWCService
 
         [OperationContract]
         [WebGet(UriTemplate = "setpartfabricationattributes/{sSessionId}/{sUserId}/{sPartNo}/{sFullname}/{sProfileCut}/{sPress}/{sWeld}/{sCountersink}/" +
-                              "{sFabricate}/{sMachined}/{sPurchased}/{sPDF}/{sDXF}/{sSTEP}/{sCheckInComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+                              "{sFabricate}/{sMachined}/{sPurchased}/{sAssemble}/{sRotaryTubeCut}/{sPDF}/{sDXF}/{sSTEP}/{sCheckInComments}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string SetPartFabricationAttributes(string sSessionId, string sUserId, string sPartNo, string sFullname,
-                                                  string sProfileCut, string sPress, string sWeld, string sCountersink,
-                                                  string sFabricate, string sMachined, string sPurchased, string sPDF,
-                                                  string sDXF, string sSTEP,
-                                                  string sCheckInComments, string sWebAppId);
+                                          string sProfileCut, string sPress, string sWeld, string sCountersink,
+                                          string sFabricate, string sMachined, string sPurchased,
+                                          string sAssemble, string sRotaryTubeCut,
+                                          string sPDF, string sDXF, string sSTEP,
+                                          string sCheckInComments, string sWebAppId);
+
 
         [OperationContract]
         [WebGet(UriTemplate = "setdocfabricationns/{sSessionId}/{sUserId}/{sDocNo}/{sFullname}/{sFabrications}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]

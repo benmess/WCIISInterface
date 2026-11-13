@@ -2336,7 +2336,9 @@ namespace WcfWCService
         }
 
         //All the fabrication values are boolean trherefore they are required to be sent as a string "true" or "false" NOT "1" or "0"
-        public string SetPartFabrications(string sSessionId, string sUserId, string sPartNo, string sFullname, 
+        // Bit map: 0 ProfileCut, 1 Press, 2 Weld, 3 Countersink, 4 Fabricate, 5 Machined, 6 Purchased,
+        //          7 Assemble, 8 RotaryTubeCut, 9 PDF, 10 DXF, 11 STEP, 
+        public string SetPartFabrications(string sSessionId, string sUserId, string sPartNo, string sFullname,
                                         string sFabrications, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -2357,9 +2359,12 @@ namespace WcfWCService
                 int iFabricate = GetBitFromInt(iFabrication, 4);
                 int iMachined = GetBitFromInt(iFabrication, 5);
                 int iPurchased = GetBitFromInt(iFabrication, 6);
-                int iPDF = GetBitFromInt(iFabrication, 7);
-                int iDXF = GetBitFromInt(iFabrication, 8);
-                int iSTEP = GetBitFromInt(iFabrication, 9);
+                int iAssemble = GetBitFromInt(iFabrication, 7);
+                int iRotaryTubeCut = GetBitFromInt(iFabrication, 8);
+                int iPDF = GetBitFromInt(iFabrication, 9);
+                int iDXF = GetBitFromInt(iFabrication, 10);
+                int iSTEP = GetBitFromInt(iFabrication, 11);
+                
                 string sCheckinComments = "Updating fabrication attributes for part " + sPartNo;
 
                 bool bProfileCut = false;
@@ -2390,6 +2395,14 @@ namespace WcfWCService
                 if (iPurchased == 1)
                     bPurchased = true;
 
+                bool bAssemble = false;
+                if (iAssemble == 1)
+                    bAssemble = true;
+
+                bool bRotaryTubeCut = false;
+                if (iRotaryTubeCut == 1)
+                    bRotaryTubeCut = true;
+
                 bool bPDF = false;
                 if (iPDF == 1)
                     bPDF = true;
@@ -2402,17 +2415,19 @@ namespace WcfWCService
                 if (iSTEP == 1)
                     bSTEP = true;
 
-                return SetPartFabricationAttributes(sSessionId, sUserId, sPartNo, sFullname, 
+                return SetPartFabricationAttributes(sSessionId, sUserId, sPartNo, sFullname,
                                                    bProfileCut.ToString(), bPress.ToString(), bWeld.ToString(), bCountersink.ToString(),
-                                                   bFabricate.ToString(), bMachined.ToString(), bPurchased.ToString(), bPDF.ToString(),
-                                                   bDXF.ToString(), bSTEP.ToString(), sCheckinComments, sWebAppId);
+                                                   bFabricate.ToString(), bMachined.ToString(), bPurchased.ToString(),
+                                                   bAssemble.ToString(), bRotaryTubeCut.ToString(),
+                                                   bPDF.ToString(), bDXF.ToString(), bSTEP.ToString(), sCheckinComments, sWebAppId);
             }
         }
         public string SetPartFabricationAttributes(string sSessionId, string sUserId, string sPartNo, string sFullname,
-                                                  string sProfileCut, string sPress, string sWeld, string sCountersink,
-                                                  string sFabricate, string sMachined, string sPurchased, string sPDF,
-                                                  string sDXF, string sSTEP,
-                                                  string sCheckInComments, string sWebAppId)
+                                          string sProfileCut, string sPress, string sWeld, string sCountersink,
+                                          string sFabricate, string sMachined, string sPurchased,
+                                          string sAssemble, string sRotaryTubeCut,
+                                          string sPDF, string sDXF, string sSTEP,
+                                          string sCheckInComments, string sWebAppId)
         {
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
             {
@@ -2422,9 +2437,9 @@ namespace WcfWCService
             {
                 Update_User_Time(sUserId, sSessionId);
                 ExampleService.MyJavaService3Client client2 = GetWCService();
-                string[] sAttributeNames = new string[11];
-                string[] sAttributeValues = new string[11];
-                string[] sAttributeTypes = new string[11];
+                string[] sAttributeNames = new string[13];
+                string[] sAttributeValues = new string[13];
+                string[] sAttributeTypes = new string[13];
 
                 sAttributeNames[0] = "ProfileCut";
                 sAttributeNames[1] = "Press";
@@ -2433,10 +2448,12 @@ namespace WcfWCService
                 sAttributeNames[4] = "Fabricate";
                 sAttributeNames[5] = "Machined";
                 sAttributeNames[6] = "Purchased";
-                sAttributeNames[7] = "PDF";
-                sAttributeNames[8] = "DXF";
-                sAttributeNames[9] = "STEP";
-                sAttributeNames[10] = "Originator";
+                sAttributeNames[7] = "Assemble";
+                sAttributeNames[8] = "RotaryTubeCut";
+                sAttributeNames[9] = "PDF";
+                sAttributeNames[10] = "DXF";
+                sAttributeNames[11] = "STEP";
+                sAttributeNames[12] = "Originator";
 
                 sAttributeValues[0] = sProfileCut;
                 sAttributeValues[1] = sPress;
@@ -2445,10 +2462,12 @@ namespace WcfWCService
                 sAttributeValues[4] = sFabricate;
                 sAttributeValues[5] = sMachined;
                 sAttributeValues[6] = sPurchased;
-                sAttributeValues[7] = sPDF;
-                sAttributeValues[8] = sDXF;
-                sAttributeValues[9] = sSTEP;
-                sAttributeValues[10] = sFullname;
+                sAttributeValues[7] = sAssemble;
+                sAttributeValues[8] = sRotaryTubeCut;
+                sAttributeValues[9] = sPDF;
+                sAttributeValues[10] = sDXF;
+                sAttributeValues[11] = sSTEP;
+                sAttributeValues[12] = sFullname;
 
                 sAttributeTypes[0] = "bool";
                 sAttributeTypes[1] = "bool";
@@ -2460,10 +2479,12 @@ namespace WcfWCService
                 sAttributeTypes[7] = "bool";
                 sAttributeTypes[8] = "bool";
                 sAttributeTypes[9] = "bool";
-                sAttributeTypes[10] = "string";
+                sAttributeTypes[10] = "bool";
+                sAttributeTypes[11] = "bool";
+                sAttributeTypes[12] = "string";
 
                 //Sending across an empty string for the name means it remains unchanged. The name is manbdatory in Windchill and cannot be empty
-                return client2.setpartattributes(sPartNo, "", sFullname,sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, Convert.ToInt16(sWebAppId));
+                return client2.setpartattributes(sPartNo, "", sFullname, sAttributeNames, sAttributeValues, sAttributeTypes, sCheckInComments, Convert.ToInt16(sWebAppId));
             }
         }
 
@@ -21002,10 +21023,11 @@ namespace WcfWCService
         }
 
         public string CreateSubPart(string sSessionId, string sUserId, string sFullName, string sPartNo, string sPartName,
-                                                string sCheckInComments, string sPartDescription, string sQuantity, string sMass, string sMatCatType,
-                                                string sProfileCut, string sPress, string sWeld, string sCountersink, string sFabricate,
-                                                string sMachined, string sPurchased, string sPdf, string sDxf, string sStep,
-                                                string sComments, string sParentPartNo, string sWebAppId)
+                                        string sCheckInComments, string sPartDescription, string sQuantity, string sMass, string sMatCatType,
+                                        string sProfileCut, string sPress, string sWeld, string sCountersink, string sFabricate,
+                                        string sMachined, string sPurchased, string sAssemble, string sRotaryTubeCut,
+                                        string sPdf, string sDxf, string sStep,
+                                        string sComments, string sParentPartNo, string sWebAppId)
         {
             string sReturn = "";
             if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
@@ -21069,7 +21091,7 @@ namespace WcfWCService
                 // Set the attributes
                 sCheckInComments = "Setting fabrication attributes from material list import";
                 sReturn = SetPartFabricationAttributes(sSessionId, sUserId, sPartNo, sFullName, sProfileCut, sPress, sWeld, sCountersink, sFabricate,
-                    sMachined, sPurchased, sPdf, sDxf, sStep, sCheckInComments, sWebAppId);
+                    sMachined, sPurchased, sAssemble, sRotaryTubeCut, sPdf, sDxf, sStep, sCheckInComments, sWebAppId);
 
                 if (!sReturn.StartsWith("Success"))
                 {
@@ -21087,7 +21109,7 @@ namespace WcfWCService
 
                     if (!sReturn.StartsWith("Success"))
                     {
-                        sReturn = "Failure: Failure when setting file attributes for subpart " + sPartNo + ": " + sReturn;
+                        sReturn = "Failure: Failure when setting part type for subpart " + sPartNo + ": " + sReturn;
                         return sReturn;
                     }
                 }
@@ -21111,10 +21133,11 @@ namespace WcfWCService
 
         // Creates a subpart, and if a document container does not exist, creates and links one
         public rtnString CreateSubPartWithDoc(string sSessionId, string sUserId, string sFullName, string sPartNo, string sPartName,
-                                                string sCheckInComments, string sPartDescription, string sQuantity, string sMass, string sMatCatType,
-                                                string sProfileCut, string sPress, string sWeld, string sCountersink, string sFabricate,
-                                                string sMachined, string sPurchased, string sPdf, string sDxf, string sStep,
-                                                string sComments, string sParentPartNo, string sWebAppId)
+                                        string sCheckInComments, string sPartDescription, string sQuantity, string sMass, string sMatCatType,
+                                        string sProfileCut, string sPress, string sWeld, string sCountersink, string sFabricate,
+                                        string sMachined, string sPurchased, string sAssemble, string sRotaryTubeCut,
+                                        string sPdf, string sDxf, string sStep,
+                                        string sComments, string sParentPartNo, string sWebAppId)
         {
             rtnString rtn = new rtnString() { bReturnValue = false };
 
@@ -21131,8 +21154,8 @@ namespace WcfWCService
             // Create the part
             int iWebAppId = Convert.ToInt16(sWebAppId);
             string sRtn = CreateSubPart(sSessionId, sUserId, sFullName, sPartNo, sPartName, sCheckInComments, sPartDescription, sQuantity, sMass, sMatCatType,
-                                                sProfileCut, sPress, sWeld, sCountersink, sFabricate, sMachined, sPurchased, sPdf, sDxf, sStep,
-                                                sComments, sParentPartNo, sWebAppId);
+                                                sProfileCut, sPress, sWeld, sCountersink, sFabricate, sMachined, sPurchased, sAssemble, sRotaryTubeCut,
+                                                sPdf, sDxf, sStep, sComments, sParentPartNo, sWebAppId);
 
             if (!sRtn.StartsWith("Success"))
             {
@@ -23367,22 +23390,26 @@ namespace WcfWCService
                 {"fabricate", 11 },
                 {"machined", 12 },
                 {"purchased", 13 },
-                {"pdf", 14 },
-                {"dxf", 15 },
-                {"step", 16 },
-                {"comments", 17 },
-                {"status", 18 }
+                {"assemble", 14 },
+                {"rotary_tube_cut", 15 },
+                {"pdf", 16 },
+                {"dxf", 17 },
+                {"step", 18 },
+                {"comments", 19 },
+                {"status", 20 }
             };
 
             var dicFlagLabels = new Dictionary<string, string>
             {
-                { "profile_cut", "Profile Cut" },
+                { "profile_cut", "Flat Profile Cut" },
                 { "press", "Press" },
                 { "weld", "Weld" },
                 { "countersink", "Countersink" },
                 { "fabricate", "Fabricate" },
                 { "machined", "Machined" },
                 { "purchased", "Purchased" },
+                { "assemble", "Assemble" },
+                { "rotary_tube_cut", "Rotary Tube Cut" },
                 { "pdf", "PDF" },
                 { "dxf", "DXF" },
                 { "step", "STEP" }
@@ -23392,7 +23419,8 @@ namespace WcfWCService
             bool failure = false;
 
             string[] arrFlagKeys = {
-                "profile_cut", "press", "weld", "countersink", "fabricate", "machined", "purchased", "pdf", "dxf", "step"
+                "profile_cut", "press", "weld", "countersink", "fabricate", "machined", "purchased",
+                "assemble", "rotary_tube_cut", "pdf", "dxf", "step"
             };
 
             try
@@ -23421,8 +23449,9 @@ namespace WcfWCService
                     // Checking if the spreadsheet matches the template
                     string[] arrExpectedHeaders = {
                         "Item", "Ref", "LMS Name", "Description", "Qty", "Mass (kg)",
-                        "Profile Cut", "Press", "Weld", "Countersink",
+                        "Flat Profile Cut", "Press", "Weld", "Countersink",
                         "Fabricate", "Machined", "Purchased",
+                        "Assemble", "Rotary Tube Cut",
                         "PDF", "DXF", "STEP",
                         "Comments", "Status"
                     };
@@ -23640,6 +23669,7 @@ namespace WcfWCService
                                     // Set part file attributes
                                     sUpdateRtn = SetPartFabricationAttributes(sSessionId, sUserId, rowVals.sRef, sFullName, rowVals.dicFlags["profile_cut"], rowVals.dicFlags["press"],
                                         rowVals.dicFlags["weld"], rowVals.dicFlags["countersink"], rowVals.dicFlags["fabricate"], rowVals.dicFlags["machined"], rowVals.dicFlags["purchased"],
+                                        rowVals.dicFlags["assemble"], rowVals.dicFlags["rotary_tube_cut"],
                                         rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"],
                                         "Updating file attributes from material list import", sWebAppId);
 
@@ -23699,7 +23729,8 @@ namespace WcfWCService
                                         rtnString sPartCreateRtn = CreateSubPartWithDoc(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sDescription, sCheckinComments,
                                             "", rowVals.sQtyNormalised, rowVals.sMassNormalised, sImportMaterialTypeCode, rowVals.dicFlags["profile_cut"], rowVals.dicFlags["press"],
                                             rowVals.dicFlags["weld"], rowVals.dicFlags["countersink"], rowVals.dicFlags["fabricate"], rowVals.dicFlags["machined"],
-                                            rowVals.dicFlags["purchased"], rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"], "", sParentRef, sWebAppId);
+                                            rowVals.dicFlags["purchased"], rowVals.dicFlags["assemble"], rowVals.dicFlags["rotary_tube_cut"],
+                                            rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"], "", sParentRef, sWebAppId);
 
                                         if (!sPartCreateRtn.bReturnValue)
                                         {
@@ -23765,8 +23796,9 @@ namespace WcfWCService
                                         // Set file attributes
                                         sCheckinComments = "Updating file attributes from material list import";
                                         sUpdateRtn = SetPartFabricationAttributes(sSessionId, sUserId, rowVals.sRef, sFullName, rowVals.dicFlags["profile_cut"], rowVals.dicFlags["press"],
-                                        rowVals.dicFlags["weld"], rowVals.dicFlags["countersink"], rowVals.dicFlags["fabricate"], rowVals.dicFlags["machined"], rowVals.dicFlags["purchased"],
-                                        rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"], sCheckinComments, sWebAppId);
+                                            rowVals.dicFlags["weld"], rowVals.dicFlags["countersink"], rowVals.dicFlags["fabricate"], rowVals.dicFlags["machined"], rowVals.dicFlags["purchased"],
+                                            rowVals.dicFlags["assemble"], rowVals.dicFlags["rotary_tube_cut"],
+                                            rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"], sCheckinComments, sWebAppId);
 
                                         if (!sUpdateRtn.StartsWith("Success"))
                                         {
