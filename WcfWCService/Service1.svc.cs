@@ -1,4 +1,6 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
+﻿using Azure.Core;
+using Azure.Identity;
+using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.EMMA;
@@ -8,6 +10,11 @@ using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Vml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Graph;
+using Microsoft.Graph.Drives.Item.SharedWithMe; // Required namespace for the v5 model
+using Microsoft.Graph.Models;
+using Microsoft.Identity.Client;
 using Microsoft.Office.Interop.Excel;
 using Microsoft.Office.Interop.Word;
 using Microsoft.SqlServer.Server;
@@ -29,7 +36,10 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Mail;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Security.Cryptography;
@@ -38,8 +48,10 @@ using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Services;
 using System.Web.Services.Description;
@@ -47,6 +59,8 @@ using System.Web.Services.Protocols;
 using System.Web.UI.WebControls;
 using WcfWCService.ExampleService;
 using Excel = Microsoft.Office.Interop.Excel;
+using Process = System.Diagnostics.Process;
+using Task = System.Threading.Tasks.Task;
 using word = Microsoft.Office.Interop.Word;
 
 namespace WcfWCService
@@ -315,6 +329,16 @@ namespace WcfWCService
                 if (iTotalIssues == 0) { return "Issues reported: \nNone to be reported."; }
                 return "Issues reported: \n" + sbIssueLog.ToString();
             }
+        }
+
+        public class PartFileUploadRow
+        {
+            public int iRowNo;
+            public string sItem;
+            public string sRevisionPDF;
+            public string sRevisionDXF;
+            public string sRevisionSTEP;
+            public bool bValidPart;
         }
 
         public class PartsListRow
@@ -13929,6 +13953,47 @@ namespace WcfWCService
             return sRtnValue;
         }
 
+        public string GetDocRevision(String sDocNo, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select D.Revision from [dbo].[vwWindchillLatestDocRev] DR, vwWindchillLatestDocumentWithType D " +
+                          "where DR.WTDocumentNumber = '" + sDocNo + "' COLLATE SQL_Latin1_General_CP1_CI_AS " + 
+                          "and D.MaxRevisionSort = DR.MaxSortRevision " + 
+                          "and D.WTDocumentNumber = DR.WTDocumentNumber";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+            string sRtnValue = "";
+
+            if (rst.m_RecordCount > 0)
+            {
+                sRtnValue = rst.Get_NVarchar(ds, "Revision", 0);
+            }
+
+
+            ds.Dispose();
+
+            return sRtnValue;
+        }
+
+        public string GetDocJobCode(String sDocNo, int iWebAppId)
+        {
+            RecordSet rst = new RecordSet();
+            rst.SetWebApp(iWebAppId);
+            string sSQL = "select * from vwWindchillDocumentStringAttributes where WTDocumentNumber = '" + sDocNo + "' COLLATE SQL_Latin1_General_CP1_CI_AS " +
+                          " and name = 'JobCode'";
+            DataSet ds = rst.OpenRecordset(sSQL, rst.SqlConnectionStr());
+            string sRtnValue = "";
+
+            if (rst.m_RecordCount > 0)
+            {
+                sRtnValue = rst.Get_NVarchar(ds, "value", 0);
+            }
+
+
+            ds.Dispose();
+
+            return sRtnValue;
+        }
 
         public rtnInt DocDocUsageLinkExists(String sParentDocNo, String sChildDocNo, int iWebAppId)
         {
@@ -14216,12 +14281,28 @@ namespace WcfWCService
                 iRtnValue = rst.Get_Int(ds, "value", 0);
                 rtnCls.bReturnValue = true;
                 rtnCls.iReturnValue = iRtnValue;
-                ds.Dispose();
+                rtnCls.sErrMessage = "";
             }
             else
             {
-                rtnCls.bReturnValue = false;
+                if (rst.m_RecordCount == 0)
+                {
+                    //This means that the attribute is not even present.
+                    //Make it zero (0) when this occurs here
+                    rtnCls.iReturnValue = 0;
+                    rtnCls.bReturnValue = true;
+                    rtnCls.sErrMessage = "";
+                }
+                else 
+                {
+                    rtnCls.iReturnValue = 0;
+                    rtnCls.bReturnValue = false;
+                    rtnCls.sErrMessage = "Something is wrong with getting boolean attribute " + sAttributeName + " for part number " + sPartNo;
+                }
+
             }
+
+            ds.Dispose();
 
             return rtnCls;
         }
@@ -24011,6 +24092,352 @@ namespace WcfWCService
             }
         }
 
+        // sVerifyOrUpload = 0 means verify only
+        // sVerifyOrUpload = 1 means to upload the files to LMS
+        public string ProcessFileLMSUploadSpreadsheet(string sSessionId, string sUserId, string sFile, 
+                                                      string sVerifyOrUpload, string sWebAppId)
+        {
+            OneDriveInteraction ODI = new OneDriveInteraction();
+            OneDriveInteraction.CADFileResult ODIResult= new OneDriveInteraction.CADFileResult();
+
+            // ---------------------------- HELPER FUNCTIONS ----------------------------
+
+            // ---------------------------- END HELPER FUNCTIONS ----------------------------
+
+            Excel.Application xlApp = null;
+            Excel.Workbooks xlWbks = null;
+
+            int iProcessId = -1;
+
+            var dicColNums = new Dictionary<string, int>
+            {
+                {"item", 1 },
+                {"description", 2 },
+                {"revision pdf", 3 },
+                {"revision dxf", 4 },
+                {"revision step", 5 },
+                {"revision lms", 6 },
+                {"comments pdf", 7 },
+                {"comments dxf", 8 },
+                {"comments step", 9 },
+                {"comments lms", 10 },
+                {"status", 11 },
+                {"comments overall", 12}
+            };
+
+            var issueTracker = new SpreadsheetTracker();
+            bool failure = false;
+
+            try
+            {
+                int iWebAppId = Convert.ToInt32(sWebAppId);
+                int iVerifyOrUpload = Convert.ToInt32(sVerifyOrUpload);
+
+                if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+                {
+                    return "User " + sUserId + " is not logged in";
+                }
+                else
+                {
+                    // ---------------------------- READING SPREADSHEET ----------------------------
+                    Update_User_Time(sUserId, sSessionId);
+                    ArrayList arrUser = GetUserDetails(sUserId);
+                    string sFullName = arrUser[2].ToString();
+
+                    xlApp = new Excel.Application();
+                    xlApp.DisplayAlerts = false;
+                    xlWbks = xlApp.Workbooks;
+
+
+                    GetWindowThreadProcessId(new IntPtr(xlApp.Hwnd), out iProcessId);
+
+                    Excel.Workbook xlWorkbook = xlWbks.Open(@"C:\Webroot\Regain\Uploads\" + sFile);
+                    Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+                    Excel.Range xlRange = xlWorksheet.UsedRange;
+
+                    // Checking if the spreadsheet matches the template
+                    string[] arrExpectedHeaders = {
+                        "Item", "Description", "Revision Pdf", "Revision Dxf", "Revision Step", "Revision LMS",
+                        "Comments Pdf", "Comments Dxf", "Comments Step", "Comments LMS",
+                        "Status", "Comments Overall"
+                    };
+
+                    if (xlRange.Row != 1 || xlRange.Column != 1)
+                    {
+                        throw new System.Exception("The spreadsheet must begin at cell A1.");
+                    }
+
+                    int rowCount = xlRange.Rows.Count;
+
+                    for (int i = 0; i < arrExpectedHeaders.Length; i++)
+                    {
+                        string sHeader = GetCellString(xlWorksheet, 1, i + 1).Trim();
+
+                        if (sHeader.ToUpper() != arrExpectedHeaders[i].ToUpper())
+                        {
+                            throw new System.Exception("Invalid column format at column " + (i + 1) +
+                                ". Expected '" + arrExpectedHeaders[i] + "' but found '" + sHeader + "'.\n\n" +
+                                "Expected columns, in order, are: " + string.Join(", ", arrExpectedHeaders));
+                        }
+                    }
+                    string sBody = "";
+
+                    var lstRows = new List<PartFileUploadRow>();
+
+                    void WriteComments(int iRowNo, string sMessage, string sType, System.Drawing.Color colour)
+                    {
+//                        xlWorksheet.Cells[iRowNo, dicColNums[sType]] = sStatus;
+                        xlWorksheet.Cells[iRowNo, dicColNums[sType]].Interior.Color =
+                            System.Drawing.ColorTranslator.ToOle(colour);
+                        xlWorksheet.Cells[iRowNo, dicColNums[sType]] = sMessage;
+                    }
+
+                    void WriteRevision(int iRowNo, string sRevision, string sType, System.Drawing.Color colour)
+                    {
+                        //                        xlWorksheet.Cells[iRowNo, dicColNums[sType]] = sStatus;
+                        xlWorksheet.Cells[iRowNo, dicColNums[sType]].Interior.Color =
+                            System.Drawing.ColorTranslator.ToOle(colour);
+                        xlWorksheet.Cells[iRowNo, dicColNums[sType]].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+                        xlWorksheet.Cells[iRowNo, dicColNums[sType]] = sRevision;
+                    }
+
+                    for (int i = 2; i <= rowCount; i++)
+                    {
+                        // Check if blank row (end)
+                        string sItem = GetCellString(xlWorksheet, i, dicColNums["item"]);
+                        if (sItem == "") { break; }
+
+                        // Create object for the row
+                        PartFileUploadRow row = new PartFileUploadRow
+                        {
+                            iRowNo = i,
+                            sItem = GetCellString(xlWorksheet, i, dicColNums["item"]).Trim(),
+                            sRevisionPDF = GetCellString(xlWorksheet, i, dicColNums["revision pdf"]).Trim(),
+                            sRevisionDXF = GetCellString(xlWorksheet, i, dicColNums["revision dxf"]).Trim(),
+                            sRevisionSTEP = GetCellString(xlWorksheet, i, dicColNums["revision step"]).Trim(),
+                        };
+
+                        lstRows.Add(row);
+                    }
+                    // ---------------------------- END READING SPREADSHEET ----------------------------
+
+
+                    // ----------- GET AND WRITE INFO TO THE ODI OBJECT ONCE BEFORE LOOPING --------------
+                    // The end result is a list of folders with their name and id
+                    if (lstRows.Count > 0)
+                    {
+                        string sToken = ODI.SetUserAccessToken().GetAwaiter().GetResult();
+                        ODI.SetCADFolderAndDriveId().GetAwaiter().GetResult();
+                        ODI.SetMaterialCatalogueDriveId().GetAwaiter().GetResult();
+                        ODI.SetMaterialCatalogueFoldersObject().GetAwaiter().GetResult();
+                    }
+
+                    // ---------------------------- LOOPING THROUGH ROWS ----------------------------
+                    for (int i = 0; i < lstRows.Count; i++)
+                    {
+                        issueTracker.ResetRow();
+                        var rowVals = lstRows[i];
+                        ODIResult.Clear();
+                        try //A try catch for each row
+                        {
+                            // ---------------------------- VALIDATIONS ----------------------------
+                            bool bSkipped = false;
+                            string sPrefix = "";
+                            bool bPartExists = true;
+
+                            if(!PartExists(lstRows[i].sItem, iWebAppId))
+                            {
+                                issueTracker.Report("Failure: this part does not exist.\n",
+                                    SpreadsheetTracker.PRIORITY_WARNING, rowVals.iRowNo, dicColNums["item"]);
+                                WriteComments(rowVals.iRowNo, "Failure: this part does not exist.", "comments overall", System.Drawing.Color.PaleVioletRed);
+                                bPartExists = false;
+                            }
+
+                            // ---------------------------- END VALIDATIONS ----------------------------
+
+                            bool bUpdated = false;
+                            bool bCreated = false;
+
+                            // ---------------------------- WRITE FAILURES OR WARNINGS TO THER SPREADSHET ----------------------------
+                            if (issueTracker.RowIsValid)
+                            {
+                                // If part in LMS, modify its attributes
+                                if (bPartExists)
+                                {
+                                    //This is where we read the CAD one drive and try and find the pdf, dxf or step file
+                                    //string sType = "pdf";
+
+                                    //Then have a call to set all the Mat Cat Folders into a list in the ODI class
+                                    //The 2nd parameter is whether we are doing a validation stage or an actual upload stage
+                                    ODIResult = ODI.FindCADFile(sSessionId, sUserId, sFullName, lstRows[i].sItem, lstRows[i].sRevisionPDF, lstRows[i].sRevisionDXF,
+                                                                lstRows[i].sRevisionSTEP, iVerifyOrUpload, iWebAppId)
+                                                                .GetAwaiter().GetResult();
+                                }
+
+                            }
+
+                            // ---------------------------- END CREATION ----------------------------
+
+                            // Writing cells in return file
+                            for (int j = 0; j < 5; j++)
+                            {
+                                string sType = "pdf";
+                                string sType2 = "revision pdf";
+
+                                //For pdf, dxf or step files the revision and comments are mutually exclusive
+                                //For overall you could have some comments as well as an LMS revision
+                                switch (j)
+                                {
+                                    case 0:
+                                        sType = "comments pdf";
+                                        sType2 = "revision pdf";
+                                        if (!ODIResult.sPDFComment.Equals(""))
+                                        {
+                                            issueTracker.Report(ODIResult.sPDFComment + "\n",
+                                                SpreadsheetTracker.PRIORITY_WARNING, rowVals.iRowNo, dicColNums["comments pdf"]);
+                                            WriteComments(rowVals.iRowNo, ODIResult.sPDFComment, sType, System.Drawing.Color.PaleGoldenrod);
+                                        }
+                                        else
+                                        {
+                                            if (!ODIResult.sPDFRevision.Equals(""))
+                                                WriteRevision(rowVals.iRowNo, ODIResult.sPDFRevision, sType2, System.Drawing.Color.PaleGreen);
+                                        }
+                                        break;
+                                    case 1:
+                                        sType = "comments dxf";
+                                        sType2 = "revision dxf";
+                                        if (!ODIResult.sDXFComment.Equals(""))
+                                        {
+                                            issueTracker.Report(ODIResult.sDXFComment + "\n",
+                                                SpreadsheetTracker.PRIORITY_WARNING, rowVals.iRowNo, dicColNums["comments dxf"]);
+                                            WriteComments(rowVals.iRowNo, ODIResult.sDXFComment, sType, System.Drawing.Color.PaleGoldenrod);
+                                        }
+                                        else
+                                        {
+                                            if (!ODIResult.sDXFRevision.Equals(""))
+                                                WriteRevision(rowVals.iRowNo, ODIResult.sDXFRevision, sType2, System.Drawing.Color.PaleGreen);
+                                        }
+                                        break;
+                                    case 2:
+                                        sType = "comments step";
+                                        sType2 = "revision step";
+                                        if (!ODIResult.sSTEPComment.Equals(""))
+                                        {
+                                            issueTracker.Report(ODIResult.sSTEPComment + "\n",
+                                                SpreadsheetTracker.PRIORITY_WARNING, rowVals.iRowNo, dicColNums["comments step"]);
+                                            WriteComments(rowVals.iRowNo, ODIResult.sSTEPComment, sType, System.Drawing.Color.PaleGoldenrod);
+                                        }
+                                        else
+                                        {
+                                            if(!ODIResult.sSTEPRevision.Equals(""))
+                                                WriteRevision(rowVals.iRowNo, ODIResult.sSTEPRevision, sType2, System.Drawing.Color.PaleGreen);
+                                        }
+                                        break;
+                                    case 3:
+                                        sType = "comments overall";
+                                        sType2 = "revision lms";
+                                        if (!ODIResult.sOverallComment.Equals(""))
+                                        {
+                                            issueTracker.Report(ODIResult.sOverallComment + "\n",
+                                                SpreadsheetTracker.PRIORITY_WARNING, rowVals.iRowNo, dicColNums["comments overall"]);
+                                            WriteComments(rowVals.iRowNo, ODIResult.sOverallComment, sType, System.Drawing.Color.PaleVioletRed);
+                                        }
+
+                                        //You can have comments in addition to the LMS revision
+                                        if (!ODIResult.sOverallRevision.Equals(""))
+                                            WriteRevision(rowVals.iRowNo, ODIResult.sOverallRevision, sType2, System.Drawing.Color.PaleGreen);
+
+                                        break;
+                                    case 4:
+                                        sType = "comments lms";
+                                        if (!ODIResult.sLMSComment.Equals(""))
+                                        {
+                                            issueTracker.Report(ODIResult.sLMSComment + "\n",
+                                                SpreadsheetTracker.PRIORITY_WARNING, rowVals.iRowNo, dicColNums["comments lms"]);
+                                            WriteComments(rowVals.iRowNo, ODIResult.sLMSComment, sType, System.Drawing.Color.PaleGreen);
+                                        }
+                                        break;
+                                }
+
+
+
+                            }
+
+                            if (ODIResult.sStatus.Equals("Failure"))
+                            {
+                                WriteComments(rowVals.iRowNo, ODIResult.sStatusComments, "status", System.Drawing.Color.PaleVioletRed);
+                            }
+                            else if (ODIResult.sStatus.Equals("Uploaded"))
+                            {
+                                WriteComments(rowVals.iRowNo, ODIResult.sStatusComments, "status", System.Drawing.Color.PaleGreen);
+                            }
+                        }
+                        catch (System.Exception e)
+                        {
+                            // Catch all for Windchill exceptions
+                            issueTracker.Report("Error: Server message reads: " + e.Message + "\n",
+                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+
+                            WriteComments(rowVals.iRowNo, "Error: Server message reads: " + e.Message + "\n", "comments overall", System.Drawing.Color.PaleVioletRed);
+                        }
+                    }
+                    // ---------------------------- END LOOPING THROUGH ROWS ----------------------------
+
+                    // ---------------------------- WRITING TO FILE AND EMAIL ---------------------------- 
+                    // Write the spreadsheet and send back via email
+                    string sFileNameNoFileType = sFile.Split('.')[0];
+                    string sNewExcelFileName = sFileNameNoFileType + "_results.xlsx";
+                    string sNewFileLocation = @"C:\Webroot\Regain\temp\" + sNewExcelFileName;
+                    xlWorkbook.SaveAs(sNewFileLocation);
+
+                    xlWorkbook.Close(true);
+                    xlWbks.Close();
+                    xlApp.Quit();
+
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWbks) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorksheet) != 0) ;
+                    while (System.Runtime.InteropServices.Marshal.ReleaseComObject(xlRange) != 0) ;
+                    xlApp = null;
+                    xlWbks = null;
+                    xlWorkbook = null;
+                    xlWorksheet = null;
+                    xlRange = null;
+
+                    // Body of email to user, and location of the results file
+                    sBody += "Part Files LMS Upload complete.\n" +
+                        "Please see the attached spreadsheet which has been updated with status and comments where " +
+                        "there may have been issues during the upload process. A full list of issues is provided below.\n \n" +
+                        issueTracker.GetIssueLog() + "^";
+
+                    sBody += sNewExcelFileName + "^";
+
+                    return "Success^" + sBody;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                failure = true;
+                return ex.Message;
+            }
+            finally
+            {
+                try
+                {
+                    if (iProcessId > 0)
+                    {
+                        Process process = Process.GetProcessById(iProcessId);
+                        process.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited
+                }
+            }
+        }
+
         public rtnStringArray2 GetPartCompositionNumbers(String sPartNo, int iWebAppId)
         {
             rtnStringArray2 rtnClass = new rtnStringArray2();
@@ -26453,6 +26880,6 @@ namespace WcfWCService
         // 5. External reference declaration for getting the PID
         [DllImport("user32.dll", SetLastError = true)]
         static extern uint GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
-    }
 
+    }
 }
