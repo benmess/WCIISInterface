@@ -8004,6 +8004,35 @@ namespace WcfWCService
             }
         }
 
+        //You must pass the existng quantity across (or a new qty) because the Windchill code will always set this
+        public string UpdateMBAPartUsageLinkArrivalDate(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNo,
+                                                        string dQty, string lLineNumber, string sCheckInComments, string sArrivalDate,
+                                                           string sWebAppId)
+        {
+            if (!IsExternalUserValid(sSessionId, sUserId, Convert.ToInt16(sWebAppId)))
+            {
+                return "User " + sUserId + " is not logged in";
+            }
+            else
+            {
+                Update_User_Time(sUserId, sSessionId);
+                double ddQty = Convert.ToDouble(dQty);
+                long llLineNumber = Convert.ToInt64(lLineNumber);
+                ExampleService.MyJavaService3Client client2 = GetWCService();
+                string[] sAttributeNames = new string[1];
+                string[] sAttributeValues = new string[1];
+                string[] sAttributeTypes = new string[1];
+
+                sAttributeNames[0] = "ArrivalDate";
+                sAttributeValues[0] = sArrivalDate;
+                sAttributeTypes[0] = "date";
+
+
+                return client2.updatepartpartlinkwithattributes(sFullName, sParentPartNo, sChildPartNo, ddQty, llLineNumber, sCheckInComments, "local.rs.vsrs05.Regain.MBAUsageLink", "tonne",
+                                                                sAttributeNames, sAttributeValues, sAttributeTypes, Convert.ToInt16(sWebAppId));
+            }
+        }
+
         public string DeletePartToPartLinkByDispatchDocket(string sSessionId, string sUserId, string sFullName, string sDispatchDocketNo, string lLineNumber,
                                                            string sParentPartNo, string sChildPartNumber, string sCheckInComments, string sWebAppId)
         {

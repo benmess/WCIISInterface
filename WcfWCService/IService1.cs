@@ -596,6 +596,12 @@ namespace WcfWCService
                                                                string sCrossRef, string sWebAppId);
 
         [OperationContract]
+        [WebGet(UriTemplate = "updatembapartusagelinkarrivaldate/{sSessionId}/{sUserId}/{sFullname}/{sParentPartNo}/{sChildPartNo}/{dQty}/{lLineNumber}/{sCheckInComments}/{sArrivalDate}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
+        string UpdateMBAPartUsageLinkArrivalDate(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNo,
+                                                        string dQty, string lLineNumber, string sCheckInComments, string sArrivalDate,
+                                                           string sWebAppId);
+
+        [OperationContract]
         [WebGet(UriTemplate = "updatembatransactionwithcrossref/{sSessionId}/{sUserId}/{sFullname}/{sParentPartNo}/{sChildPartNumber}/{sQty}/{sLineNumber}/{sDDno}/{sDDDate}/" +
                               "{sComments}/{sCrossRef}/{sMoisturePercentage}/{sInvoiceStatus}/{sWBDocket}/{sWebAppId}", ResponseFormat = WebMessageFormat.Xml)]
         string UpdateMBATransactionWithCrossRef(string sSessionId, string sUserId, string sFullName, string sParentPartNo, string sChildPartNumber,
