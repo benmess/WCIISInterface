@@ -344,7 +344,7 @@ namespace WcfWCService
         public class PartsListRow
         {
             public int iRowNo;
-            public string sItem, sRef, sName, sDescription, sMass, sMassNormalised, sQty, sQtyNormalised;
+            public string sItem, sRef, sName, sExistingName, sDescription, sMass, sMassNormalised, sQty, sQtyNormalised;
             public bool bMassValid, bQtyValid;
             public Dictionary<string, string> dicFlags = new Dictionary<string, string>();
         }
@@ -512,7 +512,7 @@ namespace WcfWCService
             public int iRowNo;
             public string sItem;
             public string sRef;
-            public string sDescription;
+            public string sName;
             public string sCompositionNo;
             public string sCompositionName;
             public string sAction;
@@ -523,7 +523,7 @@ namespace WcfWCService
             public int iRowNo;
             public string sItem = "";
             public string sRef = "";
-            public string sDescription = "";
+            public string sName = "";
             public string sQty = "";
             public string sQtyNormalised = "";
             public bool bQtyValid = false;
@@ -540,7 +540,7 @@ namespace WcfWCService
             public FunctionalLocationLinkRow flRow;
             public string sParentFlNo = "";
             public string sRef = "";
-            public string sDescription = "";
+            public string sName = "";
             public string sQty = "";
             public string sQtyNormalised = "";
             public bool bQtyValid;
@@ -21139,7 +21139,7 @@ namespace WcfWCService
                 string[] sAttributeTypes = new string[3];
 
                 sAttributeNames[0] = "Originator";
-                sAttributeNames[1] = "LongDescription";
+                sAttributeNames[1] = "PartDesc";
                 sAttributeNames[2] = "Comments";
 
                 sAttributeValues[0] = sFullName;
@@ -22920,7 +22920,8 @@ namespace WcfWCService
             return "";
         }
 
-        public string ProcessMaterialListSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
+        // sVerifyOrUpload: "0" = Verify (validation run, nothing is changed in Windchill), "1" = Upload (real run)
+        public string ProcessMaterialListSpreadsheet(string sSessionId, string sUserId, string sFile, string sVerifyOrUpload, string sWebAppId)
         {
             // ---------------------------- HELPER FUNCTIONS ----------------------------
             bool AnyDocFlagSet(PartsListRow row)
@@ -22938,7 +22939,6 @@ namespace WcfWCService
                 var sb = new StringBuilder();
 
                 sb.Append(row.sName.ToUpper()).Append("|");
-                sb.Append(row.sDescription.ToUpper()).Append("|");
                 sb.Append(row.sMassNormalised).Append("|");
 
                 foreach (string sKey in arrAttKeys)
@@ -22985,6 +22985,66 @@ namespace WcfWCService
                 return hsConflicting;
             }
 
+            // Refs whose rows have different Descriptions.
+            // Returns rowNo -> warning message for that row.
+            // Blank Descriptions are ignored: they leave the part's description unchanged, so they can't conflict.
+            // Rows are processed top to bottom, so the last row with a Description for a Ref is the one kept.
+            Dictionary<int, string> FindDescriptionMismatches(List<PartsListRow> lstRows)
+            {
+                var dicByRef = new Dictionary<string, List<PartsListRow>>();
+
+                foreach (PartsListRow row in lstRows)
+                {
+                    if (row.sRef == "" || row.sDescription == "") { continue; }
+
+                    if (!dicByRef.ContainsKey(row.sRef)) { dicByRef[row.sRef] = new List<PartsListRow>(); }
+                    dicByRef[row.sRef].Add(row);
+                }
+
+                var dicWarnings = new Dictionary<int, string>();
+
+                foreach (var kvp in dicByRef)
+                {
+                    List<PartsListRow> lstRefRows = kvp.Value;
+                    if (lstRefRows.Count < 2) { continue; }
+
+                    bool bAllMatch = true;
+                    foreach (PartsListRow row in lstRefRows)
+                    {
+                        if (row.sDescription != lstRefRows[0].sDescription) { bAllMatch = false; break; }
+                    }
+                    if (bAllMatch) { continue; }
+
+                    PartsListRow lastRow = lstRefRows[lstRefRows.Count - 1];
+
+                    foreach (PartsListRow row in lstRefRows)
+                    {
+                        // Items on other rows of this Ref whose Description differs from this row's
+                        var lstOthers = new List<string>();
+                        foreach (PartsListRow other in lstRefRows)
+                        {
+                            if (other != row && other.sDescription != row.sDescription) { lstOthers.Add(other.sItem); }
+                        }
+
+                        string sMessage = "Warning: Ref " + row.sRef + " has a different Description on item " +
+                            string.Join(", ", lstOthers) + ". ";
+
+                        if (row == lastRow)
+                        {
+                            sMessage += "This row's Description will be used.\n";
+                        }
+                        else
+                        {
+                            sMessage += "The Description from item " + lastRow.sItem + " will be used.\n";
+                        }
+
+                        dicWarnings[row.iRowNo] = sMessage;
+                    }
+                }
+
+                return dicWarnings;
+            }
+
             Dictionary<int, List<string>> FindSiblingDuplicateRefs(ItemTree<PartsListRow> tree)
             {
                 var dicDupes = new Dictionary<int, List<string>>();
@@ -23000,7 +23060,7 @@ namespace WcfWCService
                 foreach (ItemNode<PartsListRow> parent in lstParents)
                 {
                     var dicByRef = new Dictionary<string, List<ItemNode<PartsListRow>>>();
-                    
+
                     // Add a list to found Ref
                     foreach (ItemNode<PartsListRow> child in parent.lstChildren)
                     {
@@ -23080,16 +23140,16 @@ namespace WcfWCService
                 return parent.data.sRef;
             }
 
-            // Validates the part description
-            bool IsValidPartDescription(string sDesc, SpreadsheetTracker tracker, int iRowNumber, int iColumnNumber)
+            // Validates the part name (the Name column, which becomes the part's name in LMS/Windchill)
+            bool IsValidPartName(string sPartName, SpreadsheetTracker tracker, int iRowNumber, int iColumnNumber)
             {
                 string sMessage = "";
                 bool bRtn = true;
 
-                // Description length
-                if (sDesc == null || sDesc.Length < 1 || sDesc.Length > 60)
+                // Name length
+                if (sPartName == null || sPartName.Length < 1 || sPartName.Length > 60)
                 {
-                    sMessage = "Failure: description is outside character limit (1 - 60 characters)." + "\n";
+                    sMessage = "Failure: Name is outside character limit (1 - 60 characters)." + "\n";
                     tracker.Report(sMessage, SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
 
                     bRtn = false;
@@ -23098,29 +23158,13 @@ namespace WcfWCService
                 return bRtn;
             }
 
-            // Validates Ref field - including name matching, existence, and formatting
-            bool IsValidRef(string sRef, string sName, bool bExists, SpreadsheetTracker tracker,
-                int iRowNumber, int iColumnNumber, int iWebAppId)
+            // Validates a non-blank Ref.
+            // Existing part: reads its current name from Windchill into sCurrentName (for the Existing Name column).
+            // New part: checks the Ref is a valid new part number.
+            bool IsValidRef(string sRef, bool bExists, SpreadsheetTracker tracker,
+                int iRowNumber, int iColumnNumber, int iWebAppId, out string sCurrentName)
             {
-                string sNameUpper = sName.ToUpper();
-
-                if (sRef == "" && sNameUpper.Length > 0)
-                {
-                    tracker.Report("Failure: Ref is missing.\n",
-                        SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
-                    return false;
-                }
-                else if (sRef.Length > 0 && sNameUpper == "")
-                {
-                    tracker.Report("Failure: LMS Name is missing. If creating a new part, put the name in both the name and description.\n",
-                        SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
-                    return false;
-                }
-                else if (sRef == "" && sNameUpper == "")
-                {
-                    // Skipped row
-                    return true;
-                }
+                sCurrentName = "";
 
                 // ---- Does it already exist? ----
                 if (bExists)
@@ -23134,15 +23178,7 @@ namespace WcfWCService
                         return false;
                     }
 
-                    if (rtnName.sReturnValue.Trim().ToUpper() != sNameUpper)
-                    {
-                        tracker.Report("Failure: Ref " + sRef + " exists with the name '"
-                            + rtnName.sReturnValue + "', which does not match the entered LMS Name '"
-                            + sName + "'.\n",
-                            SpreadsheetTracker.PRIORITY_FAILURE, iRowNumber, iColumnNumber);
-                        return false;
-                    }
-
+                    sCurrentName = rtnName.sReturnValue.Trim();
                     return true;
                 }
 
@@ -23312,18 +23348,41 @@ namespace WcfWCService
 
             // Links a row's part to the part on its parent item row.
             // Returns true when no link was needed, or the link succeeded.
+            // Verify run: makes the same checks but creates or updates nothing.
+            // hsCreated: Refs created earlier in this run (or that would be, in a verify run), treated as existing.
             bool LinkToParentItem(PartsListRow row, ItemTree<PartsListRow> tree, string sFullName,
-                SpreadsheetTracker tracker, Dictionary<string, int> dicColNumbers, int iWebAppId)
+                SpreadsheetTracker tracker, Dictionary<string, int> dicColNumbers, int iWebAppId,
+                bool bVerify, HashSet<string> hsCreated)
             {
                 string sParentRef = GetParentRef(tree, row);
                 if (sParentRef == "") { return true; }
 
-                if (!PartExists(sParentRef, iWebAppId))
+                bool bParentCreatedThisRun = hsCreated.Contains(sParentRef);
+
+                if (!bParentCreatedThisRun && !PartExists(sParentRef, iWebAppId))
                 {
-                    tracker.Report("Warning: parent part " + sParentRef +
-                        " was not found, so no parent link was created.\n",
+                    tracker.Report("Warning: parent part " + sParentRef + " was not found, so no parent link " +
+                        (bVerify ? "will be" : "was") + " created.\n",
                         SpreadsheetTracker.PRIORITY_WARNING, row.iRowNo, dicColNumbers["item"]);
                     return false;
+                }
+
+                if (bVerify)
+                {
+                    // A link can't already exist if either part is new in this run
+                    if (bParentCreatedThisRun || hsCreated.Contains(row.sRef)) { return true; }
+
+                    rtnInt rtnCheck = PartPartLinkExists(sParentRef, row.sRef, iWebAppId);
+
+                    if (rtnCheck.bReturnValue && rtnCheck.iReturnValue < 0)
+                    {
+                        tracker.Report("Warning: a link between " + sParentRef + " and " + row.sRef +
+                            " already exists but could not be read, so its quantity will not be updated.\n",
+                            SpreadsheetTracker.PRIORITY_WARNING, row.iRowNo, dicColNumbers["item"]);
+                        return false;
+                    }
+
+                    return true;
                 }
 
                 string sLinkType = "wt.part.WTPartUsageLink";
@@ -23332,7 +23391,7 @@ namespace WcfWCService
                 string sLinkRtn;
 
                 rtnInt rtnLink = PartPartLinkExists(sParentRef, row.sRef, iWebAppId);
-                
+
                 if (rtnLink.bReturnValue && rtnLink.iReturnValue >= 0)
                 {
                     string sLineNumber = rtnLink.iReturnValue.ToString();
@@ -23460,24 +23519,25 @@ namespace WcfWCService
             {
                 {"item", 1 },
                 {"ref", 2 },
-                {"name", 3},
-                {"description", 4 },
-                {"qty", 5 },
-                {"mass", 6 },
-                {"profile_cut", 7 },
-                {"press", 8 },
-                {"weld", 9 },
-                {"countersink", 10 },
-                {"fabricate", 11 },
-                {"machined", 12 },
-                {"purchased", 13 },
-                {"assemble", 14 },
-                {"rotary_tube_cut", 15 },
-                {"pdf", 16 },
-                {"dxf", 17 },
-                {"step", 18 },
-                {"comments", 19 },
-                {"status", 20 }
+                {"name", 3 },
+                {"existing_name", 4 },
+                {"description", 5 },
+                {"qty", 6 },
+                {"mass", 7 },
+                {"profile_cut", 8 },
+                {"press", 9 },
+                {"weld", 10 },
+                {"countersink", 11 },
+                {"fabricate", 12 },
+                {"machined", 13 },
+                {"purchased", 14 },
+                {"assemble", 15 },
+                {"rotary_tube_cut", 16 },
+                {"pdf", 17 },
+                {"dxf", 18 },
+                {"step", 19 },
+                {"comments", 20 },
+                {"status", 21 }
             };
 
             var dicFlagLabels = new Dictionary<string, string>
@@ -23504,6 +23564,27 @@ namespace WcfWCService
                 "assemble", "rotary_tube_cut", "pdf", "dxf", "step"
             };
 
+            // ---- Run mode ----
+            const int MODE_VERIFY = 0;
+            const int MODE_UPLOAD = 1;
+
+            int iRunMode;
+            if (!int.TryParse(sVerifyOrUpload, out iRunMode) || (iRunMode != MODE_VERIFY && iRunMode != MODE_UPLOAD))
+            {
+                return "Invalid run mode '" + sVerifyOrUpload + "'. Expected 0 (Verify) or 1 (Upload).";
+            }
+
+            // Verify run: all validations and read-only lookups, but nothing is created or changed in Windchill
+            bool bVerifyOnly = iRunMode == MODE_VERIFY;
+
+            // ---- Existing Name column ----
+            const string EXISTING_NAME_NEW_PART = "New Part";
+            System.Drawing.Color colourExistingName = System.Drawing.Color.Lavender;
+            System.Drawing.Color colourNewPart = System.Drawing.Color.LightSkyBlue;
+
+            // Log Refs created for verify runs to simulate a real run's issues
+            var hsCreatedRefs = new HashSet<string>();
+
             try
             {
                 int iWebAppId = Convert.ToInt32(sWebAppId);
@@ -23529,7 +23610,7 @@ namespace WcfWCService
 
                     // Checking if the spreadsheet matches the template
                     string[] arrExpectedHeaders = {
-                        "Item", "Ref", "LMS Name", "Description", "Qty", "Mass (kg)",
+                        "Item", "Ref", "Name", "Existing Name", "Description", "Qty", "Mass (kg)",
                         "Flat Profile Cut", "Press", "Weld", "Countersink",
                         "Fabricate", "Machined", "Purchased",
                         "Assemble", "Rotary Tube Cut",
@@ -23552,6 +23633,23 @@ namespace WcfWCService
                         xlWorksheet.Cells[iRowNo, dicColNums["status"]].Interior.Color =
                             System.Drawing.ColorTranslator.ToOle(colour);
                         xlWorksheet.Cells[iRowNo, dicColNums["comments"]] = issueTracker.sRowMessage;
+                    }
+
+                    // Fills the Existing Name column. A null colour clears the cell's fill.
+                    void WriteExistingName(int iRowNo, string sValue, System.Drawing.Color? colour)
+                    {
+                        xlWorksheet.Cells[iRowNo, dicColNums["existing_name"]] = sValue;
+
+                        if (colour.HasValue)
+                        {
+                            xlWorksheet.Cells[iRowNo, dicColNums["existing_name"]].Interior.Color =
+                                System.Drawing.ColorTranslator.ToOle(colour.Value);
+                        }
+                        else
+                        {
+                            xlWorksheet.Cells[iRowNo, dicColNums["existing_name"]].Interior.ColorIndex =
+                                Excel.XlColorIndex.xlColorIndexNone;
+                        }
                     }
 
                     for (int i = 2; i <= rowCount; i++)
@@ -23595,6 +23693,7 @@ namespace WcfWCService
                     Dictionary<int, List<string>> dicSiblingDupes = FindSiblingDuplicateRefs(itemTree);
                     Dictionary<int, List<string>> dicSelfNested = FindSelfNestedRefs(itemTree);
                     HashSet<int> hsConflicting = FindConflictingRefRows(lstRows, arrFlagKeys);
+                    Dictionary<int, string> dicDescMismatches = FindDescriptionMismatches(lstRows);
 
                     // ---------------------------- LOOPING THROUGH ROWS ----------------------------
                     for (int i = 0; i < lstRows.Count; i++)
@@ -23603,10 +23702,13 @@ namespace WcfWCService
                         var rowVals = lstRows[i];
                         try
                         {
+                            WriteExistingName(rowVals.iRowNo, "", null);
+
                             // ---------------------------- VALIDATIONS ----------------------------
                             bool bSkipped = false;
                             string sPrefix = "";
                             bool bPartExists = false;
+                            bool bCreatedThisRun = false;
 
                             // Check for problems in the tree building
                             if (itemTree.dicProblems.ContainsKey(rowVals.iRowNo))
@@ -23663,37 +23765,68 @@ namespace WcfWCService
                                     SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
                             }
 
-                            // Check if the row was intentionally left blank
+                            // Same Ref with different Descriptions: warn, and the last row's Description is kept
+                            if (dicDescMismatches.ContainsKey(rowVals.iRowNo))
+                            {
+                                issueTracker.Report(dicDescMismatches[rowVals.iRowNo],
+                                    SpreadsheetTracker.PRIORITY_WARNING, rowVals.iRowNo, dicColNums["description"]);
+                            }
+
+                            // A blank Ref means the row is skipped. Name can still hold a value for reference.
                             if (rowVals.sRef.Length == 0)
                             {
-                                if (rowVals.sName.Length > 0)
-                                {
-                                    issueTracker.Report("Failure: Ref is missing.\n",
-                                        SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
-                                }
-                                else { bSkipped = true; }
+                                bSkipped = true;
                             }
                             else
                             {
                                 // Used later for creation. Put here so no exceptions occur from blank Refs
                                 sPrefix = rowVals.sRef.Substring(0, 1);
+                                bCreatedThisRun = hsCreatedRefs.Contains(rowVals.sRef);
 
-                                try
+                                bool bExistsCheckFailed = false;
+
+                                if (bCreatedThisRun)
                                 {
-                                    bPartExists = PartExists(rowVals.sRef, iWebAppId);
+                                    bPartExists = true;
                                 }
-                                catch (System.Exception e)
+                                else
                                 {
-                                    issueTracker.Report("Error: an exception occurred when checking if the part exists: "
-                                        + e.Message + "\n",
-                                        SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+                                    try
+                                    {
+                                        bPartExists = PartExists(rowVals.sRef, iWebAppId);
+                                    }
+                                    catch (System.Exception e)
+                                    {
+                                        bExistsCheckFailed = true;
+                                        issueTracker.Report("Error: an exception occurred when checking if the part exists: "
+                                            + e.Message + "\n",
+                                            SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+                                    }
                                 }
 
-                                // Check the Ref against LMS' existing name in case of typos
-                                IsValidRef(rowVals.sRef, rowVals.sName, bPartExists, issueTracker, rowVals.iRowNo, dicColNums["ref"], iWebAppId);
+                                // Ref checks, and fill in Existing Name
+                                if (bCreatedThisRun)
+                                {
+                                    WriteExistingName(rowVals.iRowNo, EXISTING_NAME_NEW_PART, colourNewPart);
+                                }
+                                else if (!bExistsCheckFailed)
+                                {
+                                    string sCurrentName;
+                                    if (IsValidRef(rowVals.sRef, bPartExists, issueTracker, rowVals.iRowNo, dicColNums["ref"], iWebAppId, out sCurrentName))
+                                    {
+                                        if (bPartExists)
+                                        {
+                                            WriteExistingName(rowVals.iRowNo, sCurrentName, colourExistingName);
+                                        }
+                                        else
+                                        {
+                                            WriteExistingName(rowVals.iRowNo, EXISTING_NAME_NEW_PART, colourNewPart);
+                                        }
+                                    }
+                                }
 
-                                // Description validation
-                                IsValidPartDescription(rowVals.sDescription, issueTracker, rowVals.iRowNo, dicColNums["description"]);
+                                // Name validation
+                                IsValidPartName(rowVals.sName, issueTracker, rowVals.iRowNo, dicColNums["name"]);
 
                                 // Qty validation
                                 IsValidQty(rowVals, issueTracker, rowVals.iRowNo, dicColNums["qty"]);
@@ -23713,6 +23846,7 @@ namespace WcfWCService
                             bool bUpdated = false;
                             bool bCreated = false;
                             bool bDocRequired = false;
+                            bool bHasDesc = rowVals.sDescription != "";
 
                             string sUpdateRtn = "";
                             string sJobCode = "";
@@ -23732,35 +23866,42 @@ namespace WcfWCService
                                 // If part in LMS, modify its attributes
                                 if (bPartExists)
                                 {
-                                    // Set the name and mass
-                                    sUpdateRtn = UpdatePartAttributes(sSessionId, sUserId, rowVals.sRef, rowVals.sDescription,
-                                        "UnitWeight", rowVals.sMassNormalised, "float",
-                                        null, null, null, null, null, null, null, null, null, null, null, null,
-                                        "Updating weight and name from material list import", sWebAppId);
-
-                                    if (!sUpdateRtn.StartsWith("Success"))
+                                    if (!bVerifyOnly)
                                     {
-                                        issueTracker.Report("Failure: Something went wrong setting name or weight for part " + rowVals.sRef + ".",
-                                            SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+                                        // T items use Long Description in LMS, not PartDesc
+                                        string sWindchillDescriptionName = "PartDesc";
+                                        if (sPrefix == "T") sWindchillDescriptionName = "LongDescription";
 
-                                        WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
-                                        continue;
-                                    }
+                                        // Set the name, mass, and description (a blank Description leaves the current one unchanged)
+                                        sUpdateRtn = UpdatePartAttributes(sSessionId, sUserId, rowVals.sRef, rowVals.sName,
+                                            "UnitWeight", rowVals.sMassNormalised, "float",
+                                            bHasDesc ? sWindchillDescriptionName : null, bHasDesc ? rowVals.sDescription : null, bHasDesc ? "string" : null,
+                                            null, null, null, null, null, null, null, null, null, "Updating weight, description, and name from material list import", sWebAppId);
 
-                                    // Set part file attributes
-                                    sUpdateRtn = SetPartFabricationAttributes(sSessionId, sUserId, rowVals.sRef, sFullName, rowVals.dicFlags["profile_cut"], rowVals.dicFlags["press"],
-                                        rowVals.dicFlags["weld"], rowVals.dicFlags["countersink"], rowVals.dicFlags["fabricate"], rowVals.dicFlags["machined"], rowVals.dicFlags["purchased"],
-                                        rowVals.dicFlags["assemble"], rowVals.dicFlags["rotary_tube_cut"],
-                                        rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"],
-                                        "Updating file attributes from material list import", sWebAppId);
+                                        if (!sUpdateRtn.StartsWith("Success"))
+                                        {
+                                            issueTracker.Report("Failure: Something went wrong setting name, description, or weight for part " + rowVals.sRef + ".",
+                                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
 
-                                    if (!sUpdateRtn.StartsWith("Success"))
-                                    {
-                                        issueTracker.Report("Failure: Something went wrong setting part attributes for part " + rowVals.sRef + ".",
-                                            SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+                                            WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                            continue;
+                                        }
 
-                                        WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
-                                        continue;
+                                        // Set part file attributes
+                                        sUpdateRtn = SetPartFabricationAttributes(sSessionId, sUserId, rowVals.sRef, sFullName, rowVals.dicFlags["profile_cut"], rowVals.dicFlags["press"],
+                                            rowVals.dicFlags["weld"], rowVals.dicFlags["countersink"], rowVals.dicFlags["fabricate"], rowVals.dicFlags["machined"], rowVals.dicFlags["purchased"],
+                                            rowVals.dicFlags["assemble"], rowVals.dicFlags["rotary_tube_cut"],
+                                            rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"],
+                                            "Updating file attributes from material list import", sWebAppId);
+
+                                        if (!sUpdateRtn.StartsWith("Success"))
+                                        {
+                                            issueTracker.Report("Failure: Something went wrong setting part attributes for part " + rowVals.sRef + ".",
+                                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+
+                                            WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                            continue;
+                                        }
                                     }
 
                                     bUpdated = true;
@@ -23769,7 +23910,7 @@ namespace WcfWCService
                                     rtnString rtn = isValidSubpartCode(rowVals.sRef);
                                     if (rtn.bReturnValue)
                                     {
-                                        LinkToParentItem(rowVals, itemTree, sFullName, issueTracker, dicColNums, iWebAppId);
+                                        LinkToParentItem(rowVals, itemTree, sFullName, issueTracker, dicColNums, iWebAppId, bVerifyOnly, hsCreatedRefs);
                                     }
                                 }
                                 else
@@ -23793,36 +23934,41 @@ namespace WcfWCService
                                         string sImportMaterialTypeCode = ""; // Takes parent typing for now
                                         sCheckinComments = "Auto created sub-part from material list import.";
 
-                                        // Check for parent creation (in case it failed on previous rows)
+                                        // Check for parent creation (in case it failed on previous rows).
+                                        // A parent created earlier in this run (or that would be, in a verify run) counts as existing.
                                         string sParentRef = GetParentRef(itemTree, rowVals);
 
-                                        if (sParentRef == "" || !PartExists(sParentRef, iWebAppId))
+                                        if (sParentRef == "" || !(hsCreatedRefs.Contains(sParentRef) || PartExists(sParentRef, iWebAppId)))
                                         {
                                             issueTracker.Report("Failure: parent part " + sParentRef +
-                                                " does not exist, so sub-part " + rowVals.sRef + " was not created.\n",
+                                                " does not exist, so sub-part " + rowVals.sRef + (bVerifyOnly ? " will not be" : " was not") + " created.\n",
                                                 SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["item"]);
 
                                             WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
                                             continue;
                                         }
 
-                                        // Create the subpart
-                                        rtnString sPartCreateRtn = CreateSubPartWithDoc(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sDescription, sCheckinComments,
-                                            "", rowVals.sQtyNormalised, rowVals.sMassNormalised, sImportMaterialTypeCode, rowVals.dicFlags["profile_cut"], rowVals.dicFlags["press"],
-                                            rowVals.dicFlags["weld"], rowVals.dicFlags["countersink"], rowVals.dicFlags["fabricate"], rowVals.dicFlags["machined"],
-                                            rowVals.dicFlags["purchased"], rowVals.dicFlags["assemble"], rowVals.dicFlags["rotary_tube_cut"],
-                                            rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"], "", sParentRef, sWebAppId);
-
-                                        if (!sPartCreateRtn.bReturnValue)
+                                        if (!bVerifyOnly)
                                         {
-                                            issueTracker.Report("Failure: could not create M-item. " + sPartCreateRtn.sReturnValue + "\n",
-                                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+                                            // Create the subpart
+                                            rtnString sPartCreateRtn = CreateSubPartWithDoc(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sName, sCheckinComments,
+                                                rowVals.sDescription, rowVals.sQtyNormalised, rowVals.sMassNormalised, sImportMaterialTypeCode, rowVals.dicFlags["profile_cut"], rowVals.dicFlags["press"],
+                                                rowVals.dicFlags["weld"], rowVals.dicFlags["countersink"], rowVals.dicFlags["fabricate"], rowVals.dicFlags["machined"],
+                                                rowVals.dicFlags["purchased"], rowVals.dicFlags["assemble"], rowVals.dicFlags["rotary_tube_cut"],
+                                                rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"], "", sParentRef, sWebAppId);
 
-                                            WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
-                                            continue;
+                                            if (!sPartCreateRtn.bReturnValue)
+                                            {
+                                                issueTracker.Report("Failure: could not create M-item. " + sPartCreateRtn.sReturnValue + "\n",
+                                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+
+                                                WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                                continue;
+                                            }
                                         }
 
                                         bCreated = true;
+                                        hsCreatedRefs.Add(rowVals.sRef);
                                     }
                                     else if (sPrefix == "T")
                                     {
@@ -23830,6 +23976,7 @@ namespace WcfWCService
                                         string sTItemPartType = "local.rs.vsrs05.Regain.ProjectMaterialItem";
                                         sCheckinComments = "Auto created T-part from import.";
 
+                                        // Job lookup is read-only, so it runs in a verify run too
                                         string sChildFolder = rowVals.sRef.Length >= 5 ? rowVals.sRef.Substring(0, 5) : "";
                                         rtnString rtnJob = GetJobDetails(sJobCode, sChildFolder, iWebAppId, sWebAppId);
 
@@ -23842,56 +23989,64 @@ namespace WcfWCService
                                             continue;
                                         }
 
-                                        // Create T item
                                         string[] arrJobDetails = rtnJob.sReturnValue.Split('^');
                                         sProductName = arrJobDetails[0];
                                         sFolder = arrJobDetails[1];
 
-                                        string sTItemCreateReturn = CreateProjectMaterialItem(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sDescription, sProductName, sTItemPartType,
-                                            sFolder, sCheckinComments, "", "", "0", sWebAppId);
-
-                                        if (!sTItemCreateReturn.StartsWith("Success"))
+                                        if (!bVerifyOnly)
                                         {
-                                            issueTracker.Report("Failure: could not create T-item. Error reads - " + sTItemCreateReturn + "\n",
-                                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+                                            // Create T item
+                                            string sTItemCreateReturn = CreateProjectMaterialItem(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sName, sProductName, sTItemPartType,
+                                                sFolder, sCheckinComments, rowVals.sDescription, "", "0", sWebAppId);
 
-                                            WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
-                                            continue;
+                                            if (!sTItemCreateReturn.StartsWith("Success"))
+                                            {
+                                                issueTracker.Report("Failure: could not create T-item. Error reads - " + sTItemCreateReturn + "\n",
+                                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+
+                                                WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                                continue;
+                                            }
                                         }
 
+                                        // The part now exists (or would), even if setting its attributes fails below
                                         bCreated = true;
+                                        hsCreatedRefs.Add(rowVals.sRef);
 
-                                        // Set weight attribute
-                                        string sRtnAttributeSet = SetPartAttribute(sSessionId, sUserId, sFullName, rowVals.sRef, "UnitWeight", rowVals.sMassNormalised, "float",
-                                                "Setting weight from materials list import.", sWebAppId);
-
-                                        if (!sRtnAttributeSet.StartsWith("Success"))
+                                        if (!bVerifyOnly)
                                         {
-                                            issueTracker.Report("Failure: could not set T-item weight. Error reads - " + sRtnAttributeSet + "\n",
-                                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+                                            // Set weight
+                                            string sRtnAttributeSet = SetPartAttribute(sSessionId, sUserId, sFullName, rowVals.sRef,
+                                                "UnitWeight", rowVals.sMassNormalised, "float", "Setting weight from materials list import.", sWebAppId);
 
-                                            WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
-                                            continue;
-                                        }
+                                            if (!sRtnAttributeSet.StartsWith("Success"))
+                                            {
+                                                issueTracker.Report("Failure: could not set T-item weight. Error reads - " + sRtnAttributeSet + "\n",
+                                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
 
-                                        // Set file attributes
-                                        sCheckinComments = "Updating file attributes from material list import";
-                                        sUpdateRtn = SetPartFabricationAttributes(sSessionId, sUserId, rowVals.sRef, sFullName, rowVals.dicFlags["profile_cut"], rowVals.dicFlags["press"],
-                                            rowVals.dicFlags["weld"], rowVals.dicFlags["countersink"], rowVals.dicFlags["fabricate"], rowVals.dicFlags["machined"], rowVals.dicFlags["purchased"],
-                                            rowVals.dicFlags["assemble"], rowVals.dicFlags["rotary_tube_cut"],
-                                            rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"], sCheckinComments, sWebAppId);
+                                                WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                                continue;
+                                            }
 
-                                        if (!sUpdateRtn.StartsWith("Success"))
-                                        {
-                                            issueTracker.Report("Failure: Something went wrong setting part attributes for part " + rowVals.sRef + ".",
-                                                SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+                                            // Set file attributes
+                                            sCheckinComments = "Updating file attributes from material list import";
+                                            sUpdateRtn = SetPartFabricationAttributes(sSessionId, sUserId, rowVals.sRef, sFullName, rowVals.dicFlags["profile_cut"], rowVals.dicFlags["press"],
+                                                rowVals.dicFlags["weld"], rowVals.dicFlags["countersink"], rowVals.dicFlags["fabricate"], rowVals.dicFlags["machined"], rowVals.dicFlags["purchased"],
+                                                rowVals.dicFlags["assemble"], rowVals.dicFlags["rotary_tube_cut"],
+                                                rowVals.dicFlags["pdf"], rowVals.dicFlags["dxf"], rowVals.dicFlags["step"], sCheckinComments, sWebAppId);
 
-                                            WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
-                                            continue;
+                                            if (!sUpdateRtn.StartsWith("Success"))
+                                            {
+                                                issueTracker.Report("Failure: Something went wrong setting part attributes for part " + rowVals.sRef + ".",
+                                                    SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["ref"]);
+
+                                                WriteStatus(rowVals.iRowNo, "Failure", System.Drawing.Color.PaleVioletRed);
+                                                continue;
+                                            }
                                         }
 
                                         // Set link to parent
-                                        LinkToParentItem(rowVals, itemTree, sFullName, issueTracker, dicColNums, iWebAppId);
+                                        LinkToParentItem(rowVals, itemTree, sFullName, issueTracker, dicColNums, iWebAppId, bVerifyOnly, hsCreatedRefs);
                                     }
                                 }
 
@@ -23945,18 +24100,21 @@ namespace WcfWCService
                                             sFolder = rtnDocFolder.sReturnValue;
                                         }
 
-                                        sCheckinComments = "Auto created document container from Material List import.";
-
-                                        rtnString rtnDocCreate = CreateAndLinkDoc(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sRef, rowVals.sDescription,
-                                            sDocType, sRevision, iProdOrLibrary, sProductName, sFolder, sJobCode, sCheckinComments, sWebAppId);
-
-                                        if (!rtnDocCreate.bReturnValue)
+                                        if (!bVerifyOnly) // Create the doc
                                         {
-                                            issueTracker.Report("Error: " + rtnDocCreate.sReturnValue + "\n",
-                                                SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+                                            sCheckinComments = "Auto created document container from Material List import.";
+
+                                            rtnString rtnDocCreate = CreateAndLinkDoc(sSessionId, sUserId, sFullName, rowVals.sRef, rowVals.sRef, rowVals.sName,
+                                                sDocType, sRevision, iProdOrLibrary, sProductName, sFolder, sJobCode, sCheckinComments, sWebAppId);
+
+                                            if (!rtnDocCreate.bReturnValue)
+                                            {
+                                                issueTracker.Report("Error: " + rtnDocCreate.sReturnValue + "\n",
+                                                    SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
+                                            }
                                         }
                                     }
-                                    else // If the doc exists
+                                    else if (!bVerifyOnly) // If the doc exists
                                     {
                                         string sLinkType = "wt.part.WTPartReferenceLink";
                                         string sLinkComments = "Linked existing document container from Material List import.";
@@ -23987,11 +24145,11 @@ namespace WcfWCService
                             }
                             else if (bCreated)
                             {
-                                WriteStatus(rowVals.iRowNo, "Created", System.Drawing.Color.LawnGreen);
+                                WriteStatus(rowVals.iRowNo, bVerifyOnly ? "Will Create" : "Created", System.Drawing.Color.LawnGreen);
                             }
                             else if (bUpdated)
                             {
-                                WriteStatus(rowVals.iRowNo, "Updated", System.Drawing.Color.PaleGreen);
+                                WriteStatus(rowVals.iRowNo, bVerifyOnly ? "Will Update" : "Updated", System.Drawing.Color.PaleGreen);
                             }
                             else if (bSkipped)
                             {
@@ -24014,10 +24172,10 @@ namespace WcfWCService
                         }
                     }
 
-                    // ---------------------------- WRITING TO FILE AND EMAIL ---------------------------- 
+                    // ---------------------------- WRITING TO FILE AND EMAIL ----------------------------
                     // Write the spreadsheet and send back via email
                     string sFileNameNoFileType = sFile.Split('.')[0];
-                    string sNewExcelFileName = sFileNameNoFileType + "_results.xlsx";
+                    string sNewExcelFileName = sFileNameNoFileType + (bVerifyOnly ? "_validation.xlsx" : "_results.xlsx");
                     string sNewFileLocation = @"C:\Webroot\Regain\temp\" + sNewExcelFileName;
                     xlWorkbook.SaveAs(sNewFileLocation);
 
@@ -24036,21 +24194,22 @@ namespace WcfWCService
                     xlWorksheet = null;
                     xlRange = null;
 
-                    /*                    GC.Collect();
-                                        GC.WaitForPendingFinalizers();
-
-                                        System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
-                                        foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
-                                        {
-                                            proc.Kill();
-                                        }
-                    */
-
                     // Body of email to user, and location of the results file
-                    sBody += "Material list import complete.\n" +
-                        "Please see the attached spreadsheet which has been updated with status and comments where " +
-                        "there may have been issues during the upload process. A full list of issues is provided below.\n \n" +
-                        issueTracker.GetIssueLog() + "^";
+                    if (bVerifyOnly)
+                    {
+                        sBody += "Validation complete. No parts were changed.\n" +
+                            "Please see the attached spreadsheet which has been updated with the current names in Windchill (Existing Name), " +
+                            "status and comments where there may be issues. Check the Existing Name column is as expected before running the import. " +
+                            "A full list of issues is provided below.\n \n" +
+                            issueTracker.GetIssueLog() + "^";
+                    }
+                    else
+                    {
+                        sBody += "Material list import complete.\n" +
+                            "Please see the attached spreadsheet which has been updated with status and comments where " +
+                            "there may have been issues during the upload process. A full list of issues is provided below.\n \n" +
+                            issueTracker.GetIssueLog() + "^";
+                    }
 
                     sBody += sNewExcelFileName + "^";
 
@@ -24081,13 +24240,6 @@ namespace WcfWCService
                     {
                         // Process already exited
                     }
-
-                    /*                    System.Diagnostics.Process[] excelProcs = System.Diagnostics.Process.GetProcessesByName("EXCEL");
-                                        foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("EXCEL"))
-                                        {
-                                            proc.Kill();
-                                        }
-                    */
                 }
             }
         }
@@ -24438,72 +24590,70 @@ namespace WcfWCService
             }
         }
 
-        public rtnStringArray2 GetPartCompositionNumbers(String sPartNo, int iWebAppId)
+        public rtnString GetPartCompositionNo(String sPartNo, int iWebAppId)
         {
-            rtnStringArray2 rtnClass = new rtnStringArray2();
-            rtnClass.sArray = new string[0];
+            rtnString rtn = new rtnString();
+            rtn.bReturnValue = false;
+            rtn.sReturnValue = "";
 
             StoredProc SP = new StoredProc();
             RecordSet rs = new RecordSet();
 
-            SP.SetProcName("SP_GetWindchillPartLinkedCompositions");
-            SP.SetParam("@pvchPartNumber", sPartNo);
+            SP.SetProcName("SP_GetWindchillMaterialCatalogPartDetails");
+            SP.SetParam("@pvchMatCatPartNo", sPartNo);
             int iRecordCount = SP.RunStoredProcDataSet();
 
             if (iRecordCount < 0)
             {
-                rtnClass.bReturnValue = false;
-                rtnClass.sReturnValue = "Could not read the compositions for part number " + sPartNo;
-                return rtnClass;
+                rtn.sReturnValue = "Could not read the details for part number " + sPartNo;
+                return rtn;
+            }
+
+            // An existing M part always returns a row. No row means the composition can't be known, so don't guess "none"
+            if (iRecordCount == 0)
+            {
+                rtn.sReturnValue = "No details were found for part number " + sPartNo;
+                return rtn;
             }
 
             try
             {
                 DataSet ds = SP.GetDataSet();
-                var lstCompositions = new List<string>();
+                string sCompositionNo = rs.Get_NVarchar(ds, "CompositionCode", 0);
 
-                for (int i = 0; i < iRecordCount; i++)
-                {
-                    string sCompositionNo = rs.Get_NVarchar(ds, "PMAPartNumber", i).Trim().ToUpper();
-
-                    if (Regex.IsMatch(sCompositionNo, @"^MC[0-9]{4}$") && !lstCompositions.Contains(sCompositionNo))
-                    {
-                        lstCompositions.Add(sCompositionNo);
-                    }
-                }
-
-                rtnClass.sArray = lstCompositions.ToArray();
-                rtnClass.bReturnValue = true;
-                return rtnClass;
+                rtn.sReturnValue = (sCompositionNo ?? "").Trim().ToUpper();
+                rtn.bReturnValue = true;
+                return rtn;
             }
             catch (System.Exception e)
             {
-                rtnClass.bReturnValue = false;
-                rtnClass.sReturnValue = e.Message;
-                return rtnClass;
+                rtn.sReturnValue = e.Message;
+                return rtn;
             }
         }
 
         public string ProcessMaterialCompositionAssignmentSpreadsheet(string sSessionId, string sUserId, string sFile, string sWebAppId)
         {
             // What the Composition No cell tells the import to do with the row
-            const string ACTION_LINK = "LINK";          // MC + four digits: link the part to this composition
+            const string ACTION_LINK = "LINK";          // a composition part number: link the part to this composition
             const string ACTION_REMOVE = "REMOVE";      // None: remove the part's composition link
             const string ACTION_SKIP = "SKIP";          // blank or Generic: leave the part alone
-            const string ACTION_INVALID = "INVALID";    // anything else
 
-            const string COMPOSITION_PATTERN = @"^MC[0-9]{4}$";
+            // Results of checking a Composition No, cached so each number is only looked up once
+            const string COMP_OK = "OK";
+            const string COMP_NOT_FOUND = "NOT_FOUND";
+            const string COMP_NOT_COMPOSITION = "NOT_COMPOSITION";
 
             // ---------------------------- HELPER FUNCTIONS ----------------------------
 
             // Expects the value already trimmed and upper-cased.
+            // Anything other than blank, Generic or None is treated as a composition to link, and is checked against LMS later.
             string GetCompositionAction(string sCompositionNo)
             {
                 if (sCompositionNo == "" || sCompositionNo == "GENERIC") { return ACTION_SKIP; }
                 if (sCompositionNo == "NONE") { return ACTION_REMOVE; }
-                if (Regex.IsMatch(sCompositionNo, COMPOSITION_PATTERN)) { return ACTION_LINK; }
 
-                return ACTION_INVALID;
+                return ACTION_LINK;
             }
 
             // The value compared between rows that share a Ref.
@@ -24511,6 +24661,13 @@ namespace WcfWCService
             string GetCompositionSignature(CompositionAssignmentRow row)
             {
                 return row.sAction == ACTION_SKIP ? "" : row.sCompositionNo;
+            }
+
+            // True when the part's CompositionType attribute is set. Same check as the Part Import.
+            bool IsCompositionPart(string sPartNo, int iWebAppId)
+            {
+                rtnInt rtnType = GetPartBooleanAttribute(sPartNo, "CompositionType", iWebAppId);
+                return rtnType.bReturnValue && rtnType.iReturnValue == 1;
             }
 
             // Finds the rows with different Compositions for same Ref. Returns row numbers of conflicts
@@ -24562,7 +24719,7 @@ namespace WcfWCService
                 return dicConflicts;
             }
 
-            // Validates the Ref. It must be filled in, be a part and not a composition, exist in LMS, and have an LMS name that matches the Description column.
+            // Validates the Ref. It must be filled in, exist in LMS, not be a composition itself, and have an LMS name that matches the Name column.
             // Stops at the first problem found. Not called for skipped rows.
             bool IsValidRef(CompositionAssignmentRow row, SpreadsheetTracker tracker,
                 Dictionary<string, int> dicColNumbers, int iWebAppId)
@@ -24582,15 +24739,6 @@ namespace WcfWCService
                     return false;
                 }
 
-                // Can't put a composition part as the Ref
-                if (Regex.IsMatch(row.sRef, COMPOSITION_PATTERN))
-                {
-                    tracker.Report("Failure: Ref " + row.sRef +
-                        " is a composition number. A composition cannot be assigned a composition.\n",
-                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
-                    return false;
-                }
-
                 // Part must exist
                 if (!PartExists(row.sRef, iWebAppId))
                 {
@@ -24600,54 +24748,73 @@ namespace WcfWCService
                     return false;
                 }
 
-                // Description must be filled in and match the part name, in case the Ref was mistyped
-                if (row.sDescription == "")
+                // Can't put a composition part as the Ref
+                if (IsCompositionPart(row.sRef, iWebAppId))
                 {
-                    tracker.Report("Failure: Description is missing. It must match the part name in LMS.\n",
-                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["description"]);
+                    tracker.Report("Failure: Ref " + row.sRef +
+                        " is a composition. A composition cannot be assigned a composition.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["ref"]);
+                    return false;
+                }
+
+                // Name must be filled in and match the part name, in case the Ref was mistyped
+                if (row.sName == "")
+                {
+                    tracker.Report("Failure: Name is missing. It must match the part name in LMS.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["name"]);
                     return false;
                 }
 
                 rtnString rtnName = GetPartName(row.sRef, iWebAppId);
 
-                if (rtnName.sReturnValue.Trim().ToUpper() != row.sDescription.ToUpper())
+                if (rtnName.sReturnValue.Trim().ToUpper() != row.sName.ToUpper())
                 {
                     tracker.Report("Failure: Ref " + row.sRef + " exists with the name '" +
-                        rtnName.sReturnValue.Trim() + "', which does not match the entered Description '" +
-                        row.sDescription + "'.\n",
-                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["description"]);
+                        rtnName.sReturnValue.Trim() + "', which does not match the entered Name '" +
+                        row.sName + "'.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["name"]);
                     return false;
                 }
 
                 return true;
             }
 
-            // Validates the Composition No.
-            bool IsValidCompositionNo(CompositionAssignmentRow row, Dictionary<string, bool> dicExists,
+            // Validates the Composition No when linking: it must be an existing part with CompositionType set,
+            // and the Composition Name must match its name in LMS.
+            bool IsValidCompositionNo(CompositionAssignmentRow row, Dictionary<string, string> dicChecked,
                 SpreadsheetTracker tracker, int iColumnNumber, int iNameColumnNumber, int iWebAppId)
             {
-                // Malformed composition number
-                if (row.sAction == ACTION_INVALID)
+                // Blank, Generic and None have nothing to look up
+                if (row.sAction != ACTION_LINK) { return true; }
+
+                // SQL Injection guard. Must stay above the LMS lookups below
+                if (row.sCompositionNo.Contains("'"))
                 {
-                    tracker.Report("Failure: invalid Composition No '" + row.sCompositionNo +
-                        "'. Must be MC followed by four digits (e.g. MC0123), None, Generic, or blank.\n",
+                    tracker.Report("Failure: Composition No contains an invalid character (').\n",
                         SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, iColumnNumber);
                     return false;
                 }
 
-                // Only a composition being linked has to exist. None has nothing to look up
-                if (row.sAction != ACTION_LINK) { return true; }
-
-                // Composition must exist if linking. Save in dic for later reference
-                if (!dicExists.ContainsKey(row.sCompositionNo))
+                // Look the composition up once, and save the result for later rows
+                if (!dicChecked.ContainsKey(row.sCompositionNo))
                 {
-                    dicExists[row.sCompositionNo] = PartExists(row.sCompositionNo, iWebAppId);
+                    if (!PartExists(row.sCompositionNo, iWebAppId)) { dicChecked[row.sCompositionNo] = COMP_NOT_FOUND; }
+                    else if (!IsCompositionPart(row.sCompositionNo, iWebAppId)) { dicChecked[row.sCompositionNo] = COMP_NOT_COMPOSITION; }
+                    else { dicChecked[row.sCompositionNo] = COMP_OK; }
                 }
 
-                if (!dicExists[row.sCompositionNo])
+                if (dicChecked[row.sCompositionNo] == COMP_NOT_FOUND)
                 {
                     tracker.Report("Failure: composition " + row.sCompositionNo +
                         " was not found in LMS.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, iColumnNumber);
+                    return false;
+                }
+
+                if (dicChecked[row.sCompositionNo] == COMP_NOT_COMPOSITION)
+                {
+                    tracker.Report("Failure: " + row.sCompositionNo +
+                        " is not a composition. Enter the part number of a composition, None, Generic, or leave it blank.\n",
                         SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, iColumnNumber);
                     return false;
                 }
@@ -24674,34 +24841,23 @@ namespace WcfWCService
                 return true;
             }
 
-            // Removes the part's link to each composition in the list. Returns the compositions that were removed.
-            List<string> RemoveCompositionLinks(CompositionAssignmentRow row, List<string> lstCompositions,
+            // Removes the link between the part (parent) and a composition (child). Returns true if it was removed.
+            bool RemoveCompositionLink(CompositionAssignmentRow row, string sOldCompositionNo,
                 string sFullName, int iPriorityIfFails, SpreadsheetTracker tracker, int iColumnNumber)
             {
-                var lstRemoved = new List<string>();
+                string sDeleteRtn = DeletePartToPartLink(sSessionId, sUserId, sFullName,
+                    row.sRef, sOldCompositionNo,
+                    "Deleting composition link for " + row.sRef + " from composition assignment import.", sWebAppId);
 
-                string sPrefix = "Failure";
-                if (iPriorityIfFails == SpreadsheetTracker.PRIORITY_WARNING) { sPrefix = "Warning"; }
+                if (sDeleteRtn.StartsWith("Success")) { return true; }
 
-                foreach (string sOldCompositionNo in lstCompositions)
-                {
-                    string sDeleteRtn = DeletePartToPartLink(sSessionId, sUserId, sFullName,
-                        sOldCompositionNo, row.sRef,
-                        "Deleting composition link for " + row.sRef + " from composition assignment import.", sWebAppId);
+                string sPrefix = (iPriorityIfFails == SpreadsheetTracker.PRIORITY_WARNING) ? "Warning" : "Failure";
 
-                    if (sDeleteRtn.StartsWith("Success"))
-                    {
-                        lstRemoved.Add(sOldCompositionNo);
-                    }
-                    else
-                    {
-                        tracker.Report(sPrefix + ": could not remove the link between " + row.sRef +
-                            " and composition " + sOldCompositionNo + ". Error reads - " + sDeleteRtn + "\n",
-                            iPriorityIfFails, row.iRowNo, iColumnNumber);
-                    }
-                }
+                tracker.Report(sPrefix + ": could not remove the link between " + row.sRef +
+                    " and composition " + sOldCompositionNo + ". Error reads - " + sDeleteRtn + "\n",
+                    iPriorityIfFails, row.iRowNo, iColumnNumber);
 
-                return lstRemoved;
+                return false;
             }
 
             // ---------------------------- END HELPER FUNCTIONS ----------------------------
@@ -24715,7 +24871,7 @@ namespace WcfWCService
             {
                 {"item", 1 },
                 {"ref", 2 },
-                {"description", 3 },
+                {"name", 3 },
                 {"composition_no", 4 },
                 {"composition_name", 5 },
                 {"comments", 6 },
@@ -24750,7 +24906,7 @@ namespace WcfWCService
 
                     // Checking if the spreadsheet matches the template
                     string[] arrExpectedHeaders = {
-                        "Item", "Ref", "Description", "Composition No", "Composition Name",
+                        "Item", "Ref", "Name", "Composition No", "Composition Name",
                         "Comments", "Status"
                     };
 
@@ -24786,7 +24942,7 @@ namespace WcfWCService
                             iRowNo = i,
                             sItem = sItem,
                             sRef = GetCellString(xlWorksheet, i, dicColNums["ref"]).Trim().ToUpper(),
-                            sDescription = GetCellString(xlWorksheet, i, dicColNums["description"]).Trim(),
+                            sName = GetCellString(xlWorksheet, i, dicColNums["name"]).Trim(),
                             sCompositionNo = sCompositionNo,
                             sCompositionName = GetCellString(xlWorksheet, i, dicColNums["composition_name"]).Trim(),
                             sAction = GetCompositionAction(sCompositionNo)
@@ -24800,7 +24956,7 @@ namespace WcfWCService
                     // Spreadsheet-wide checks
                     Dictionary<int, List<int>> dicConflicts = FindConflictingRefRows(lstRows);
 
-                    var dicCompositionExists = new Dictionary<string, bool>();
+                    var dicCompositionChecks = new Dictionary<string, string>();
                     var dicAppliedRefs = new Dictionary<string, int>();
                     var sbChangeLog = new StringBuilder();
 
@@ -24821,6 +24977,7 @@ namespace WcfWCService
                         {
                             // ---------------------------- VALIDATIONS ----------------------------
                             bool bSkipped = false;
+                            bool bTPart = false;
 
                             // Conflicting rows check
                             if (dicConflicts.ContainsKey(rowVals.iRowNo))
@@ -24845,17 +25002,26 @@ namespace WcfWCService
                             }
                             else
                             {
-                                // Ref validation - including existence in LMS and name matching
+                                // Ref validation - including existence in LMS, not a composition, and name matching
                                 IsValidRef(rowVals, issueTracker, dicColNums, iWebAppId);
 
-                                // Composition No. validation - including existence in LMS when linking
-                                IsValidCompositionNo(rowVals, dicCompositionExists, issueTracker,
+                                // Composition No. validation - existence and CompositionType when linking
+                                IsValidCompositionNo(rowVals, dicCompositionChecks, issueTracker,
                                     dicColNums["composition_no"], dicColNums["composition_name"], iWebAppId);
+
+                                // Compositions are not assigned to T parts. Same rule as the Part Import: a warning, and nothing is changed
+                                if (issueTracker.RowIsValid && rowVals.sRef.StartsWith("T"))
+                                {
+                                    bTPart = true;
+                                    issueTracker.Report("Warning: composition cannot be assigned to a T part. No change made.\n",
+                                        SpreadsheetTracker.PRIORITY_WARNING, rowVals.iRowNo, dicColNums["composition_no"]);
+                                }
                             }
                             // ---------------------------- END VALIDATIONS ----------------------------
 
                             // ---------------------------- LINK COMPOSITIONS ----------------------------
-                            if (issueTracker.RowIsValid && !bSkipped)
+                            // The part is the parent and the composition is its child. A part has at most one composition.
+                            if (issueTracker.RowIsValid && !bSkipped && !bTPart)
                             {
                                 if (dicAppliedRefs.ContainsKey(rowVals.sRef))
                                 {
@@ -24865,109 +25031,87 @@ namespace WcfWCService
                                 }
                                 else
                                 {
-                                    rtnStringArray2 rtnCompositions = GetPartCompositionNumbers(rowVals.sRef, iWebAppId);
+                                    rtnString rtnCurrent = GetPartCompositionNo(rowVals.sRef, iWebAppId);
 
                                     // Stop here if the lookup failed
-                                    if (!rtnCompositions.bReturnValue)
+                                    if (!rtnCurrent.bReturnValue)
                                     {
                                         issueTracker.Report("Error: could not read the current composition for " + rowVals.sRef +
-                                            ". Error reads - " + rtnCompositions.sReturnValue + "\n",
+                                            ". Error reads - " + rtnCurrent.sReturnValue + "\n",
                                             SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
 
                                         WriteStatus(rowVals.iRowNo, "Error", System.Drawing.Color.PaleVioletRed, issueTracker.sRowMessage);
                                         continue;
                                     }
 
-                                    List<string> lstCurrentCompositions = new List<string>(rtnCompositions.sArray);
+                                    string sCurrentCompositionNo = rtnCurrent.sReturnValue; // "" when the part has no composition
 
                                     if (rowVals.sAction == ACTION_LINK)
                                     {
-                                        bool bAlreadyLinked = lstCurrentCompositions.Contains(rowVals.sCompositionNo);
-                                        bool bLinked = true;
-
-                                        // Link to Composition first
-                                        if (!bAlreadyLinked)
+                                        if (sCurrentCompositionNo == rowVals.sCompositionNo)
                                         {
+                                            // Already linked to this composition
+                                            sRowStatus = "Unchanged";
+                                            sRowNote = "Already linked to " + rowVals.sCompositionNo + ".";
+                                            dicAppliedRefs[rowVals.sRef] = rowVals.iRowNo;
+                                        }
+                                        else
+                                        {
+                                            // Link the new composition first, so the part keeps its old one if this fails
                                             string sLinkRtn = CreateParentChildPartLink(sSessionId, sUserId, sFullName,
-                                                rowVals.sCompositionNo, rowVals.sRef, sQty, sLinkType, sUnit,
+                                                rowVals.sRef, rowVals.sCompositionNo, sQty, sLinkType, sUnit,
                                                 "Linked part to composition from composition assignment import.", sWebAppId);
 
                                             if (!sLinkRtn.StartsWith("Success"))
                                             {
-                                                bLinked = false;
                                                 issueTracker.Report("Failure: could not link " + rowVals.sRef + " to composition " +
                                                     rowVals.sCompositionNo + ". Error reads - " + sLinkRtn + "\n",
                                                     SpreadsheetTracker.PRIORITY_FAILURE, rowVals.iRowNo, dicColNums["composition_no"]);
                                             }
-                                        }
-
-                                        // Remove other compositions
-                                        if (bLinked)
-                                        {
-                                            // Remove any other composition the part is linked to
-                                            var lstOldCompositions = new List<string>(lstCurrentCompositions);
-                                            lstOldCompositions.Remove(rowVals.sCompositionNo);
-
-                                            List<string> lstRemoved = RemoveCompositionLinks(rowVals, lstOldCompositions, sFullName,
-                                                SpreadsheetTracker.PRIORITY_WARNING, issueTracker, dicColNums["composition_no"]);
-
-                                            // Comments - Composition was switched
-                                            if (lstRemoved.Count > 0 && !bAlreadyLinked)
-                                            {
-                                                sRowStatus = "Updated";
-                                                sRowNote = "Composition changed from " + string.Join(", ", lstRemoved) +
-                                                    " to " + rowVals.sCompositionNo + ".";
-                                                sbChangeLog.Append("Row " + rowVals.iRowNo + " - " + rowVals.sRef + ": " + sRowNote + "\n");
-                                            }
-                                            // No new link, but compositions removed
-                                            else if (lstRemoved.Count > 0)
-                                            {
-                                                sRowStatus = "Updated";
-                                                sRowNote = "Already linked to " + rowVals.sCompositionNo +
-                                                    ". Removed extra composition link to " + string.Join(", ", lstRemoved) + ".";
-                                                sbChangeLog.Append("Row " + rowVals.iRowNo + " - " + rowVals.sRef + ": " + sRowNote + "\n");
-                                            }
-                                            // New link to a composition
-                                            else if (!bAlreadyLinked)
-                                            {
-                                                sRowStatus = "Linked";
-                                                sRowNote = "Linked to " + rowVals.sCompositionNo + ".";
-                                            }
                                             else
                                             {
-                                                sRowStatus = "Unchanged";
-                                            }
+                                                if (sCurrentCompositionNo == "")
+                                                {
+                                                    // New link to a composition
+                                                    sRowStatus = "Linked";
+                                                    sRowNote = "Linked to " + rowVals.sCompositionNo + ".";
+                                                }
+                                                else if (RemoveCompositionLink(rowVals, sCurrentCompositionNo, sFullName,
+                                                    SpreadsheetTracker.PRIORITY_WARNING, issueTracker, dicColNums["composition_no"]))
+                                                {
+                                                    // Composition was switched
+                                                    sRowStatus = "Updated";
+                                                    sRowNote = "Composition changed from " + sCurrentCompositionNo +
+                                                        " to " + rowVals.sCompositionNo + ".";
+                                                    sbChangeLog.Append("Row " + rowVals.iRowNo + " - " + rowVals.sRef + ": " + sRowNote + "\n");
+                                                }
+                                                else
+                                                {
+                                                    // New link made, but the old one could not be removed (reported as a Warning)
+                                                    sRowStatus = "Linked";
+                                                    sRowNote = "Linked to " + rowVals.sCompositionNo + ".";
+                                                }
 
-                                            dicAppliedRefs[rowVals.sRef] = rowVals.iRowNo;
+                                                dicAppliedRefs[rowVals.sRef] = rowVals.iRowNo;
+                                            }
                                         }
                                     }
                                     else
                                     {
                                         // ---- REMOVE ----
-                                        if (lstCurrentCompositions.Count == 0)
+                                        if (sCurrentCompositionNo == "")
                                         {
                                             sRowStatus = "Unchanged";
                                             sRowNote = "No composition link to remove.";
                                             dicAppliedRefs[rowVals.sRef] = rowVals.iRowNo;
                                         }
-                                        else
+                                        else if (RemoveCompositionLink(rowVals, sCurrentCompositionNo, sFullName,
+                                            SpreadsheetTracker.PRIORITY_FAILURE, issueTracker, dicColNums["composition_no"]))
                                         {
-                                            List<string> lstRemoved = RemoveCompositionLinks(rowVals, lstCurrentCompositions, sFullName,
-                                                SpreadsheetTracker.PRIORITY_FAILURE, issueTracker, dicColNums["composition_no"]);
-
-                                            bool bAllRemoved = (lstRemoved.Count == lstCurrentCompositions.Count);
-
-                                            if (lstRemoved.Count > 0)
-                                            {
-                                                sRowNote = "Removed composition link to " + string.Join(", ", lstRemoved) + ".";
-                                                sbChangeLog.Append("Row " + rowVals.iRowNo + " - " + rowVals.sRef + ": " + sRowNote + "\n");
-                                            }
-
-                                            if (bAllRemoved)
-                                            {
-                                                sRowStatus = "Removed";
-                                                dicAppliedRefs[rowVals.sRef] = rowVals.iRowNo;
-                                            }
+                                            sRowStatus = "Removed";
+                                            sRowNote = "Removed composition link to " + sCurrentCompositionNo + ".";
+                                            sbChangeLog.Append("Row " + rowVals.iRowNo + " - " + rowVals.sRef + ": " + sRowNote + "\n");
+                                            dicAppliedRefs[rowVals.sRef] = rowVals.iRowNo;
                                         }
                                     }
                                 }
@@ -25134,10 +25278,31 @@ namespace WcfWCService
 
             // ---------------------------- HELPER FUNCTIONS ----------------------------
 
-            // Checks and reports if the parent has unlisted children that exist in LMS
+            // True when the part is a composition or a coating (CompositionType or CompositionCoatingType is set).
+            // Results are cached, as the same children appear under many parents.
+            bool IsCompositionOrCoatingPart(string sPartNo, Dictionary<string, bool> dicCompositionCache, int iWebAppId)
+            {
+                if (dicCompositionCache.ContainsKey(sPartNo)) { return dicCompositionCache[sPartNo]; }
+
+                rtnInt rtnComposition = GetPartBooleanAttribute(sPartNo, "CompositionType", iWebAppId);
+                bool bIsComposition = rtnComposition.bReturnValue && rtnComposition.iReturnValue == 1;
+
+                bool bIsCoating = false;
+                if (!bIsComposition)
+                {
+                    rtnInt rtnCoating = GetPartBooleanAttribute(sPartNo, "CompositionCoatingType", iWebAppId);
+                    bIsCoating = rtnCoating.bReturnValue && rtnCoating.iReturnValue == 1;
+                }
+
+                dicCompositionCache[sPartNo] = bIsComposition || bIsCoating;
+                return bIsComposition || bIsCoating;
+            }
+
+            // Checks and reports if the parent has unlisted children that exist in LMS.
+            // A part's composition and coating are also child links, but they are not part of an assembly, so they are not reported here.
             void CheckForExtraLinks(PartAssemblyLinkRow row, HashSet<string> hsSheetChildren,
-                Dictionary<string, List<string[]>> dicLinkCache, SpreadsheetTracker tracker,
-                Dictionary<string, int> dicColNumbers, int iWebAppId)
+                Dictionary<string, List<string[]>> dicLinkCache, Dictionary<string, bool> dicCompositionCache,
+                SpreadsheetTracker tracker, Dictionary<string, int> dicColNumbers, int iWebAppId)
             {
                 string sParentRef = row.sRef;
 
@@ -25161,7 +25326,12 @@ namespace WcfWCService
                     bool bListedInSheet = hsSheetChildren.Contains(sLinkedChildRef);
                     bool bAlreadyFound = lstExtraChildren.Contains(sLinkedChildRef);
 
-                    if (!bListedInSheet && !bAlreadyFound) { lstExtraChildren.Add(sLinkedChildRef); }
+                    if (bListedInSheet || bAlreadyFound) { continue; }
+
+                    // The part's composition or coating is expected to be linked, so it isn't an extra
+                    if (IsCompositionOrCoatingPart(sLinkedChildRef, dicCompositionCache, iWebAppId)) { continue; }
+
+                    lstExtraChildren.Add(sLinkedChildRef);
                 }
 
                 if (lstExtraChildren.Count > 0)
@@ -25460,7 +25630,7 @@ namespace WcfWCService
                 return true;
             }
 
-            // Validates the Ref. It must exist in LMS and its LMS name must match the Description column
+            // Validates the Ref. It must exist in LMS and its LMS name must match the Name column
             bool IsValidRef(PartAssemblyLinkRow row, SpreadsheetTracker tracker,
                 Dictionary<string, int> dicColNumbers, int iWebAppId)
             {
@@ -25479,11 +25649,11 @@ namespace WcfWCService
                     return false;
                 }
 
-                // Description must be filled in and match the part name, in case the Ref was mistyped
-                if (row.sDescription == "")
+                // Name must be filled in and match the part name, in case the Ref was mistyped
+                if (row.sName == "")
                 {
-                    tracker.Report("Failure: Description is missing. It must match the part name in LMS.\n",
-                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["description"]);
+                    tracker.Report("Failure: Name is missing. It must match the part name in LMS.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["name"]);
                     return false;
                 }
 
@@ -25497,14 +25667,14 @@ namespace WcfWCService
                 }
 
                 string sLmsName = rtnName.sReturnValue.Trim();
-                bool bNameMatches = sLmsName.ToUpper() == row.sDescription.ToUpper();
+                bool bNameMatches = sLmsName.ToUpper() == row.sName.ToUpper();
 
                 if (!bNameMatches)
                 {
                     tracker.Report("Failure: Ref " + row.sRef + " exists with the name '" +
-                        sLmsName + "', which does not match the entered Description '" +
-                        row.sDescription + "'.\n",
-                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["description"]);
+                        sLmsName + "', which does not match the entered Name '" +
+                        row.sName + "'.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["name"]);
                     return false;
                 }
 
@@ -25730,7 +25900,7 @@ namespace WcfWCService
             {
                 {"item", 1 },
                 {"ref", 2 },
-                {"description", 3 },
+                {"name", 3 },
                 {"qty", 4 },
                 {"comments", 5 },
                 {"status", 6 }
@@ -25764,8 +25934,8 @@ namespace WcfWCService
 
                     // Checking if the spreadsheet matches the template
                     string[] arrExpectedHeaders = {
-                        "Item", "Ref", "Description", "Qty", "Comments", "Status"
-                    };
+                "Item", "Ref", "Name", "Qty", "Comments", "Status"
+            };
 
                     // Get the correct sheet (checks first 2 for valid sheets, throws if none matching expected headers found)
                     Excel._Worksheet xlWorksheet = GetImportWorksheet(xlWorkbook, arrExpectedHeaders);
@@ -25796,7 +25966,7 @@ namespace WcfWCService
                             iRowNo = i,
                             sItem = sItem,
                             sRef = GetCellString(xlWorksheet, i, dicColNums["ref"]).Trim().ToUpper(),
-                            sDescription = GetCellString(xlWorksheet, i, dicColNums["description"]).Trim(),
+                            sName = GetCellString(xlWorksheet, i, dicColNums["name"]).Trim(),
                             sQty = GetCellNumericString(xlWorksheet, i, dicColNums["qty"])
                         };
 
@@ -25818,6 +25988,7 @@ namespace WcfWCService
                     Dictionary<string, HashSet<string>> dicSheetChildren = GetSheetChildren(itemTree);
 
                     var dicLinkCache = new Dictionary<string, List<string[]>>();
+                    var dicCompositionCache = new Dictionary<string, bool>();
                     var dicAppliedLinks = new Dictionary<string, int>();
                     var hsExtraLinksChecked = new HashSet<string>();
                     var sbChangeLog = new StringBuilder();
@@ -25934,7 +26105,7 @@ namespace WcfWCService
                                 if (bHasSheetChildren && !bExtraLinksChecked)
                                 {
                                     hsExtraLinksChecked.Add(rowVals.sRef);
-                                    CheckForExtraLinks(rowVals, dicSheetChildren[rowVals.sRef], dicLinkCache,
+                                    CheckForExtraLinks(rowVals, dicSheetChildren[rowVals.sRef], dicLinkCache, dicCompositionCache,
                                         issueTracker, dicColNums, iWebAppId);
                                 }
 
@@ -26219,6 +26390,14 @@ namespace WcfWCService
                 }
 
                 rtnString rtnName = GetPartName(sFlNo, iWebAppId);
+
+                if (!rtnName.bReturnValue)
+                {
+                    tracker.Report("Error: could not read the name of Functional Location " + sFlNo + ".\n",
+                        SpreadsheetTracker.PRIORITY_ERROR, row.iRowNo, dicColNumbers["fl_no"]);
+                    return false;
+                }
+
                 string sLmsName = rtnName.sReturnValue.Trim();
                 bool bNameMatches = sLmsName.ToUpper() == row.sFlName.ToUpper();
 
@@ -26296,7 +26475,7 @@ namespace WcfWCService
                 return true;
             }
 
-            // Ref validation
+            // Ref validation. The Ref must exist in LMS and its LMS name must match the Name column
             bool IsValidRef(FunctionalLocationLinkRow row, SpreadsheetTracker tracker,
                 Dictionary<string, int> dicColNumbers, int iWebAppId)
             {
@@ -26315,11 +26494,11 @@ namespace WcfWCService
                     return false;
                 }
 
-                // Description must be filled in and match the part name, in case the Ref was mistyped
-                if (row.sDescription == "")
+                // Name must be filled in and match the part name, in case the Ref was mistyped
+                if (row.sName == "")
                 {
-                    tracker.Report("Failure: Description is missing. It must match the part name in LMS.\n",
-                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["description"]);
+                    tracker.Report("Failure: Name is missing. It must match the part name in LMS.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["name"]);
                     return false;
                 }
 
@@ -26333,14 +26512,14 @@ namespace WcfWCService
                 }
 
                 string sLmsName = rtnName.sReturnValue.Trim();
-                bool bNameMatches = sLmsName.ToUpper() == row.sDescription.ToUpper();
+                bool bNameMatches = sLmsName.ToUpper() == row.sName.ToUpper();
 
                 if (!bNameMatches)
                 {
                     tracker.Report("Failure: Ref " + row.sRef + " exists with the name '" +
-                        sLmsName + "', which does not match the entered Description '" +
-                        row.sDescription + "'.\n",
-                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["description"]);
+                        sLmsName + "', which does not match the entered Name '" +
+                        row.sName + "'.\n",
+                        SpreadsheetTracker.PRIORITY_FAILURE, row.iRowNo, dicColNumbers["name"]);
                     return false;
                 }
 
@@ -26567,7 +26746,7 @@ namespace WcfWCService
                 {"fl_no", 1 },
                 {"fl_name", 2 },
                 {"ref", 3 },
-                {"description", 4 },
+                {"name", 4 },
                 {"qty", 5 },
                 {"comments", 6 },
                 {"status", 7 }
@@ -26601,7 +26780,7 @@ namespace WcfWCService
 
                     // Checking if the spreadsheet matches the template
                     string[] arrExpectedHeaders = {
-                        "Functional Location No", "Functional Location Name", "Ref", "Description", "Qty",
+                        "Functional Location No", "Functional Location Name", "Ref", "Name", "Qty",
                         "Comments", "Status"
                     };
 
@@ -26641,7 +26820,7 @@ namespace WcfWCService
                             sFlName = sFlName,
                             bStatesFl = sFlNo != "",
                             sRef = sRef,
-                            sDescription = GetCellString(xlWorksheet, i, dicColNums["description"]).Trim(),
+                            sName = GetCellString(xlWorksheet, i, dicColNums["name"]).Trim(),
                             sQty = GetCellNumericString(xlWorksheet, i, dicColNums["qty"])
                         };
 
@@ -26759,11 +26938,11 @@ namespace WcfWCService
                                 }
                                 catch (System.Exception e)
                                 {
-                                    issueTracker.Report("Error: a link could not be established in the database. The error reported is: " + 
+                                    issueTracker.Report("Error: a link could not be established in the database. The error reported is: " +
                                         e.Message + "\n",
                                     SpreadsheetTracker.PRIORITY_ERROR, rowVals.iRowNo, dicColNums["ref"]);
                                 }
-                                
+
                             }
                             // ---------------------------- END LINKING ----------------------------
 
