@@ -334,7 +334,7 @@ namespace WcfWCService
         public class PartFileUploadRow
         {
             public int iRowNo;
-            public string sItem;
+            public string sRef;
             public string sRevisionPDF;
             public string sRevisionDXF;
             public string sRevisionSTEP;
@@ -24246,11 +24246,11 @@ namespace WcfWCService
 
         // sVerifyOrUpload = 0 means verify only
         // sVerifyOrUpload = 1 means to upload the files to LMS
-        public string ProcessFileLMSUploadSpreadsheet(string sSessionId, string sUserId, string sFile, 
+        public string ProcessFileLMSUploadSpreadsheet(string sSessionId, string sUserId, string sFile,
                                                       string sVerifyOrUpload, string sWebAppId)
         {
             OneDriveInteraction ODI = new OneDriveInteraction();
-            OneDriveInteraction.CADFileResult ODIResult= new OneDriveInteraction.CADFileResult();
+            OneDriveInteraction.CADFileResult ODIResult = new OneDriveInteraction.CADFileResult();
 
             // ---------------------------- HELPER FUNCTIONS ----------------------------
 
@@ -24263,8 +24263,8 @@ namespace WcfWCService
 
             var dicColNums = new Dictionary<string, int>
             {
-                {"item", 1 },
-                {"description", 2 },
+                {"ref", 1 },
+                {"name", 2 },
                 {"revision pdf", 3 },
                 {"revision dxf", 4 },
                 {"revision step", 5 },
@@ -24309,7 +24309,7 @@ namespace WcfWCService
 
                     // Checking if the spreadsheet matches the template
                     string[] arrExpectedHeaders = {
-                        "Item", "Description", "Revision Pdf", "Revision Dxf", "Revision Step", "Revision LMS",
+                        "Ref", "Name", "Revision Pdf", "Revision Dxf", "Revision Step", "Revision LMS",
                         "Comments Pdf", "Comments Dxf", "Comments Step", "Comments LMS",
                         "Status", "Comments Overall"
                     };
@@ -24338,7 +24338,7 @@ namespace WcfWCService
 
                     void WriteComments(int iRowNo, string sMessage, string sType, System.Drawing.Color colour)
                     {
-//                        xlWorksheet.Cells[iRowNo, dicColNums[sType]] = sStatus;
+                        //                        xlWorksheet.Cells[iRowNo, dicColNums[sType]] = sStatus;
                         xlWorksheet.Cells[iRowNo, dicColNums[sType]].Interior.Color =
                             System.Drawing.ColorTranslator.ToOle(colour);
                         xlWorksheet.Cells[iRowNo, dicColNums[sType]] = sMessage;
@@ -24356,14 +24356,14 @@ namespace WcfWCService
                     for (int i = 2; i <= rowCount; i++)
                     {
                         // Check if blank row (end)
-                        string sItem = GetCellString(xlWorksheet, i, dicColNums["item"]);
-                        if (sItem == "") { break; }
+                        string sRef = GetCellString(xlWorksheet, i, dicColNums["ref"]);
+                        if (sRef == "") { break; }
 
                         // Create object for the row
                         PartFileUploadRow row = new PartFileUploadRow
                         {
                             iRowNo = i,
-                            sItem = GetCellString(xlWorksheet, i, dicColNums["item"]).Trim(),
+                            sRef = GetCellString(xlWorksheet, i, dicColNums["ref"]).Trim(),
                             sRevisionPDF = GetCellString(xlWorksheet, i, dicColNums["revision pdf"]).Trim(),
                             sRevisionDXF = GetCellString(xlWorksheet, i, dicColNums["revision dxf"]).Trim(),
                             sRevisionSTEP = GetCellString(xlWorksheet, i, dicColNums["revision step"]).Trim(),
@@ -24397,10 +24397,10 @@ namespace WcfWCService
                             string sPrefix = "";
                             bool bPartExists = true;
 
-                            if(!PartExists(lstRows[i].sItem, iWebAppId))
+                            if (!PartExists(lstRows[i].sRef, iWebAppId))
                             {
                                 issueTracker.Report("Failure: this part does not exist.\n",
-                                    SpreadsheetTracker.PRIORITY_WARNING, rowVals.iRowNo, dicColNums["item"]);
+                                    SpreadsheetTracker.PRIORITY_WARNING, rowVals.iRowNo, dicColNums["ref"]);
                                 WriteComments(rowVals.iRowNo, "Failure: this part does not exist.", "comments overall", System.Drawing.Color.PaleVioletRed);
                                 bPartExists = false;
                             }
@@ -24421,7 +24421,7 @@ namespace WcfWCService
 
                                     //Then have a call to set all the Mat Cat Folders into a list in the ODI class
                                     //The 2nd parameter is whether we are doing a validation stage or an actual upload stage
-                                    ODIResult = ODI.FindCADFile(sSessionId, sUserId, sFullName, lstRows[i].sItem, lstRows[i].sRevisionPDF, lstRows[i].sRevisionDXF,
+                                    ODIResult = ODI.FindCADFile(sSessionId, sUserId, sFullName, lstRows[i].sRef, lstRows[i].sRevisionPDF, lstRows[i].sRevisionDXF,
                                                                 lstRows[i].sRevisionSTEP, iVerifyOrUpload, iWebAppId)
                                                                 .GetAwaiter().GetResult();
                                 }
@@ -24481,7 +24481,7 @@ namespace WcfWCService
                                         }
                                         else
                                         {
-                                            if(!ODIResult.sSTEPRevision.Equals(""))
+                                            if (!ODIResult.sSTEPRevision.Equals(""))
                                                 WriteRevision(rowVals.iRowNo, ODIResult.sSTEPRevision, sType2, System.Drawing.Color.PaleGreen);
                                         }
                                         break;
@@ -24535,7 +24535,7 @@ namespace WcfWCService
                     }
                     // ---------------------------- END LOOPING THROUGH ROWS ----------------------------
 
-                    // ---------------------------- WRITING TO FILE AND EMAIL ---------------------------- 
+                    // ---------------------------- WRITING TO FILE AND EMAIL ----------------------------
                     // Write the spreadsheet and send back via email
                     string sFileNameNoFileType = sFile.Split('.')[0];
                     string sNewExcelFileName = sFileNameNoFileType + "_results.xlsx";
